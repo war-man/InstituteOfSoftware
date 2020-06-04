@@ -15,6 +15,8 @@ using Newtonsoft.Json;
 using System.Web.Script.Serialization;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 {
@@ -25,7 +27,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         private readonly StudentFeeStandardBusinsess dbtext;
         public PricedetailsController()
         {
-            dbtext = new StudentFeeStandardBusinsess();
+         
+               dbtext = new StudentFeeStandardBusinsess();
         }
         // GET: Teachingquality/Pricedetails
         //专业
@@ -430,9 +433,76 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Paytheadvancefee()
+        public ActionResult Paytheadvancefee(int id)
+        {
+        ViewBag.ExportStudentBeanData = studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a => a.Id == id).FirstOrDefault();
+            return View();
+        }
+        /// <summary>
+        /// 预入费缴纳
+        /// </summary>
+        /// <param name="preentryfee"></param>
+        /// <returns></returns>
+        public ActionResult PaytheadvancefeeAdd(Preentryfee preentryfee)
+        {
+          return Json(dbtext.PaytheadvancefeeAdd(preentryfee));
+        }
+        /// <summary>
+        /// 获取已交预入费的学员页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult PreentryfeeDate()
         {
             return View();
+        }
+        /// <summary>
+        /// 获取已交预入费的学员数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult PreentryfeeDates(int page, int limit)
+        {
+            return Json(dbtext.PreentryfeeDates(page, limit), JsonRequestBehavior.AllowGet);
+        }
+        //预入费业务类
+        BaseBusiness<Preentryfee> Preentryfeebusenn = new BaseBusiness<Preentryfee>();
+        /// <summary>
+        /// 退预入费页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Preentryfeerefund(int id)
+        {
+            //班级业务类
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            var x = Preentryfeebusenn.GetEntity(id);
+            ViewBag.ExportStudentBeanData = studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a => a.Id == x.keeponrecordid).FirstOrDefault();
+            ViewBag.obj = x;
+            ViewBag.ClassNumber = classScheduleBusiness.GetEntity(x.ClassID).ClassNumber;
+            return View();
+        }
+        /// <summary>
+        /// 退预入费数据业务操作
+        /// </summary>
+        /// <param name="refund">数据对象</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Preentryfeerefund(Refund refund)
+        {
+            return Json(dbtext.Preentryfeerefund(refund), JsonRequestBehavior.AllowGet);
+       
+        }
+        /// <summary>
+        /// 预入费作废
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Preentryfezuofei(int id)
+        {
+            return Json(dbtext.Preentryfezuofei(id), JsonRequestBehavior.AllowGet);
+
         }
     }
 }

@@ -481,39 +481,37 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         {
             List<ExportStudentBeanData> data = new List<ExportStudentBeanData>();
             string str = "select * from  StudentBeanView where Id=" + Stu_id;
-            //if (Stu_id<54117)
-            //{
-            //data = Stu_Entity.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where Id=" + Stu_id).Select(d => new ExportStudentBeanData()
-            //{
-            //    StuName = d.StudentName,
-            //    StuSex = d.Sex == "男" ? true : false,
-            //    StuBirthy = null,
-            //    IdCade = null,
-            //    Stuphone = d.Phone,
-            //    StuSchoolName = d.School,
-            //    StuEducational = d.Education,
-            //    StuAddress = null,
-            //    StuWeiXin = null,
-            //    StuQQ = d.QQ,
-            //    stuinfomation = d.source,
-            //    StatusName = d.MarketState,
-            //    StuisGoto = false,
-            //    StuVisit = null,
-            //    empName = d.SalePerson,
-            //    Party = d.RelatedPerson,
-            //    BeanDate = d.CreateDate,
-            //    StuEntering = d.CreateUserName,
-            //    StatusTime = null,
-            //    RegionName = d.Area,
-            //    Reak = null,
-            //    ConsultTeacher = d.Inquiry
-            //}).ToList();
-            //   data = Stu_Entity.GetListBySql<ExportStudentBeanData>("select view Sch_MarketView where Id="+Stu_id);
-            //}
-            //else
-            //{
-                 data = Stu_Entity.GetListBySql<ExportStudentBeanData>("select * from  StudentBeanView where Id=" + Stu_id);
-            //}
+            if (Stu_id < 54117)
+            {
+                data = Stu_Entity.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where Id=" + Stu_id).Select(d => new ExportStudentBeanData()
+                {
+                    StuName = d.StudentName,
+                    StuSex = d.Sex,
+                    StuBirthy = null,
+                    Stuphone = d.Phone,
+                    StuSchoolName = d.School,
+                    StuEducational = d.Education,
+                    StuAddress = null,
+                    StuWeiXin = null,
+                    StuQQ = d.QQ,
+                    stuinfomation = d.source,
+                    StatusName = d.MarketState,
+                    StuisGoto = false,
+                    StuVisit = null,
+                    empName = d.SalePerson,
+                    Party = d.RelatedPerson,
+                    BeanDate = d.CreateDate,
+                    StuEntering = d.CreateUserName,
+                    StatusTime = null,
+                    RegionName = d.Area,
+                    Reak = null,
+                    ConsultTeacher = d.Inquiry
+                }).ToList();
+            }
+            else
+            {
+                data = Stu_Entity.GetListBySql<ExportStudentBeanData>("select * from  StudentBeanView where Id=" + Stu_id);
+            }
             return data[0];
         }
 

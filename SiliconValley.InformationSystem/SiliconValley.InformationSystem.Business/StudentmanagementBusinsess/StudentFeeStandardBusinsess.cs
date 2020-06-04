@@ -15,6 +15,7 @@ using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 
 namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
 {
@@ -53,6 +54,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         BaseBusiness<Paymentverification> PaymentverificationBusiness = new BaseBusiness<Paymentverification>();
         //审核缴费信息对应业务类
         BaseBusiness<PayviewPaymentver> PayviewPaymentverBusiness = new BaseBusiness<PayviewPaymentver>();
+        //预入费退费业务类
+        BaseBusiness<Refund> RefundBusiness = new BaseBusiness<Refund>();
         /// <summary>
         /// 获取所有学员数据
         /// </summary>
@@ -1045,6 +1048,163 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }
             catch (Exception ex)
             {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            return retus;
+        }
+        //预入费业务类
+        BaseBusiness<Preentryfee> Preentryfeebusenn = new BaseBusiness<Preentryfee>();
+        //备案业务类
+        StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
+        /// <summary>
+        /// 预入费缴纳
+        /// </summary>
+        /// <param name="preentryfee">数据对象</param>
+        /// <returns></returns>
+        public object PaytheadvancefeeAdd(Preentryfee preentryfee)
+        {
+           AjaxResult retus = null;
+            try
+            {
+                preentryfee.AddDate = DateTime.Now;
+                preentryfee.IsDit = false;
+                Preentryfeebusenn.Insert(preentryfee);
+                retus = new SuccessResult();
+                retus.Success = true;
+                retus.Msg = "缴费成功";
+                BusHelper.WriteSysLog("审核缴费数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            return retus;
+        }
+
+        public class Preeviews
+        {
+            public int id { get; set; }
+            public string StuName { get; set; }
+            public string Stuphone { get; set; }
+            public string StuSex { get; set; }
+            public string empName { get; set; }
+            public string StuEntering { get; set; }
+            public bool? Refundornot { get; set; }
+            public decimal Amountofmoney { get; set; }
+            public string identitydocument { get; set; }
+            public string ClassNumber { get; set; }
+        }
+        /// <summary>
+        /// 获取已缴预入费数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public object PreentryfeeDates(int page, int limit)
+        {
+            var preenlist = Preentryfeebusenn.GetList().Where(A=>A.IsDit==false).ToList();
+            List<Preeviews> list = new List<Preeviews>();
+            foreach (var item in preenlist)
+            {
+              var Keep=  studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a=>a.Id==item.keeponrecordid).FirstOrDefault();
+                var x = new Preeviews()
+                {
+                    id= item.id,
+                    StuName= Keep.StuName,
+                    Stuphone=Keep.Stuphone,
+                    StuSex= Keep.StuSex,
+                    empName=Keep.empName,
+                    StuEntering=  Keep.StuEntering,
+                    Refundornot= item.Refundornot,
+                    Amountofmoney= item.Amountofmoney,
+                    identitydocument= item.identitydocument,
+                    ClassNumber= classschedu.GetEntity(item.ClassID).ClassNumber
+                };
+                list.Add(x);
+            }
+            var dataList = list.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+            //  var x = dbtext.GetList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = list.Count,
+                data = dataList
+            };
+            return data;
+        }
+        /// <summary>
+        /// 预入费退费
+        /// </summary>
+        /// <param name="refund">数据对象</param>
+        /// <returns></returns>
+        public object Preentryfeerefund(Refund refund)
+        {
+            AjaxResult retus = null;
+            try
+            {
+                retus = new SuccessResult();
+                if (Preentryfeebusenn.GetEntity(refund.Preentid).Refundornot==null)
+                {
+                    refund.AddDate = DateTime.Now;
+                    RefundBusiness.Insert(refund);
+                    retus.Msg = "退费成功";
+                }
+                else
+                {
+                    retus.Msg = "该学员已报名请勿退费";
+                }
+                
+              
+                retus.Success = true;
+                BusHelper.WriteSysLog("退预入费成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            return retus;
+        }
+        /// <summary>
+        /// 预入费作废
+        /// </summary>
+        /// <param name="id">主键id</param>
+        /// <returns></returns>
+        public object Preentryfezuofei(int id)
+        {
+            AjaxResult retus = null;
+            try
+            {
+                var x = Preentryfeebusenn.GetEntity(id);
+                retus = new SuccessResult();
+                retus.Success = true;
+                if (x.Refundornot==null)
+                {
+                    x.IsDit = true;
+                    Preentryfeebusenn.Update(x);
+                    retus.Msg = "操作成功";
+                }
+                else
+                {
+                    retus.Msg = "该学员已报名，禁止作废！";
+                }
+                BusHelper.WriteSysLog("退预入费作废", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+
                 retus = new ErrorResult();
                 retus.Msg = "服务器错误";
                 retus.Success = false;

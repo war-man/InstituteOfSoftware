@@ -1,0 +1,818 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model SiliconValley.InformationSystem.Entity.MyEntity.StudentInformation
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentEnll</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .linu {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-tab">
+        @{
+            List<StudentInformation> students = ViewBag.studentlist as List<StudentInformation>;
+        
+            int i = 0;
+            int i1 = 0;
+            <ul class="layui-tab-title">
+
+                @foreach (var item in students)
+                {
+                    i++;
+                    if (i == 1)
+                    {
+                        <li class="layui-this">@item.Name</li>}
+                    else
+                    {
+                        <li>@item.Name</li>
+                    }
+                }
+
+
+
+            </ul>
+            <div class="layui-tab-content">
+
+                @foreach (var item in students)
+                {
+                    string Sexs = item.Guardian == null ? item.Guardian : item.Guardian.Split(',')[1].Trim();
+                    item.Guardian = item.Guardian == null ? item.Guardian : item.Guardian.Split(',')[0];
+                    var datetime="";
+                    if (item.BirthDate==null)
+                    {
+                        datetime = item.BirthDate.ToString();
+                    }
+                    else
+                    {
+                        datetime = item.BirthDate.Value.ToString("yyyy-MM-dd");
+                    }
+
+
+
+                    i1++;
+                    if (i1 == 1)
+                    {
+                        <div class="layui-tab-item layui-show">
+                            <form class="layui-form" action="" lay-filter="example">
+
+                                <div class="layui-container">
+                                    <fieldset>
+
+
+                                        <legend>基础信息</legend>
+
+
+                                        <div class="layui-row layui-form-item">
+
+
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="nba">
+                                                <label class="layui-form-label">学号</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="StudentNumber" value="@item.StudentNumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+                                                </div>
+
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">姓名</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="Name" value="@item.Name" lay-verify="required|Name" placeholder="请输入姓名" class="layui-input linu" />
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                                <label class="layui-form-label">性别</label>
+
+                                                <div class="layui-input-block">
+                                                    @if (item.Sex == false)
+                                                    {
+                                                        <input type="radio" name="Sex" value="false" title="女" checked="checked">
+                                                        <input type="radio" name="Sex" value="true" title="男">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="radio" name="Sex" value="false" title="女">
+                                                        <input type="radio" name="Sex" value="true" title="男" checked="checked">
+                                                    }
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="layui-row layui-form-item">
+
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                                <label class="layui-form-label">身份证号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="identitydocument" value="@item.identitydocument" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" class="layui-input" />
+                                                </div>
+
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">民族</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Nation" value="@item.Nation" lay-verify="required" placeholder="请输入民族" class="layui-input linu" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">电话号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Telephone" value="@item.Telephone" lay-verify="required|phone" placeholder="请输入手机号码" class="layui-input linu" />
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">亲属姓名</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Guardian" value="@item.Guardian" lay-verify="required|Name" placeholder="请输入亲属姓名" class="layui-input linu" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">学员学历</label>
+
+                                                <div class="layui-input-block">
+                                                    @if (item.Education == "初中")
+                                                    {<input type="radio" name="Education" value="初中" title="初中" checked="checked">
+                                                        <input type="radio" name="Education" value="高中" title="高中">
+                                                        <input type="radio" name="Education" value="中专" title="中专"><br />
+
+                                                        <input type="radio" name="Education" value="大专" title="大专">
+                                                        <input type="radio" name="Education" value="本科" title="本科">}
+                                                    else if (item.Education == "高中")
+                                                    {
+                                                        <input type="radio" name="Education" value="初中" title="初中">
+                                                        <input type="radio" name="Education" value="高中" title="高中" checked="checked">
+                                                        <input type="radio" name="Education" value="中专" title="中专"><br />
+                                                        <input type="radio" name="Education" value="大专" title="大专">
+                                                        <input type="radio" name="Education" value="本科" title="本科">
+                                                    }
+                                                    else if (item.Education == "中专")
+                                                    {
+                                                        <input type="radio" name="Education" value="初中" title="初中">
+                                                        <input type="radio" name="Education" value="高中" title="高中">
+                                                        <input type="radio" name="Education" value="中专" title="中专" checked="checked"><br />
+                                                        <input type="radio" name="Education" value="大专" title="大专">
+                                                        <input type="radio" name="Education" value="本科" title="本科">
+                                                    }
+                                                    else if (item.Education == "大专")
+                                                    {
+                                                        <input type="radio" name="Education" value="初中" title="初中">
+                                                        <input type="radio" name="Education" value="高中" title="高中">
+                                                        <input type="radio" name="Education" value="中专" title="中专"><br />
+                                                        <input type="radio" name="Education" value="大专" title="大专" checked="checked">
+                                                        <input type="radio" name="Education" value="本科" title="本科">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="radio" name="Education" value="初中" title="初中">
+                                                        <input type="radio" name="Education" value="高中" title="高中">
+                                                        <input type="radio" name="Education" value="中专" title="中专"><br />
+                                                        <input type="radio" name="Education" value="大专" title="大专">
+                                                        <input type="radio" name="Education" value="本科" title="本科" checked="checked">
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">亲属关系</label>
+                                                <div class="layui-input-block">
+                                                    @if (Sexs == "父亲")
+                                                    {
+                                                        <input type="radio" name="Sexs" value="父亲" title="父亲" checked="checked">
+                                                        <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
+                                                        <input type="radio" name="Sexs" value="爷爷" title="爷爷">
+                                                        <input type="radio" name="Sexs" value="奶奶" title="奶奶">
+                                                    }
+                                                    else if (Sexs == "母亲")
+                                                    {
+                                                        <input type="radio" name="Sexs" value="父亲" title="父亲">
+                                                        <input type="radio" name="Sexs" value="母亲" title="母亲" checked="checked"><br />
+                                                        <input type="radio" name="Sexs" value="爷爷" title="爷爷">
+                                                        <input type="radio" name="Sexs" value="奶奶" title="奶奶">
+                                                    }
+                                                    else if (Sexs == "爷爷")
+                                                    {
+                                                        <input type="radio" name="Sexs" value="父亲" title="父亲">
+                                                        <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
+                                                        <input type="radio" name="Sexs" value="爷爷" title="爷爷" checked="checked">
+                                                        <input type="radio" name="Sexs" value="奶奶" title="奶奶">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="radio" name="Sexs" value="父亲" title="父亲">
+                                                        <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
+                                                        <input type="radio" name="Sexs" value="爷爷" title="爷爷">
+                                                        <input type="radio" name="Sexs" value="奶奶" title="奶奶" checked="checked">
+                                                    }
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">亲属电话号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Familyphone" value="@item.Familyphone" lay-verify="required|phone" placeholder="请输入手机号码" class="layui-input linu" />
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">出生日期</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" id="BirthDate" name="BirthDate" value="@datetime" lay-verify="required|date" placeholder="年-月-日" class="layui-input linu" autocomplete="off" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="layui-form-label">家庭住址</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="Familyaddress" value="@item.Familyaddress" lay-verify="required" placeholder="请输入家庭住址" class="layui-input linu" />
+                                            </div>
+                                        </div>
+
+
+
+                                    </fieldset>
+                                    <fieldset>
+                                        <input type="text" id="textid" style="display:none;" />
+                                        <legend>详细信息</legend>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">微信</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="WeChat" value="@item.WeChat" lay-verify="WeChat" placeholder="请输入微信号码" class="layui-input linu" />
+
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">QQ</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="qq" value="@item.qq" lay-verify="QQ" placeholder="请输入qq号码" class="layui-input linu" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">兴趣爱好</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Hobby" value="@item.Hobby" lay-verify="MyText" placeholder="请输入兴趣爱好" class="layui-input linu" />
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">学员性格</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Traine" value="@item.Traine" lay-verify="MyText" placeholder="请输入学员性格" class="layui-input linu" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                <label class="layui-form-label">备注</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Reack" value="@item.Reack" lay-verify="MyText" placeholder="请输入备注" class="layui-textarea textar" />
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+                                    <div class="layui-row layui-form-item" style="margin-top:10px;">
+                                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="layui-tab-item">
+                            <form class="layui-form" action="" lay-filter="example">
+
+                                <div class="layui-container">
+                                    <fieldset>
+
+
+                                        <legend>基础信息</legend>
+
+
+                                        <div class="layui-row layui-form-item">
+
+
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="nba">
+                                                <label class="layui-form-label">学号</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="StudentNumber" value="@item.StudentNumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+                                                </div>
+
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">姓名</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="Name" value="@item.Name" lay-verify="required|Name" placeholder="请输入姓名" class="layui-input linu" />
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                                <label class="layui-form-label">性别</label>
+
+                                                <div class="layui-input-block">
+                                                    @if (item.Sex == false)
+                                                    {
+                                                        <input type="radio" name="Sex" value="false" title="女" checked="checked">
+                                                        <input type="radio" name="Sex" value="true" title="男">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="radio" name="Sex" value="false" title="女">
+                                                        <input type="radio" name="Sex" value="true" title="男" checked="checked">
+                                                    }
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="layui-row layui-form-item">
+
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                                <label class="layui-form-label">身份证号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="identitydocument" value="@item.identitydocument" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" class="layui-input" />
+                                                </div>
+
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">民族</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Nation" value="@item.Nation" lay-verify="required" placeholder="请输入民族" class="layui-input linu" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">电话号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Telephone" value="@item.Telephone" lay-verify="required|phone" placeholder="请输入手机号码" class="layui-input linu" />
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">亲属姓名</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Guardian" value="@item.Guardian" lay-verify="required|Name" placeholder="请输入亲属姓名" class="layui-input linu" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">学员学历</label>
+
+                                                <div class="layui-input-block">
+                                                    @if (item.Education == "初中")
+                                                    {<input type="radio" name="Education" value="初中" title="初中" checked="checked">
+                                                        <input type="radio" name="Education" value="高中" title="高中">
+                                                        <input type="radio" name="Education" value="中专" title="中专"><br />
+
+                                                        <input type="radio" name="Education" value="大专" title="大专">
+                                                        <input type="radio" name="Education" value="本科" title="本科">}
+                                                    else if (item.Education == "高中")
+                                                    {
+                                                        <input type="radio" name="Education" value="初中" title="初中">
+                                                        <input type="radio" name="Education" value="高中" title="高中" checked="checked">
+                                                        <input type="radio" name="Education" value="中专" title="中专"><br />
+                                                        <input type="radio" name="Education" value="大专" title="大专">
+                                                        <input type="radio" name="Education" value="本科" title="本科">
+                                                    }
+                                                    else if (item.Education == "中专")
+                                                    {
+                                                        <input type="radio" name="Education" value="初中" title="初中">
+                                                        <input type="radio" name="Education" value="高中" title="高中">
+                                                        <input type="radio" name="Education" value="中专" title="中专" checked="checked"><br />
+                                                        <input type="radio" name="Education" value="大专" title="大专">
+                                                        <input type="radio" name="Education" value="本科" title="本科">
+                                                    }
+                                                    else if (item.Education == "大专")
+                                                    {
+                                                        <input type="radio" name="Education" value="初中" title="初中">
+                                                        <input type="radio" name="Education" value="高中" title="高中">
+                                                        <input type="radio" name="Education" value="中专" title="中专"><br />
+                                                        <input type="radio" name="Education" value="大专" title="大专" checked="checked">
+                                                        <input type="radio" name="Education" value="本科" title="本科">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="radio" name="Education" value="初中" title="初中">
+                                                        <input type="radio" name="Education" value="高中" title="高中">
+                                                        <input type="radio" name="Education" value="中专" title="中专"><br />
+                                                        <input type="radio" name="Education" value="大专" title="大专">
+                                                        <input type="radio" name="Education" value="本科" title="本科" checked="checked">
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">亲属关系</label>
+                                                <div class="layui-input-block">
+                                                    @if (Sexs == "父亲")
+                                                    {
+                                                        <input type="radio" name="Sexs" value="父亲" title="父亲" checked="checked">
+                                                        <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
+                                                        <input type="radio" name="Sexs" value="爷爷" title="爷爷">
+                                                        <input type="radio" name="Sexs" value="奶奶" title="奶奶">
+                                                    }
+                                                    else if (Sexs == "母亲")
+                                                    {
+                                                        <input type="radio" name="Sexs" value="父亲" title="父亲">
+                                                        <input type="radio" name="Sexs" value="母亲" title="母亲" checked="checked"><br />
+                                                        <input type="radio" name="Sexs" value="爷爷" title="爷爷">
+                                                        <input type="radio" name="Sexs" value="奶奶" title="奶奶">
+                                                    }
+                                                    else if (Sexs == "爷爷")
+                                                    {
+                                                        <input type="radio" name="Sexs" value="父亲" title="父亲">
+                                                        <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
+                                                        <input type="radio" name="Sexs" value="爷爷" title="爷爷" checked="checked">
+                                                        <input type="radio" name="Sexs" value="奶奶" title="奶奶">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="radio" name="Sexs" value="父亲" title="父亲">
+                                                        <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
+                                                        <input type="radio" name="Sexs" value="爷爷" title="爷爷">
+                                                        <input type="radio" name="Sexs" value="奶奶" title="奶奶" checked="checked">
+                                                    }
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">亲属电话号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Familyphone" value="@item.Familyphone" lay-verify="required|phone" placeholder="请输入手机号码" class="layui-input linu" />
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">出生日期</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" id="BirthDate" name="BirthDate" value="@datetime" lay-verify="required|date" placeholder="年-月-日" class="layui-input linu" autocomplete="off" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="layui-form-label">家庭住址</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="Familyaddress" value="@item.Familyaddress" lay-verify="required" placeholder="请输入家庭住址" class="layui-input linu" />
+                                            </div>
+                                        </div>
+
+
+
+                                    </fieldset>
+                                    <fieldset>
+                                        <input type="text" id="textid" style="display:none;" />
+                                        <legend>详细信息</legend>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">微信</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="WeChat" value="@item.WeChat" lay-verify="WeChat" placeholder="请输入微信号码" class="layui-input linu" />
+
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">QQ</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="qq" value="@item.qq" lay-verify="QQ" placeholder="请输入qq号码" class="layui-input linu" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">兴趣爱好</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Hobby" value="@item.Hobby" lay-verify="MyText" placeholder="请输入兴趣爱好" class="layui-input linu" />
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                                <label class="layui-form-label">学员性格</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Traine" value="@item.Traine" lay-verify="MyText" placeholder="请输入学员性格" class="layui-input linu" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                <label class="layui-form-label">备注</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Reack" value="@item.Reack" lay-verify="MyText" placeholder="请输入备注" class="layui-textarea textar" />
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+                                    <div class="layui-row layui-form-item" style="margin-top:10px;">
+                                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    }
+                }
+
+
+                <div class="layui-tab-item">内容2</div>
+                <div class="layui-tab-item">内容3</div>
+                <div class="layui-tab-item">内容4</div>
+                <div class="layui-tab-item">内容5</div>
+            </div>
+        }
+
+    </div>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+
+    if ($("#StudentID").val() != false) {
+        $("#but1").remove();
+        $("#Name").attr("readonly", "readonly");
+        $("#clssa").remove();
+        //去掉所有的空格
+        function trim(str) {
+            return str.replace(/(^\s+)|(\s+$)/g, "");
+        }
+        
+    } else {
+        $("#nba").css("display", "none");
+        $("#clssa").css("display", "block");
+        //clssa
+
+    }
+    layui.use(['form', 'layedit', 'laydate', 'upload', 'layer'], function () {
+
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+        laydate.render({
+            elem: '#BirthDate'
+        });
+        //错误消息提示
+        function Errye(err) {
+            layer.msg(err, {
+                time: 8000, //20s后自动关闭
+
+                btn: ['确定']
+            });
+        }
+        var $ = layui.jquery
+            , upload = layui.upload;
+
+       
+
+        //正则表达式
+        form.verify({
+            //微信正则 /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/
+            //qq正则  /^[1-9]\d{4,9}$/
+            //中文 [\u4e00-\u9fa5][a-z,\u4e00-\u9fa5]*
+            Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '内容不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '内容首尾不能出现下划线\'_\'';
+                    }
+                    if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                        return '内容只能由中文或字母组成';
+                    }
+                }
+
+            },
+            WeChat: function (value) {
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        if (!/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/.test(value)) {
+                            return '请输入正确的微信号码';
+                        }
+                    }
+                }
+
+            },
+            QQ: function (value) {
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        if (!/^[1-9]\d{4,9}$/.test(value)) {
+                            return '请输入正确的QQ号码';
+                        }
+                    }
+                }
+
+            },
+            MyText: function (value) {
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        if (!/[\u4e00-\u9fa5][a-z,\u4e00-\u9fa5]*/.test(value)) {
+                            return '输入内容不规范';
+                        }
+                    }
+                }
+
+            }
+
+
+        });//Guardian
+
+        //正在执行中
+        function showLoad() {
+
+            return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 200000 });
+
+        }
+        //关闭执行中的窗体
+        function closeLoad(index) {
+            layer.close(index);
+
+        }
+        //年月日
+        function getNowFormatDate(date) {
+
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+        //判断身份证号是否跟生日对应
+        function Ages(sheng) {
+            //生日
+            var ss = sheng.substring(6, sheng.length - 4);
+            var n = ss.substring(0, ss.length - 4);
+            var y = ss.substring(4, ss.length - 2);
+            var r = ss.substring(6);
+            ss = n + "-" + y + "-" + r;
+            return ss;
+
+        }
+
+       
+
+        //提示消息
+        var couer = 0;
+        var mydate = new Date();
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            console.log(data.field);
+            data.field.Guardian = data.field.Guardian + "," + data.field.Sexs;
+     
+
+            if (getNowFormatDate(mydate) < Ages(data.field.identitydocument) || getNowFormatDate(new Date()) < data.field.BirthDate) {
+               
+                Errye("身份证或生日错误!!!");
+            } else {
+
+               
+                    $.ajax({
+                        url: '/Teachingquality/StudentInformation/StudentEnll',
+                        type: 'POST',
+                        async: true,
+                        cache: false,
+                        timeout: 2000,
+                        data: data.field,
+                        beforeSend: function () {
+                            i = showLoad();
+                        },
+                        success: function (data) {
+                            //  closeLoad(i);
+                            //    closeLoad(i);
+                            if (data.Success == true) {
+                                closeLoad(i);
+                                layer.msg(data.Msg, {
+                                    icon: 1,
+                                    shade: 0.8
+                                });
+                            } else {
+                                closeLoad(i);
+                                layer.msg(data.Msg, {
+                                    time: 5000, //20s后自动关闭
+
+                                    btn: ['确定']
+                                });
+                            }
+
+
+
+                        }
+                        , error: function (xmlhttprequest, textstatus, message) {
+                            closeLoad(i);
+
+                        }
+                    })
+          
+                }
+
+        });
+    });
+    //时间转换方法
+    function TimeChange(newtime) {
+        if (newtime == null)
+            return "";
+        var date = new Date(parseInt(newtime.slice(6)));
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        if (month < 10) {
+            month = "0" + (parseInt(month) + 1);
+        }
+        var day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        var result = year + '-' + month + '-' + day;
+        return result;
+    }
+   // $("#BirthDate").val(TimeChange($("#BirthDate").val()));
+    function GetPartsItmes(data) {
+
+        $("#List").val(data.id);
+        $("#Lists").css("display", "block");
+
+      
+        $("#CLassNames").css("display", "none");
+        $("#Lists").val(data.ClassNumber);
+    }
+
+</script>
+<script>
+    layui.use('element', function () {
+        var $ = layui.jquery
+            , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+
+    });
+</script>

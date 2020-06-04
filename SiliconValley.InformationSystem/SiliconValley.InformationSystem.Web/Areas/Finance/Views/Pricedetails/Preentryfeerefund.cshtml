@@ -2,29 +2,22 @@
 @{
     Layout = null;
 }
-@model SiliconValley.InformationSystem.Entity.Entity.Preentryfee
- @using SiliconValley.InformationSystem.Entity.ViewEntity
+@model SiliconValley.InformationSystem.Entity.Entity.Refund
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.Entity
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Paytheadvancefee</title>
+    <title>Preentryfeerefund</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <style>
-        #but1 {
-            position: absolute;
-            top: 9%;
-            left: 69%;
-            width: 36px;
-            height: 36px;
-            text-align: center;
-            line-height: 36px;
-        }
-        .widths{
-            margin-top:10px;
+        .textar{
+            width:190px;
+            height:100px;
         }
     </style>
 </head>
@@ -56,37 +49,38 @@
                         <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 ">
                             <label class="layui-form-label">联系电话</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="keeponrecordid" style="display:none" value="@exportStudentBeanData.Id" />
+
                                 <input type="text" style="border:0px;" readonly="readonly" value=" @exportStudentBeanData.Stuphone" class="layui-input" />
                             </div>
                         </div>
-                        
-                   
-                        
                     }
-                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
-                        <label class="layui-form-label">身份证号码</label>
-                        <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.identitydocument, new Dictionary<string, object>() { { "lay-verify", "required|identity" }, { "placeholder", "请输入身份证号码" }, { "class", "layui-input " } })
+                    @{
+                       
+                        var obj = ViewBag.obj as Preentryfee;
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
+                            <label class="layui-form-label">身份证号码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" style="border:0px;" readonly="readonly" value="@obj.identitydocument" class="layui-input" />*
+                            </div>
                         </div>
-                    </div>
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 widths">
-                        <label class="layui-form-label">班级</label>
-                        @Html.HiddenFor(a => a.ClassID)
-                        <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="Lists" style="display:none; border:0px;" readonly="readonly" />
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
+                            <label class="layui-form-label">班级</label>
+                            <div class="layui-input-inline">
+                                <input type="text" style="border:0px;" readonly="readonly" value="@ViewBag.ClassNumber" class="layui-input" />
+                            </div>
                         </div>
-
-                        <div class="layui-input-inline" id="CLassNames">
-                            <button type="button" style="width:190px;height:38px;" class="layui-btn layui-btn-sm layui-btn-primary">
-                                <i class="layui-icon" id="ClassName" style="margin-left:156px;">&#xe615;</i>
-                            </button>
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
+                            <label class="layui-form-label">退款金额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" lay-verify="required|number" name="Amountofmoney" value="@obj.Amountofmoney" class="layui-input" />
+                                <input type="text" style="display:none;"  name="Preentid" value="@obj.id" class="layui-input" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
-                        <label class="layui-form-label">缴费金额</label>
+                    }
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths" style="margin-top:10px;">
+                        <label class="layui-form-label">退费原因</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入需要缴纳额度" }, { "class", "layui-input " } })
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
                         </div>
                     </div>
                 </div>
@@ -105,43 +99,16 @@
     </div>
 </body>
 </html>
-<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
-
     layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
 
         var layer = layui.layer;
         var form = layui.form;
-        //正则表达式
-        form.verify({
-            Name: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if (!/^[a-zA-Z0-9]{6, 10}$/.test(value)) {
-                    return '班级名称6-10位组成';
-                }
-
-            }
-        });
-        //这个是专业是否显示
-        function Tuition() {
-            $($("#domes").children()).remove();
-            $("#domes").css("display", "block");
-            var templates = _.template($("#studenthtml").html());
-            var dates = templates({});
-            $("#domes").append($(dates));
-            form.render();
-        }
+       
         //监听提交
         form.on('submit(demo1)', function (data) {
-            //layer.alert(JSON.stringify(data.field), {
-            //    title: '最终的提交信息'
-            //})
-            //return false;
-
             var datas = data.field;
-          
-            if ($("#Lists").val() != "") {
-                ajaxpost("/Finance/Pricedetails/PaytheadvancefeeAdd", datas);
-            }
+            ajaxpost("/Finance/Pricedetails/Preentryfeerefund", datas);
         });
         //正在执行中
         function showLoad() {
@@ -160,9 +127,9 @@
                 type: 'POST',
                 async: true,
                 cache: false,
-                timeout: 2000,
+              
                 data: datae,
-                timeout: 1000,
+               
                 beforeSend: function () {//执行中
                     i = showLoad();
                 },
@@ -212,35 +179,5 @@
             });
         }
 
-        function ClassNameCount(id) {
-            $.post("/Teachingquality/ClassSchedule/ClassNameCount/" + id, function (da) {
-                if (da > 0) {
-                    $("#BoolClassName").val("1233");
-                    $("#labClassName").css("display", "block");
-                } else {
-                    $("#BoolClassName").val("");
-                    $("#labClassName").css("display", "none");
-                }
-            })
-        }
-
-        //拿到班级号
-        $("#ClassName").click(function () {
-            console.log("aaa");
-            Popup("/Teachingquality/StudentInformation/StudentclassView", "获取新的班级", 588, 400);
-
-        });
-
-       
     });
-    function GetPartsItmes(data) {
-        $("#ClassID").val(data.id);
-        console.log(data);
-        $("#List").val(data.id);
-        $("#Lists").css("display", "block");
-
-        console.log(data.id);
-        $("#CLassNames").css("display", "none");
-        $("#Lists").val(data.ClassNumber);
-    }
 </script>

@@ -76,12 +76,18 @@
             @{ 
                 ExportStudentBeanData studata = ViewBag.Studentdata as ExportStudentBeanData;
 
-                string stusex = studata.StuSex == true ? "男" : "女";
+                
             }
             <form class="layui-form" lay-filter="studentdata">
                 <fieldset>
                     <legend>基础数据</legend>
                     <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">学生姓名:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.StuName" />
+                            </div>
+                        </div>
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                             <label class="LableCss1">联系电话:</label>
                             <div class="layui-input-block">
@@ -91,7 +97,7 @@
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                             <label class="LableCss1">学生性别:</label>
                             <div class="layui-input-block">
-                                <input type="text" disabled="disabled" class="layui-input" value="@stusex" />
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.StuSex" />
                             </div>
                         </div>
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
@@ -100,14 +106,15 @@
                                 <input type="text" disabled="disabled" class="layui-input" value="@studata.StuQQ" />
                             </div>
                         </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                             <label class="LableCss1">学 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 历:</label>
                             <div class="layui-input-block">
                                 <input type="text" disabled="disabled" class="layui-input" value="@studata.StuEducational" />
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                             <label class="LableCss1">家庭地址:</label>
                             <div class="layui-input-block">
@@ -126,14 +133,15 @@
                                 <input type="text" disabled="disabled" class="layui-input" value="@studata.StatusName" />
                             </div>
                         </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                             <label class="LableCss1">备&nbsp; 案&nbsp; 人:</label>
                             <div class="layui-input-block">
                                 <input type="text" disabled="disabled" class="layui-input" value="@studata.empName" />
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                             <label class="LableCss1">所在区域:</label>
                             <div class="layui-input-block">
@@ -145,7 +153,7 @@
                             <div class="layui-input-block">
                                 <input type="text" disabled="disabled" class="layui-input" value="@studata.Party" />
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                 </fieldset>
             </form>

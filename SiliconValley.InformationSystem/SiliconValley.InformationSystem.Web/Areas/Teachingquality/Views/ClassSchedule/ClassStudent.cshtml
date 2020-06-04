@@ -218,7 +218,10 @@
 <div class="layui-collapse fload" lay-accordion="" style="width:25%; border:1px solid #1cc09f;text-align:center; margin-top:40px;">
     <div class="layui-colla-item">
         <h2 class="layui-colla-title "> 学员管理</h2>
-        <div class="layui-colla-content layui-anim" >
+        <div class="layui-colla-content layui-anim">
+            <div>
+                <button type="button" id="Basicinformation" class="layui-btn layui-btn-fluid mybut">基本资料</button>
+            </div>
             <div>
                 <button type="button" id="InsuranceAdd" class="layui-btn layui-btn-fluid mybut">学员保险</button>
             </div>
@@ -957,7 +960,28 @@
 
         });
     });
+    $("#Basicinformation").click(function () {
+        if ($(".color").length>0) {
+            var x = "";
+            var list = $(".color");
+            for (var i = 0; i < list.length; i++) {
+                x += $($(list[i]).children()[0]).text() + ",";
+            }
 
+            layer.open({
+                title: "基本资料",
+                type: 2,
+                area: ['1000px', '800px']
+                , content: "/Teachingquality/StudentInformation/StudentEnll?studentid=" + x
+                , end: function () {  }
+                , anim: 1,
+                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+
+        } else {
+            layer.alert('请选择一个学员', { icon: 0 });
+        }
+    })
     //学员保险
     $("#InsuranceAdd").click(function () {
         window.location = "/Teachingquality/ClassSchedule/Insurance?ClassID=" + $("#ClassName").text();

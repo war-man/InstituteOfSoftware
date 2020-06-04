@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
@@ -34,7 +35,8 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         /// <returns></returns>
         public object Stage(int id)
         {
-            var x = tagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == id).Select(a => new {
+            var x = tagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == id).Select(a => new
+            {
                 code = specia.GetEntity(a.Major_Id).Id,
                 name = specia.GetEntity(a.Major_Id).SpecialtyName
             }).ToList();
@@ -68,7 +70,8 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         {
 
 
-            var x = feestandard.GetList().Where(a => a.IsDelete == false && a.Stage == id).Select(a => new {
+            var x = feestandard.GetList().Where(a => a.IsDelete == false && a.Stage == id).Select(a => new
+            {
                 code = a.id,
                 name = a.Unitpricename
             }).ToList();
@@ -171,6 +174,154 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         public List<StudentInformation> StudentList()
         {
             return this.GetList().Where(a => a.IsDelete != true && a.State == null).ToList();
+        }
+
+        //获取网络时间
+        public string Date()
+        {
+
+            WebRequest request = null;
+            WebResponse response = null;
+            WebHeaderCollection headerCollection = null;
+
+            string datetime = string.Empty;
+            try
+            {
+                request = WebRequest.Create("https://www.baidu.com");
+                request.Timeout = 3000;
+                request.Credentials = CredentialCache.DefaultCredentials;
+                response = (WebResponse)request.GetResponse();
+                headerCollection = response.Headers;
+                foreach (var h in headerCollection.AllKeys)
+                { if (h == "Date") { datetime = headerCollection[h]; } }
+                return datetime;
+            }
+
+            catch (Exception) { return datetime; }
+            finally
+            {
+                if (request != null)
+                { request.Abort(); }
+                if (response != null)
+                { response.Close(); }
+                if (headerCollection != null)
+                { headerCollection.Clear(); }
+            }
+        }
+        //月份前面加个零
+        public string Month(int a)
+        {
+            if (a < 10)
+            {
+                return "0" + a;
+            }
+            string c = a.ToString();
+            return c;
+        }
+        //生成学号
+        public string StudentID(string IDnumber)
+        {
+            string mingci = string.Empty;
+            DateTime date = Convert.ToDateTime(Date());
+            //当前年份
+            string n = date.Year.ToString().Substring(2);//获取年份
+
+            //学员总数Mylist("StudentInformation")
+            var laststr = this.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n).Count() + 1;
+            string sfz = IDnumber.Substring(6, 8);
+
+            string y = Month(Convert.ToInt32(date.Month)).ToString();
+            // string count = Count().ToString();
+            string count = laststr.ToString();
+            if (count.Length < 2)
+                mingci = "0000" + count;
+            else if (count.Length < 3)
+                mingci = "000" + count;
+            else if (count.Length < 4)
+                mingci = "00" + count;
+            else if (count.Length < 5)
+                mingci = "0" + count;
+            else mingci = count;
+
+            string xuehao = n + y + sfz + mingci;
+            return xuehao;
+        }
+
+        /// <summary>
+        /// 以身份证查询是否有重复学员
+        /// </summary>
+        /// <param name="identitydocument">身份证号</param>
+        /// <returns></returns>
+        public bool Isidentitydocument(string identitydocument)
+        {
+            var x = this.GetList().Where(a => a.identitydocument == identitydocument && a.IsDelete != true).ToList();
+            if (x.Count > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+        /// <summary>
+        /// 注册学员
+        /// </summary>
+        /// <param name="studentInformation">学员数据对象</param>
+        /// <param name="List">班级id</param>
+        /// <param name="NameKeysid">备案id</param>
+        /// <returns></returns>
+        public AjaxResult StudfentEnti(StudentInformation studentInformation, int List, int NameKeysid)
+        {
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            AjaxResult result = null;
+            if (Isidentitydocument(studentInformation.identitydocument))
+            {
+                try
+                {
+                    studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
+                    studentInformation.InsitDate = DateTime.Now;
+                    studentInformation.Password = "000000";
+                    studentInformation.StudentPutOnRecord_Id = NameKeysid;
+                    studentInformation.IsDelete = false;
+                    //dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
+                    this.Insert(studentInformation);
+                    ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
+                    scheduleForTrainees.ClassID = classScheduleBusiness.GetEntity(List).ClassNumber;//班级名称
+                    scheduleForTrainees.ID_ClassName = List;//班级编号
+                    scheduleForTrainees.CurrentClass = true;
+                    scheduleForTrainees.StudentID = studentInformation.StudentNumber;
+                    scheduleForTrainees.AddDate = DateTime.Now;
+                    scheduleForTrainees.IsGraduating = false;
+                    scheduleForTraineesBusiness.Insert(scheduleForTrainees);
+                    // Stuclass.Remove("ScheduleForTrainees");
+                    result = new SuccessResult();
+                    result.Msg = "注册成功";
+                    result.Success = true;
+                    result.Data = studentInformation.StudentNumber;
+                    //dbtext.Remove("StudentInformation");
+                    BusHelper.WriteSysLog("注册学员成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+
+                }
+                catch (Exception ex)
+                {
+                    result = new ErrorResult();
+                    result.ErrorCode = 500;
+                    result.Msg = "服务器错误1";
+
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+
+                }
+            }
+            else
+            {
+                result = new SuccessResult();
+                result.Success = false;
+                result.Msg = "身份证重复";
+            }
+            return result;
         }
     }
 }
