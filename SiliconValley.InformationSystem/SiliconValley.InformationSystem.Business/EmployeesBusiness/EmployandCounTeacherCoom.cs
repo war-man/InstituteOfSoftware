@@ -17,7 +17,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
    public static class EmployandCounTeacherCoom
     {
         static ConsultTeacherManeger Consult_entity = new ConsultTeacherManeger();
-        static ConsultManeger consult = new ConsultManeger();
+       public static ConsultManeger consult = new ConsultManeger();
         /// <summary>
         /// 获取所有的咨询师，然后转化为员工集合
         /// </summary>

@@ -547,7 +547,42 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             }
 
             return a;
-        }         
+        }
+
+        /// <summary>
+        /// 转换咨询师
+        /// </summary>
+        /// <param name="list">备案Id</param>
+        /// <param name="TeacherId">咨询师Id</param>
+        /// <returns></returns>
+        public AjaxResult ChangTeacher(List<int> list,int TeacherId)
+        {
+            List<Consult> countdata = new List<Consult>();
+            foreach (int id in list)
+            {
+               Consult find= this.GetList().Where(t => t.StuName == id).FirstOrDefault();
+
+                if (find!=null)
+                {
+                    find.TeacherName = TeacherId;
+                    countdata.Add(find);
+                }
+            }
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Update(countdata);
+                a.Success = true;
+                a.Msg = "操作成功";
+            }
+            catch (Exception)
+            {
+                a.Success = false;
+                a.Msg = "系统异常！，请刷新重试！";
+            }
+
+            return a;
+        }
 
         #region  给跟踪业务使用的方法
         //给咨询分量的数据

@@ -1832,6 +1832,7 @@
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\Myclass.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Changedata.cshtml" />
     <Content Include="Areas\Market\Views\FollwingInfo\MyFollwingInfoIndex.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\HandMasterRegisterds.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
