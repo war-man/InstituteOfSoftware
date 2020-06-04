@@ -1,0 +1,204 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.StudentInformation
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TuitionreHome</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div style="text-align:center;font-size:14pt;margin-top:10px;">阶段费用退费</div>
+    <input style=" display:none;" type="text" value="@ViewBag.studentid" id="StudentID" />
+    <form class="layui-form" action="" id="form">
+       
+        <div class="layui-container">
+
+            <div class="layui-row layui-form-item" style="margin-left:80px;margin-top:20px;">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                    <label class="layui-form-label">学号</label>
+                    <div class="layui-form-label" id="StudentID">
+                        @Model.StudentNumber
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-form-label" style="margin-left:-30px;" id="Name">
+                        @Model.Name
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-form-label" style="margin-left:-35px;" id="Sex">
+                       @{
+                           string sex = Model.Sex == false ? "女" : "男";
+                       } 
+                        @sex
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                    <label class="layui-form-label">班级</label>
+                    <div class="layui-form-label" style="margin-left:-20px;" id="classa">
+                        @Model.Education
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                    <label class="layui-form-label">身份证</label>
+                    <div class="layui-form-label" id="identitydocument">
+                        @Model.identitydocument
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql" >
+                    <label class="layui-form-label">阶段</label>
+                    <div class="layui-input-inline">
+                        @Html.DropDownList("Stage", ViewBag.Stage as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" } })
+                    </div>
+                </div>
+
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="margin-top:20px;" >
+                    <label class="layui-form-label lables" >退款名目</label>
+                    <div class="layui-input-block" style="margin-left:130px;width:360px;" id="UndergraduatecourseID">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                  
+                </div>
+            </div>
+
+        </div>
+        <div style="position:relative;top:-50px;left:80%;width:100px;">
+            合计   <label style="color:red;" id="Totalsum">0</label>元
+        </div>
+    </form>
+</body>
+</html>
+<script>
+    @*var student = JSON.parse('@Html.Raw(ViewBag.student)');*@
+
+    layui.use(['table', 'layer', 'tree','element', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var element = layui.element;
+
+
+        //监听阶段下拉框
+        form.on('select(Stage)', function (data) {
+            $('#UndergraduatecourseID').empty();
+                var dbase = {
+                    Grand_id: data.value,
+                    StudentID: $("#StudentID").val()
+                };
+            $.post("/Finance/Pricedetails/TuitionreStage", dbase, function (da) {
+                if (da.length > 0) {
+                    $.each(da, function (index, item) {
+
+                        var iden = index % 2;
+                        var x = "";
+                        if (iden === 1) {
+                            x = " <input type='checkbox' lay-filter='UndergraduatecourseID' Amountofmoney=" + item.Amountofmoney + "  name='Subjectid' value=" + item.id + "  title=" + item.Name + " ><br/><br/>";
+                        } else {
+                            x = " <input type='checkbox' lay-filter='UndergraduatecourseID'  Amountofmoney=" + item.Amountofmoney + "  name='Subjectid' value=" + item.id + "  title=" + item.Name + " >";
+                        }
+
+                        $("#UndergraduatecourseID").append(x);
+
+                    });
+                } else {
+                    $("#UndergraduatecourseID").append($("<div style='margin-top:10px;color:red;'>该阶段暂无可退费项目</div>"));
+                }
+
+                layui.form.render("checkbox");
+            });
+
+        });
+
+
+
+        var list = [];
+        var Amountofmoney = 0;
+        //Totalsum
+        form.on('checkbox(UndergraduatecourseID)', function (data) {
+            if (data.elem.checked == true) {
+                layer.prompt({
+                    formType: 0,
+                    value: $(data.elem).attr("Amountofmoney"),
+                    title: data.elem.title,
+                    area: ['100px', '100px'], //自定义文本域宽高
+                    btn2: function () {
+                        data.elem.checked = false;
+                        form.render();
+                    }
+                }, function (value, index, elem) {
+                        if (value >= $(data.elem).attr("Amountofmoney") && RegExp(/\d{8-20}/)) {
+
+                            value = $(data.elem).attr("Amountofmoney");
+
+                        } else if (value < $(data.elem).attr("Amountofmoney")) {
+
+                        } else {
+                            value = $(data.elem).attr("Amountofmoney");
+                        }
+                        Amountofmoney = Amountofmoney + parseInt(value);
+                        $("#Totalsum").text(Amountofmoney);
+
+                     //
+                    data.elem.title = data.elem.title + "(" + value + "元)";
+                        form.render();
+
+                    var obj = {
+                        Amountofmoney : value,
+                        StudentFeeRecordId: $(data.elem).val(),
+                        StudentID: $("#StudentID").val()
+                    };
+                    list.push(obj);
+                    layer.close(index);
+
+                });
+
+            } else {
+                Amountofmoney = Amountofmoney - parseInt($(data.elem).attr("Amountofmoney"));
+                $("#Totalsum").text(Amountofmoney);
+                var title = data.elem.title.split('(');
+                data.elem.title = title[0];
+                form.render();
+                console.log(list);
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].StudentFeeRecordId == data.value) {
+                        list.splice(i, 1);
+                    }
+                }
+            }
+
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            if (list.length > 0) {
+                var datas = {
+                    Tuitionrefunds: JSON.stringify(list)
+                }
+                $.post("/Finance/Pricedetails/TuitionreHomes", datas, function (da) {
+                    console.log(da);
+                })
+            }
+
+
+        });
+    });
+
+
+
+</script>
