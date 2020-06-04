@@ -40,6 +40,12 @@
                 <i style="font-size:20px;" class="icon layui-icon-search"></i>
 
             </button>
+            
+            <button style="width:150px;height:40px; text-align:center;" id="download" class="layui-btn layui-btn-radius layui-btn-primary">
+                下载机试题
+               
+
+            </button>
         </div>
         <hr />
         <div id="questionlist">
@@ -91,7 +97,7 @@
 
             <div class="layui-form-item">
 
-                <label class="layui-form-label">考试类型:</label>
+                <label class="layui-form-label">题目类型:</label>
                 <div class="layui-input-block">
                     <select class="formitem" lay-filter="examtype" name="examtype" id="examtype">
                         @{
@@ -263,11 +269,18 @@
 
             });
         }
+
         var answerquestion = new Array();
+
         layui.use(['form', 'layer'], function () {
 
             var form = layui.form;
+
             var layer = layui.layer;
+
+            var level = undefined;
+            var kecheng = undefined;
+            var examtype = undefined;
 
             function loadchoicequestiondata(examtype, level, kecheng = "0") {
 
@@ -340,7 +353,11 @@
                 });
 
             }
+            function downloadquestion(examtype, level, kecheng = "0") {
 
+                window.open("/ExaminationSystem/StudentExamSys/MockComputerquestion?examType=" + examtype + "&kecheng=" + kecheng + "&level=" + level);
+
+            }
             var type;
             form.on('select(examtype)', function (data) {
 
@@ -427,17 +444,31 @@
 
             $("#searchbtn").click();
 
+            $("#download").click(function () {
+
+
+                if (level == undefined || kecheng == undefined || kecheng == undefined) {
+
+
+                    layer.msg("请先选择 阶段，课程！");
+
+                    return;
+                }
+
+                downloadquestion(examtype, level, kecheng);
+            });
+
             $(document).off("click", "#search").on("click", "#search", function () {
 
 
-                var level = $("#level").val();
-                var kecheng = "0";
+                 level = $("#level").val();
+                 kecheng = "0";
 
                 if (type == "2") {
                     kecheng = $("#course").val();
                 }
 
-                var examtype = $("#examtype").val();
+                 examtype = $("#examtype").val();
 
                 $("#choicequestionlist").html("");
                 $("#answerquestionlist").html("");
