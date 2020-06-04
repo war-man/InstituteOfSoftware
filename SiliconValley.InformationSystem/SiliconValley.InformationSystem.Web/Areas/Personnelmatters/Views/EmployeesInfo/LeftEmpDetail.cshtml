@@ -274,7 +274,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">离职原因:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.WorkExperience, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
+                            <input type="text" id="delreason" name="delreason" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
 
@@ -290,9 +290,9 @@
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">工作经验:</label>
+                        <label class="layui-form-label">招聘来源:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.WorkExperience, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
+                            @Html.TextAreaFor(a => a.InvitedSource, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
                         </div>
                     </div>
 
