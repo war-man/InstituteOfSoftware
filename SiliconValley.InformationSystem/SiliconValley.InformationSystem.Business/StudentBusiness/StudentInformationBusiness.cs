@@ -225,11 +225,9 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             DateTime date = Convert.ToDateTime(Date());
             //当前年份
             string n = date.Year.ToString().Substring(2);//获取年份
-
             //学员总数Mylist("StudentInformation")
             var laststr = this.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n).Count() + 1;
             string sfz = IDnumber.Substring(6, 8);
-
             string y = Month(Convert.ToInt32(date.Month)).ToString();
             // string count = Count().ToString();
             string count = laststr.ToString();
@@ -242,11 +240,10 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             else if (count.Length < 5)
                 mingci = "0" + count;
             else mingci = count;
-
             string xuehao = n + y + sfz + mingci;
             return xuehao;
         }
-
+         
         /// <summary>
         /// 以身份证查询是否有重复学员
         /// </summary>
