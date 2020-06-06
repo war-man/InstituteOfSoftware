@@ -1271,7 +1271,6 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyDetail.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyHistoryView.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveylistView.cshtml" />
-    <Content Include="Areas\Teachingquality\StuImages\+name" />
     <Content Include="Areas\Finance\Views\Pricedetails\Costitems.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Studentpayment.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Typeeyesight.cshtml" />
@@ -1833,6 +1832,7 @@
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Changedata.cshtml" />
     <Content Include="Areas\Market\Views\FollwingInfo\MyFollwingInfoIndex.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\HandMasterRegisterds.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\GetStudent.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3520,6 +3520,8 @@
     <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200813033222阳亮.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20201013033222阳亮.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20201113033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ExportAll\20200605090846.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ExportAll\20200606082337.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3587,7 +3589,6 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
-    <Folder Include="uploadXLSXfile\ConsultUploadfile\ExportAll\" />
     <Folder Include="Views\DataKeepOnRecord\" />
   </ItemGroup>
   <ItemGroup>

@@ -159,7 +159,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 str2 = str2 + " and CreateDate >= '" + findStartvalue + "'";
             }
 
-            if (!string.IsNullOrEmpty(findTeacher))
+            if (!string.IsNullOrEmpty(findTeacher) && findTeacher!="0")
             {
                 str1 = str1 + " and ConsultTeacher = '" + findTeacher + "'";
                 str2 = str2 + " and Inquiry = '" + findTeacher + "'";
@@ -171,10 +171,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 str2 = str2 + " and CreateDate <= '" + findEndvalue + "'";
             }
             #endregion
-
-                List<ExportStudentBeanData> list = s_Entity.GetSudentDataAll().OrderByDescending(s => s.Id).ToList();
+                
              
-                list= s_Entity.Serch(str1,str2).OrderByDescending(s => s.Id).ToList();
+              List<ExportStudentBeanData> list= s_Entity.Serch(str1,str2).OrderByDescending(s => s.Id).ToList();
 
                 var data = list.Skip((page - 1) * limit).Take(limit).ToList();
 
@@ -1246,6 +1245,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
 
         #region 获取在校学生信息
+        public ActionResult GetStudent()
+        {
+            return View();
+        }
         #endregion
+
+
     }
 }

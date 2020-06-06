@@ -588,6 +588,23 @@
         });
     }
 
+    //判断备案数据是否只选中一条
+    function One(fun) {
+        layui.use(['layer', 'table'], function () {
+            var layer = layui.layer;
+            var table = layui.table;
+            var checkStatus = table.checkStatus('tabletest1');
+            if (checkStatus.data.length = 1) {
+                fun();
+            } else if (checkStatus.data.length <= 0) {
+                layer.msg('请选择备案数据!', { icon: 2, shade: 0.8 });
+            } else {
+                layer.msg('最多只能选择一条数据!', { icon: 2, shade: 0.8 });
+            }
+
+        });
+    }
+
     //一键转换咨询师
     function ChangTeacher() {
         layui.use(['layer','table'], function () {
@@ -614,27 +631,12 @@
 
     //查看在校学生信息
     function InSchoolStudentData() {
-        layui.use(['layer', 'table'], function () {
-            var layer = layui.layer;
-            var table = layui.table;
-            var checkStatus = table.checkStatus('tabletest1');
-
-            if (checkStatus.data.length = 1) {
-
-
-
-            } else if (checkStatus.data.length <= 0) {
-                layer.msg('请选择备案数据!', { icon: 2, shade: 0.8 });
-            } else {
-                layer.msg('最多只能选择一条数据!', { icon: 2, shade: 0.8 });
-            }
-
-        });
+        
     }
 
     //查看学生缴费信息
     function GetMony() {
-
+        
     }
 </script>
  
