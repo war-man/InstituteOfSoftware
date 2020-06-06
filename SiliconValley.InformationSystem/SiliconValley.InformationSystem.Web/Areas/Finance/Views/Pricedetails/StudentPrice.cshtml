@@ -77,7 +77,7 @@
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" }, { "class", "layui-input " } })
                             <input type="text" style="display:none;" id="Amountofmoney1" name="Amountofmoney1" />
-
+                            <div style="position:absolute;left:200px;top:-41px;color:dodgerblue;width:200px;" id="Tuitionrefund"></div>
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
@@ -209,8 +209,13 @@
                     }
                     // zafei
                     $("#Unitpricename").html(optionstring);
-                    var Amountofmoney = JSON.parse('@Html.Raw(ViewBag.Amountofmoney)');
-                    console.log(Amountofmoney);
+                    var Amountofmoney12 = JSON.parse('@Html.Raw(ViewBag.Amountofmoney)');
+                    
+                    if (Amountofmoney12>0) {
+                        Totalsum = Totalsum - Amountofmoney12;
+                        $("#Tuitionrefund").css("display", "block");
+                        $("#Tuitionrefund").text("已扣除预入费" + Amountofmoney12+"元");
+                    }
                     $("#Totalsum").text(Totalsum)
                     form.render();
                 });

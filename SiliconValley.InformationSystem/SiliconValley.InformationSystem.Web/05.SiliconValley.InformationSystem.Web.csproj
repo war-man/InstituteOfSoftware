@@ -1271,7 +1271,6 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyDetail.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyHistoryView.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveylistView.cshtml" />
-    <Content Include="Areas\Teachingquality\StuImages\+name" />
     <Content Include="Areas\Finance\Views\Pricedetails\Costitems.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Studentpayment.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Typeeyesight.cshtml" />

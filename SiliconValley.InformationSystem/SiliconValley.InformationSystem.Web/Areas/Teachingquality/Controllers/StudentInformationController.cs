@@ -419,7 +419,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 {
                     StudentInformation x = Finds(studentInformation.StudentNumber);
                     studentInformation.Password = x.Password;
-                    studentInformation.StudentPutOnRecord_Id = x.StudentPutOnRecord_Id;
+                    //studentInformation.StudentPutOnRecord_Id = x.StudentPutOnRecord_Id;
                     studentInformation.InsitDate = x.InsitDate;
                     studentInformation.IsDelete = false;
                     dbtext.Update(studentInformation);
@@ -642,7 +642,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult Classlist(int page, int limit, string Stage_id, string Major_Id)
+        public ActionResult Classlist(int page, int limit,string ClassName, string Stage_id, string Major_Id)
         {
             //阶段
             GrandBusiness Grandcontext = new GrandBusiness();
@@ -670,6 +670,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     MyClass = MyClass.Where(a => a.Major_Id == major).ToList();
                 }
 
+            }
+            if (!string.IsNullOrEmpty(ClassName))
+            {
+                MyClass = MyClass.Where(a => a.ClassNumber.Contains(ClassName)).ToList();
             }
             var dataList = MyClass.Select(a => new
             {
