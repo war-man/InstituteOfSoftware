@@ -1,0 +1,266 @@
+﻿
+@{
+    ViewBag.Title = "MyFollwingInfoIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .inputCss1
+    {
+        height: 38px;
+        line-height: 1.3;
+        line-height: 38px;
+        border-width: 1px;
+        background-color: #fff;
+        border-radius: 2px;
+        width: 150px;
+        border-radius: 5px;
+    }
+    .demo-class2
+    {
+        width: 280px;
+        text-align: center;
+    }
+
+    .demo-class2 .layui-layer-btn a
+        {
+            background: #009688;
+            color: #fff;
+            border: 0;
+            margin-left: -8px;
+            margin-top: -10px;
+        }
+
+    body .demo-class2 .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+
+    li
+    {
+        cursor: pointer;
+    }
+
+    body .demo-class .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+
+    .layui-colla-title
+    {
+        position: relative;
+        padding: 0 15px 0 35px;
+        color: #333;
+        background-color: #f2f2f2;
+        cursor: pointer;
+        font-size: 14px;
+        overflow: hidden;
+        height: 15px;
+        line-height: 15px;
+    }        
+</style>
+
+<div id="center_div">
+    <div class="layui-form">
+        <div class="layui-form">
+            <div style=" width:800px; display:inline-block;">
+                <label>学生姓名:</label>
+                <div class="btn-group layui-container" style="width:120px;">
+                    <input type="text" class="form-control" id="studentName" placeholder="学生姓名">
+                </div>
+                <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="AddFollwingData()">查询</button>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="layui-collapse" lay-accordion>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">数据查询</h2>
+        <div class="layui-colla-content">
+            <form class="layui-form">
+                <div class="layui-row">
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
+                        <input name="findNamevalue" id="name" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">联系电话:</label>
+                        <input name="findPhonevalue" id="phone" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">开始时间:</label>
+                        <input name="findStartvalue" id="staTime" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">结束时间:</label>
+                        <div style="display: inline-block;width:150px;">
+                            <input name="findEndvalue" id="endTime" class="inputCss1" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-sm2">
+                         <button type="button" class="layui-btn" onclick="Query()">查询</button>
+                    </div>
+                </div>                
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<table id="follwing_form" class="layui-form" lay-filter="follwing_form"> </table>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="add">添加跟踪信息</a>
+</script>
+
+<script>
+
+    var indexs;
+    //这是获取到多个学生的数据显示方法
+    function StudentShow(url, mytitle, myskin, mycloseBtn) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 2,
+                content: url
+                , area: ['1000px', '670px'],
+                title: mytitle
+                , shade: 0.8
+                , anim: 4
+                , skin: myskin
+                , closeBtn: mycloseBtn
+            });
+        });
+    }
+    //转换时间的方法
+    function TimeChange(newtime) {
+        if (newtime == null)
+            return "";
+        var date = new Date(parseInt(newtime.slice(6)));
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        if ((month + 1) < 10) {
+            month = "0" + Number(month + 1);
+        } else {
+            month = Number(month + 1);
+        }
+        var day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        var result = year + '-' + month + '-' + day;
+        return result;
+    }
+    layui.use(['table', 'layer','element','laydate'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#staTime'
+            , trigger: 'click'
+        });
+        laydate.render({
+            elem: '#endTime'
+            , trigger: 'click'
+        });
+        var element = layui.element;
+        table.render({
+            elem: '#follwing_form'
+            , url: '/Market/FollwingInfo/GetTableData'
+            , cols: [[
+                { type: 'checkbox' }
+                , { field: 'StuName', title: '姓名' }
+                , { field: 'StuSex', title: '性别', width: 60 }
+                , { field: 'Stuphone', title: '联系电话' }
+                , { field: 'stuinfomation', title: '信息来源' }
+                , { field: 'StuisGoto', title: '是否上门', templet: function (res) { if (res.StuisGoto == false || res.StuisGoto == null) { return "未上门"; } else { return "已上门"; } } }
+                , { field: 'StatusName', title: '学生状态' }
+                , { field: 'StuEducational', title: '学历' }
+                , { field: 'empName', title: '备案人' }
+                , { field: 'RegionName', title: '区域' }
+                , { field: 'BeanDate', title: '备案日期', templet: function (res) { return TimeChange(res.BeanDate); } }
+                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+            ]]
+            , page: true
+            , limits: [20, 40, 50, 60, 80, 100]
+            , limit: 20
+        });
+
+        //监听行工具事件
+        table.on('tool(follwing_form)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'add') {
+                console.log(data);
+                //打开跟踪添加页面
+                layer.open({
+                    type: 2,
+                    content: '/Market/FollwingInfo/AddFollwingInfo/' + data.Id
+                    , area: ['800px', '580px'],
+                    title: '添加跟踪页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class2'
+                });
+            }
+        });
+    });
+
+    //查询信息
+    function AddFollwingData() {
+        //判断是否有值
+        var Name = $("#studentName").val();
+        if (Name.length > 0) {
+            //查找该学生
+            $.ajax({
+                url: '/Market/FollwingInfo/GetMonthStudent/' + Name,
+                success: function (SucData) {
+                    if (SucData.data.length > 0) {
+                        //找到了多个
+                        var stuid = "";
+                        for (var i = 0; i < SucData.data.length; i++) {
+                            stuid = stuid + SucData.data[i].Id + ",";
+                        }
+                        var url = "/Market/FollwingInfo/ListStudentView/" + stuid;
+                        StudentShow(url, "查询结果", "demo-class", 1);
+
+                    } else if (SucData.data.length <= 0) {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('抱歉，该学生未分配给你！！！', { icon: 5 });
+                        });
+                    }
+                }
+            });
+
+        } else {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.msg('学生姓名不能为空！！！', { icon: 2 });
+            });
+        }
+    }
+
+    function Query() {
+        layui.use('table', function () {
+            var table = layui.table;
+
+            table.reload('follwing_form', {
+                url: '/Market/FollwingInfo/GetTableData'
+                , where: { "name": $("#name").val(), "phone": $("#phone").val(), "staTime": $("#staTime").val(), "endTime": $("#endTime").val() }
+            });
+        });
+         
+    }
+</script>
+

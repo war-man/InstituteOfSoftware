@@ -135,7 +135,7 @@
 </body>
 </html>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
-<script>
+<script>//Amountofmoney
     var student = JSON.parse('@Html.Raw(ViewBag.student)');
     $("#StudentNumber").text(student.StudentNumber);
     $("#identitydocument").text(student.identitydocument);
@@ -195,7 +195,7 @@
                             Totalsum = Totalsum + item.Amountofmoney;
                             $("#Amountofmoney1").val(item.id);
                         } else if (item.Name == "食宿费") {
-                            console.log("伙食费")
+                           
                             $("#Amountofmoneys1").val(item.id);
                             $("#Amountofmoneys").val(item.Amountofmoney);
                             Totalsum = Totalsum + item.Amountofmoney;
@@ -209,6 +209,8 @@
                     }
                     // zafei
                     $("#Unitpricename").html(optionstring);
+                    var Amountofmoney = JSON.parse('@Html.Raw(ViewBag.Amountofmoney)');
+                    console.log(Amountofmoney);
                     $("#Totalsum").text(Totalsum)
                     form.render();
                 });
@@ -243,32 +245,32 @@
         });
         //监听提交
         form.on('submit(demo1)', function (data) {
-            window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 830, 600);
-            //var db = data.field;
+         //   window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 830, 600);
+            var db = data.field;
 
-            //var obj = {};
-            //obj.Costitemsid = db.Amountofmoney1;
-            //obj.Amountofmoney = db.Amountofmoney;
-            //obj.StudenID = $("#StudentNumber").text();
+            var obj = {};
+            obj.Costitemsid = db.Amountofmoney1;
+            obj.Amountofmoney = db.Amountofmoney;
+            obj.StudenID = $("#StudentNumber").text();
        
-            //list.push(obj);
-            // obj = {};
-            //obj.Costitemsid = db.Amountofmoneys1;
-            //obj.Amountofmoney = db.Amountofmoneys;
+            list.push(obj);
+             obj = {};
+            obj.Costitemsid = db.Amountofmoneys1;
+            obj.Amountofmoney = db.Amountofmoneys;
            
-            //obj.StudenID  = $("#StudentNumber").text();
-            //list.push(obj);
+            obj.StudenID  = $("#StudentNumber").text();
+            list.push(obj);
           
-            //var dbase = {
-            //    person: JSON.stringify(list),
-            //    Remarks: db.Remarks,
-            //    Stage: db.Stage
-            //};
-            //ajaxprice("/Finance/Pricedetails/StudentPrices", dbase, function () {
-            //    var index = parent.layer.getFrameIndex(window.name);
-            //    parent.layer.close(index);//关闭当前页  
-            //    window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 830, 600);
-            //});
+            var dbase = {
+                person: JSON.stringify(list),
+                Remarks: db.Remarks,
+                Stage: db.Stage
+            };
+            ajaxprice("/Finance/Pricedetails/StudentPrices", dbase, function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);//关闭当前页  
+                window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 830, 600);
+            });
         
          //  ajaxUniom("/Finance/Pricedetails/StudentPrices", dbase);
 

@@ -180,7 +180,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                this.Insert(new_s);
+                 this.Insert(new_s);
                 //redisCache.RemoveCache("StudentKeepList");
                 a.Success = true;
                 a.Msg = "备案成功";
@@ -222,6 +222,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                     fins.Region_id = olds.Region_id;
                     fins.Reak = olds.Reak;
                     this.Update(fins);
+                    
                     //redisCache.RemoveCache("StudentKeepList");
                     a.Success = true;
                     a.Msg = "修改成功！";
@@ -505,16 +506,17 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
         public void InServer()
         {
+            #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark from Sch_Market  where CreateDate >= '2020-01-01' and CreateDate<= '2020-01-30'";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState from Sch_Market where StudentName='柏青青' and Phone='15573903684（哥哥）'";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
             foreach (ADDdataview item in all)
             {
                 StudentPutOnRecord one = new StudentPutOnRecord();
                 one.StuName = item.StudentName;
-                one.StuSex = item.Sex;
-                one.EmployeesInfo_Id = Enplo_Entity.FindEmpData(item.SalePerson, false)==null? Enplo_Entity.FindEmpData("何娉", false).EmployeeId : Enplo_Entity.FindEmpData(item.SalePerson, false).EmployeeId;
+                one.StuSex = string.IsNullOrEmpty(item.Sex) ? "男" : item.Sex;
+                one.EmployeesInfo_Id = Enplo_Entity.FindEmpData(item.SalePerson, false)?.EmployeeId ?? Enplo_Entity.FindEmpData("何娉", false).EmployeeId;
                 one.StuDateTime = item.CreateDate;
                 string date = item.CreateDate.Year + "-" + item.CreateDate.Month + "-" + item.CreateDate.Day;
                 one.BeanDate = Convert.ToDateTime(date);
@@ -522,14 +524,57 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 one.StuPhone = item.Phone;
                 one.StuQQ = item.QQ;
                 one.StuSchoolName = item.School;
-                one.StuEducational = item.Inquiry;
+                one.StuEducational = item.Education;
+                one.StuIsGoto = item.MarketState == "已上门" ? true : false;
+                if (item.MarketState == "已上门")
+                {
+                    one.StuVisit = Convert.ToDateTime(date);
+                }
                 one.StuInfomationType_Id = StuInfomationType_Entity.SerchSingleData(item.Source, false) == null ? StuInfomationType_Entity.SerchSingleData("渠道", false).Id : StuInfomationType_Entity.SerchSingleData(item.Source, false).Id;
-                one.Region_id = region_Entity.SerchRegionName(item.Area, false) == null ?Convert.ToInt32(null) : region_Entity.SerchRegionName(item.Area, false).ID;
+                one.Region_id = region_Entity.SerchRegionName(item.Area, false)?.ID ?? null;
                 one.Party = item.RelatedPerson;
+                one.StuEntering = Enplo_Entity.FindEmpData(item.CreateUserName, false)?.EmpName ?? Enplo_Entity.FindEmpData("何娉", false).EmpName;
                 studentlist.Add(one);
+
+
             }
 
             this.Add_data(studentlist);
+
+            List<Consult> Consultlist = new List<Consult>();
+            all = all.Where(a1 => a1.Inquiry != null && !string.IsNullOrEmpty(a1.Inquiry)).ToList();
+            all = all.Where(a1 => !a1.Inquiry.Contains("高") || !a1.Inquiry.Contains("初")).ToList();
+            foreach (ADDdataview item in all)
+            {
+                if (!string.IsNullOrEmpty(item.Inquiry))
+                {
+                    EmployeesInfo e = new EmployeesInfo();
+                    e = Enplo_Entity.FindEmpData(item.Inquiry, false);
+                    if (e != null)
+                    {
+
+                        ConsultTeacher teacher = EmployandCounTeacherCoom.GetConsultTeacherId(e.EmployeeId);
+                        if (teacher != null)
+                        {
+                            ExportStudentBeanData findstudent = StudentOrrideData(item.StudentName, item.Phone);
+                            if (findstudent != null)
+                            {
+                                Consult consult = new Consult();
+                                string date = item.CreateDate.Year + "-" + item.CreateDate.Month + "-" + item.CreateDate.Day;
+                                consult.ComDate = Convert.ToDateTime(date);
+                                consult.StuName = Convert.ToInt32(findstudent.Id);
+                                consult.TeacherName = teacher.Id;
+                                Consultlist.Add(consult);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            AjaxResult a = EmployandCounTeacherCoom.AddConsultData(Consultlist);
+
+            #endregion
         }
 
         /// <summary>
@@ -707,6 +752,11 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
            return this.GetEntity(id);
         }
 
+        public ExportStudentBeanData whereStudentId(string id)
+        {
+            List<ExportStudentBeanData> data = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where Id='" + id + "'");
+            return data[0];
+        }
         /// <summary>
         /// 根据Id获取Sch_Market表中的备案数据
         /// </summary>

@@ -129,5 +129,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json("数据错误！！！", JsonRequestBehavior.AllowGet);
             }             
         }
+
+        /// <summary>
+        /// 选择咨询师
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TeacherSelect()
+        {
+
+            ViewBag.selectconsult = EmployandCounTeacherCoom.getallCountTeacher(false);
+            return View();
+        }
+
     }
 }

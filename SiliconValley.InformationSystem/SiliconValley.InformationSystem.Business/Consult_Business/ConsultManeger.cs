@@ -10,6 +10,7 @@ using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 using SiliconValley.InformationSystem.Business.RegionManage;
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Business.Consult_Business
 {
@@ -168,9 +169,21 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         /// 获取备案学生数据
         /// </summary>
         /// <returns></returns>
-        public List<StudentPutOnRecord> GetStudentPutRecored()
+        public List<ExportStudentBeanData> GetStudentPutRecored(string name,bool IsName)
         {
-            return Stu_Entity.GetAllStudentKeepData();
+            if (IsName)
+            {
+                //根据Name查询
+                return Stu_Entity.StudentOrride(name);
+            }
+            else
+            {
+                //跟据Id查询
+                List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();
+                list.Add(Stu_Entity.whereStudentId(name));
+                return list ;
+            }
+           
         }
         /// <summary>
         /// 获取当个学生备案数据
@@ -513,6 +526,62 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
                 data = Stu_Entity.GetListBySql<ExportStudentBeanData>("select * from  StudentBeanView where Id=" + Stu_id);
             }
             return data[0];
+        }
+
+        /// <summary>
+        /// 添加数据
+        /// </summary>
+        /// <returns></returns>
+        public AjaxResult Add_Data(List<Consult> list)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Insert(list);
+                a.Success = true;
+            }
+            catch (Exception)
+            {
+
+                a.Success = false;
+            }
+
+            return a;
+        }
+
+        /// <summary>
+        /// 转换咨询师
+        /// </summary>
+        /// <param name="list">备案Id</param>
+        /// <param name="TeacherId">咨询师Id</param>
+        /// <returns></returns>
+        public AjaxResult ChangTeacher(List<int> list,int TeacherId)
+        {
+            List<Consult> countdata = new List<Consult>();
+            foreach (int id in list)
+            {
+               Consult find= this.GetList().Where(t => t.StuName == id).FirstOrDefault();
+
+                if (find!=null)
+                {
+                    find.TeacherName = TeacherId;
+                    countdata.Add(find);
+                }
+            }
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Update(countdata);
+                a.Success = true;
+                a.Msg = "操作成功";
+            }
+            catch (Exception)
+            {
+                a.Success = false;
+                a.Msg = "系统异常！，请刷新重试！";
+            }
+
+            return a;
         }
 
         #region  给跟踪业务使用的方法

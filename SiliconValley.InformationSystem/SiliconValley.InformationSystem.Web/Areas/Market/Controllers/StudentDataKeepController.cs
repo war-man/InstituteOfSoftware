@@ -32,6 +32,7 @@ using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Business.RegionManage;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using System.Threading;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -80,114 +81,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.slist = ss;
             return View();
         }
-
-        #region 维修中
-        //往数据库中获取数据备案的信息
-        //public ActionResult GetStudentPutOnRecordData(int limit, int page)
-        //{
-        //    region_Entity = new RegionManeges();
-        //    StuInfomationType_Entity = new StuInfomationTypeManeger();
-        //    Stustate_Entity = new StuStateManeger();
-        //    EmployeesInfoManage Enplo_Entity = new EmployeesInfoManage();
-        //    Department department = Enplo_Entity.GetDeptByEmpid(UserName.EmpNumber);
-        //    #region 取值
-        //    string findNamevalue = Request.QueryString["findNamevalue"];
-        //    string findPhonevalue = Request.QueryString["findPhonevalue"];
-        //    string findInformationvalue = Request.QueryString["findInformationvalue"];
-        //    string findStartvalue = Request.QueryString["findStartvalue"];
-        //    string findEndvalue = Request.QueryString["findEndvalue"];
-        //    string findBeanManvalue = Request.QueryString["findBeanManvalue"];
-        //    string findAreavalue = Request.QueryString["findAreavalue"];
-        //    #endregion
-        //    List<StudentPutOnRecord> stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).ToList();
-
-        //    #region 模糊查询
-        //    if (!string.IsNullOrEmpty(findNamevalue))
-        //    {
-        //        stu_IQueryable = stu_IQueryable.Where(s => s.StuName.Contains(findNamevalue)).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(findPhonevalue))
-        //    {
-        //        stu_IQueryable = stu_IQueryable.Where(s => s.StuPhone.Contains(findPhonevalue)).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(findInformationvalue) && findInformationvalue != "请选择")
-        //    {
-        //        int type_id = Convert.ToInt32(findInformationvalue);
-        //        stu_IQueryable = stu_IQueryable.Where(s => s.StuInfomationType_Id == type_id).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(findStartvalue))
-        //    {
-        //        DateTime t1 = Convert.ToDateTime(findStartvalue);
-
-        //        stu_IQueryable = stu_IQueryable.Where(s => s.StuDateTime >= t1).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(findEndvalue))
-        //    {
-        //        DateTime t2 = Convert.ToDateTime(findEndvalue);
-        //        DateTime dd = new DateTime(t2.Year, t2.Month, t2.Day, 23, 59, 59);
-        //        stu_IQueryable = stu_IQueryable.Where(s => s.StuDateTime <= dd).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(findBeanManvalue))
-        //    {
-        //        string Beanname = findBeanManvalue;
-        //        string empyeid = s_Entity.GetNameSreachEmploId(Beanname) == null ? null : s_Entity.GetNameSreachEmploId(Beanname).EmployeeId;
-        //        stu_IQueryable = stu_IQueryable.Where(s => s.EmployeesInfo_Id == empyeid).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(findAreavalue) && findAreavalue != "请选择")
-        //    {
-        //        int Areeid = Convert.ToInt32(findAreavalue);
-        //        stu_IQueryable = stu_IQueryable.Where(s => s.Region_id == Areeid).ToList();
-        //    }
-        //    #endregion
-
-        //    try
-        //    {
-        //        #region 分页转前端数据格式类型
-        //        int SunLimit = stu_IQueryable.Count();//总行数
-        //        int SunPage = Convert.ToInt32(Math.Ceiling((double)SunLimit / limit));//总页数
-        //        stu_IQueryable = stu_IQueryable.Skip((page - 1) * limit).Take(limit).ToList();
-        //        var Get_List_studentPutOnRecord = stu_IQueryable.Select(s => new
-        //        {
-        //            Id = s.Id,
-        //            StuName = s.StuName,
-        //            StuSex = s.StuSex,
-        //            StuBirthy = s.StuBirthy,
-        //            StuPhone = s.StuPhone,
-        //            StuSchoolName = s.StuSchoolName,
-        //            StuEducational = s.StuEducational,
-        //            StuAddress = s.StuAddress,
-        //            StuWeiXin = s.StuWeiXin,
-        //            StuQQ = s.StuQQ,
-        //            StuInfomationType_Id = StuInfomationType_Entity.GetEntity(s.StuInfomationType_Id) == null ? null : StuInfomationType_Entity.GetEntity(s.StuInfomationType_Id).Name,
-        //            StuStatus_Id = Stustate_Entity.GetEntity(s.StuStatus_Id) == null ? null : Stustate_Entity.GetEntity(s.StuStatus_Id).StatusName,
-        //            StuIsGoto = s.StuIsGoto,
-        //            StuVisit = s.StuVisit,
-        //            EmployeesInfo_Id = s_Entity.GetEmployeeValue(s.EmployeesInfo_Id, false) == null ? "" : s_Entity.GetEmployeeValue(s.EmployeesInfo_Id, false),
-        //            BeanDate = s.BeanDate,
-        //            StuEntering = s.StuEntering,
-        //            Reak = s.Reak,
-        //            Regin_id = s.Region_id,
-        //            ReginName = region_Entity.GetEntity(s.Region_id) == null ? "区域外" : region_Entity.GetEntity(s.Region_id).RegionName,
-        //            consultName = s.ConsultTeacher
-        //        }).ToList();//获取了数据库中所有数据备案信息;                                                                                                         
-        //        var JsonData = new
-        //        {
-        //            code = 0, //解析接口状态,
-        //            msg = "", //解析提示文本,
-        //            count = SunLimit, //解析数据长度
-        //            data = Get_List_studentPutOnRecord //解析数据列表
-        //        };
-        //        #endregion
-        //        return Json(JsonData, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //将错误填写到日志中     
-        //        BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
-        //        return Json(Error("加载数据有误"), JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-        #endregion
+ 
         public ActionResult GetTableData(int limit, int page)
         {
             string str1 = "select * from StudentBeanView where 1=1 ";
@@ -259,7 +153,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             #endregion
 
             List<ExportStudentBeanData> list = s_Entity.GetSudentDataAll().OrderByDescending(s => s.Id).ToList();
-            if (page>1 || findNamevalue!=null)
+            if (page>1 || !string.IsNullOrEmpty(findNamevalue))
             {
                 list= s_Entity.Serch(str1,str2).OrderByDescending(s => s.Id).ToList();
 
@@ -388,12 +282,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     if (a.Success == true)
                     {
                         //通知备案人备案成功
-                        //string number = "13204961361";//根据备案人查询电话号码
-                        //string smsText = "备案提示:已备案成功";
-                        //string t = PhoneMsgHelper.SendMsg(number, smsText);
+                        string phone= s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
+                        // string number = "13204961361";//根据备案人查询电话号码
+                        string smsText = "备案提示:"+ news.StuName + "学生在"+ DateTime.Now + "已备案成功";
+                        string t = PhoneMsgHelper.SendMsg(phone, smsText);
 
                         //判断是否指派了咨询师  
-
 
                         if (news.ConsultId != "0")
                         {
@@ -486,7 +380,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             AjaxResult a = s_Entity.UpdateGotoShcool(list, date);
             return Json(a, JsonRequestBehavior.AllowGet);
         }
-
+      
 
         //根据ID找到学生信息并赋值
         public ActionResult FindStudentInfomation(string id)
@@ -496,29 +390,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ExportStudentBeanData finds = s_Entity.findId(id);
                 var newdata = new
                 {
-                    //EmployeesInfo_Id = finds,
+                    EmployeesInfo_Id =s_Entity.GetEntity(finds.Id).EmployeesInfo_Id,
                     Id = finds.Id,
                     Reak = finds.Reak,
                     StuAddress = finds.StuAddress,
                     StuBirthy = finds.StuBirthy,
-                    StuDateTime = finds.BeanDate,
+                    StuDateTime =s_Entity.GetEntity(finds.Id).StuDateTime,
                     StuEducational = finds.StuEducational,
                     StuEntering = finds.StuEntering,
-                    //StuInfomationType_Id = finds.StuInfomationType_Id,
-                    StuIsGoto = finds.StuisGoto,
+                    StuInfomationType_Id =s_Entity.StuInfomationType_Entity.SerchSingleData(finds.stuinfomation,false).Id,
+                    Region_id =s_Entity.region_Entity.SerchRegionName(finds.RegionName,false)?.ID??null,
+                    StuIsGoto = finds.StuisGoto==null?false: finds.StuisGoto,
                     StuName = finds.StuName,
                     StuPhone = finds.Stuphone,
                     StuQQ = finds.StuQQ,
                     StuSchoolName = finds.StuSchoolName,
-                    StuSex = finds.StuSex,
-                    //StuStatus_Id = finds.StuStatus_Id,
+                    StuSex = finds.StuSex==null?"男": finds.StuSex,
                     StuVisit = finds.StuVisit,
                     StuWeiXin = finds.StuWeiXin,
                     e_Name = finds.empName,
                     StuEntering_1 = finds.StuEntering,
                     InfomationTypeName = finds.stuinfomation, /*StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id) == null ? "未定义" : StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id).Name,*/
                     StatusName = finds.StatusName,//Stustate_Entity.GetEntity(finds.StuStatus_Id) == null ? "未填写" : Stustate_Entity.GetEntity(finds.StuStatus_Id).StatusName,
-                    Region_id = finds.RegionName,//finds.Region_id == null ? "区域外" : region_Entity.GetEntity(finds.Region_id).ID.ToString(),
+                    Region_Name = finds.RegionName,//finds.Region_id == null ? "区域外" : region_Entity.GetEntity(finds.Region_id).ID.ToString(),
                     Party = finds.Party,
                     reamke=finds.Reak
                 };
@@ -1247,6 +1141,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
 
         #region 学员注册
+        //班主任注册页面
+        public ActionResult HandMasterRegisterds()
+        {
+            return View();
+        }
         //注册页面
         public ActionResult Registeredstudentnumber(string id)
         {
@@ -1282,10 +1181,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
         //注册方法
-        public ActionResult RegistersFunction()
+        [HttpPost]
+        public ActionResult RegistersFunction(ZhuceShowData data)
         {
-            return null;
+            StudentInformationBusiness informationBusiness = new StudentInformationBusiness();
+            StudentInformation student = new StudentInformation();
+            student.Name = data.stuName;
+            student.Sex = data.stuSex=="男"?true:false;
+            student.identitydocument = data.IdCare;
+            student.Telephone = data.stuPhone;
+
+            AjaxResult a=  informationBusiness.StudfentEnti(student, Convert.ToInt32(data.Class_ID), Convert.ToInt32(data.Id));
+            return Json(a,JsonRequestBehavior.AllowGet);
         }
+        #endregion
+
+        #region 一键转咨询师
+
+         public ActionResult ChangTeacher()
+        {
+            string[] id = Request.Form["id"].Split(',') ;
+            int teacherid =Convert.ToInt32(Request.Form["teacherid"]);
+            List<int> list = new List<int>();
+            foreach (string item in id)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                   list.Add( Convert.ToInt32(item));
+                }
+            }
+
+            AjaxResult a= EmployandCounTeacherCoom.consult.ChangTeacher(list, teacherid);
+
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
     }
 }

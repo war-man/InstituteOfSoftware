@@ -22,5 +22,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
              public Nullable<System.DateTime> StuDateTime { get; set; }
              public string StuEntering { get; set; }
              public string AreName { get; set; }
+
+             public string Party { get; set; }
     }
 }

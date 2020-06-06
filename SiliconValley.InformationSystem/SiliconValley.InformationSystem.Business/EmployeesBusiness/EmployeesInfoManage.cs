@@ -318,7 +318,11 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             }
             else
             {
-                employees = this.GetEmpInfoData().Where(e => e.EmpName == name).FirstOrDefault();
+                List<EmployeesInfo> list = this.GetListBySql<EmployeesInfo>("select * from EmpView where EmpName='" + name + "'").ToList();
+                if (list.Count > 0)
+                {
+                    employees = list[0];
+                }                
             }
             return employees;
         }

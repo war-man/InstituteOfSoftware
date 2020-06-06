@@ -1,0 +1,300 @@
+﻿
+@{
+    ViewBag.Title = "Tuitionrefund";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+        .linu {
+            width: 200px;
+        }
+    </style>
+}
+
+<form class="layui-form" action="">
+    <div class="layui-carousel-left">
+        <div class="layui-row ">
+
+            <div class="layui-row layui-form-item">
+
+
+                <div class="layui-col-xs2.5">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="Sex" value="false" title="女">
+                        <input type="radio" name="Sex" value="true" title="男">
+                        <input type="radio" name="Sex" value="" title="全部" checked="checked">
+                    </div>
+                </div>
+                <div class="layui-col-xs2.5">
+                    <label class="layui-form-label">学号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="number" name="StudentNumber" class="layui-input" />
+
+                    </div>
+                </div>
+
+                <div class="layui-col-xs2.5">
+
+                    <label class="layui-form-label">身份证</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="identityi" name="identitydocument" class="layui-input linu" />
+
+                    </div>
+
+                </div>
+                <div style="position:absolute;left:83%;top:67px;">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+<div>
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+
+
+@section script{
+    @*头部工具栏*@
+
+
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="StudentEnll">费用退款</button>
+         
+        </div>
+    </script>
+    <script>
+
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + (parseInt(month) + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+
+        //计算年龄
+        function Age(strBirthday) { //传入形式yyyy-MM-dd
+            //strBirthday = util.formatTime(strBirthday);转换成yyyy-MM-dd形式
+            var returnAge
+            var strBirthdayArr = strBirthday.split('-')
+            var birthYear = strBirthdayArr[0]
+            var birthMonth = strBirthdayArr[1]
+            var birthDay = strBirthdayArr[2]
+            var d = new Date()
+            var nowYear = d.getFullYear()
+            var nowMonth = d.getMonth() + 1
+            var nowDay = d.getDate()
+            if (nowYear == birthYear) {
+                returnAge = 0 //同年 则为0岁
+            } else {
+                var ageDiff = nowYear - birthYear //年之差
+                if (ageDiff > 0) {
+                    if (nowMonth == birthMonth) {
+                        var dayDiff = nowDay - birthDay //日之差
+                        if (dayDiff < 0) {
+                            returnAge = ageDiff - 1
+                        } else {
+                            returnAge = ageDiff
+                        }
+                    } else {
+                        var monthDiff = nowMonth - birthMonth //月之差
+                        if (monthDiff < 0) {
+                            returnAge = ageDiff - 1
+                        } else {
+                            returnAge = ageDiff
+                        }
+                    }
+                } else {
+                    returnAge = -1 //返回-1 表示出生日期输入错误 晚于今天
+                }
+            }
+            return returnAge //返回周岁年龄
+        }
+        layui.use(['table', 'layer', 'tree', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var tree = layui.tree;
+         
+            
+            
+            //正则表达式
+            form.verify({
+                Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                                return '姓名不能有特殊字符';
+                            }
+                            if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                                return '姓名首尾不能出现下划线\'_\'';
+                            }
+                            if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                                return '姓名只能由中文或字母组成';
+                            }
+                        }
+                    }
+
+                },//(^$)|^\d{10}$/
+                identityi: function (value) {
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            var identitydocument = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                            if (!identitydocument.test(value)) {
+                                return '请输入正确身份证号';
+                            }
+                        }
+                    }
+
+                },
+                number: function (value) {
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            var identitydocument = /^\d/;
+                            if (!identitydocument.test(value)) {
+                                return '学号由数字组成';
+                            }
+                        }
+                    }
+
+                }
+            });
+            //表格渲染
+            table.render({
+                elem: '#test'
+                , url: '/Finance/Pricedetails/GetDate'
+                , toolbar: '#toolbarDemo' 
+                , id: 'idTest'
+                , page: true
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { type: 'radio' }
+                    , { field: 'StudentNumber', title: '学号', sort: true }
+                    , { field: 'Name', title: '姓名' }
+                    , {
+                        field: 'Sex', title: '性别', templet: function (c) {
+                            if (c.Sex == 0) {
+                                return "女";
+                            } else { return "男"; }
+                        }
+                    }
+                    , {
+                        field: 'BirthDate', title: '年龄', templet: function (c) {
+                            return Age(TimeChange(c.BirthDate));
+                        }
+                    }
+                    , { field: 'ClassName', title: '班级名称 ' }
+                    , { field: 'identitydocument', title: '身份证号码' }
+                    , { field: 'Headmasters', title: '班主任 ', width: 100 }
+                    
+                ]]
+                , page: true
+                , limit: 15
+                , limits: [15, 20, 25]
+            });
+
+            //头工具栏事件
+            table.on('toolbar(test)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'StudentEnll':
+                        var data = checkStatus.data;
+
+                        if (data.length > 0) {
+                            var url = "/Finance/Pricedetails/TuitionreHome/" + data[0].StudentNumber;
+                            StudentShow(url, name, 600, 600);
+
+                        } else {
+                            layer.alert('请选择一条数据', { icon: 0 });
+                        }
+                        break;
+                  
+                };
+            });
+
+
+            //查询功能
+            form.on('submit(demo2)', function (data) {
+
+                var x = data.field;
+
+
+                table.reload('idTest', {
+                    where: {
+                        Name: x.Name,
+                        Sex: x.Sex,
+                        StudentNumber: x.StudentNumber,
+                        identitydocument: x.identitydocument
+                    }, page: {
+                        curr: 1
+                    }
+                });
+                return false;
+            });
+        });
+        function StudentShow(url, mytitle, width, hegin) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 2,
+                    content: url
+                    , area: [width + 'px', hegin + 'px'],
+                    title: mytitle
+                    , shade: 0.3
+                    , anim: 1
+                    , closeBtn: 1
+                });
+            });
+        }
+        function closeSelf() {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+
+            });
+        }
+
+
+    </script>
+
+}
+
+
