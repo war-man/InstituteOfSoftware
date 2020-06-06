@@ -115,8 +115,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             if (!string.IsNullOrEmpty(findNamevalue))
             {
-                str1 = str1 + " and StuName = '"+ findNamevalue + "'";
-                str2 = str2 + " and StudentName = '" + findNamevalue + "'";
+                str1 = str1 + " and StuName like  '%"+ findNamevalue + "%'";
+                str2 = str2 + " and StudentName like  '%" + findNamevalue + "%'";
             }
             if (!string.IsNullOrEmpty(findPhonevalue))
             {
