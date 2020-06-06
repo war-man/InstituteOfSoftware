@@ -33,7 +33,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
       /// </summary>
       /// <param name="nes"></param>
       /// <returns></returns>
-       public AjaxResult MyUpdate(Sch_Market data)
+        public AjaxResult MyUpdate(Sch_Market data)
         {
             AjaxResult a = new AjaxResult();
             try
@@ -46,6 +46,25 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             {
                 a.Success = false;
                 a.Msg = "系统错误，请重试";
+            }
+
+            return a;
+        }
+
+    
+        public AjaxResult MyUpdate(List<Sch_Market> data)
+        {
+            AjaxResult a = new AjaxResult();
+
+            try
+            {
+                this.Update(data);
+                a.Success = true;
+            }
+            catch (Exception)
+            {
+
+                a.Success = false;
             }
 
             return a;

@@ -36,33 +36,49 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         //创建一个用于查询岗位信息实体
        public PositionManage Position_Entity = new PositionManage();
 
+       public  Sch_MarketManeger s_entity = new Sch_MarketManeger();
+
+        /// <summary>
+        /// 获取两张表的所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> GETView()
+        {
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
+
+            List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView");
+
+            listall.AddRange(this.LongrageDataToViewmodel(old));
+            return listall;
+        }
+
         /// <summary>
         /// 获取所有备案数据
         /// </summary>
         /// <returns></returns>
-        public List<StudentPutOnRecord> GetAllStudentKeepData()
-        {
-            redisCache = new RedisCache();
-            //redisCache.RemoveCache("StudentKeepList");
-            List<StudentPutOnRecord> get_studentkeep_list = new List<StudentPutOnRecord>();
-            get_studentkeep_list = redisCache.GetCache<List<StudentPutOnRecord>>("StudentKeepList");
-            if (get_studentkeep_list == null || get_studentkeep_list.Count == 0)
-            {
-                get_studentkeep_list = this.GetIQueryable().ToList();
-                redisCache.SetCache("StudentKeepList", get_studentkeep_list);
-            }
-            return get_studentkeep_list;
-        }
+        //public List<StudentPutOnRecord> GetAllStudentKeepData()
+        //{
+        //    redisCache = new RedisCache();
+        //    //redisCache.RemoveCache("StudentKeepList");
+        //    List<StudentPutOnRecord> get_studentkeep_list = new List<StudentPutOnRecord>();
+        //    get_studentkeep_list = redisCache.GetCache<List<StudentPutOnRecord>>("StudentKeepList");
+        //    if (get_studentkeep_list == null || get_studentkeep_list.Count == 0)
+        //    {
+        //        get_studentkeep_list = this.GetIQueryable().ToList();
+        //        redisCache.SetCache("StudentKeepList", get_studentkeep_list);
+        //    }
+        //    return get_studentkeep_list;
+        //}
         /// <summary>
         /// 获取某一年的已报名备案数据
         /// </summary>
         /// <param name="year">年份</param>
         /// <returns></returns>
-        public List<StudentPutOnRecord> GetEffectiveData(int year)
+        public List<ExportStudentBeanData> GetEffectiveData(int year)
         {
-            List<StudentPutOnRecord> list = new List<StudentPutOnRecord>();
-            List<StudentPutOnRecord> All = GetAllStudentKeepData();
-            foreach (StudentPutOnRecord item in All)
+            List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();
+            List<ExportStudentBeanData> All = WhereDateYear(year);
+            foreach (ExportStudentBeanData item in All)
             {
                 if (item.StatusTime != null)
                 {
@@ -74,34 +90,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
             return list;
         }
-        //查询员工
-        public string GetEmployeeValue(string id, bool isglu)
-        {         
-            if (isglu)
-            {
-                EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel == false).FirstOrDefault();
-                if (finde != null)
-                {
-                    return finde.EmpName;
-                }
-                else
-                {
-                    return "无";
-                }
-            }
-            else
-            {
-                EmployeesInfo finde = Enplo_Entity.GetEntity(id);
-                if (finde != null)
-                {
-                    return finde.EmpName;
-                }
-                else
-                {
-                    return "无";
-                }
-            }
-        }
+
         /// <summary>
         /// 获取员工 
         /// </summary>
@@ -111,13 +100,12 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             if (IsIncumbency)
             {
-                //获取所有在职员工
-                return Enplo_Entity.GetAll();
+               return Enplo_Entity.GetListBySql<EmployeesInfo>(" select * from EmpView  where IsDel=0");
             }
             else
             {
                 //获取所有员工
-                return Enplo_Entity.GetList();
+                return Enplo_Entity.GetListBySql<EmployeesInfo>("select * from EmpView"); ;
             }
         }
 
@@ -140,17 +128,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 return region_Entity.GetList();
             }
         }
-
-        /// <summary>
-        /// 通过员工名称获取员工编号
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public EmployeesInfo GetNameSreachEmploId(string name)
-        {
-            return GetEffectiveEmpAll(false).Where(es => es.EmpName == name).FirstOrDefault();
-
-        }      
+     
         /// <summary>
         /// 添加数据
         /// </summary>
@@ -229,8 +207,6 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 }
                 else
                 {
-                    region_Entity = new RegionManeges();
-                    Sch_MarketManeger s_entity = new Sch_MarketManeger();
                     Sch_Market finds = this.whereMarketId(olds.Id);
                     finds.Area = olds.Region_id==null?finds.Area:region_Entity.GetEntity(olds.Region_id).RegionName;
                     finds.Education = olds.StuEducational;
@@ -250,6 +226,24 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
             return a;
         }
+      
+        public AjaxResult Update_data(List<StudentPutOnRecord> olds)
+        {
+            AjaxResult a = new AjaxResult();
+
+            try
+            {
+                this.Update(olds);
+                a.Success = true;
+            }
+            catch (Exception)
+            {
+                a.Success = false;
+            }
+
+            return a;
+        }
+
         /// <summary>
         /// 将未上门学生改为已上门
         /// </summary>
@@ -508,7 +502,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState from Sch_Market where StudentName='柏青青' and Phone='15573903684（哥哥）'";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState from Sch_Market where StudentName='王彬' and Phone='15173281718'";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
             foreach (ADDdataview item in all)
@@ -534,6 +528,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 one.Region_id = region_Entity.SerchRegionName(item.Area, false)?.ID ?? null;
                 one.Party = item.RelatedPerson;
                 one.StuEntering = Enplo_Entity.FindEmpData(item.CreateUserName, false)?.EmpName ?? Enplo_Entity.FindEmpData("何娉", false).EmpName;
+                one.StuStatus_Id = 1013;//默认未报名
                 studentlist.Add(one);
 
 
@@ -614,19 +609,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         }
         #endregion
 
-        /// <summary>
-        /// 获取两张表的所有数据
-        /// </summary>
-        /// <returns></returns>
-        public List<ExportStudentBeanData> GETView()
-        {
-            List<ExportStudentBeanData> listall= this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
-
-            List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView");
-
-            listall.AddRange(this.LongrageDataToViewmodel(old));
-            return listall;
-        }
+      
 
         /// <summary>
         /// 获取StudentPutOnRecord表的所有数据
@@ -763,11 +746,51 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <param name="id"></param>
         /// <returns></returns>
         public Sch_Market whereMarketId(int id)
-        {
-            Sch_MarketManeger s_entity = new Sch_MarketManeger();
+        {            
             return s_entity.GetEntity(id);
         }
 
+        /// <summary>
+        /// 获去某个年份的数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> WhereDateYear(int year)
+        {
+            List<ExportStudentBeanData> data = new List<ExportStudentBeanData>();
+            if (year==2017 || year==2018 || year==2019)
+            {
+                switch (year)
+                {
+                    case 2017:
+                        string str = "select *from Sch_MarketView where CreateDate>'2016-12-31' and CreateDate<'2018-01-01'";
+                        List<Sch_MarketView> list = s_entity.GetListBySql<Sch_MarketView>(str);
+                        data= LongrageDataToViewmodel(list);
+                        break;
+                    case 2018:
+                        string str2 = "select *from Sch_MarketView where CreateDate>'2017-12-31' and CreateDate<'2019-01-01'";
+                        List<Sch_MarketView> list2 = s_entity.GetListBySql<Sch_MarketView>(str2);
+                        data = LongrageDataToViewmodel(list2);
+                        break;
+                    case 2019:
+                        string str3 = "select *from Sch_MarketView where CreateDate>'2019-12-31' and CreateDate<'2020-01-01'";
+                        List<Sch_MarketView> list3 = s_entity.GetListBySql<Sch_MarketView>(str3);
+                        data = LongrageDataToViewmodel(list3);
+                        break;
+                }
+            }
+            else
+            {
+                string starYear = year + "-01-01";
+                string endYear = year + "-12-31";
+
+                string str = "select * from StudentBeanView where BeanDate>='"+starYear+"' and BeanDate<='"+endYear+"'";
+
+                data= this.GetListBySql<ExportStudentBeanData>(str);
+            }
+
+            return data;
+        }
 
     }
 }

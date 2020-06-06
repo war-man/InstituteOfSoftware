@@ -3493,6 +3493,33 @@
     <Content Include="uploadXLSXfile\ComputerTestQuestionsWord\2019年11月13日.rar" />
     <Content Include="uploadXLSXfile\ComputerTestQuestionsWord\2019年12月12日.rar" />
     <Content Include="uploadXLSXfile\ExamtionQuestionBankTemplate\ClearQuestionTemplate.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200413033222蒋海明.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200413033222徐宝平.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200413033222欧阳斌初.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200413033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200418033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200419033222欧阳斌初.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200422033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200424033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200428033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200430100703阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200430101659阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200430101919徐宝平.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200508030449徐宝平.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200513073336徐宝平.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200520103754徐宝平.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200522091716徐宝平.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200523024452阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200523024623阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200527040633徐宝平.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200604022318阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200513082336徐宝平.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200612033222蒋海明.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200613033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200713033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20200813033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20201013033222阳亮.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20201113033222阳亮.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3560,7 +3587,6 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
-    <Folder Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\ExportAll\" />
     <Folder Include="Views\DataKeepOnRecord\" />
   </ItemGroup>

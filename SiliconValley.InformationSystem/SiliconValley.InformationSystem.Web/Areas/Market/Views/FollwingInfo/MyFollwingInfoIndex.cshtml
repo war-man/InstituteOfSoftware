@@ -63,20 +63,7 @@
     }        
 </style>
 
-<div id="center_div">
-    <div class="layui-form">
-        <div class="layui-form">
-            <div style=" width:800px; display:inline-block;">
-                <label>学生姓名:</label>
-                <div class="btn-group layui-container" style="width:120px;">
-                    <input type="text" class="form-control" id="studentName" placeholder="学生姓名">
-                </div>
-                <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="AddFollwingData()">查询</button>
-            </div>
-            <hr />
-        </div>
-    </div>
-</div>
+ 
 
 <div class="layui-collapse" lay-accordion>
     <div class="layui-colla-item">
@@ -114,8 +101,15 @@
 </div>
 
 <table id="follwing_form" class="layui-form" lay-filter="follwing_form"> </table>
+<script type="text/html" id="toolbarDemo1">
+    <div class="layui-btn-container">         
+        <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
+    </div>
+</script>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="add">添加跟踪信息</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edi">编辑跟踪信息</a>
+    <a class="layui-btn layui-btn-xs" lay-event="ser">查询跟踪信息</a>
 </script>
 
 <script>
@@ -172,36 +166,42 @@
         table.render({
             elem: '#follwing_form'
             , url: '/Market/FollwingInfo/GetTableData'
+            , toolbar: '#toolbarDemo1'
             , cols: [[
                 { type: 'checkbox' }
                 , { field: 'StuName', title: '姓名' }
-                , { field: 'StuSex', title: '性别', width: 60 }
+                , { field: 'StuSex', title: '性别'}
                 , { field: 'Stuphone', title: '联系电话' }
-                , { field: 'stuinfomation', title: '信息来源' }
-                , { field: 'StuisGoto', title: '是否上门', templet: function (res) { if (res.StuisGoto == false || res.StuisGoto == null) { return "未上门"; } else { return "已上门"; } } }
-                , { field: 'StatusName', title: '学生状态' }
-                , { field: 'StuEducational', title: '学历' }
-                , { field: 'empName', title: '备案人' }
-                , { field: 'RegionName', title: '区域' }
-                , { field: 'BeanDate', title: '备案日期', templet: function (res) { return TimeChange(res.BeanDate); } }
-                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+                //, { field: 'stuinfomation', title: '信息来源' }
+                //, { field: 'StuisGoto', title: '是否上门', templet: function (res) { if (res.StuisGoto == false || res.StuisGoto == null) { return "未上门"; } else { return "已上门"; } } }
+                //, { field: 'StatusName', title: '学生状态' }
+                //, { field: 'StuEducational', title: '学历' }
+                //, { field: 'empName', title: '备案人' }
+                //, { field: 'RegionName', title: '区域' }
+                , { field: 'BeanDate', title: '分量日期', templet: function (res) { return TimeChange(res.BeanDate); } }
+                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 350 }
             ]]
             , page: true
-            , limits: [20, 40, 50, 60, 80, 100]
-            , limit: 20
+            , limits: [10,20, 40, 50, 60, 80, 100]
+            , limit: 10
         });
 
         //监听行工具事件
         table.on('tool(follwing_form)', function (obj) {
             var data = obj.data;
-            //console.log(obj)
-            if (obj.event === 'del') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
-                });
+ 
+            if (obj.event === 'edi') {
+                layer.open({
+                    type: 2,
+                    content: '/Market/FollwingInfo/EditView/' + data.Id
+                    , area: ['1000px', '680px'],
+                    title: '编辑跟踪页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class2'
+                });            
+                
             } else if (obj.event === 'add') {
-                console.log(data);
                 //打开跟踪添加页面
                 layer.open({
                     type: 2,
@@ -212,45 +212,20 @@
                     , anim: 4
                     , skin: 'demo-class2'
                 });
+            } else if (obj.event === 'ser') {
+                //查看跟踪信息
+                layer.open({
+                    type: 2,
+                    content: '/Market/Consult/FollwingInfoView/' + data.Id
+                    , area: ['1000px', '750px']
+                    , title: '跟踪信息页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class2'
+                });
             }
         });
     });
-
-    //查询信息
-    function AddFollwingData() {
-        //判断是否有值
-        var Name = $("#studentName").val();
-        if (Name.length > 0) {
-            //查找该学生
-            $.ajax({
-                url: '/Market/FollwingInfo/GetMonthStudent/' + Name,
-                success: function (SucData) {
-                    if (SucData.data.length > 0) {
-                        //找到了多个
-                        var stuid = "";
-                        for (var i = 0; i < SucData.data.length; i++) {
-                            stuid = stuid + SucData.data[i].Id + ",";
-                        }
-                        var url = "/Market/FollwingInfo/ListStudentView/" + stuid;
-                        StudentShow(url, "查询结果", "demo-class", 1);
-
-                    } else if (SucData.data.length <= 0) {
-                        layui.use('layer', function () {
-                            var layer = layui.layer;
-                            layer.msg('抱歉，该学生未分配给你！！！', { icon: 5 });
-                        });
-                    }
-                }
-            });
-
-        } else {
-            layui.use('layer', function () {
-                var layer = layui.layer;
-                layer.msg('学生姓名不能为空！！！', { icon: 2 });
-            });
-        }
-    }
-
     function Query() {
         layui.use('table', function () {
             var table = layui.table;
@@ -261,6 +236,32 @@
             });
         });
          
+    }
+
+    //注册学生学号
+    function ZhuceClass() {
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var checkStatus = table.checkStatus('follwing_form');
+            if (checkStatus.data.length <= 0) {
+                layer.msg('请选择学生数据', { icon: 2, shade: 0.8 });
+            } else {
+                var ids = "";
+                for (var i = 0; i < checkStatus.data.length; i++) {
+                    ids = ids + checkStatus.data[i].Id + ",";
+                }
+                layer.open({
+                    type: 2
+                    , content: '/Market/StudentDataKeep/Registeredstudentnumber/' + ids
+                    , area: ['800px', '420px']
+                    , title: '注册学号页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            }
+        });
     }
 </script>
 

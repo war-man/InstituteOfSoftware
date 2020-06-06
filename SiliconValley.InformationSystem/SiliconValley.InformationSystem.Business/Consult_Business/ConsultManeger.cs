@@ -65,11 +65,11 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
              
         }
         //获取某个月份所有备案数据
-        public List<StudentPutOnRecord> GetMonStudent(int monName)
+        public List<ExportStudentBeanData> GetMonStudent(int monName)
         {
-            List<StudentPutOnRecord> All_stu= Stu_Entity.GetAllStudentKeepData().Where(s => Convert.ToDateTime(s.StuDateTime).Month == monName).ToList();//获取某个月份备案的所有数据
+            List<ExportStudentBeanData> All_stu= Stu_Entity.WhereDateYear((DateTime.Now).Year).Where(s => Convert.ToDateTime(s.BeanDate).Month == monName).ToList();//获取某个月份备案的所有数据
             List<Consult> All_con = this.GetList();//获取所有分量数据
-            List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            List<ExportStudentBeanData> result = new List<ExportStudentBeanData>();
 
             if (All_stu.Count > 0)
             {
@@ -582,6 +582,18 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             }
 
             return a;
+        }
+
+        /// <summary>
+        /// 根据备案编号获取分量数据
+        /// </summary>
+        /// <param name="studentID"></param>
+        /// <returns></returns>
+        public Consult AccordingStuIdGetConsultData(int studentID)
+        {
+           List<Consult> find= this.GetListBySql<Consult>("select * from Consult where StuName=" + studentID);
+
+            return find[0];
         }
 
         #region  给跟踪业务使用的方法

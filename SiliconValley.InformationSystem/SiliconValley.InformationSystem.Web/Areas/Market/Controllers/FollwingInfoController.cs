@@ -324,7 +324,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 DateTime d2 = Convert.ToDateTime(EndDate);
                 list = list.Where(l => l.BeanDate <= d2).ToList();
             }
-            var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).Select(l=>new {
+                Id=l.Id,
+                StuName=l.StuName,
+                StuSex= l.StuSex,
+                Stuphone = l.Stuphone,
+                BeanDate= CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
+            }).ToList();
             var data = new {data= mydata, count=list.Count,code=0,msg=""};
 
             return Json(data,JsonRequestBehavior.AllowGet);
