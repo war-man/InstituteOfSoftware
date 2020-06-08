@@ -22,26 +22,41 @@
             line-height: 15px;
         }
     
-    .NoneCss{
+        .NoneCss{
     display:none;
     }
     </style>
 }
 <script type="text/html" id="toolbarDemo1">
     <div class="layui-btn-container">
-        <button type="button" class="layui-btn layui-btn-sm" lay-event="getCheckData">
-            <i class="layui-icon">&#xe624;</i> 添加
-        </button>
-        <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto">
-            <i class="layui-icon">&#xe601;</i>
-            Excel文件导入
-        </button>
-        <button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>
-        <button class="layui-btn layui-btn-sm" onclick="ChangeGotoSchoolstate()"> <i class="layui-icon">&#xe714;</i> 转上门</button>
-        <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
-        <button class="layui-btn layui-btn-sm" onclick="ChangTeacher()"> <i class="layui-icon">&#xe714;</i> 转换咨询师</button>
-        <button class="layui-btn layui-btn-sm" onclick="InSchoolStudentData()"> <i class="layui-icon">&#xe714;</i> 查看在校学生信息</button>
-        <button class="layui-btn layui-btn-sm" onclick="GetMony()"> <i class="layui-icon">&#xe714;</i> 查看学生缴费信息</button>
+        @{
+            int r = Convert.ToInt32(ViewBag.Pers);
+            if (r != -1)
+            {
+                <button type="button" class="layui-btn layui-btn-sm" lay-event="getCheckData">
+                    <i class="layui-icon">&#xe624;</i> 添加
+                </button>
+                <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto">
+                    <i class="layui-icon">&#xe601;</i>
+                    Excel文件导入
+                </button>
+            }
+
+            if (r == 0)
+            {
+                <button class="layui-btn layui-btn-sm" onclick="ChangeGotoSchoolstate()"> <i class="layui-icon">&#xe714;</i> 转上门</button>
+                <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
+                <button class="layui-btn layui-btn-sm" onclick="ChangTeacher()"> <i class="layui-icon">&#xe714;</i> 转换咨询师</button>
+            }
+
+            if (r == 0 || r == 2)
+            {
+                <button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>
+                <button class="layui-btn layui-btn-sm" onclick="InSchoolStudentData()"> <i class="layui-icon">&#xe714;</i> 查看在校学生信息</button>
+                <button class="layui-btn layui-btn-sm" onclick="GetMony()"> <i class="layui-icon">&#xe714;</i> 查看学生缴费信息</button>
+            }
+
+        }
     </div>
 </script>
 <script type="text/html" id="barDemo1">
@@ -50,6 +65,7 @@
     <a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>
 </script>
 <div class="layui-collapse" lay-accordion>
+    <input type="hidden" id="rr" value="@r"/>
     <div class="layui-colla-item">
         <h2 class="layui-colla-title">数据查询</h2>
         <div class="layui-colla-content">
@@ -139,8 +155,7 @@
                  <button type="button" class="layui-btn" lay-submit="" lay-filter="ToIes">确定</button>
              </div>           
          </div>
-    </form>
-    
+    </form>    
 </div>
 <script>
  
@@ -376,7 +391,13 @@
                 , {
                     fixed: 'right', title: '操作', width: 250, templet: function (res) {
                         if (res.ConsultTeacher == null) {
-                            return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a ><a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>';
+                            var my_r = $("#rr").val();
+                            if (my_r == "2" || my_r== "3") {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
+                            } else {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a ><a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>';
+                            }
+                             
                         } else {
                             return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
                         }
@@ -461,25 +482,29 @@
         //监听行双击事件
         table.on('rowDouble(tabletest1)', function (obj) {
             var id = obj.data.Id;
-            layer.confirm("亲！是要查看跟踪信息吗?", { icon: 3, shade: 0.8, title: '温馨提示' }, function (index) {
-                layer.close(index);
-                if (obj.data.ConsultTeacher == null) {
-                    layer.msg("请先指派咨询师!!!", { icon: 6, shade: 0.8 });
-                } else {
-                    layer.open({
-                        type: 2,
-                        content: '/Market/Consult/FollwingInfoView/' + id
-                        , area: ['950px', '710px'],
-                        title: '跟踪信息信息页面'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                        , scrollbar: false
-                    });
+            var myrr = $("#rr").val();
+            if (myrr=="0") {
+                layer.confirm("亲！是要查看跟踪信息吗?", { icon: 3, shade: 0.8, title: '温馨提示' }, function (index) {
+                    layer.close(index);
+                    if (obj.data.ConsultTeacher == null) {
+                        layer.msg("请先指派咨询师!!!", { icon: 6, shade: 0.8 });
+                    } else {
+                        layer.open({
+                            type: 2,
+                            content: '/Market/Consult/FollwingInfoView/' + id
+                            , area: ['950px', '710px'],
+                            title: '跟踪信息信息页面'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                            , scrollbar: false
+                        });
 
-                }
+                    }
 
-            });
+                });
+            }
+            
         });
 
         //监听提交

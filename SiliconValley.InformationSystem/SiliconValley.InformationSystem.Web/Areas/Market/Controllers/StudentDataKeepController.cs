@@ -49,6 +49,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
        
+        
         #endregion
 
 
@@ -81,7 +82,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             ViewBag.slist = ss;
 
-
+            ViewBag.Pers = s_Entity.GetPostion(UserName.EmpNumber);
             return View();
         }
  
@@ -479,6 +480,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Student = data;
             return View(data);
         }
+
 
         #endregion
 
@@ -1247,6 +1249,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #region 获取在校学生信息
         public ActionResult GetStudent()
         {
+            string id = Request.QueryString["id"];
+            //根据备案Id获取数据
             return View();
         }
         #endregion

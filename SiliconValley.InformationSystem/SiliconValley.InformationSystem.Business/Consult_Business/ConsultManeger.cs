@@ -540,9 +540,9 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
                 this.Insert(list);
                 a.Success = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                string msg = ex.Message;
                 a.Success = false;
             }
 
@@ -595,6 +595,8 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
 
             return find[0];
         }
+
+        
 
         #region  给跟踪业务使用的方法
         //给咨询分量的数据

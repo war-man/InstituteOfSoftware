@@ -25,5 +25,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string MarketState { get; set; }
 
         public string Inquiry { get; set; }
+
+        public string MarketType { get; set; }
+
+        public string Info { get; set; }
     }
 }
