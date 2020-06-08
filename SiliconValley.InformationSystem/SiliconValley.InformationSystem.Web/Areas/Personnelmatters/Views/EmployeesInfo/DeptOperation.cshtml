@@ -71,30 +71,31 @@
                 tree.render({
                     elem: '#uldiv',
                     id: 'mytree',
-                    edit: ['update', 'del'] //操作节点的图标
+                    edit: [/*'update',*/ 'del'] //操作节点的图标
                     , operate: function (obj) {
                         var type = obj.type; //得到操作类型：add、edit、del
                         var data = obj.data; //得到当前节点的数据
                         var elem = obj.elem; //得到当前节点元素
-
+                        console.log("树菜单操作类型：" + type);
                         //Ajax 操作
                         var id = data.id; //得到节点编号
-                        if (type === 'update') { 
-                            var editeddata = elem.find('.layui-tree-txt').html();//得到修改后的内容
+                        //if (type === 'update') { 
+                        //    var editeddata = elem.find('.layui-tree-txt').html();//得到修改后的内容
  
-                            if (data.grade==1) {//表示点击编辑的是部门节点
-                                $.ajax({
-                                    type: "POST",
-                                    dataType: "json",
-                                    url: "/Personnelmatters/EmployeesInfo/EditDept",
-                                    data: { id: id, dname: editeddata},
-                                    success: function (data) {
-                                        console.log(editeddata);
+                        //    if (data.grade==1) {//表示点击编辑的是部门节点
+                        //        $.ajax({
+                        //            type: "POST",
+                        //            dataType: "json",
+                        //            url: "/Personnelmatters/EmployeesInfo/EditDept",
+                        //            data: { id: id, dname: editeddata},
+                        //            success: function (data) {
+                        //                console.log(editeddata);
                                        
-                                    }
-                                });
+                        //            }
+                        //        });
 
-                            } else if (data.grade==2) {
+                        //    } else
+                        if (data.grade == 1) {
                                 $.ajax({
                                     type: "POST",
                                     dataType: "json",

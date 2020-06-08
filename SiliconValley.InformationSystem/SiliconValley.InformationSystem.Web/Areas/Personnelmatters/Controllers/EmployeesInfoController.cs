@@ -223,7 +223,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
-
+         
             try
             {
                 emp.EmployeeId = empinfo.EmpId();
@@ -466,25 +466,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
         //修改部门表属性
-        [HttpPost]
-        public ActionResult EditDept(int id, string dname)
-        {
-            DepartmentManage deptmanage = new DepartmentManage();
-            PositionManage pmanage = new PositionManage();
-            var AjaxResultxx = new AjaxResult();
-            try
-            {
-                var dept = deptmanage.GetEntity(id);
-                dept.DeptName = dname;
-                deptmanage.Update(dept);
-                AjaxResultxx = deptmanage.Success();
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = deptmanage.Error(ex.Message);
-            }
-            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
-        }
+        //[HttpPost]
+        //public ActionResult EditDept(int id, string dname)
+        //{
+        //    DepartmentManage deptmanage = new DepartmentManage();
+        //    PositionManage pmanage = new PositionManage();
+        //    var AjaxResultxx = new AjaxResult();
+        //    try
+        //    {
+        //        var dept = deptmanage.GetEntity(id);
+        //        dept.DeptName = dname;
+        //        deptmanage.Update(dept);
+        //        AjaxResultxx = deptmanage.Success();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        AjaxResultxx = deptmanage.Error(ex.Message);
+        //    }
+        //    return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        //}
         //部门伪删除即,将部门禁用
         [HttpPost]
         public ActionResult DelDepts(int id)
