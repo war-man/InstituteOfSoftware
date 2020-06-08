@@ -30,19 +30,31 @@
             .table1 th {
                 text-align: end;
             }
+
         .div1 {
             cursor: pointer;
-          
         }
+
             .div1:hover {
                 background-color: chartreuse;
             }
     </style>
+    <link href="~/Areas/Teachingquality/Styles/MenuBar.css" rel="stylesheet" />
 }
+<menu class="menui" style="width:134px;">
 
+
+    <li class="menui-item ">
+        <button type="button" class="menui-btn " id="test1" >
+            <i class="fa fa-folder-open" value="更换照片"></i>
+            <span class="menui-text"  >班级照片更换</span>
+        </button>
+    </li>
+
+</menu>
 
 <div style="width:20%;height:400px; border:1px solid #e6e6e6;float:left;margin-top:10px;">
-    <div style="position:relative;left:79px;"><img src="~/uploadXLSXfile/EmpImage/@Model.Images" class="round_icon" /></div>
+    <div style="position:relative;left:79px;width:160px;"><img src="~/uploadXLSXfile/EmpImage/@Model.Images" class="round_icon" /></div>
 
 
     <table cellspacing="1" class="table1">
@@ -71,31 +83,103 @@
 
 
     </table>
-  
+
 </div>
-      <div style="width:79%;float:left;" id="classid">
-          
-      </div>
+<div style="width:79%;float:left;" id="classid">
+
+</div>
 
 
 <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
 
-@section script{}
-    <script>
+
+<script>
+    
+    var menu = document.querySelector('.menui');
+    function showMenu(x, y) {
+        if (x > 1600) {
+            x = x - 300;
+        }
+        menu.style.left = parseInt(x - 0) + 'px';
+        menu.style.top = parseInt(y - 60) + 'px';
+        menu.classList.add('show-menui');
+    }
+    function hideMenu() {
+
+        menu.classList.remove('show-menui');
+    }
+
+    function onContextMenu(e) {
+
+        e.preventDefault();
+        showMenu(e.pageX, e.pageY);
+        document.addEventListener('mousedown', onMouseDown, false);
+    }
+    var stuid = "";
+    //班委数据操作
+    function onMouseDown(e) {
+        hideMenu();
+        var myx = $(e)[0].target.innerText;
+        if (myx == "班级照片更换") {
+            ClassImages(stuid);
+       
+        }
+        document.removeEventListener('mousedown', onMouseDown);
+
+    }
+    function ClassImages(ids) {
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            layer.open({
+                title: "班级照片替换",
+                type: 2,
+                area: ['360px', '360px']
+                , content: "/Teachingquality/ClassSchedule/ClassImages/" + ids
+                , end: function () { date(); }
+                , anim: 1,
+                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+        });
+    }
+    $(document).ready(function () {
+        window.oncontextmenu = function () { return false; }
+        //加上这个代码即可
+    });
+
+    $("body").on("contextmenu", ".div1", function (e) {
+        onContextMenu(e);
+        stuid = $($(this).children()[0]).val();
+
+        return false;
+        document.addEventListener('contextmenu', onContextMenu, false);
+        hideMenu();
+    });
+    function date() {
+        $($("#classid").children()).remove();
         $.post("/Teachingquality/ClassSchedule/EmpClass", function (data) {
-            console.log(data);
+
             for (var i = 0; i < data.length; i++) {
-                $("#classid").append($('<div class="div1" style="width:150px;height:150px;float:left;margin-left:20px;margin-top:20px;">  <input type="text" value=' + data[i].id + ' style="display:none" /> <img  style="width:150px;height:150px;" src="/Areas/Teachingquality/ClassImages/ClassImages.jpg" /> <div style="height:30px;margin-top:-91px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>'+data[i].grade_Id+'</div><</div>'));
+                if (data[i].ClassImage == null) {
+                    $("#classid").append($('<div class="div1" style="width:150px;height:150px;float:left;margin-left:20px;margin-top:20px;">  <input type="text" value=' + data[i].id + ' style="display:none" /> <img  style="width:150px;height:150px;" src="/Areas/Teachingquality/ClassImages/ClassImages.jpg" /> <div style="height:30px;margin-top:-91px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div><</div>'));
+                } else {
+                    $("#classid").append($('<div class="div1" style="width:150px;height:150px;float:left;margin-left:20px;margin-top:20px;">  <input type="text" value=' + data[i].id + ' style="display:none" /> <img  style="width:150px;height:150px;" src="/Areas/Teachingquality/ClassImages/' + data[i].ClassImage + '" /> <div style="height:30px;margin-top:-91px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div><</div>'));
+                }
+
             }
         })
-     
-        $("body").on("click", ".div1", function (e) {
-            e.stopPropagation();
-            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
-        })
-      
+    }
+    date();
+
+    $("body").on("click", ".div1", function (e) {
+        e.stopPropagation();
+        window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
+    })
+
     
-    </script>
+</script>
+
+
 
 
 

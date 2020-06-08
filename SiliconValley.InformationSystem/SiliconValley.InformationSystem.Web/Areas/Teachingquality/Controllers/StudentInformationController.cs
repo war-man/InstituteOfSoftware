@@ -843,7 +843,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             List<StudentInformation> students = new List<StudentInformation>();
             var classname = classschedu.GetList().Where(a => a.ClassNumber == id).FirstOrDefault();
-           var student= Stuclass.ClassStudent(classname.id);
+           var student= Stuclass.ClassStudent(classname.id).Where(a=>a.InsitDate>Convert.ToDateTime("2020-06-07")).ToList();
             var da = "";
             if (ye==true)
             {
@@ -855,36 +855,57 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             var n = da.Substring(0, 2);
             var y = da.Substring(2, 2);
+            var r = da.Substring(4, 2);
+            foreach (var item in student)
+            {
+              item.StudentNumber=n+y+  item.StudentNumber.Substring(4, item.StudentNumber.Length - 4);
+                item.InsitDate = Convert.ToDateTime("20" + n + "-" + y + "-" + r);
+                students.Add(item);
+            }
+                dbtext.Update(students);
 
-            //foreach (var item in student)
-            //{
-            var x = dbtext.GetList();
+
+                //var x = Stuclass.GetList().Where(a => a.ID_ClassName == classname.id).ToList();
+                //foreach (var item in x)
+                //{
+                //    var stuid = item.StudentID;
+                //    var stu = item.StudentID.Substring(4, stuid.Length - 4);
+                //    item.StudentID = n + y + stu;
+
+                //}
+                //Stuclass.Update(x);
+
+            }
+        /// <summary>
+        /// 修改班级学号
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="ye"></param>
+        public void Classstu(string id, bool ye)
+        {
+            var da = "";
+            var classname = classschedu.GetList().Where(a => a.ClassNumber == id).FirstOrDefault();
+            var x = Stuclass.GetList().Where(a => a.ID_ClassName == classname.id&&a.AddDate> Convert.ToDateTime("2020-06-07")).ToList();
+
+            if (ye == true)
+            {
+                da = id.Substring(0, id.Length - 1);
+            }
+            else
+            {
+                da = id.Substring(2, 6);
+            }
+            var n = da.Substring(0, 2);
+            var y = da.Substring(2, 2);
+            var r = da.Substring(4, 2);
             foreach (var item in x)
             {
-                var stuid1 = item.StudentNumber.Substring(4, item.StudentNumber.Length-4);
-               var clssstu= Stuclass.GetList().Where(a => a.ID_ClassName == classname.id).ToList();
-                foreach (var item1 in clssstu)
-                {
-                    var item2 = item1.StudentID.Substring(4, item1.StudentID.Length-4);
-                    if (stuid1== item2)
-                    {
-                        item.StudentNumber = item1.StudentID;
-                        students.Add(item);
-                    }
-                }
+                var stuid = item.StudentID;
+                var stu = item.StudentID.Substring(4, stuid.Length - 4);
+                item.StudentID = n + y + stu;
+
             }
-            dbtext.Update(students);
-
-
-            //var x = Stuclass.GetList().Where(a => a.ID_ClassName == classname.id).ToList();
-            //foreach (var item in x)
-            //{
-            //    var stuid = item.StudentID;
-            //    var stu = item.StudentID.Substring(4, stuid.Length - 4);
-            //    item.StudentID = n + y + stu;
-
-            //}
-            //Stuclass.Update(x);
+            Stuclass.Update(x);
 
         }
         /// <summary>
@@ -917,19 +938,89 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             return null;
         }
+
         public ActionResult StudentClassID()
         {
           var x=  classschedu.GetList();
             foreach (var item in x)
             {
                 bool ye = item.grade_Id == 1 ? true : false;
-                StudentXueGai(item.ClassNumber, ye);
+                Classstu(item.ClassNumber, ye);
+
             }
             return null;
         }
 
-
-        //public ActionResult 
+        //修改进班日期和注册日期
+        public ActionResult Lubandate()
+        {
+            List<ScheduleForTrainees> scheduleForTrainees = new List<ScheduleForTrainees>();
+            List<StudentInformation> studentInformation = new List<StudentInformation>();
+            var da = "";
+            var x = classschedu.GetList();
+            foreach (var item in x)
+            {
+                if (item.grade_Id==1)
+                {
+                    da = item.ClassNumber.Substring(0, item.ClassNumber.Length - 1);
+                }
+                else
+                {
+                    da = item.ClassNumber.Substring(2, 6);
+                }
+                var n = da.Substring(0, 2);
+                var y = da.Substring(2, 2);
+                var r = da.Substring(4, 2);
+                var dat = "20" + n + "-" + y + "-" + r;
+                var student = Stuclass.GetList().Where(a => a.ID_ClassName == item.id).ToList();
+                foreach (var item1 in student)
+                {
+                    item1.AddDate = Convert.ToDateTime(dat);
+                    var stu = dbtext.GetEntity(item1.StudentID);
+                    stu.InsitDate = Convert.ToDateTime(dat);
+                    studentInformation.Add(stu);
+                    scheduleForTrainees.Add(item1);
+                }
+            }
+            Stuclass.Update(scheduleForTrainees);
+            dbtext.Update(studentInformation);
+            // var student = Stuclass.GetList();
+            return null;
+        }
+        //删除班级数据（没有学生的数据）
+        public ActionResult ClassStus()
+        {
+            List<ScheduleForTrainees> scheduleForTrainees = new List<ScheduleForTrainees>();
+            var x = classschedu.GetList();
+            foreach (var item in x)
+            {
+                var clssstu = Stuclass.GetList().Where(a => a.ID_ClassName == item.id&& a.AddDate > Convert.ToDateTime("2020-06-07")).ToList();
+                foreach (var item1 in clssstu)
+                {
+                   if(dbtext.GetList().Where(a => a.StudentNumber == item1.StudentID).FirstOrDefault() == null)
+                    {
+                        scheduleForTrainees.Add(item1);
+                    }
+                }
+            }
+            Stuclass.Delete(scheduleForTrainees);
+            return null;
+        }
+        //删除重复学生
+        public ActionResult StuClass()
+        {
+            List<StudentInformation> studentInformation = new List<StudentInformation>();
+           var x= dbtext.GetList();
+            foreach (var item in x)
+            {
+                if (Stuclass.GetList().Where(a => a.StudentID == item.StudentNumber).FirstOrDefault()==null)
+                {
+                    studentInformation.Add(item);
+                }
+            }
+            dbtext.Delete(studentInformation);
+            return null;
+        }
         //GetDate StudentClassView
         public ActionResult Classlists()
         {
@@ -989,5 +1080,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             };
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+      
     }
 }

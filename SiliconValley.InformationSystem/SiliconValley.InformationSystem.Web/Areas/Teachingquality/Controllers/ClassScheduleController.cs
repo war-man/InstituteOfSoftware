@@ -24,6 +24,7 @@ using SiliconValley.InformationSystem.Business.Shortmessage_Business;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using System.IO;
 
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
@@ -100,9 +101,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 List<ClassSchedule> list = new List<ClassSchedule>();
                 List<ClassSchedule> list1 = new List<ClassSchedule>();
+               var dbclass= dbtext.GetListBySql<ClassSchedule>("select *from ClassSchedule").ToList();
                 if (user.UserName == "Admin")
                 {
-                    list = dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false).ToList();
+                    list = dbclass.Where(a => a.ClassStatus == false && a.IsDelete == false).ToList();
                 }
                 else
                 {
@@ -120,7 +122,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                           var x=  Grandlist.Where(a => a.GrandName=="S1"|| a.GrandName=="S2").ToList();
                             foreach (var item in x)
                             {
-                                mylist.AddRange(dbtext.GetList().Where(a => a.grade_Id == item.Id).ToList());
+                                mylist.AddRange(dbclass.Where(a => a.grade_Id == item.Id).ToList());
                             }
                         }
                         else
@@ -128,7 +130,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                             var x = Grandlist.Where(a => a.GrandName == "S3").ToList();
                             foreach (var item in x)
                             {
-                                mylist.AddRange(dbtext.GetList().Where(a => a.grade_Id == item.Id).ToList());
+                                mylist.AddRange(dbclass.Where(a => a.grade_Id == item.Id).ToList());
                             }
                         }
                         list = mylist;
@@ -140,7 +142,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                             var x = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HadnID.ID).ToList();
                             foreach (var item in x)
                             {
-                                list.Add(dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false && a.id == item.ClassID).FirstOrDefault());
+                                list.Add(dbclass.Where(a => a.ClassStatus == false && a.IsDelete == false && a.id == item.ClassID).FirstOrDefault());
                             }
                         }
                     }
@@ -279,11 +281,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //查看班级的学员
         public ActionResult ClassStudent()
         {
-
-
            var classNumberss =int.Parse( Request.QueryString["ClassNumber"]);
-         
-            ViewBag.ClassName =dbtext.GetEntity( classNumberss).ClassNumber;
+            ViewBag.ClassName =dbtext.GetEntity(classNumberss).ClassNumber;
             ViewBag.GrandName= Grandcontext.GetEntity(dbtext.GetEntity(classNumberss).grade_Id).GrandName;
             ViewBag.ClassdetailsView = dbtext.Listdatails((int)classNumberss);
             ViewBag.ClassID = classNumberss;
@@ -917,6 +916,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 ClassRemarks = a.ClassRemarks,
                 ClassStatus = a.ClassStatus,
                 IsDelete = a.IsDelete,
+                a.ClassImage,
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 
             //Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
@@ -924,6 +924,48 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 stuclasss = Stuclass.GetList().Where(c => c.ID_ClassName == a.id && c.CurrentClass == true).Count()//班级人数
             }).ToList();
             return Json(dataList, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 更改班级照片页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ClassImages(int id)
+        {
+            return View(dbtext.GetEntity(id));
+        }
+        /// <summary>
+        /// 更新班级照片
+        /// </summary>
+        /// <param name="id">班级id</param>
+        /// <returns></returns>
+        public ActionResult AddClassImages(int id)
+        {
+            var cl = dbtext.GetEntity(id);
+
+            AjaxResult result = new AjaxResult();
+            var fien = Request.Files[0];
+            string filename = fien.FileName;
+            string Extension = Path.GetExtension(filename);
+            string newfilename = id  + Extension;
+            try
+            {
+                    cl.ClassImage = newfilename;
+                    dbtext.Update(cl);
+                    result = new SuccessResult();
+                    result.ErrorCode = 200;
+                    string path = Server.MapPath("~/Areas/Teachingquality/ClassImages/" + newfilename);
+
+                    fien.SaveAs(path);
+               
+            }
+            catch (Exception ex)
+            {
+                result = new SuccessResult();
+                result.ErrorCode = 300;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+            
         }
     }
 }

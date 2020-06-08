@@ -52,7 +52,11 @@
                     var datetime="";
                     if (item.BirthDate==null)
                     {
-                        datetime = item.BirthDate.ToString();
+                        string ident = item.identitydocument.Substring(6, 8);
+                        string n = ident.Substring(0, 4);
+                        string y = ident.Substring(4, 2);
+                        string r = ident.Substring(6, 2);
+                        datetime = n +"-"+ y+ "-"+ r;
                     }
                     else
                     {
