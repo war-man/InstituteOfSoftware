@@ -18,6 +18,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using Newtonsoft.Json;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Entity.Entity;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
@@ -206,7 +208,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //  List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
             //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
             List<StudentInformation> list = classschedu.HeadteStudent();
-
+            foreach (var item in list)
+            {
+                //list
+                if (item.BirthDate==null)
+                {
+                    var ident = item.identitydocument;
+                   var x= ident.Substring(6).Substring(0,8);
+                    var n = x.Substring(0, 4);
+                    var y = x.Substring(4, 2);
+                    var r = x.Substring(6, 2);
+                   var  da=    n + "-" + y + "-" + r;
+                    item.BirthDate = Convert.ToDateTime(da);
+                }
+            }
 
             try
             {
@@ -818,6 +833,161 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             return Json(result,JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 修改学生学号准确时间
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="ye"></param>
+        public void StudentXueGai(string id,bool ye)
+        {
+            List<StudentInformation> students = new List<StudentInformation>();
+            var classname = classschedu.GetList().Where(a => a.ClassNumber == id).FirstOrDefault();
+           var student= Stuclass.ClassStudent(classname.id);
+            var da = "";
+            if (ye==true)
+            {
+               da= id.Substring(0, id.Length - 1);
+            }
+            else
+            {
+                da = id.Substring(2, 6);
+            }
+            var n = da.Substring(0, 2);
+            var y = da.Substring(2, 2);
+
+            //foreach (var item in student)
+            //{
+            var x = dbtext.GetList();
+            foreach (var item in x)
+            {
+                var stuid1 = item.StudentNumber.Substring(4, item.StudentNumber.Length-4);
+               var clssstu= Stuclass.GetList().Where(a => a.ID_ClassName == classname.id).ToList();
+                foreach (var item1 in clssstu)
+                {
+                    var item2 = item1.StudentID.Substring(4, item1.StudentID.Length-4);
+                    if (stuid1== item2)
+                    {
+                        item.StudentNumber = item1.StudentID;
+                        students.Add(item);
+                    }
+                }
+            }
+            dbtext.Update(students);
+
+
+            //var x = Stuclass.GetList().Where(a => a.ID_ClassName == classname.id).ToList();
+            //foreach (var item in x)
+            //{
+            //    var stuid = item.StudentID;
+            //    var stu = item.StudentID.Substring(4, stuid.Length - 4);
+            //    item.StudentID = n + y + stu;
+
+            //}
+            //Stuclass.Update(x);
+
+        }
+        /// <summary>
+        /// 删除重复的学生/删除前要修改key唯一键
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyStudenttext()
+        {
+            List<StudentInformation> stu= new List<StudentInformation>();
+            List<StudentInformation> studentInformation = new List<StudentInformation>();
+          var x=  dbtext.GetList();
+            foreach (var item in x)
+            {
+              
+                foreach (var item1 in studentInformation)
+                {
+                    if (item.identitydocument==item1.identitydocument)
+                    {
+                        stu.Add(item);
+                    }
+                }
+                studentInformation.Add(item);
+
+            }
+
+            foreach (var item in stu)
+            {
+                Stuclass.Delete(Stuclass.GetList().Where(a => a.StudentID == item.StudentNumber).FirstOrDefault());
+                dbtext.Delete(item);
+            }
+            return null;
+        }
+        public ActionResult StudentClassID()
+        {
+          var x=  classschedu.GetList();
+            foreach (var item in x)
+            {
+                bool ye = item.grade_Id == 1 ? true : false;
+                StudentXueGai(item.ClassNumber, ye);
+            }
+            return null;
+        }
+
+
+        //public ActionResult 
+        //GetDate StudentClassView
+        public ActionResult Classlists()
+        {
+            //阶段
+            GrandBusiness Grandcontext = new GrandBusiness();
+            var Techarco = Techarcontext.GetList();
+
+            Specialty specialty = new Specialty();
+            specialty.SpecialtyName = "无";
+
+
+            Techarco.Add(specialty);
+          
+            //阶段
+            ViewBag.Stage = Grandcontext.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
+            return View();
+
+        }
+
+        public ActionResult ClassGetDate(int page, int limit, string ClassName, string Stage_id)
+        {
+            //班级状态表
+            BaseBusiness<Classstatus> classtatus = new BaseBusiness<Classstatus>();
+            HeadmasterBusiness Hadmst = new HeadmasterBusiness();
+            GrandBusiness Grandcontext = new GrandBusiness();
+            var EmpNumber = Base_UserBusiness.GetCurrentUser().EmpNumber;
+            var id = Hadmst.GetList().Where(a => a.informatiees_Id == EmpNumber && a.IsDelete == false).FirstOrDefault().ID;
+
+            var dataList = Hadmst.EmpClass(id,true).Select(a => new
+            {
+                //  a.BaseDataEnum_Id,
+                a.id,
+                ClassNumber = a.ClassNumber,
+                ClassRemarks = a.ClassRemarks,
+             
+                grade_Id = Grandcontext.GetEntity(a.grade_Id).Id, //阶段id
+                grade_Name = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
+                stuclasss = Stuclass.GetList().Where(c => c.ID_ClassName == a.id && c.CurrentClass == true).Count()//班级人数
+            }).ToList();
+            if (!string.IsNullOrEmpty(ClassName))
+            {
+                dataList = dataList.Where(a => a.ClassNumber.Contains(ClassName)).ToList();
+            }
+            if (!string.IsNullOrEmpty(Stage_id))
+            {
+                int stage = int.Parse(Stage_id);
+
+                dataList = dataList.Where(a => a.grade_Id == stage).ToList();
+            }
+            var dt=dataList.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = dataList.Count,
+                data = dt
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -1833,6 +1833,13 @@
     <Content Include="Areas\Market\Views\FollwingInfo\MyFollwingInfoIndex.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\HandMasterRegisterds.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\GetStudent.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\CourseTypeIndex.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\StudentExamSys\MockExaminationView.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Tuitionrefund.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\TuitionreHome.cshtml" />
+    <Content Include="Areas\Teaching\Views\Exam\ExamquestionExplanation.cshtml" />
+    <Content Include="Areas\Teaching\Views\Exam\Index.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Classlists.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
