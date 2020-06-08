@@ -927,10 +927,10 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         }
 
 
-        //public string GetIdCard(string date)
-        //{
-        //    string one = "404";
-
-        //}
+        public string GetIdCard(string date)
+        {
+            string one = "404";
+            return null;
+        }
     }
 }
