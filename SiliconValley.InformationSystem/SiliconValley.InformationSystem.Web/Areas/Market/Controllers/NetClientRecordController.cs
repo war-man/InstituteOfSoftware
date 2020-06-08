@@ -49,16 +49,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 string IsDel = str[4];
                 string start_time = str[5];
                 string end_time = str[6];
-                list = list.Where(e => e.StuName.Contains(name)).ToList();
-                list = list.Where(e => e.InformationSource.Contains(InformationSource)).ToList();
-                if (!string.IsNullOrEmpty(registrant))
-                {
-                    list = list.Where(e =>e.EmployeeId==registrant).ToList();
-                }
-                if (!string.IsNullOrEmpty(IsFaceConsult))
-                {
-                    list = list.Where(e =>e.IsFaceConsult==bool.Parse(IsFaceConsult)).ToList();
-                }
+                //list = list.Where(e => e.StuName.Contains(name)).ToList();
+                //list = list.Where(e => e.InformationSource.Contains(InformationSource)).ToList();
+                //if (!string.IsNullOrEmpty(registrant))
+                //{
+                //    list = list.Where(e =>e.EmployeeId==registrant).ToList();
+                //}
+                //if (!string.IsNullOrEmpty(IsFaceConsult))
+                //{
+                //    list = list.Where(e =>e.IsFaceConsult==bool.Parse(IsFaceConsult)).ToList();
+                //}
                 if (!string.IsNullOrEmpty(IsDel))
                 {
                     list = list.Where(e =>e.IsDel==bool.Parse(IsDel)).ToList();
@@ -80,22 +80,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                           {
                               #region 获取属性值 
                               e.Id,
-                              netemp= GetNetConsultTea(e.EmployeeId).EmpName,
+                              //netemp= GetNetConsultTea(e.EmployeeId).EmpName,
                               e.NetClientDate,
-                              channeltea = e.MarketTeaId==null ? null: GetNetConsultTea(e.MarketTeaId).EmpName,
-                              e.StuName,
-                              e.StuSex,
-                              e.StuAge,
-                              e.InformationSource,
-                              e.Education,
-                              e.Region,
-                              e.ContactInformation,
-                              e.QQNum,
-                              e.WeChatNum,
-                              e.IsFaceConsult,
-                              e.CallBackCase,
-                              e.SecondCallBack,
-                              e.ThirdCallBack,
+                              //channeltea = e.MarketTeaId==null ? null: GetNetConsultTea(e.MarketTeaId).EmpName,
+                              //e.StuName,
+                              //e.StuSex,
+                              //e.StuAge,
+                              //e.InformationSource,
+                              //e.Education,
+                              //e.Region,
+                              //e.ContactInformation,
+                              //e.QQNum,
+                              //e.WeChatNum,
+                              //e.IsFaceConsult,
+                                e.CallBackCase,
+                              //e.SecondCallBack,
+                              //e.ThirdCallBack,
                               e.IsDel,
                               #endregion
                           };
@@ -190,7 +190,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                                                                
                 string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
                 // ncr.EmployeeId=session['网络咨询师'];网咨信息登记者即为正在登录该页面的员工
-                ncr.EmployeeId = eid;//防止测试的报错暂时设置一个死值
+              //  ncr.EmployeeId = eid;//防止测试的报错暂时设置一个死值
                 ncr.NetClientDate = DateTime.Now;
                 nmanage.Insert(ncr);
                AjaxResultxx= nmanage.Success();
@@ -248,31 +248,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult EditNetStu(int id, string name, bool ismarry) {
-            NetClientRecordManage ncrinfo = new NetClientRecordManage();
-            var AjaxResultxx = new AjaxResult();
-            try
-            {
-                var emp= ncrinfo.GetEntity(id);
-                switch (name)
-                {
-                    case "IsFaceConsult":
+        //public ActionResult EditNetStu(int id, string name, bool ismarry) {
+        //    NetClientRecordManage ncrinfo = new NetClientRecordManage();
+        //    var AjaxResultxx = new AjaxResult();
+        //    try
+        //    {
+        //        var emp= ncrinfo.GetEntity(id);
+        //        switch (name)
+        //        {
+        //            case "IsFaceConsult":
                        
-                            emp.IsFaceConsult = ismarry;
-                        break;
-                    case "IsDel":
-                            emp.IsDel =ismarry;
+        //                    emp.IsFaceConsult = ismarry;
+        //                break;
+        //            case "IsDel":
+        //                    emp.IsDel =ismarry;
 
-                        break;
-                }
-                ncrinfo.Update(emp);
-                AjaxResultxx = ncrinfo.Success();
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = ncrinfo.Error(ex.Message);
-            }
-            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
-        }
+        //                break;
+        //        }
+        //        ncrinfo.Update(emp);
+        //        AjaxResultxx = ncrinfo.Success();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        AjaxResultxx = ncrinfo.Error(ex.Message);
+        //    }
+        //    return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        //}
     }
 }
