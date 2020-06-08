@@ -39,6 +39,41 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
        public  Sch_MarketManeger s_entity = new Sch_MarketManeger();
 
         /// <summary>
+        /// 获取登录的岗位
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <returns></returns>
+        public int GetPostion(string emp)
+        {
+            int Key = -1;
+            //根据Emp获取岗位
+            int id= Enplo_Entity.GetEntity(emp).PositionId;
+            Position find_p = Position_Entity.GetEntity(id);
+            if (find_p.PositionName== "网络咨询师")
+            {
+                Key = 3;
+            }else if (find_p.PositionName== "咨询助理")
+            {
+                Key = 4; 
+            }else if (find_p.PositionName== "咨询主任")
+            {
+                Key = 0;
+            }else if (find_p.PositionName == "网络主任")
+            {
+                Key = 2;
+            }
+            else  
+            {
+               Department find_b= Department_Entity.GetEntity(find_p.DeptId);
+                if (find_b.DeptName== "校办")
+                {
+                    Key = 0;
+                }
+            }
+            return Key;
+        }
+
+        /// <summary>
         /// 获取两张表的所有数据
         /// </summary>
         /// <returns></returns>
@@ -502,35 +537,93 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState from Sch_Market where StudentName='王彬' and Phone='15173281718'";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where CreateDate>='2017-02-28' and CreateDate<='2017-03-31'";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
             foreach (ADDdataview item in all)
             {
                 StudentPutOnRecord one = new StudentPutOnRecord();
+                one.Reak = item.Remark;
                 one.StuName = item.StudentName;
                 one.StuSex = string.IsNullOrEmpty(item.Sex) ? "男" : item.Sex;
                 one.EmployeesInfo_Id = Enplo_Entity.FindEmpData(item.SalePerson, false)?.EmployeeId ?? Enplo_Entity.FindEmpData("何娉", false).EmployeeId;
+                var mm = Enplo_Entity.FindEmpData(item.SalePerson, false);
+                if (string.IsNullOrEmpty(item.SalePerson) || item.SalePerson == "其他")
+                {
+                    one.Reak = one.Reak + "由于该备案人为空所以默认备案人为何娉";
+                }
+                else
+                {
+                    if (Enplo_Entity.FindEmpData(item.SalePerson, false).EmpName == null)
+                    {
+                        one.Reak = one.Reak + "。由于该备案人已离职所以默认备案人为何娉,真实备案人为:" + item.SalePerson + ",";
+                    }
+                }
+
                 one.StuDateTime = item.CreateDate;
                 string date = item.CreateDate.Year + "-" + item.CreateDate.Month + "-" + item.CreateDate.Day;
                 one.BeanDate = Convert.ToDateTime(date);
-                one.Reak = item.Remark;
+
                 one.StuPhone = item.Phone;
+                one.IsDelete = false;
                 one.StuQQ = item.QQ;
                 one.StuSchoolName = item.School;
                 one.StuEducational = item.Education;
+                one.StuStatus_Id = 1013;//默认未报名
                 one.StuIsGoto = item.MarketState == "已上门" ? true : false;
                 if (item.MarketState == "已上门")
                 {
                     one.StuVisit = Convert.ToDateTime(date);
                 }
+                else if (item.MarketState == "已报名交清" || item.MarketState == "已报名未交清")
+                {
+                    one.StuStatus_Id = 1012;//默认未报名
+                }
                 one.StuInfomationType_Id = StuInfomationType_Entity.SerchSingleData(item.Source, false) == null ? StuInfomationType_Entity.SerchSingleData("渠道", false).Id : StuInfomationType_Entity.SerchSingleData(item.Source, false).Id;
                 one.Region_id = region_Entity.SerchRegionName(item.Area, false)?.ID ?? null;
                 one.Party = item.RelatedPerson;
                 one.StuEntering = Enplo_Entity.FindEmpData(item.CreateUserName, false)?.EmpName ?? Enplo_Entity.FindEmpData("何娉", false).EmpName;
-                one.StuStatus_Id = 1013;//默认未报名
-                studentlist.Add(one);
+                if (item.Inquiry != null)
+                {
+                    one.ConsultTeacher = item.Inquiry;
+                    if (item.Inquiry == "罗星琪")
+                    {
+                        one.ConsultId = "4";
+                    }
+                    else if (item.Inquiry == "吴想")
+                    {
+                        one.ConsultId = "5";
+                    }
+                    else if (item.Inquiry == "易香婷")
+                    {
+                        one.ConsultId = "3";
+                    }
+                    else if (item.Inquiry == "于阳")
+                    {
+                        one.ConsultId = "2";
+                    }
+                    else if (item.Inquiry == "刘菁阳")
+                    {
+                        one.ConsultId = "6";
+                    }
+                    else if (item.Inquiry == "黄玲")
+                    {
+                        one.ConsultId = "7";
+                    }
+                    else if (item.Inquiry == "何娉")
+                    {
+                        one.ConsultId = "1";
+                    }
+                    else
+                    {
+                        one.ConsultTeacher = "何娉";
+                        one.ConsultId = "1";
+                        one.Reak = one.Reak + "之前咨询师是:" + item.Inquiry + "但是离职了，由于没有员工信息所以默认为何娉";
+                    }
+                }
 
+
+                studentlist.Add(one);
 
             }
 
@@ -559,6 +652,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                                 consult.ComDate = Convert.ToDateTime(date);
                                 consult.StuName = Convert.ToInt32(findstudent.Id);
                                 consult.TeacherName = teacher.Id;
+                                consult.IsDelete = false;
                                 Consultlist.Add(consult);
                             }
 
@@ -567,7 +661,48 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 }
             }
 
+
             AjaxResult a = EmployandCounTeacherCoom.AddConsultData(Consultlist);
+
+            List<FollwingInfo> listinfo = new List<FollwingInfo>();
+            all = all.Where(m => m.Inquiry != null).ToList();
+
+            foreach (ADDdataview item in all)
+            {
+                if (Enplo_Entity.FindEmpData(item.Inquiry,false)!=null)
+                {
+                    List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where StuName='" + item.StudentName + "'and Stuphone='" + item.Phone + "' ");
+                    if (listall.Count>0)
+                    {
+                        Consult findc = EmployandCounTeacherCoom.findConsult(Convert.ToInt32(listall[0].Id));
+                        FollwingInfo follwing = new FollwingInfo();
+                        follwing.Consult_Id = findc.Id;
+                        if (string.IsNullOrEmpty(item.Info) && item.MarketType!=null)
+                        {
+                            follwing.TailAfterSituation = "跟踪结果:市场类型为"+item.MarketType;
+                        }
+                        else if(!string.IsNullOrEmpty(item.Info) && item.MarketType == null)
+                        {
+                            follwing.Rank = "D";
+                            follwing.TailAfterSituation = item.Info;
+                            follwing.Rmark = "该市场类型由信息部人员随意添加，如有错误，请联系咨询师确认信息准确性";
+                        }
+                        else
+                        {
+                            follwing.TailAfterSituation = item.Info;
+                            follwing.Rank = item.MarketState;
+                        }
+                        follwing.IsDelete = false;
+                        string date = item.CreateDate.Year + "-" + item.CreateDate.Month + "-" + item.CreateDate.Day;
+                        follwing.FollwingDate = Convert.ToDateTime(date); ;
+                         
+
+                        listinfo.Add(follwing);
+                    }
+                }
+            }
+
+            a = EmployandCounTeacherCoom.AddFllow(listinfo);
 
             #endregion
         }
@@ -610,7 +745,6 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         #endregion
 
       
-
         /// <summary>
         /// 获取StudentPutOnRecord表的所有数据
         /// </summary>
@@ -792,5 +926,11 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             return data;
         }
 
+
+        public string GetIdCard(string date)
+        {
+            string one = "404";
+            return null;
+        }
     }
 }

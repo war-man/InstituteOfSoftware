@@ -18,6 +18,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
     {
        public static ConsultTeacherManeger Consult_entity = new ConsultTeacherManeger();
        public static ConsultManeger consult = new ConsultManeger();
+       static FollwingInfoManeger follwing = new FollwingInfoManeger();
         /// <summary>
         /// 获取所有的咨询师，然后转化为员工集合
         /// </summary>
@@ -115,5 +116,22 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
            return Consult_entity.GetList().Select(c => new ConsultTeacher() { Employees_Id = employeesInfo.GetEntity(c.Employees_Id).EmpName, Id = c.Id }).ToList();
         }
              
+        /// <summary>
+        /// 添加咨询跟踪数据
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static AjaxResult AddFllow(List<FollwingInfo> list)
+        {
+            AjaxResult a = new AjaxResult();
+            a.Success = follwing.Addlist(list);
+            return a;
+        }
+
+
+        public static Consult findConsult(int sid)
+        {
+           return consult.AccordingStuIdGetConsultData(sid);
+        }
     }
 }

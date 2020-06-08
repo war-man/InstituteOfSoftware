@@ -9,9 +9,71 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>GetStudent</title>
+    <link href="~/Scripts/layui/css/styles.css" rel="stylesheet" />
+    <style>
+        .DivCss{
+        width:95%;
+        height:100%;
+        margin-top:20px;
+        margin-left:auto;
+        margin-right:auto;
+        margin-bottom:auto;
+        }
+
+        .inputCss{
+          border:1px solid dashed;          
+        }
+    </style>
 </head>
 <body>
-    <div> 
+    <div class="DivCss">
+        <form class="layui-form">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">学生姓名:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="inputCss" name="StudentName" id="StudentName"/>
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">所在班级:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="inputCss" name="IntoClass" id="IntoClass"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">班主任:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="inputCss" name="heandMaster" id="heandMaster"/>
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">目前阶段:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="inputCss" name="grandName" id="grandName"/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">教学老师:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="inputCss" name="teacherName"  id="teacherName"/>
+                    </div>
+                </div>                 
+            </div>
+        </form>
     </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+
+        });
+    </script>
 </body>
 </html>
