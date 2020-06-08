@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 学号
         /// </summary>
-       
+        [Key]
         public string StudentNumber { get; set; }
         /// <summary>
         /// 姓名
@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 身份证号
         /// </summary>
-        [Key]
+        
         public string identitydocument { get; set; }
         /// <summary>
         /// 电话号码

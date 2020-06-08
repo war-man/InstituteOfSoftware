@@ -477,6 +477,7 @@
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
+    <Content Include="Areas\Teachingquality\ClassImages\1.jpg" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
     <Content Include="Areas\Teachingquality\ClassImages\ClassImages.jpg" />
     <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051991032300041back.jpg" />
@@ -1840,6 +1841,8 @@
     <Content Include="Areas\Teaching\Views\Exam\ExamquestionExplanation.cshtml" />
     <Content Include="Areas\Teaching\Views\Exam\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Classlists.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\ClassImages.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\StudentEnll.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

@@ -262,6 +262,7 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             }
 
         }
+     
         /// <summary>
         /// 注册学员
         /// </summary>
@@ -278,6 +279,8 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             {
                 try
                 {
+                    
+                    
                     studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
                     studentInformation.InsitDate = DateTime.Now;
                     studentInformation.Password = "000000";
