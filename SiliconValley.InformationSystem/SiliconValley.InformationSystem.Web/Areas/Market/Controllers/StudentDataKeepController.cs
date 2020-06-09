@@ -1186,8 +1186,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         [HttpPost]
         public ActionResult RegistersFunction(ZhuceShowData data)
         {
-            //HeiHuManeger
-            data.YesHei = true;
             StudentInformationBusiness informationBusiness = new StudentInformationBusiness();
             StudentInformation student = new StudentInformation();
             student.Name = data.stuName;
