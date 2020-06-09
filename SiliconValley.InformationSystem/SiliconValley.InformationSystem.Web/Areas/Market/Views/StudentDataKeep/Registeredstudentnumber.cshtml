@@ -77,9 +77,17 @@
                                     </div>
                                     <div class="layui-row layui-form-item">
                                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                            <label class="LableCss1">身 &nbsp;份 &nbsp;证:</label>
+                                            <label class="LableCss1">黑 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 户:</label>
                                             <div class="layui-input-block">
-                                                <input type="text" class="layui-input" name="IdCare" id="IdCare" lay-verify="identity"/>
+                                                <input type="checkbox" class="layui-input" name="YesHei" id="YesHei" value="true" title="是" lay-filter="one"/>                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                            <label class="LableCss1"  >身 &nbsp;份 &nbsp;证:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" class="layui-input" name="IdCare" id="IdCare"/>
                                             </div>
                                         </div>
                                     </div>
@@ -111,31 +119,39 @@
                                     <form class="layui-form">
                                         <div class="layui-row layui-form-item">
                                             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                                                <input type="hidden" value="@item.Id" id="Id" name="Id"/>
+                                                <input type="hidden" value="@item.Id" id="Id" name="Id" />
                                                 <label class="LableCss1">学生姓名:</label>
                                                 <div class="layui-input-block">
                                                     <input type="hidden" value="@item.Id" />
-                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuName" name="stuName" id="name"/>
+                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuName" name="stuName" id="name" />
                                                 </div>
                                             </div>
                                             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                                                 <label class="LableCss1">联系电话:</label>
                                                 <div class="layui-input-block">
-                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuPhone" name="stuPhone" id="stuPhone"/>
+                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuPhone" name="stuPhone" id="stuPhone" />
                                                 </div>
                                             </div>
                                             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                                                 <label class="LableCss1">学生性别:</label>
                                                 <div class="layui-input-block">
-                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuSex" name="stuSex" id="stuSex"/>
+                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuSex" name="stuSex" id="stuSex" />
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="layui-row layui-form-item">
                                             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                                <label class="LableCss1">身 &nbsp;份 &nbsp;证:</label>
+                                                <label class="LableCss1">黑 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 户:</label>
                                                 <div class="layui-input-block">
-                                                    <input type="text" class="layui-input" name="IdCare" id="IdCare" lay-verify="identity" />
+                                                    <input type="checkbox" class="layui-input" name="YesHei" id="YesHei" value="true" title="是"  lay-filter="one"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                <label class="LableCss1 myii">身 &nbsp;份 &nbsp;证:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" class="layui-input" name="IdCare" id="IdCare"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -144,7 +160,7 @@
                                                 <label class="LableCss1">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
                                                 <div class="layui-input-block">
                                                     <input type="hidden" name="Class_ID" id="Class_ID" />
-                                                    <i onclick="Iclick()" class="layui-icon" style="color:#009688;font-size: 30px;position:absolute;right:10px;top:5px;cursor:pointer">&#xe615;</i><input id="Class_Name" name="Class_Name" type="text" disabled="disabled" class="layui-input" lay-verify="required"/>
+                                                    <i onclick="Iclick()" class="layui-icon" style="color:#009688;font-size: 30px;position:absolute;right:10px;top:5px;cursor:pointer">&#xe615;</i><input id="Class_Name" name="Class_Name" type="text" disabled="disabled" class="layui-input" lay-verify="required" />
                                                 </div>
                                             </div>
                                         </div>
@@ -180,6 +196,7 @@
             var element = layui.element;
 
             form.on('submit(add)', function (data) {
+               // console.log(data.field);
                 $.ajax({
                     url: '/Market/StudentDataKeep/RegistersFunction',
                     type: 'POST',
@@ -199,6 +216,11 @@
             element.on('tab(student_reg_Form)', function (data) {
                 myindex=data.index; 
             });
+
+            //单选按钮切换
+            //form.on('radio(one)', function (data) {
+                 
+            //});  
         });
 
         function Iclick() {

@@ -31,6 +31,7 @@ using DataTable = System.Data.DataTable;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Business.RegionManage;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+//using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
 using System.Threading;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 
@@ -718,11 +719,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     s.StuIsGoto = false;
                     s.StuPhone = item1.StuPhone;
                     s.StuSchoolName = item1.StuSchoolName;
-                    s.StuStatus_Id = s_Entity.Stustate_Entity.GetIdGiveName("未报名", false).Success == true ? (s_Entity.Stustate_Entity.GetIdGiveName("未报名", false).Data as StuStatus).Id : -1;
+                    s.StuStatus_Id = 1013;
 
                     listnew.Add(s);
                 }
                 add_result = s_Entity.Add_data(listnew);
+
+                if (add_result.Success==true)
+                {
+                    //查询备案中是网络备案
+                    StuInfomationType find= s_Entity.StuInfomationType_Entity.SerchSingleData("网络", false);
+                    listnew= listnew.Where(l => l.StuInfomationType_Id == find.Id).ToList();
+                    foreach (StudentPutOnRecord item in listnew)
+                    {
+
+                    }
+                }
             }
 
             catch (Exception)
@@ -1174,12 +1186,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         [HttpPost]
         public ActionResult RegistersFunction(ZhuceShowData data)
         {
+            //HeiHuManeger
+            data.YesHei = true;
             StudentInformationBusiness informationBusiness = new StudentInformationBusiness();
             StudentInformation student = new StudentInformation();
             student.Name = data.stuName;
             student.Sex = data.stuSex=="男"?true:false;
-            student.identitydocument = data.IdCare;
+            if (data.YesHei)
+            {
+                student.identitydocument =s_Entity.GetIdCard(data.IdCare);
+                //添加到黑户表
+                HeiHu hu = new HeiHu();
+                hu.IdCard = student.identitydocument;
+                bool s= s_Entity.heiHu.Add_SingData(hu);
+            }
+             
             student.Telephone = data.stuPhone;
+
             AjaxResult a = new AjaxResult();
             //判断学号是否被注册
             int count= informationBusiness.GetList().Where(g => g.StudentPutOnRecord_Id ==Convert.ToInt32( data.Id)).Count();
@@ -1189,6 +1212,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 a.Msg = "该学生已注册过学号！";
                 return Json(a, JsonRequestBehavior.AllowGet);
             }
+             
               a=  informationBusiness.StudfentEnti(student, Convert.ToInt32(data.Class_ID), Convert.ToInt32(data.Id));
             return Json(a,JsonRequestBehavior.AllowGet);
         }

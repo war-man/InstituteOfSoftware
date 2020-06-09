@@ -38,6 +38,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
        public  Sch_MarketManeger s_entity = new Sch_MarketManeger();
 
+       public  HeiHuManeger heiHu = new HeiHuManeger();//用于查询黑户数据
+
         /// <summary>
         /// 获取登录的岗位
         /// </summary>
@@ -537,11 +539,13 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where CreateDate>='2017-02-28' and CreateDate<='2017-03-31'";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where  CreateDate>='2020-06-07' ";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
+
             foreach (ADDdataview item in all)
             {
+
                 StudentPutOnRecord one = new StudentPutOnRecord();
                 one.Reak = item.Remark;
                 one.StuName = item.StudentName;
@@ -582,7 +586,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 one.StuInfomationType_Id = StuInfomationType_Entity.SerchSingleData(item.Source, false) == null ? StuInfomationType_Entity.SerchSingleData("渠道", false).Id : StuInfomationType_Entity.SerchSingleData(item.Source, false).Id;
                 one.Region_id = region_Entity.SerchRegionName(item.Area, false)?.ID ?? null;
                 one.Party = item.RelatedPerson;
-                one.StuEntering = Enplo_Entity.FindEmpData(item.CreateUserName, false)?.EmpName ?? Enplo_Entity.FindEmpData("何娉", false).EmpName;
+                one.StuEntering = Enplo_Entity.FindEmpData(item.CreateUserName, false)?.EmpName ?? Enplo_Entity.FindEmpData("唐敏", false).EmpName;
                 if (item.Inquiry != null)
                 {
                     one.ConsultTeacher = item.Inquiry;
@@ -621,13 +625,19 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                         one.Reak = one.Reak + "之前咨询师是:" + item.Inquiry + "但是离职了，由于没有员工信息所以默认为何娉";
                     }
                 }
-
-
-                studentlist.Add(one);
-
+                 //studentlist.Add(one);
+                try
+                {
+                    this.Insert(one);
+                }
+                catch (Exception ex)
+                {
+                    
+                    string str1 = ex.Message;
+                }
             }
-
-            this.Add_data(studentlist);
+            
+            // this.Add_data(studentlist); 祁胜东,17674129299   13549595811（家里） 
 
             List<Consult> Consultlist = new List<Consult>();
             all = all.Where(a1 => a1.Inquiry != null && !string.IsNullOrEmpty(a1.Inquiry)).ToList();
@@ -665,44 +675,48 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             AjaxResult a = EmployandCounTeacherCoom.AddConsultData(Consultlist);
 
             List<FollwingInfo> listinfo = new List<FollwingInfo>();
-            all = all.Where(m => m.Inquiry != null).ToList();
+            all = all.Where(m => m.Info != null || m.MarketType!=null).ToList();
 
             foreach (ADDdataview item in all)
             {
-                if (Enplo_Entity.FindEmpData(item.Inquiry,false)!=null)
+                if (Enplo_Entity.FindEmpData(item.Inquiry, false).EmpName != null)
                 {
                     List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where StuName='" + item.StudentName + "'and Stuphone='" + item.Phone + "' ");
-                    if (listall.Count>0)
+                    if (listall.Count > 0 )
                     {
                         Consult findc = EmployandCounTeacherCoom.findConsult(Convert.ToInt32(listall[0].Id));
                         FollwingInfo follwing = new FollwingInfo();
                         follwing.Consult_Id = findc.Id;
-                        if (string.IsNullOrEmpty(item.Info) && item.MarketType!=null)
+                        if (string.IsNullOrEmpty(item.Info) && item.MarketType != null)
                         {
-                            follwing.TailAfterSituation = "跟踪结果:市场类型为"+item.MarketType;
+                            follwing.TailAfterSituation = "跟踪结果:市场类型为" + item.MarketType;
+                            follwing.Rank = item.MarketType.Substring(0,1);
                         }
-                        else if(!string.IsNullOrEmpty(item.Info) && item.MarketType == null)
+                        else if (!string.IsNullOrEmpty(item.Info) && item.MarketType == null)
                         {
                             follwing.Rank = "D";
                             follwing.TailAfterSituation = item.Info;
                             follwing.Rmark = "该市场类型由信息部人员随意添加，如有错误，请联系咨询师确认信息准确性";
                         }
-                        else
+                        else if(!string.IsNullOrEmpty(item.Info) && item.MarketType != null)
                         {
                             follwing.TailAfterSituation = item.Info;
-                            follwing.Rank = item.MarketState;
+                            follwing.Rank = item.MarketType.Substring(0,1);
                         }
                         follwing.IsDelete = false;
                         string date = item.CreateDate.Year + "-" + item.CreateDate.Month + "-" + item.CreateDate.Day;
-                        follwing.FollwingDate = Convert.ToDateTime(date); ;
-                         
+                        follwing.FollwingDate = Convert.ToDateTime(date);
 
-                        listinfo.Add(follwing);
+                        if (follwing.Rank!=null || follwing.TailAfterSituation !=null)
+                        {
+                            listinfo.Add(follwing);
+                        }
+                         
                     }
                 }
             }
 
-            a = EmployandCounTeacherCoom.AddFllow(listinfo);
+          a = EmployandCounTeacherCoom.AddFllow(listinfo);
 
             #endregion
         }
@@ -926,11 +940,47 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             return data;
         }
 
-
+        /// <summary>
+        ///  生成黑户身份证
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public string GetIdCard(string date)
         {
             string one = "404";
-            return null;
+            
+
+            int count=  heiHu.Count()+1;
+            string lent = count.ToString();
+
+            string server = null;
+
+            if (lent.Length==1)
+            {
+                server = "000000" + count;
+            }else if (lent.Length == 2)
+            {
+                server = "00000" + count;
+            }else if (lent.Length == 3)
+            {
+                server = "0000" + count;
+            }else if (lent.Length == 4)
+            {
+                server = "000" + count;
+            }else if (lent.Length == 5)
+            {
+                server = "00" + count;
+            }else if (lent.Length == 6)
+            {
+                server = "0" + count;
+            }
+            else if(lent.Length == 7)
+            {
+                server = count.ToString();
+            }
+
+            string card = one + date + server;
+            return card;
         }
     }
 }
