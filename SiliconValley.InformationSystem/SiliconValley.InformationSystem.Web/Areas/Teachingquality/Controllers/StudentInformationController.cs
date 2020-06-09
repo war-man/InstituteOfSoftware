@@ -1080,7 +1080,49 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             };
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
-      
+        /// <summary>
+        /// 学号顺序优化
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult StuidPaixu()
+        {
+            List<StudentInformation> studentInformation = new List<StudentInformation>();
+            var mingci = string.Empty;
+            var x = dbtext.GetList() ;
+            var count = 0;
+            foreach (var item in x)
+            {
+                count++;
+                if (count.ToString().Length < 2)
+                    mingci = "0000" + count;
+                else if (count.ToString().Length < 3)
+                    mingci = "000" + count;
+                else if (count.ToString().Length < 4)
+                    mingci = "00" + count;
+                else if (count.ToString().Length < 5)
+                    mingci = "0" + count;
+                else mingci = count.ToString();
+               var stuid= item.StudentNumber.Substring(0, item.StudentNumber.Length - 5);
+                item.StudentNumber = stuid + mingci;
+                studentInformation.Add(item);
+            }
+            dbtext.BulkInsert(studentInformation);
+            return null;
+        }
+        //修改班级身份证
+        public ActionResult classidnti()
+        {
+            List<ScheduleForTrainees> scheduleForTrainees = new List<ScheduleForTrainees>();
+            var classstu = Stuclass.GetList();
+            
+                foreach (var item in classstu)
+                {
+                item.identitydocument = dbtext.GetEntity(item.StudentID).identitydocument;
+                scheduleForTrainees.Add(item);
+                }
+            Stuclass.Update(scheduleForTrainees);
+            return null;
+           }
+       
     }
 }

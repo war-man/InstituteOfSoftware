@@ -46,5 +46,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public bool IsGraduating { get; set; }
 
+        public string identitydocument { get; set; }
+
     }
 }
