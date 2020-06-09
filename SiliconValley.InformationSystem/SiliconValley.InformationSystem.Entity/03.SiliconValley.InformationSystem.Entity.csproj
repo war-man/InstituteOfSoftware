@@ -184,6 +184,7 @@
     <Compile Include="Entity\HeadClass.cs" />
     <Compile Include="Entity\Headmaster.cs" />
     <Compile Include="Entity\HeadMasterGrand.cs" />
+    <Compile Include="Entity\HeiHu.cs" />
     <Compile Include="Entity\HomeWorkFinishRate.cs" />
     <Compile Include="Entity\HygienicDeduction.cs" />
     <Compile Include="Entity\InStock.cs" />

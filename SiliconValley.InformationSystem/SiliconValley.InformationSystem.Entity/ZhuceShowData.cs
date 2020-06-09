@@ -40,5 +40,7 @@ namespace SiliconValley.InformationSystem.Entity
         /// 班级编号
         /// </summary>
         public string Class_ID { get; set; }
+
+        public bool YesHei { get; set; }
     }
 }
