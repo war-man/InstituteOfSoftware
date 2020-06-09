@@ -406,10 +406,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 {
                     //记录课程
                     db_examination.ExamCouresConfigAdd(examination.ID, course);
-
-
-
                 }
+
+                // 
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";
@@ -838,15 +837,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                   var canlist =  dbcnad.GetIQueryable().Where(d => d.Examination == examid).ToList();
 
-                    //初始化成绩单
-
-
-
+                    
                     foreach (var item in canlist)
                     {
+                        //初始化成绩单
                         db_scores.InitExamScores(examid, item.CandidateNumber);
+
+             
                     }
-                    
+
 
                     result.ErrorCode = 200;
                     result.Msg = "成功";

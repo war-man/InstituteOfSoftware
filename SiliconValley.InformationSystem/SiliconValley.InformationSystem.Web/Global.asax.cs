@@ -20,8 +20,6 @@ namespace SiliconValley.InformationSystem.Web
         /// </summary>
         protected void Application_Start()
         {
-
-           
             //注册路由
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             

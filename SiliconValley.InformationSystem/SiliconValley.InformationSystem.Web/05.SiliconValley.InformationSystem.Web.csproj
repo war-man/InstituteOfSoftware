@@ -1728,6 +1728,9 @@
     <Content Include="Areas\ExaminationSystem\Views\StudentExamSys\MockExaminationView.cshtml" />
     <Content Include="Areas\Teaching\Views\Exam\Index.cshtml" />
     <Content Include="Areas\Teaching\Views\Exam\ExamquestionExplanation.cshtml" />
+    <Content Include="Areas\Educational\CostHistoryFiles\2020-2费用统计表.xls" />
+    <Content Include="Areas\Educational\CostHistoryFiles\2020-3费用统计表.xls" />
+    <Content Include="Areas\Educational\CostHistoryFiles\2020-5费用统计表.xls" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3392,7 +3395,6 @@
     <Folder Include="Areas\Courseware\首页\word文档\S3NET\" />
     <Folder Include="Areas\Courseware\首页\word文档\S4NET\" />
     <Folder Include="Areas\Courseware\首页\word文档\Y1\" />
-    <Folder Include="Areas\Educational\CostHistoryFiles\" />
     <Folder Include="Areas\Educational\Models\" />
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
     <Folder Include="Areas\Educational\Views\Check\" />
@@ -3405,6 +3407,7 @@
     <Folder Include="Areas\Educational\Views\ShppingDetail\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
+    <Folder Include="Areas\flow\Controllers\" />
     <Folder Include="Areas\Logistics\Controllers\" />
     <Folder Include="Areas\Logistics\Models\" />
     <Folder Include="Areas\Logistics\Views\Shared\" />

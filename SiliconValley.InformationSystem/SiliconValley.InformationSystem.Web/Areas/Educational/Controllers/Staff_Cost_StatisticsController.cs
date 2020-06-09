@@ -181,14 +181,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
                 List<Cose_StatisticsItems> result = new List<Cose_StatisticsItems>();
 
+                List<Staff_Cost_StatisticesDetailView> detaillist = new List<Staff_Cost_StatisticesDetailView>();
                 foreach (var item in list)
                 {
                     string emp = "";
 
                     try
                     {
-                        var obj = db_staf_Cost.Statistics_Cost(item.EmployeeId, date, workingDays);
+                        var data = db_staf_Cost.Staff_CostData(item.EmployeeId, DateTime.Parse(date), workingDays);
+
+                        var obj = db_staf_Cost.Statistics_Cost(data);
+
                         result.Add(obj);
+
+                        detaillist.Add(data);
                     }
                     catch (Exception ex)
                     {
@@ -199,6 +205,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                    
                 }
 
+                string Detailfilename = DateTime.Parse(date).Year + "-" + DateTime.Parse(date).Month + "费用统计明细表";
+
+                db_staf_Cost.SaveStaff_CostData(detaillist, result, Detailfilename);
                 //保存到文件 
                 string filename = DateTime.Parse(date).Year + "-" + DateTime.Parse(date).Month+"费用统计表";
                 db_staf_Cost.SaveToExcel(result, filename);
@@ -262,7 +271,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
             try
             {
-                var costItems = db_staf_Cost.Statistics_Cost(empid, date,workingDays);
+                var data = db_staf_Cost.Staff_CostData(empid, DateTime.Parse(date), workingDays);
+                var costItems = db_staf_Cost.Statistics_Cost(data);
 
                 result.Data = costItems;
                 result.ErrorCode = 200;

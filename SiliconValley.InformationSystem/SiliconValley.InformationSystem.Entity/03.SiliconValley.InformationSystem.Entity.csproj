@@ -383,6 +383,7 @@
     <Compile Include="ViewEntity\GetYear.cs" />
     <Compile Include="ViewEntity\GrandClass.cs" />
     <Compile Include="ViewEntity\GrandClassAnpaiEvningSelf.cs" />
+    <Compile Include="ViewEntity\grand_number.cs" />
     <Compile Include="ViewEntity\HealthRegistrationtableview.cs" />
     <Compile Include="ViewEntity\InsuranceStudentView.cs" />
     <Compile Include="ViewEntity\InsuranceView.cs" />

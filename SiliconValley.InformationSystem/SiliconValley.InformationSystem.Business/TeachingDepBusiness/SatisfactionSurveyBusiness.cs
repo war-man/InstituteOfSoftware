@@ -797,6 +797,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     {
                         result.Add(detailview);
                     }
+                    
                 }
             }
 
