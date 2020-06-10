@@ -15,6 +15,7 @@ using System.Data;
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;
 using SiliconValley.InformationSystem.Business.DepartmentBusiness;
 using SiliconValley.InformationSystem.Business.PositionBusiness;
+using System.Text.RegularExpressions;
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -539,10 +540,10 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where  CreateDate>='2020-06-07' ";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-09' and StudentName <> '邓伟'  and StudentName <> '邓维伦'";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
-
+            
             foreach (ADDdataview item in all)
             {
 
@@ -981,6 +982,67 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
             string card = one + date + server;
             return card;
+        }
+
+        /// <summary>
+        /// 根据备案查询学生班级数据
+        /// </summary>
+        /// <param name="Sid"></param>
+        /// <returns></returns>
+        public PutStudentDataView FindStudentData(int Sid)
+        {
+           List<PutStudentDataView> list= this.GetListBySql<PutStudentDataView>(" select * from StudentInfoView where id=" + Sid);
+            if (list.Count>0)
+            {
+                return list[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 根据班级获取任课老师
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public EmployeesInfo GetTeacher(int classid)
+        {
+            EmployeesInfo info = new EmployeesInfo();
+            List<ClassTeacher> find= this.GetListBySql<ClassTeacher>("select * from ClassTeacher where EndDate is null and ClassNumber="+classid);
+            if (find.Count>0)
+            {
+               List< EmployeesInfo> list= this.GetListBySql<EmployeesInfo>(" select * from EmployeesInfo as e left join  Teacher as t on t.EmployeeId = e.EmployeeId where t.TeacherId =" + find[0].TeacherID);
+
+                if (list.Count>0)
+                {
+                    info = list[0];
+                }
+            }
+
+            return info;
+        }
+        /// <summary>
+        /// 判断身份证
+        /// </summary>
+        /// <param name="crad"></param>
+        /// <returns></returns>
+        public bool TrueCrad(string crad)
+        {
+            string reg1="^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$";//十八位
+            string reg2 ="^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{2}[0-9Xx]$";//十五位
+
+             bool s1= Regex.IsMatch(crad, reg1);
+             bool s2 = Regex.IsMatch(crad, reg2);
+
+            if(!s1 && !s2){
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

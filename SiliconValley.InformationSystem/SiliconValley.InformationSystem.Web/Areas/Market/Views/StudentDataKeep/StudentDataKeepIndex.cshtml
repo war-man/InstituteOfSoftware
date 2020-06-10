@@ -603,7 +603,7 @@
                 layer.open({
                     type: 2
                     , content: '/Market/StudentDataKeep/Registeredstudentnumber/' + ids
-                    , area: ['800px', '420px']
+                    , area: ['800px', '480px']
                     , title: '注册学号页面'
                     , shade: 0.8
                     , anim: 4
@@ -614,13 +614,44 @@
     }
 
     //判断备案数据是否只选中一条
-    function One(fun) {
+    function One(url,title,width,height,Ishava) {
         layui.use(['layer', 'table'], function () {
             var layer = layui.layer;
             var table = layui.table;
             var checkStatus = table.checkStatus('tabletest1');
-            if (checkStatus.data.length = 1) {
-                fun();
+            console.log(checkStatus.data.length);
+            if (checkStatus.data.length == 1) {
+                if (Ishava) {
+                    $.ajax({
+                        url: '/Market/StudentDataKeep/Ture/' + checkStatus.data[0].Id,
+                        success: function (suc) {
+                            if (suc.Success) {
+                                layer.open({
+                                    type: 2
+                                    , content: url + checkStatus.data[0].Id
+                                    , area: [width, height]
+                                    , title: title
+                                    , shade: 0.8
+                                    , anim: 4
+                                    , skin: 'demo-class'
+                                });            
+                            } else {
+                                layer.msg('该备案学生还没有在校信息！！！', {icon:5});
+                            }
+                        }
+                    });
+                } else {
+                    layer.open({
+                        type: 2
+                        , content: url + checkStatus.data[0].Id
+                        , area: [width, height]
+                        , title: title
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });            
+                }
+                
             } else if (checkStatus.data.length <= 0) {
                 layer.msg('请选择备案数据!', { icon: 2, shade: 0.8 });
             } else {
@@ -656,7 +687,11 @@
 
     //查看在校学生信息
     function InSchoolStudentData() {
-        
+        var url = '/Market/StudentDataKeep/GetStudent/';
+        var title = '在校学生信息';
+        var height = '400px';
+        var width = '700px';
+        One(url, title, width, height, true);
     }
 
     //查看学生缴费信息

@@ -32,10 +32,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public string HearName { get; set; }
         /// <summary>
-        ///教学老师
-        /// </summary>
-        public string TeacherName { get; set; }
-        /// <summary>
         /// 阶段名称
         /// </summary>
         public string GrandName { get; set; }
