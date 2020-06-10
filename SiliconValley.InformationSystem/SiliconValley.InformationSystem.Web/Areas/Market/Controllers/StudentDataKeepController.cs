@@ -34,6 +34,7 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 //using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
 using System.Threading;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
+using System.Text.RegularExpressions;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -1190,29 +1191,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             StudentInformation student = new StudentInformation();
             student.Name = data.stuName;
             student.Sex = data.stuSex=="男"?true:false;
+            AjaxResult a = new AjaxResult();
+            bool m = true;
             if (data.YesHei)
             {
+                bool sm= Regex.IsMatch(data.IdCare, "^\\d{8}$");
+                if(!sm)
+                {
+                    a.Success = false;
+                    a.Msg = "出生年月日不正确！！";
+
+                    return Json(a, JsonRequestBehavior.AllowGet);
+                }                 
                 student.identitydocument =s_Entity.GetIdCard(data.IdCare);
                 //添加到黑户表
                 HeiHu hu = new HeiHu();
                 hu.IdCard = student.identitydocument;
                 bool s= s_Entity.heiHu.Add_SingData(hu);
             }
-             
-            student.Telephone = data.stuPhone;
-
-            AjaxResult a = new AjaxResult();
-            //判断学号是否被注册
-            int count= informationBusiness.GetList().Where(g => g.StudentPutOnRecord_Id ==Convert.ToInt32( data.Id)).Count();
-            if (count>0)
+            else
             {
-                a.Success = false;
-                a.Msg = "该学生已注册过学号！";
-                return Json(a, JsonRequestBehavior.AllowGet);
+                //判断身份证
+                m = s_Entity.TrueCrad(data.IdCare);
+                student.identitydocument = data.IdCare;
             }
              
-              a=  informationBusiness.StudfentEnti(student, Convert.ToInt32(data.Class_ID), Convert.ToInt32(data.Id));
-            return Json(a,JsonRequestBehavior.AllowGet);
+            student.Telephone = data.stuPhone;          
+            if (m)
+            {               
+                //判断学号是否被注册
+                int count = informationBusiness.GetList().Where(g => g.StudentPutOnRecord_Id == Convert.ToInt32(data.Id)).Count();
+                if (count > 0)
+                {
+                    a.Success = false;
+                    a.Msg = "该学生已注册过学号！";
+                    return Json(a, JsonRequestBehavior.AllowGet);
+                }
+
+                a = informationBusiness.StudfentEnti(student, Convert.ToInt32(data.Class_ID), Convert.ToInt32(data.Id));
+                
+            }
+            else
+            {
+                a.Success = false;
+                a.Msg = "身份证格式错误！";
+            }
+            return Json(a, JsonRequestBehavior.AllowGet);
         }
         #endregion
 
@@ -1269,11 +1293,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
 
         #region 获取在校学生信息
-        public ActionResult GetStudent()
+        /// <summary>
+        /// 判断某个学生是否有在校信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Ture(int id)
         {
-            string id = Request.QueryString["id"];
+            AjaxResult a = new AjaxResult();
+            a.Success = true;
+            PutStudentDataView find = s_Entity.FindStudentData(id);
+            if (find==null)
+            {
+                a.Success = false;
+            }
+
+            return Json(a,JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetStudent(int id)
+        {
+             
+            PutStudentDataView find= s_Entity.FindStudentData(id);
+            ViewBag.Teacher = "";
+            if (find!=null)
+            {
+                ViewBag.Teacher = s_Entity.GetTeacher(find.ClassID).EmpName;
+            }
+       
             //根据备案Id获取数据
-            return View();
+            return View(find);
         }
         #endregion
 

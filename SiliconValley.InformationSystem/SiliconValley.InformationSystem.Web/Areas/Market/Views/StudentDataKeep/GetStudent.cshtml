@@ -2,15 +2,17 @@
 @{
     Layout = null;
 }
-
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@model  SiliconValley.InformationSystem.Entity.ViewEntity.PutStudentDataView
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>GetStudent</title>
-    <link href="~/Scripts/layui/css/styles.css" rel="stylesheet" />
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <style>
+
         .DivCss{
         width:95%;
         height:100%;
@@ -21,7 +23,10 @@
         }
 
         .inputCss{
-          border:1px solid dashed;          
+          border-top:0px;
+          border-left:0px;
+          border-right:0px;
+          border-bottom:1px dashed black;          
         }
     </style>
 </head>
@@ -32,38 +37,44 @@
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">学生姓名:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="inputCss" name="StudentName" id="StudentName"/>
+                        <input type="text" disabled class="inputCss layui-input" name="StudentName" id="StudentName" value="@Model.StuName"/>
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">所在班级:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="inputCss" name="IntoClass" id="IntoClass"/>
+                        <input type="text" disabled class="inputCss layui-input" name="IntoClass layui-input" id="IntoClass" value="@Model.className"/>
                     </div>
                 </div>
             </div>
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">班主任:</label>
+                    <label class="layui-form-label">班&nbsp; 主&nbsp;任:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="inputCss" name="heandMaster" id="heandMaster"/>
+                        <input type="text" disabled class="inputCss layui-input" name="heandMaster" id="heandMaster" value="@Model.HearName"/>
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">目前阶段:</label>
+                    <label class="layui-form-label">教学老师:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="inputCss" name="grandName" id="grandName"/>
+                        <input type="text" disabled class="inputCss layui-input" name="teacherName" id="teacherName" value="@ViewBag.Teacher"/>
                     </div>
                 </div>
 
             </div>
             <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">教学老师:</label>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">目前阶段:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="inputCss" name="teacherName"  id="teacherName"/>
+                        <input type="text" disabled class="inputCss layui-input" name="grandName" id="grandName" value="@Model.GrandName"/>
                     </div>
-                </div>                 
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">所学专业:</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled class="inputCss layui-input" name="marginName" id="marginName" value="@Model.SpeciName"/>
+                    </div>
+                </div> 
             </div>
         </form>
     </div>
@@ -72,7 +83,6 @@
     <script>
         layui.use(['form'], function () {
             var form = layui.form;
-
         });
     </script>
 </body>
