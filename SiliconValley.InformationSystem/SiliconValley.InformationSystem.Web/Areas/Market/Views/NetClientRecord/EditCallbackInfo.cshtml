@@ -2,14 +2,14 @@
 @{
     Layout = null;
 }
+
+<!DOCTYPE html>
 @model SiliconValley.InformationSystem.Entity.MyEntity.NetClientRecord
 @using SiliconValley.InformationSystem.Entity.MyEntity;
-<!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>AddNetConsultStuinfo</title>
+    <title>EditCallbackInfo</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
 
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -160,6 +160,10 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
 
+            //日期验证
+            laydate.render({
+                elem: '#NetClientDate',
+            });
 
             ////动态绑定岗位属性的下拉框的值
             //$.ajax({
@@ -178,7 +182,7 @@
 
             //添加提交
             form.on('submit(demo1)', function (data) {
-                console.log('添加提交：'+data);
+                console.log('添加提交：' + data);
                 $.post("/Market/NetClientRecord/AddNetConsultStuinfo", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function () {
@@ -203,6 +207,5 @@
 
         });
     </script>
-
 </body>
 </html>

@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     /// </summary>
     [Table(name: "StudentPutOnRecord")]
     public partial class StudentPutOnRecord: IEqualityComparer<StudentPutOnRecord>
-    {
+    { 
       
         /// <summary>
         /// 学生备案数据编号

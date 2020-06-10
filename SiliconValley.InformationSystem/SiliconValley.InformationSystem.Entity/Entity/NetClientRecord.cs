@@ -18,9 +18,15 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int Id { get; set; }
-        //public string EmployeeId { get; set; }备案人（备案）
+        public string EmpId { get; set; }//跟踪回访人
         public Nullable<System.DateTime> NetClientDate { get; set; }//回访日期
         public int MarketTeaId { get; set; }//市场对接老师（市场人员表）
+        public string CallBackCase { get; set; }//回访记录
+        public Nullable<bool> IsDel { get; set; }
+
+        public int SPRId { get; set; }//备案编号
+        public string Grade { get; set; }//等级
+
         //public string StuName { get; set; }学生姓名（备案）
         //public Nullable<bool> StuSex { get; set; }学生性别（备案）
         //public Nullable<int> StuAge { get; set; }学生年龄（备案）
@@ -31,12 +37,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         //public string QQNum { get; set; }学生qq号（备案）
         //public string WeChatNum { get; set; }学生微信号（备案）
         //public Nullable<bool> IsFaceConsult { get; set; }是否面咨/是否上门（备案）
-        public string CallBackCase { get; set; }//回访记录
+
         //public string SecondCallBack { get; set; }
         //public string ThirdCallBack { get; set; }
-        public Nullable<bool> IsDel { get; set; }
 
-        public int SPRId { get; set; }//备案编号
 
 
     }

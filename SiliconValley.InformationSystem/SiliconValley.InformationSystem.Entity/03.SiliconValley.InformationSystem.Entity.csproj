@@ -184,7 +184,6 @@
     <Compile Include="Entity\HeadClass.cs" />
     <Compile Include="Entity\Headmaster.cs" />
     <Compile Include="Entity\HeadMasterGrand.cs" />
-    <Compile Include="Entity\HeiHu.cs" />
     <Compile Include="Entity\HomeWorkFinishRate.cs" />
     <Compile Include="Entity\HygienicDeduction.cs" />
     <Compile Include="Entity\InStock.cs" />
@@ -395,7 +394,7 @@
     <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
-    <Compile Include="ViewEntity\PutStudentDataView.cs" />
+    <Compile Include="ViewEntity\NetClientRecordView.cs" />
     <Compile Include="ViewEntity\SatisficingConfigDataView.cs" />
     <Compile Include="ViewEntity\Sch_Market.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionAreaView.cs" />
