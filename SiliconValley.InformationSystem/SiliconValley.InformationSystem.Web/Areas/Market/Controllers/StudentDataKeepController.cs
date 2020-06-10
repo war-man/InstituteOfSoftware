@@ -1143,6 +1143,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         #endregion
 
+
         #region 学员注册
         //班主任注册页面
         public ActionResult HandMasterRegisterds()
@@ -1240,6 +1241,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         #endregion
 
+
         #region 一键转咨询师
 
          public ActionResult ChangTeacher()
@@ -1287,6 +1289,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #endregion
+
 
         #region 获取缴费情况
 
