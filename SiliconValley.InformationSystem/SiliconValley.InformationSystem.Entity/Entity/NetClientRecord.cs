@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int Id { get; set; }
         public string EmpId { get; set; }//跟踪回访人
         public Nullable<System.DateTime> NetClientDate { get; set; }//回访日期
-        public int MarketTeaId { get; set; }//市场对接老师（市场人员表）
+        public Nullable<int> MarketTeaId { get; set; }//市场对接老师（市场人员表）
         public string CallBackCase { get; set; }//回访记录
         public Nullable<bool> IsDel { get; set; }
 
