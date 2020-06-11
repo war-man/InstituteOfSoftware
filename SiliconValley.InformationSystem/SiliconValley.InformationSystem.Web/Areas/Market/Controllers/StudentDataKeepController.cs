@@ -87,7 +87,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Pers = s_Entity.GetPostion(UserName.EmpNumber);
             return View();
         }
- 
+        /// <summary>
+        /// 第一次加载数据的
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public ActionResult TableData(int limit, int page)
         {
             List<ExportStudentBeanData> list = s_Entity.GetSudentDataAll().OrderByDescending(s => s.Id).ToList();
@@ -176,7 +181,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             #endregion
                 
              
-              List<ExportStudentBeanData> list= s_Entity.Serch(str1,str2).OrderByDescending(s => s.Id).ToList();
+                List<ExportStudentBeanData> list= s_Entity.Serch(str1,str2).OrderByDescending(s => s.Id).ToList();
 
                 var data = list.Skip((page - 1) * limit).Take(limit).ToList();
 
@@ -292,12 +297,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     a = s_Entity.Add_data(news);
                     if (a.Success == true)
                     {
-                        //通知备案人备案成功
-                        string phone= s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
-                        // string number = "13204961361";//根据备案人查询电话号码
-                        string smsText = "备案提示:"+ news.StuName + "学生在"+ DateTime.Now + "已备案成功";
-                        string t = PhoneMsgHelper.SendMsg(phone, smsText);
+                        //判断是否是网咨，如果是网咨则不需要发短信
+                        StuInfomationType find_type= s_Entity.StuInfomationType_Entity.SerchSingleData("网络", false);
+                        if (news.StuInfomationType_Id != find_type.Id)
+                        {
+                            //通知备案人备案成功
+                            string phone = s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
+                            //string phone = "13204961361";//根据备案人查询电话号码
+                            string smsText = "备案提示:" + news.StuName + "学生在" + DateTime.Now + "已备案成功";
+                            string t = PhoneMsgHelper.SendMsg(phone, smsText);
+                        }
+                        else
+                        {
+                            //如果是网咨，则添加到王咨回访表中
+                            StudentPutOnRecord find_stu= s_Entity.StudentOrreideData_OnRecord(news.StuName, news.StuPhone);
+                            bool sm= s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
 
+                        }
+                         
                         //判断是否指派了咨询师  
 
                         if (news.ConsultId != "0")
@@ -310,6 +327,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             new_c.ComDate = DateTime.Now;
                             a.Success = EmployandCounTeacherCoom.AddConsult(new_c);
                         }
+
+
                     }
                 }
                 else
@@ -728,13 +747,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
                 if (add_result.Success==true)
                 {
+                    List<StudentPutOnRecord> list_W = new List<StudentPutOnRecord>();
                     //查询备案中是网络备案
                     StuInfomationType find= s_Entity.StuInfomationType_Entity.SerchSingleData("网络", false);
                     listnew= listnew.Where(l => l.StuInfomationType_Id == find.Id).ToList();
                     foreach (StudentPutOnRecord item in listnew)
                     {
-
+                        StudentPutOnRecord m= s_Entity.StudentOrreideData_OnRecord(item.StuName, item.StuPhone);
+                        if (m!=null)
+                        {
+                            list_W.Add(m);
+                        }
                     }
+
+                    //向网络回访添加数据
+                    bool s= s_Entity.NetClient_Entity.AddNCRData(list_W);
                 }
             }
 
@@ -1143,6 +1170,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         #endregion
 
+
         #region 学员注册
         //班主任注册页面
         public ActionResult HandMasterRegisterds()
@@ -1202,8 +1230,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     a.Msg = "出生年月日不正确！！";
 
                     return Json(a, JsonRequestBehavior.AllowGet);
-                }                 
-                student.identitydocument =s_Entity.GetIdCard(data.IdCare);
+                }
+                AjaxResult sust = s_Entity.GetIdCard(data.IdCare);
+                if (sust.Success==false)
+                {
+                    return Json(sust, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    student.identitydocument = sust.Data as string;
+                }
+
+                
                 //添加到黑户表
                 HeiHu hu = new HeiHu();
                 hu.IdCard = student.identitydocument;
@@ -1239,6 +1277,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(a, JsonRequestBehavior.AllowGet);
         }
         #endregion
+
 
         #region 一键转咨询师
 
@@ -1288,9 +1327,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         #endregion
 
+
         #region 获取缴费情况
 
         #endregion
+
 
         #region 获取在校学生信息
         /// <summary>

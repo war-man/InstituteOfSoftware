@@ -40,5 +40,16 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
             return count;
         }
+
+        /// <summary>
+        /// 获取最新添加的数据
+        /// </summary>
+        /// <returns></returns>
+        public HeiHu LastData()
+        {
+           List<HeiHu> h= this.GetListBySql<HeiHu>("select top 1 * from HeiHu order by id desc");
+
+            return h[0];
+        }
     }
 }

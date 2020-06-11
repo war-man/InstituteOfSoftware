@@ -16,6 +16,8 @@ using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;
 using SiliconValley.InformationSystem.Business.DepartmentBusiness;
 using SiliconValley.InformationSystem.Business.PositionBusiness;
 using System.Text.RegularExpressions;
+using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
+using SiliconValley.InformationSystem.Entity.Entity;
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -40,6 +42,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
        public  Sch_MarketManeger s_entity = new Sch_MarketManeger();
 
        public  HeiHuManeger heiHu = new HeiHuManeger();//用于查询黑户数据
+
+        public NetClientRecordManage NetClient_Entity = new NetClientRecordManage();//用于添加网咨回访数据
 
         /// <summary>
         /// 获取登录的岗位
@@ -836,7 +840,19 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
             return listall.Count > 0 ? listall[0] : null;
         }
+        /// <summary>
+        /// 获取已备案的数据
+        /// </summary>
+        /// <param name="stuName"></param>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public StudentPutOnRecord StudentOrreideData_OnRecord(string stuName, string phone)
+        {
+            stuName = stuName.Trim();
+            List<StudentPutOnRecord> listall = this.GetListBySql<StudentPutOnRecord>("select * from studentPutOnRecord where StuName='" + stuName + "'and StuPhone='" + phone + "' ");
 
+            return listall.Count > 0 ? listall[0] : null;
+        }
         /// <summary>
         /// 模糊查询
         /// </summary>
@@ -946,42 +962,79 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public string GetIdCard(string date)
+        public AjaxResult GetIdCard(string date)
         {
+            AjaxResult a = new AjaxResult();
             string one = "404";
-            
 
-            int count=  heiHu.Count()+1;
-            string lent = count.ToString();
+            string two = "000";
 
-            string server = null;
+            string three = "0001";
 
-            if (lent.Length==1)
+            int count=  heiHu.Count();
+            if (count==0)
             {
-                server = "000000" + count;
-            }else if (lent.Length == 2)
-            {
-                server = "00000" + count;
-            }else if (lent.Length == 3)
-            {
-                server = "0000" + count;
-            }else if (lent.Length == 4)
-            {
-                server = "000" + count;
-            }else if (lent.Length == 5)
-            {
-                server = "00" + count;
-            }else if (lent.Length == 6)
-            {
-                server = "0" + count;
+                a.Success = true;
+                a.Data= one + two + date + three;
+                return a;
             }
-            else if(lent.Length == 7)
+            else
             {
-                server = count.ToString();
+                HeiHu find = heiHu.LastData();
+                int number1=Convert.ToInt32(find.IdCard.Substring(14, 4));
+                int number2= Convert.ToInt32(find.IdCard.Substring(3, 3));
+                if (number1<9999)
+                {
+                    number1++;
+                    if (number1.ToString().Length==1)
+                    {
+
+                        three = "000" + number1;
+                    }
+                    else if(number1.ToString().Length == 2)
+                    {
+                        three = "00" + number1;
+                    }else if (number1.ToString().Length == 3)
+                    {
+                        three = "0" + number1;
+                    }else if (number1.ToString().Length == 4)
+                    {
+                        three = number1.ToString();
+                    }
+                }                
+                else if(number1==9999)
+                {
+                    if (number2==999)
+                    {
+                        a.Success = false;
+                        a.Msg = "黑户账号已满！请联系管理员重新设计黑户规则";
+
+                        return a;
+                    }
+                    else
+                    {
+                        number2++;
+                        if (number2.ToString().Length == 1)
+                        {
+                            two = "00" + number2;
+                        }
+                        else if (number2.ToString().Length == 2)
+                        {
+                            two = "0" + number2;
+                        }
+                        else if (number2.ToString().Length == 3 && number2 < 999)
+                        {
+                            two = number2.ToString();
+                        }                         
+                    }
+                    
+                }
+
+                a.Success = true;
+                a.Data = one + two + date + three;
             }
 
-            string card = one + date + server;
-            return card;
+            return a;
         }
 
         /// <summary>
