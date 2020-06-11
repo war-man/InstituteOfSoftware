@@ -1008,7 +1008,6 @@
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
-    <Content Include="Areas\Market\Views\NetClientRecord\DetailInfo.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\EditView.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\MarketChairIndex.cshtml" />

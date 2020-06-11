@@ -26,15 +26,17 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// <returns></returns>
         public List<StudentInformation> ClassStudent(int ClassID)
         {
+            BaseBusiness<ScheduleForTraineesview> ScheduleForTraineesviewBusiness = new BaseBusiness<ScheduleForTraineesview>();
             //CurrentClass是否为正常状态 查询使用以参数为班级的学员学号
-            var stuid = this.GetList().Where(a => a.ID_ClassName == ClassID && a.CurrentClass == true).ToList();
+            var stuid = ScheduleForTraineesviewBusiness.GetListBySql<ScheduleForTraineesview>("select * from ScheduleForTraineesview where Classid=" + ClassID);
+
             //查询班级所有学生
             StudentInformationBusiness student = new StudentInformationBusiness();
 
             List<StudentInformation> resullist = new List<StudentInformation>();
             foreach (var item in stuid)
             {
-               var studentobj = student.GetList().Where(d => d.IsDelete == false && d.StudentNumber == item.StudentID).FirstOrDefault();
+                var studentobj = student.GetEntity(item.StudentNumber);
 
                 if (studentobj != null)
                     resullist.Add(studentobj);
