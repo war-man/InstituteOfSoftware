@@ -33,16 +33,16 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         //创建一个用于查询数据的上门学生状态实体
         public StuStateManeger Stustate_Entity =new StuStateManeger();
         //创建一个用于查询数据的上门学生信息来源实体
-       public StuInfomationTypeManeger StuInfomationType_Entity = new StuInfomationTypeManeger();
+        public StuInfomationTypeManeger StuInfomationType_Entity = new StuInfomationTypeManeger();
         //创建一个用于查询数据的部门信息实体
-       public DepartmentManage Department_Entity = new DepartmentManage();
+        public DepartmentManage Department_Entity = new DepartmentManage();
         //创建一个用于查询岗位信息实体
-       public PositionManage Position_Entity = new PositionManage();
+        public PositionManage Position_Entity = new PositionManage();
 
-       public  Sch_MarketManeger s_entity = new Sch_MarketManeger();
+        public  Sch_MarketManeger s_entity = new Sch_MarketManeger();
 
-       public  HeiHuManeger heiHu = new HeiHuManeger();//用于查询黑户数据
-
+        public  HeiHuManeger heiHu = new HeiHuManeger();//用于查询黑户数据
+ 
         public NetClientRecordManage NetClient_Entity = new NetClientRecordManage();//用于添加网咨回访数据
 
         /// <summary>
@@ -813,15 +813,22 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <returns></returns>
         public List<ExportStudentBeanData> StudentOrride(string stuName)
         {
-            stuName = stuName.Trim();
-            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where StuName='" + stuName + "'");
+            if (!string.IsNullOrEmpty(stuName))
+            {
+                stuName = stuName.Trim();
+                List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where StuName='" + stuName + "'");
 
-            List<Sch_MarketView> listal2 = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where StudentName='" + stuName + "'");
+                List<Sch_MarketView> listal2 = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where StudentName='" + stuName + "'");
 
 
-            listall.AddRange(this.LongrageDataToViewmodel(listal2));
+                listall.AddRange(this.LongrageDataToViewmodel(listal2));
 
-            return listall;
+                return listall;
+            }
+            else {
+                return null;
+            }
+            
         }
 
         /// <summary>

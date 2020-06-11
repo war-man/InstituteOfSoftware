@@ -271,26 +271,29 @@
         //姓名失去焦点事件
         $("#StuName").blur(function () {
             var name = $("#StuName").val();
-            $.ajax({
-                url: "/Market/StudentDataKeep/FindStudent/" + name,
-                success: function (successdata) {
-                    if (successdata.Success == false) {
-                        //有相同的名称
-                        layui.use('layer', function () {
-                            var layer = layui.layer;
-                            layer.open({
-                                type: 2,
-                                content: '/Market/StudentDataKeep/StudentSomeData/' + name  
-                                , area: ['700px', '600px']
-                                ,title: '疑似数据显示!'
-                                , shade: 0.8
-                                , anim: 4
-                                , skin: 'demo-class3'
-                            });                             
-                        })
+            if (name.length>0) {
+                $.ajax({
+                    url: "/Market/StudentDataKeep/FindStudent/" + name,
+                    success: function (successdata) {
+                        if (successdata.Success == false) {
+                            //有相同的名称
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.open({
+                                    type: 2,
+                                    content: '/Market/StudentDataKeep/StudentSomeData/' + name
+                                    , area: ['700px', '600px']
+                                    , title: '疑似数据显示!'
+                                    , shade: 0.8
+                                    , anim: 4
+                                    , skin: 'demo-class3'
+                                });
+                            })
+                        }
                     }
-                }
-            });
+                });
+            }
+            
         });
     });
     layui.use(['form', 'layedit', 'laydate'], function () {

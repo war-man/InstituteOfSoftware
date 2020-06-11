@@ -42,7 +42,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     [CheckLogin]
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/ZhipaiConsustTacher
+        // GET: /Market/StudentDataKeep/ShortInfomationFuntion
         #region 创建实体
         //创建一个用于操作数据的备案实体
         private StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -351,16 +351,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult FindStudent(string id)
         {
             AjaxResult a = new AjaxResult();
-            List<ExportStudentBeanData> fins = s_Entity.StudentOrride(id);
-            if (fins.Count > 0)
+            if (!string.IsNullOrEmpty(id))
             {
-                a.Data = fins;
-                a.Success = false;
+                List<ExportStudentBeanData> fins = s_Entity.StudentOrride(id);
+                if (fins.Count > 0)
+                {
+                    a.Data = fins;
+                    a.Success = false;
+                }
+                else
+                {
+                    a.Success = true;
+                }
             }
             else
             {
-                a.Success = true;
+                a.Success = false;
             }
+            
             return Json(a, JsonRequestBehavior.AllowGet);
         }
 
@@ -677,8 +685,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<MyExcelClass> ExcelList = SessionHelper.Session["ExcelData"] as List<MyExcelClass>;//获取Excle文件数据     
             //List<StudentPutOnRecord> All_list = s_Entity.GetAllStudentKeepData();//获取备案数据
             List<MyExcelClass> result = new List<MyExcelClass>();
-            //foreach (StudentPutOnRecord a1 in All_list)
-            //{
+ 
             foreach (MyExcelClass a2 in ExcelList)
             {
                 bool s = s_Entity.StudentOrride(a2.StuName, a2.StuPhone);
@@ -687,7 +694,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     result.Add(a2);
                 }
             }
-            //}
+ 
             if (IsRepea)
             {
                 //获取冲突的数据
@@ -719,29 +726,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 List<StudentPutOnRecord> listnew = new List<StudentPutOnRecord>();
                 foreach (MyExcelClass item1 in list)
                 {
-                    StudentPutOnRecord s = new StudentPutOnRecord();
-                    s.StuName = item1.StuName;
-                    s.StuSex = item1.StuSex;
-                    s.EmployeesInfo_Id = s_Entity.Enplo_Entity.FindEmpData(item1.EmployeesInfo_Id,false) == null ? null : s_Entity.Enplo_Entity.FindEmpData(item1.EmployeesInfo_Id,false).EmployeeId;
-                    s.IsDelete = false;
-                    s.Reak = item1.Reak;
-                    Region find_region = s_Entity.region_Entity.SerchRegionName(item1.Region_id, false);
-                    if (find_region != null){s.Region_id = find_region.ID;}else{s.Reak = s.Reak + ",所在区域:" + item1.Region_id;}
-                    s.StatusTime = null;
-                    s.StuAddress = item1.StuAddress;
-                    s.StuBirthy = null;
-                    s.StuDateTime = DateTime.Now;
-                    s.BeanDate = DateTime.Now;
-                    s.StuEducational = item1.StuEducational;
-                    s.StuEntering = s_Entity.Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName;
-                    StuInfomationType find_sinfomation = s_Entity.StuInfomationType_Entity.SerchSingleData(item1.StuInfomationType_Id, false);
-                    if (find_sinfomation != null){s.StuInfomationType_Id = find_sinfomation.Id;}
-                    s.StuIsGoto = false;
-                    s.StuPhone = item1.StuPhone;
-                    s.StuSchoolName = item1.StuSchoolName;
-                    s.StuStatus_Id = 1013;
+                    if (!string.IsNullOrEmpty(item1.StuName))
+                    {
+                        StudentPutOnRecord s = new StudentPutOnRecord();
+                        s.StuName = item1.StuName;
+                        s.StuSex = item1.StuSex;
+                        s.EmployeesInfo_Id = s_Entity.Enplo_Entity.FindEmpData(item1.EmployeesInfo_Id, false) == null ? null : s_Entity.Enplo_Entity.FindEmpData(item1.EmployeesInfo_Id, false).EmployeeId;
+                        s.IsDelete = false;
+                        s.Reak = item1.Reak;
+                        Region find_region = s_Entity.region_Entity.SerchRegionName(item1.Region_id, false);
+                        if (find_region != null) { s.Region_id = find_region.ID; } else { s.Reak = s.Reak + ",所在区域:" + item1.Region_id; }
+                        s.StatusTime = null;
+                        s.StuAddress = item1.StuAddress;
+                        s.StuBirthy = null;
+                        s.StuDateTime = DateTime.Now;
+                        s.BeanDate = DateTime.Now;
+                        s.StuEducational = item1.StuEducational;
+                        s.StuEntering = s_Entity.Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName;
+                        StuInfomationType find_sinfomation = s_Entity.StuInfomationType_Entity.SerchSingleData(item1.StuInfomationType_Id, false);
+                        if (find_sinfomation != null) { s.StuInfomationType_Id = find_sinfomation.Id; }
+                        s.StuIsGoto = false;
+                        s.StuPhone = item1.StuPhone;
+                        s.StuSchoolName = item1.StuSchoolName;
+                        s.StuStatus_Id = 1013;
 
-                    listnew.Add(s);
+                        listnew.Add(s);
+                    }
+                    
                 }
                 add_result = s_Entity.Add_data(listnew);
 
@@ -1366,6 +1377,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         #endregion
 
+        #region 短信发送
+        public ActionResult ShortInfoMationView()
+        {
+            return View();
+        }
+       
+        public ActionResult ShortInfomationFuntion()
+        {
+            string phone= Request.Form["phone"];
+            string rand = Request.Form["rank"];
 
+            string t = PhoneMsgHelper.SendMsg(phone, rand);
+
+            return Json(t, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 }

@@ -56,6 +56,11 @@
                 <button class="layui-btn layui-btn-sm" onclick="GetMony()"> <i class="layui-icon">&#xe714;</i> 查看学生缴费信息</button>
             }
 
+            if (r == 2)
+            {
+                <button class="layui-btn layui-btn-sm" onclick="shortMessage()"> <i class="layui-icon">&#xe681;</i>发送短信</button>
+            }
+
         }
     </div>
 </script>
@@ -697,6 +702,19 @@
     //查看学生缴费信息
     function GetMony() {
         
+    }
+
+    //短信发送
+    function shortMessage() {
+        layer.open({
+            type: 2
+            , content: '/Market/StudentDataKeep/ShortInfoMationView'
+            , area: ['550px', '400px']
+            , title: '短信发送页面'
+            , shade: 0.8
+            , anim: 4
+            , skin: 'demo-class'
+        });        
     }
 </script>
  
