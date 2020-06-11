@@ -196,12 +196,14 @@
             var element = layui.element;
 
             form.on('submit(add)', function (data) {
+               var myindex= layer.load(1);
                // console.log(data.field);
                 $.ajax({
                     url: '/Market/StudentDataKeep/RegistersFunction',
                     type: 'POST',
                     data: data.field,
                     success: function (su) {
+                        layer.close(myindex);
                         if (su.Success) {
                             layer.msg(su.Msg, { icon: 1, shade: 0.8 })
                         } else {
@@ -217,10 +219,6 @@
                 myindex=data.index; 
             });
 
-            //单选按钮切换
-            //form.on('radio(one)', function (data) {
-                 
-            //});  
         });
 
         function Iclick() {
