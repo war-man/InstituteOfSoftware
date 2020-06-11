@@ -397,6 +397,7 @@
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\NetClientRecordView.cs" />
+    <Compile Include="ViewEntity\PutStudentDataView.cs" />
     <Compile Include="ViewEntity\SatisficingConfigDataView.cs" />
     <Compile Include="ViewEntity\Sch_Market.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionAreaView.cs" />
