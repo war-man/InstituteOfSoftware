@@ -1008,7 +1008,6 @@
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
-    <Content Include="Areas\Market\Views\NetClientRecord\DetailInfo.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\EditView.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\MarketChairIndex.cshtml" />
@@ -1843,6 +1842,8 @@
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Classlists.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\ClassImages.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\StudentEnll.cshtml" />
+    <Content Include="Areas\Market\Views\NetClientRecord\CallbackDetailInfo.cshtml" />
+    <Content Include="Areas\Market\Views\NetClientRecord\EditCallbackInfo.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
