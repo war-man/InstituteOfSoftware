@@ -282,6 +282,7 @@
     <Compile Include="Entity\StudentFeeRecord.cs" />
     <Compile Include="Entity\StudentFeeStandard.cs" />
     <Compile Include="Entity\StudentInformation.cs" />
+    <Compile Include="Entity\StudentInformationview.cs" />
     <Compile Include="Entity\Studentmate.cs" />
     <Compile Include="Entity\StudentPutOnRecord.cs" />
     <Compile Include="Entity\Studenttuitionfeestandard.cs" />
@@ -395,6 +396,7 @@
     <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
+    <Compile Include="ViewEntity\NetClientRecordView.cs" />
     <Compile Include="ViewEntity\PutStudentDataView.cs" />
     <Compile Include="ViewEntity\SatisficingConfigDataView.cs" />
     <Compile Include="ViewEntity\Sch_Market.cs" />
@@ -463,6 +465,7 @@
     <Compile Include="ViewEntity\StudentData.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
     <Compile Include="ViewEntity\StudentFeeRecordView.cs" />
+    <Compile Include="ViewEntity\StudentpaymentView.cs" />
     <Compile Include="ViewEntity\StudentUnionDepartmentView.cs" />
     <Compile Include="ViewEntity\StuHomeWorkView.cs" />
     <Compile Include="ViewEntity\SuccessionrecordView.cs" />
