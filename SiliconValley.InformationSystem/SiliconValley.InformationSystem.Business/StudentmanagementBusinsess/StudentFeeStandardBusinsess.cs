@@ -56,7 +56,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         BaseBusiness<PayviewPaymentver> PayviewPaymentverBusiness = new BaseBusiness<PayviewPaymentver>();
         //预入费退费业务类
         BaseBusiness<Refund> RefundBusiness = new BaseBusiness<Refund>();
-
+       
+       
         //退费业务类
         BaseBusiness<Tuitionrefund> TuitionrefundBusiness = new BaseBusiness<Tuitionrefund>();
         /// <summary>
@@ -71,11 +72,12 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         /// <returns></returns>
         public object GetDate(int page, int limit, string Name, string Sex, string StudentNumber, string identitydocument)
         {
+            BaseBusiness<StudentpaymentView> StudentpaymentViewbusiness = new BaseBusiness<StudentpaymentView>();
             //班主任带班
             BaseBusiness<HeadClass> Hoadclass = new BaseBusiness<HeadClass>();
             //    List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
             // List<StudentInformation> list = studentInformationBusiness.Mylist("StudentInformation").Where(a => a.IsDelete ==false).ToList();
-            List<StudentInformation> list = studentInformationBusiness.GetList().Where(a => a.IsDelete == false).ToList();
+            List<StudentpaymentView> list = StudentpaymentViewbusiness.GetListBySql<StudentpaymentView>("select * from StudentpaymentView");
 
             if (!string.IsNullOrEmpty(Name))
             {
@@ -96,24 +98,14 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }
 
 
-            var xz = list.Select(a => new
-            {
-                a.StudentNumber,
-                a.Name,
-                a.Sex,
-                a.BirthDate,
-                a.identitydocument,
-                ClassName = scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber)==null?"暂无": scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ClassID,
-                Headmasters = headmasters.Listheadmasters(a.StudentNumber) == null ? "暂无" : headmasters.Listheadmasters(a.StudentNumber).EmpName
-
-            }).ToList();
-            var dataList = xz.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
+        
+            var dataList = list.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new
             {
                 code = "",
                 msg = "",
-                count = xz.Count,
+                count = list.Count,
                 data = dataList
             };
             return data;

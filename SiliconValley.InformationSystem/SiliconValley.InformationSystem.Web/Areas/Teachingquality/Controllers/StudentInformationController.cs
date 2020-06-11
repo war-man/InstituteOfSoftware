@@ -1086,12 +1086,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <returns></returns>
         public ActionResult StuidPaixu()
         {
+            BaseBusiness<StudentInformationview> stuview = new BaseBusiness<StudentInformationview>();
+            List<StudentInformationview> studentInformationviews = new List<StudentInformationview>();
+            
             List<StudentInformation> studentInformation = new List<StudentInformation>();
             var mingci = string.Empty;
             var x = dbtext.GetList() ;
             var count = 0;
             foreach (var item in x)
             {
+                StudentInformationview z = new StudentInformationview();
+                
+                z.State = item.State;
+                z.Sex = item.Sex;
+                z.Reack = item.Picture;
+                z.Password = item.Password;
+                z.Nation = item.Nation;
+                z.Name = item.Name;
+                z.IsDelete = item.IsDelete;
+                z.InsitDate = item.InsitDate;
+                z.Identityjustimg = item.Identityjustimg;
+                z.identitydocument = item.identitydocument;
+                z.Identitybackimg = item.Identitybackimg;
+                z.Hobby = item.Hobby;
+                z.Guardian = item.Guardian;
+                z.Familyphone = item.Familyphone;
+                z.Familyaddress = item.Familyaddress;
+                z.Education = item.Education;
+                z.BirthDate = item.BirthDate;
+                z.WeChat = item.WeChat;
+                z.Traine = item.Traine;
+                z.Telephone = item.Telephone;
+                z.StudentPutOnRecord_Id = item.StudentPutOnRecord_Id;
                 count++;
                 if (count.ToString().Length < 2)
                     mingci = "0000" + count;
@@ -1103,10 +1129,48 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     mingci = "0" + count;
                 else mingci = count.ToString();
                var stuid= item.StudentNumber.Substring(0, item.StudentNumber.Length - 5);
-                item.StudentNumber = stuid + mingci;
-                studentInformation.Add(item);
+                z.StudentNumber  = stuid + mingci;
+                studentInformationviews.Add(z);
             }
-            dbtext.BulkInsert(studentInformation);
+
+            stuview.BulkInsert(studentInformationviews);
+            return null;
+        }
+
+         public ActionResult studenttext()
+        {
+            BaseBusiness<StudentInformationview> stuview = new BaseBusiness<StudentInformationview>();
+            List<StudentInformation> studentInformation = new List<StudentInformation>();
+            var x= stuview.GetList();
+            foreach (var item in x)
+            {
+                StudentInformation z = new StudentInformation();
+                z.StudentNumber = item.StudentNumber;
+                z.State = item.State;
+                z.Sex = item.Sex;
+                z.Reack = item.Picture;
+                z.Password = item.Password;
+                z.Nation = item.Nation;
+                z.Name = item.Name;
+                z.IsDelete = item.IsDelete;
+                z.InsitDate = item.InsitDate;
+                z.Identityjustimg = item.Identityjustimg;
+                z.identitydocument = item.identitydocument;
+                z.Identitybackimg = item.Identitybackimg;
+                z.Hobby = item.Hobby;
+                z.Guardian = item.Guardian;
+                z.Familyphone = item.Familyphone;
+                z.Familyaddress = item.Familyaddress;
+                z.Education = item.Education;
+                z.BirthDate =item.BirthDate;
+                z.WeChat = item.WeChat;
+                z.Traine = item.Traine;
+                z.Telephone = item.Telephone;
+                z.StudentPutOnRecord_Id = item.StudentPutOnRecord_Id;
+                studentInformation.Add(z);
+            }
+
+            dbtext.Insert(studentInformation);
             return null;
         }
         //修改班级身份证
@@ -1123,6 +1187,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             Stuclass.Update(scheduleForTrainees);
             return null;
            }
+
+        public ActionResult text2()
+        {
+            List<ScheduleForTrainees> scheduleForTrainees = new List<ScheduleForTrainees>();
+            var classstu = Stuclass.GetList();
+            var stu = dbtext.GetList();
+            foreach (var item in classstu)
+            {
+                item.StudentID = stu.Where(a => a.identitydocument == item.identitydocument).FirstOrDefault().StudentNumber;
+                scheduleForTrainees.Add(item);
+            }
+            Stuclass.Update(scheduleForTrainees);
+            return null;
+        }
        
     }
 }

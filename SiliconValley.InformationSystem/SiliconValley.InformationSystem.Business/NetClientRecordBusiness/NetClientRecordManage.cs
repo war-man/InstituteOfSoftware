@@ -25,6 +25,7 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
             {
                 ncr.SPRId = id;
                 ncr.EmpId = sdkmanage.GetEntity(id).EmployeesInfo_Id;//跟踪回访人首先默认为备案人，有不同则跟踪信息表修改
+                ncr.MarketTeaId = null;
                 ncr.IsDel = false;
                 this.Insert(ncr);
                 result = true;
@@ -51,6 +52,7 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
                     NetClientRecord ncr = new NetClientRecord();
                     ncr.SPRId = item.Id;
                     ncr.EmpId = item.EmployeesInfo_Id;//跟踪回访人首先默认为备案人，有不同则跟踪信息表修改
+                    ncr.MarketTeaId = null;
                     ncr.IsDel = false;
                     this.Insert(ncr);
                     result = true;
@@ -77,12 +79,12 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
             var item = this.GetEntity(id);
             #region 赋值
             var sdk = sdkrmanage.findId(Convert.ToString(item.SPRId));//获取对应的备案数据对象
-            var channelemp = empmanege.GetInfoByEmpID(channel.GetChannelByID(item.MarketTeaId).EmployeesInfomation_Id);//获取渠道员工信息
+            var channelemp = item.MarketTeaId==null?null: empmanege.GetInfoByEmpID(channel.GetChannelByID(item.MarketTeaId).EmployeesInfomation_Id);//获取渠道员工信息
             var emp = empmanege.GetInfoByEmpID(item.EmpId);//获取跟踪回访员工
             ncr.Id = item.Id;
             ncr.SPRId = item.SPRId;
             ncr.EmpId = item.EmpId;
-            ncr.Channelemp = channelemp.EmpName;
+            ncr.Channelemp = channelemp==null?null: channelemp.EmpName;
             ncr.Empname = emp.EmpName;
             ncr.StuName = sdk.StuName;
             ncr.StuSex = sdk.StuSex;
