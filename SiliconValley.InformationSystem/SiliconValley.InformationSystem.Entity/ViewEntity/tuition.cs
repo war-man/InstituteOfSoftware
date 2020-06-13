@@ -42,9 +42,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public bool Istur { get; set; }
 
         /// <summary>
-        /// 预录费
+        /// 预录费详情
         /// </summary>
-        public decimal? Prerecordingfee { get; set; }
+        public List<tuitiondetails> Prerecordingfee { get; set; }
 
         /// <summary>
         /// 缴费详情

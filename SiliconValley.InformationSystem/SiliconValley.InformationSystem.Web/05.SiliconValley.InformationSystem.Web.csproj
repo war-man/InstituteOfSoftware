@@ -1846,6 +1846,7 @@
     <Content Include="Areas\Market\Views\NetClientRecord\CallbackDetailInfo.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\EditCallbackInfo.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\ShortInfoMationView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\Sign_up.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

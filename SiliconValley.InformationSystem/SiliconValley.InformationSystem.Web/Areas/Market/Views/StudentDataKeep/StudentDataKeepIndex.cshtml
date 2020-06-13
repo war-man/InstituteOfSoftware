@@ -47,6 +47,7 @@
                 <button class="layui-btn layui-btn-sm" onclick="ChangeGotoSchoolstate()"> <i class="layui-icon">&#xe714;</i> 转上门</button>
                 <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
                 <button class="layui-btn layui-btn-sm" onclick="ChangTeacher()"> <i class="layui-icon">&#xe714;</i> 转换咨询师</button>
+                <button class="layui-btn layui-btn-sm" onclick="SignUp()"> <i class="layui-icon">&#xe714;</i>报名/预录学生信息下载</button>
             }
 
             if (r == 0 || r == 2)
@@ -60,7 +61,6 @@
             {
                 <button class="layui-btn layui-btn-sm" onclick="shortMessage()"> <i class="layui-icon">&#xe681;</i>发送短信</button>
             }
-
         }
     </div>
 </script>
@@ -715,6 +715,20 @@
             , anim: 4
             , skin: 'demo-class'
         });        
+    }
+
+    //报名 / 预录学生信息下载
+    function SignUp() {
+        layer.open({
+            type: 2
+            , content: '/Market/StudentDataKeep/Sign_up'
+            , area: ['550px', '600px']
+            , title: '下载报名学生或已交预录费学生页面'
+            , shade: 0.8
+            , anim: 4
+            , skin: 'demo-class'
+        });    
+         
     }
 </script>
  

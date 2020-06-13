@@ -1,0 +1,109 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Sign_up</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .DivCss{
+           width:95%;
+           margin-top:20px;
+           margin-left:auto;
+           margin-right:auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="DivCss">        
+        <form class="layui-form">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">日 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 期:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="date" id="date" />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">类 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 型:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" class="layui-input" value="1" title="已报名" name="type" checked/>
+                        <input type="radio" class="layui-input" value="2" title="已交预录费" name="type"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">信息来源:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" class="layui-input" value="0" checked title="全部" name="infomation" />
+                        @{
+                            List<SelectListItem> list = ViewBag.list as List<SelectListItem>;
+
+                            foreach (SelectListItem item in list)
+                            {
+                                <input type="radio" class="layui-input" value="@item.Value" title="@item.Text" name="infomation" />
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div style="text-align:center">
+                    <button type="button" class="layui-btn" lay-submit="" lay-filter="true">确定下载</button>
+                    <button type="button" class="layui-btn" onclick="Flase()">取消关闭</button>
+                </div>
+            </div>
+        </form>       
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form','layer','laydate'], function () {
+            var form = layui.form;
+
+            var layer = layui.layer;
+
+            var laydate = layui.laydate;
+
+            laydate.render({
+                elem: '#date'
+                , trigger: 'click'
+            });
+
+
+            form.on('submit(true)', function (data) {
+
+                console.log(data.field);
+                //$.ajax({
+                //    url: '/Market/StudentDataKeep/',
+                //    data: data.field,
+                //    type: 'POST',
+                //    success: function (suc) {
+                        
+                //    }
+                //});
+
+                return false;
+            });
+        });
+
+        function Flase() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+            });
+        }
+    </script>
+</body>
+</html>
