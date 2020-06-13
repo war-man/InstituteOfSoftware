@@ -24,6 +24,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// ture--缴清，false--未缴清
         /// </summary>
-        public bool clean { get; set; }
+        public bool? clean { get; set; }
+
+        /// <summary>
+        /// 缴费日期
+        /// </summary>
+        public DateTime? Date { get; set; }
     }
 }

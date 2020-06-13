@@ -375,38 +375,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
             return ary;
         }
-        /// <summary>
-        /// 这个方法是就修改学生状态的方法
-        /// </summary>
-        /// <param name="id">备案id</param>
-        /// <returns></returns>
-        public bool ChangeStudentState(int id)
-        {
-            Statu_Entity = new StuStateManeger();
-            redisCache = new RedisCache();
-            StudentPutOnRecord find_s = this.GetEntity(id);
-            if (find_s != null)
-            {
-                AjaxResult a = Statu_Entity.GetStu("已报名");
-                if (a.Success == true)
-                {
-                    StuStatus find_statu = a.Data as StuStatus;
-                    find_s.StuStatus_Id = find_statu.Id;
-                    find_s.StatusTime = DateTime.Now;
-                    this.Update(find_s);
-                    redisCache.RemoveCache("StudentKeepList");
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
+       
         public int GetMonthCount(List<StudentPutOnRecord> student_list, int monthName)
         {
             var count = student_list.Select(s => Convert.ToDateTime(s.StuVisit).Month).Where(s => s == monthName).ToList().Count;
@@ -516,8 +485,40 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
             return resultlist;
         }
-        #endregion        
-      
+        #endregion
+
+        #region 给财务的方法
+        
+        /// <summary>
+        /// 这个方法是就修改学生状态的方法
+        /// </summary>
+        /// <param name="id">备案id</param>
+        /// <returns></returns>
+        public bool ChangeStudentState(int id)
+        {
+            StudentPutOnRecord find_s = this.GetEntity(id);
+            if (find_s != null)
+            {
+                AjaxResult a = Statu_Entity.GetStu("已报名");
+                if (a.Success == true)
+                {
+                    StuStatus find_statu = a.Data as StuStatus;
+                    find_s.StuStatus_Id = find_statu.Id;
+                    find_s.StatusTime = DateTime.Now;
+                    this.Update(find_s);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
 
         #region 用于将远程数据库中的备案数据导入当前数据库中
         /// <summary>
@@ -544,7 +545,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-09' and StudentName <> '邓伟'  and StudentName <> '邓维伦'";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-07' ";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
             
@@ -595,40 +596,12 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 if (item.Inquiry != null)
                 {
                     one.ConsultTeacher = item.Inquiry;
-                    if (item.Inquiry == "罗星琪")
-                    {
-                        one.ConsultId = "4";
-                    }
-                    else if (item.Inquiry == "吴想")
-                    {
-                        one.ConsultId = "5";
-                    }
-                    else if (item.Inquiry == "易香婷")
-                    {
-                        one.ConsultId = "3";
-                    }
-                    else if (item.Inquiry == "于阳")
-                    {
-                        one.ConsultId = "2";
-                    }
-                    else if (item.Inquiry == "刘菁阳")
-                    {
-                        one.ConsultId = "6";
-                    }
-                    else if (item.Inquiry == "黄玲")
-                    {
-                        one.ConsultId = "7";
-                    }
-                    else if (item.Inquiry == "何娉")
-                    {
-                        one.ConsultId = "1";
-                    }
-                    else
+                    if (Enplo_Entity.FindEmpData(item.Inquiry,false)==null)
                     {
                         one.ConsultTeacher = "何娉";
-                        one.ConsultId = "1";
                         one.Reak = one.Reak + "之前咨询师是:" + item.Inquiry + "但是离职了，由于没有员工信息所以默认为何娉";
                     }
+                                         
                 }
                  //studentlist.Add(one);
                 try

@@ -196,7 +196,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">咨&nbsp;询 &nbsp; 师:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownList("ConsultId", ViewBag.ConsultTeacher as List<SelectListItem>)
+                            @Html.DropDownList("ConsultTeacher", ViewBag.ConsultTeacher as List<SelectListItem>)
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -390,29 +390,35 @@
 
         //提交数据
         form.on('submit(tijiao)', function (data) {
-            $.ajax({
-                url: "/Market/StudentDataKeep/StudentDataKeepAdd",
-                data: data.field,
-                type:"POST",
-                success: function (successdata) {
-                    if (successdata.Success == true) {
-                        layer.msg(successdata.Msg, {
-                            icon: 1,
-                            time: 2000,
-                            shade: 0.8
-                        }, function () {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index); //再执行关闭
-                            window.parent.LoadTable();
-                        });
-                    } else {
-                        layer.msg(successdata.Msg, {
-                            icon: 2,
-                        });
+            layer.confirm('确定备案吗？(如果备案成功则不能修改备案人，学生姓名，学生电话号码)', { title: '温馨提示！', icon: 3 }, function (index) {
+                var mylayerinde = layer.load(1);
+                $.ajax({
+                    url: "/Market/StudentDataKeep/StudentDataKeepAdd",
+                    data: data.field,
+                    type: "POST",
+                    success: function (successdata) {
+                        layer.close(mylayerinde);
+                        if (successdata.Success == true) {
+                            layer.msg(successdata.Msg, {
+                                icon: 1,
+                                time: 2000,
+                                shade: 0.8
+                            }, function () {
+                                var Myindex = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(Myindex); //再执行关闭
+                                window.parent.LoadTable();
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg(successdata.Msg, {
+                                icon: 2,
+                            });
+                        }
                     }
-
-                }
-            });
+                });
+                 
+            });       
+            
             return false;  
         });
     });

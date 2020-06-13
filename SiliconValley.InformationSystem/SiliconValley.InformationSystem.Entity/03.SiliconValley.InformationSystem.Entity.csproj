@@ -459,6 +459,7 @@
     <Compile Include="ViewEntity\ShowEchartsView.cs" />
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
     <Compile Include="ViewEntity\simpleDataClass.cs" />
+    <Compile Include="ViewEntity\SingUpStudent.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="ViewEntity\StaffOfRoomwithFormdataView.cs" />
     <Compile Include="ViewEntity\Staff_Cost_StatisticesDetailView.cs" />
