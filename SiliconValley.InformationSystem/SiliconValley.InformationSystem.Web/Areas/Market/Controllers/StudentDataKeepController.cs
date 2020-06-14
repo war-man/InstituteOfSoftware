@@ -31,7 +31,6 @@ using DataTable = System.Data.DataTable;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Business.RegionManage;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
-//using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
 using System.Threading;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using System.Text.RegularExpressions;
@@ -805,6 +804,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             var json = new { resut = result, msg = msg };
                             return Json(json, JsonRequestBehavior.AllowGet);
                         }
+
+                        //通知备案人备案成功
+                        string number = s_Entity.Enplo_Entity.FindEmpData(equally_list2[0].EmployeesInfo_Id, false).Phone;
+                        string smsText = "备案提示:Excel文件备案成功,但是有重复数据，请去系统查看！！！";
+                        string t = PhoneMsgHelper.SendMsg(number, smsText);
                     }
 
                     //有重复的值                                
@@ -840,9 +844,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             old = SercherStudent(equally_list),
                             news = equally_list
                         };
-                        //string number = "13204961361";
-                        //string smsText = "备案提示:已备案成功，但是有重复数据,请自行去系统查看";
-                        //string t = PhoneMsgHelper.SendMsg(number, smsText);
+                         
                         return Json(data, JsonRequestBehavior.AllowGet);
                     }
                     else
@@ -857,13 +859,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     List<MyExcelClass> nochongfu_list = SessionHelper.Session["ExcelData"] as List<MyExcelClass>;
                     if (AddExcelToServer(nochongfu_list))
                     {
-                        result = "ok";                       
+                        result = "ok";
                         //通知备案人备案成功
-                        //string number = "13204961361";
-                        //string smsText = "备案提示:已备案成功，无重复数据";
-                        //string t = PhoneMsgHelper.SendMsg(number, smsText);
+                        string number = s_Entity.Enplo_Entity.FindEmpData(nochongfu_list[0].EmployeesInfo_Id,false).Phone;
+                        string smsText = "备案提示:Excel文件备案成功，无重复数据";
+                        string t = PhoneMsgHelper.SendMsg(number, smsText);
                     }
-
                 }
 
             }
