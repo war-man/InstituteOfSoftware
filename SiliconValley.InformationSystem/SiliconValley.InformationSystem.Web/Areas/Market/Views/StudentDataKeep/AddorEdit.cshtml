@@ -106,7 +106,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label needTextColor">电 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 话:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.StuPhone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "联系电话" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(s => s.StuPhone, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "联系电话" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -358,10 +358,6 @@
 
                 }
             }
-            ,PhoeNumber: [
-                /^[0-9]*$/
-                , '电话号码只能是数字'
-            ]
             //, MyIdCard: function (value) {
             //    var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
             //    if (value.length>0) {
