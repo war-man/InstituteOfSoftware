@@ -259,16 +259,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             return view;
 
-        }
-
-
+        } 
         public SatisfactionSurveyDetailView ConvertToViewModel(SatisficingResult satisficingResult)
         {
             SatisfactionSurveyDetailView detailView = new SatisfactionSurveyDetailView();
 
             var satisficingConfig = db_satisconfig.GetList().Where(d => d.IsDel == false && d.ID == satisficingResult.SatisficingConfig).FirstOrDefault();
 
-
+            detailView.SatisficingConfigId = satisficingConfig.ID;
             detailView.Curriculum = db_course.GetCurriculas().Where(d => d.CurriculumID == satisficingConfig.CurriculumID).FirstOrDefault();
 
             detailView.Emp = db_emp.GetList().Where(d => d.EmployeeId == satisficingConfig.EmployeeId && d.IsDel == false).FirstOrDefault();
@@ -367,14 +365,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 resultlist = SurveyHistoryData(empid, (int)Curriculum, classnumber);
 
             }
-
-
-
             return resultlist;
 
         }
-
-
         /// <summary>
         /// 获取满意度调查详细数据 --教员
         /// </summary>
@@ -528,7 +521,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
-
         /// <summary>
         /// 获取还未过期的满意度调查
         /// </summary>
@@ -598,13 +590,8 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 {
                     result.Add(item);
                 }
-
             }
-
             return result;
-
-
-
         }
 
         public SatisficingConfigView ConvertToview(SatisficingConfig satisficingConfig)
