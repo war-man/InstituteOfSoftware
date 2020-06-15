@@ -106,10 +106,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //    return NetConsultTeaobj;
         //    }
 
-        /// 绑定登记人和市场对接老师两个下拉框的方法
-        /// </summary>
-        /// <returns></returns>
-      
 
         //添加网咨学员信息
         public ActionResult AddNetConsultStuinfo(int id)
@@ -127,15 +123,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-                //var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
+                var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
 
-                //string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
-                //                                // ncr.EmployeeId=session['网络咨询师'];网咨信息登记者即为正在登录该页面的员工
-                //                                //  ncr.EmployeeId = eid;//防止测试的报错暂时设置一个死值
-
-                ncr.NetClientDate = DateTime.Now;
+                string eid = UserName.EmpNumber;
+                var oldncr = nmanage.GetEntity(ncr.Id);
+                NetClientRecord ncrnew = new NetClientRecord();
+                ncrnew.SPRId = oldncr.SPRId;
+                ncrnew.EmpId = eid;
+                ncrnew.NetClientDate = DateTime.Now;
                 nmanage.Insert(ncr);
                 AjaxResultxx = nmanage.Success();
+                if (AjaxResultxx.Success){
+                    var ncrlist = nmanage.GetList().Where(s => s.SPRId == oldncr.SPRId).ToList();
+                    foreach (var item in ncrlist)
+                    {  
+                        item.EmpId = eid;
+                        nmanage.Update(item);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -194,31 +199,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
-        //public ActionResult EditNetStu(int id, string name, bool ismarry) {
-        //    NetClientRecordManage ncrinfo = new NetClientRecordManage();
-        //    var AjaxResultxx = new AjaxResult();
-        //    try
-        //    {
-        //        var emp= ncrinfo.GetEntity(id);
-        //        switch (name)
-        //        {
-        //            case "IsFaceConsult":
-
-        //                    emp.IsFaceConsult = ismarry;
-        //                break;
-        //            case "IsDel":
-        //                    emp.IsDel =ismarry;
-
-        //                break;
-        //        }
-        //        ncrinfo.Update(emp);
-        //        AjaxResultxx = ncrinfo.Success();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AjaxResultxx = ncrinfo.Error(ex.Message);
-        //    }
-        //    return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
-        //}
+        public ActionResult EditNetStu(int id, string name, bool ismarry)
+        {
+            NetClientRecordManage ncrinfo = new NetClientRecordManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var emp = ncrinfo.GetEntity(id);
+               
+                ncrinfo.Update(emp);
+                AjaxResultxx = ncrinfo.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = ncrinfo.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
     }
 }
