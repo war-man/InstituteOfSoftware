@@ -173,8 +173,6 @@
 
             //添加提交
             form.on('submit(demo1)', function (data) {
-                console.log('添加提交：' + data);
-                console.log('添加提交：' + data.field);
                 $.post("/Market/NetClientRecord/AddNetConsultStuinfo", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function () {
