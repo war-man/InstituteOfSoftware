@@ -24,15 +24,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         EmployeesInfoManage Enplo_Entity;
         ConsultTeacherManeger ConsultTeacher;
         // GET: /Market/FollwingInfo/GetTableData
-        //获取当前上传的操作人
-        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+        
         static int f_id = 0;
         public ActionResult FollwingInfoIndex()
         {
             ConsultTeacher = new ConsultTeacherManeger();
 
             //判断是哪个咨询师
-            
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
             f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()==null?0: ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             return View();
         }
@@ -152,6 +152,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个添加方法
         public ActionResult AddFunction()
         {
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
             Enplo_Entity = new EmployeesInfoManage();
             try
             {
@@ -341,6 +343,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ConsultTeacher = new ConsultTeacherManeger();
 
             //判断是哪个咨询师
+
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
 
             f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
 
