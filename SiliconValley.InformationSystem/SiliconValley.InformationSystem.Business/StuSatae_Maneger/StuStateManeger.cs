@@ -42,18 +42,26 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
             if (IsKey)
             {
                 //主键
-                int Id = Convert.ToInt32(id);
-                StuStatus s= this.GetEntity(Id);
-                if (s!=null)
+                if (!string.IsNullOrEmpty(id))
                 {
-                    new_a.Success = true;
-                    new_a.Data = s;
+                    int Id = Convert.ToInt32(id);
+                    StuStatus s = this.GetEntity(Id);
+                    if (s != null)
+                    {
+                        new_a.Success = true;
+                        new_a.Data = s;
+                    }
+                    else
+                    {
+                        new_a.Success = false;
+                    }
+
                 }
                 else
                 {
                     new_a.Success = false;
                 }
-                
+
             }
             else
             {
@@ -113,5 +121,6 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
             return find_s;
         }
 
+        
     }
 }

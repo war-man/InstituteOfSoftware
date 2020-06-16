@@ -49,6 +49,7 @@
         height: 15px;
         line-height: 15px;
     }
+
 </style>
 }
 
@@ -117,7 +118,7 @@
     function TableFulsh() {
         layui.use('table', function () {
             var table = layui.table;
-            table.reload('headmaster_table');
+            table.reload('headmaster_table', { url: '/Educational/TeacherNight/GetClassMasterFunction' });
         });
     }
     var ids = "";
@@ -182,23 +183,15 @@
             , url: '/Educational/TeacherNight/GetClassMasterFunction'
             , toolbar: '#toolbarDemo_Night' //开启头部工具栏，并为其绑定左侧模板
             , cols: [[
-                { type: 'checkbox' }
-                , {
-                    field: 'OrwatchDate', title: '值班日期', templet: function (res) {
-                        return TimeChange(res.OrwatchDate);
-                    }
-                }
-                , { field: 'TearcherName', title: '值班老师' }
-                , { field: 'timename', title: '值班类型' }
-                , {
-                    field: 'AttendDate', title: '安排日期', templet: function (res) {
-                        return TimeChange(res.AttendDate);
-                    }
-                }
-                , { field: 'Rmark', title: '备注' }
+                { type: 'radio' }
+                , {field: 'Time', title: '值班日期', templet: function (res) {return TimeChange(res.Time);}}
+                , { field: 'Teachers', title: '值班老师' }
+                , { field: 'Types', title: '值班类型' }
                 , { fixed: 'right', title: '操作', toolbar: '#barDemo_Night', width: 150 }
             ]]
             , page: true
+            , limits: [20, 40, 60, 80, 100]
+            ,limit:20
         });
 
         //头工具栏事件
@@ -209,7 +202,7 @@
                     layer.open({
                         type: 2,
                         content: '/Educational/TeacherNight/WeekenddutyView'
-                        , area: ['800px', '400px'],
+                        , area: ['800px', '500px'],
                         title: '添加值班数据页面'
                         , shade: 0.8
                         , anim: 4
@@ -233,10 +226,8 @@
 
                         }
                         ids = id;
-                        //IsAll = checkStatus.isAll;
-                        if (count > 0) {
-                            layer.msg('值班日期要一致', { icon: 2,shade:0.8 });
-                        } else {
+            
+                        
                             layer.open({
                                 type: 2,
                                 content: '/Educational/TeacherNight/EditDateChangeView'
@@ -246,7 +237,7 @@
                                 , anim: 4
                                 , skin: 'demo-class'
                             });
-                        }
+                       
                          
                     } else {
                         layer.msg('请选择数据在进行操作!!!', { icon: 2 });
@@ -305,6 +296,7 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
+                console.log(data);
                 layer.open({
                     type: 2,
                     content: '/Educational/TeacherNight/EditMasterView/' + data.Id,

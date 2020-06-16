@@ -73,7 +73,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">异动时间:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.TransactionTime, new Dictionary<string, object>() { { "class", "layui-input" },{ "lay - verify", "required" } })
+                            @Html.TextBoxFor(a => a.TransactionTime, new Dictionary<string, object>() { { "class", "layui-input" }, { "lay - verify", "required" } })
                         </div>
                     </div>
 
@@ -162,6 +162,42 @@
 
                 </div>
 
+
+                <div class="layui-row layui-form-item" id="contractRenewal" style="border:0px;display:none">
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label" style="margin-left:-40px;width:120px">现合同起始日期:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.BeforeContractStartTime, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label" style="margin-left:-40px;width:120px">现合同终止日期:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.BeforeContractEndTime, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label" style="margin-left:-40px;width:120px">续签后起始日期:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.AfterContractStartTime, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label" style="margin-left:-40px;width:120px">续签后终止日期:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.AfterContractEndTime, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
             <div class="layui-form-item" style="margin-left:200px;margin-top:30px;">
                 <div class="layui-input-block">
@@ -180,10 +216,36 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
             //form.render();
-
             laydate.render({
                 elem: '#TransactionTime',
-            });//身份证有效期
+            });//异动确认时间
+            var startTime = laydate.render({
+                elem: '#AfterContractStartTime',
+                done: function (value, date) {
+                    endTime.config.min = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });//合同起始时间
+            var endTime = laydate.render({
+                elem: '#AfterContractEndTime',
+                done: function (value, date) {
+                    startTime.config.max = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });//合同终止时间
+
 
             $("#iconbtn").click(function () {
                 var type = $("#TransactionType").val();
@@ -198,15 +260,15 @@
                         , anim: 2
                     });
                 }
-                
+
             });
 
             //将选择的员工信息从弹出层获取，并赋值给相应的属性
-        
+
             //异动类型下拉框监听事件
             form.on('select(myform)', function (data) {
                 var s = data.value;
-              
+
                 $(data.elem).children().each(function (index, elem) {
                     var currentValue = $(elem).val();
 
@@ -214,16 +276,23 @@
                         if ($(elem).text() == "调岗") {
                             document.getElementById('transferPosition').style.display = "block";
                             document.getElementById('Raises').style.display = "none";
+                            document.getElementById('contractRenewal').style.display = "none";
                         } else if ($(elem).text() == "加薪") {
                             document.getElementById('Raises').style.display = "block";
+                            document.getElementById('transferPosition').style.display = "none";
+                            document.getElementById('contractRenewal').style.display = "none";
+                        } else if ($(elem).text() == "续签") {
+                            document.getElementById('contractRenewal').style.display = "block";
+                            document.getElementById('Raises').style.display = "none";
                             document.getElementById('transferPosition').style.display = "none";
                         } else {
                             document.getElementById('transferPosition').style.display = "none";
                             document.getElementById('Raises').style.display = "none";
+                            document.getElementById('contractRenewal').style.display = "none";
                         }
                     }
                 });
-             
+
             });
 
             //添加异动信息提交
@@ -234,7 +303,7 @@
                     console.log("加薪后工资：" + data.field.PresentSalary);
                 }
                 $.post("/Personnelmatters/EmpTransactionRecord/AddEtrInfo", data.field, function (data) {
-                  
+
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
@@ -252,7 +321,7 @@
             //关闭部门添加页面
             $("#btnclose1").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
-              //  parent.layui.table.reload('myETR');
+                //  parent.layui.table.reload('myETR');
                 parent.layer.close(index);
             });
         });
@@ -272,6 +341,8 @@
                 $("#PreviousSalary").val(Itemnames.Salary);
                 $("#salaryBefore").val(Itemnames.Salary);
             }
+            $("#BeforeContractStartTime").val(GetYMD(Itemnames.ContractStartTime));
+            $("#BeforeContractEndTime").val(GetYMD(Itemnames.ContractEndTime));
         }
 
     </script>
@@ -329,6 +400,31 @@
         });
 
 
+    </script>
+
+    @*显示年月日*@
+    <script>
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
     </script>
 </body>
 </html>

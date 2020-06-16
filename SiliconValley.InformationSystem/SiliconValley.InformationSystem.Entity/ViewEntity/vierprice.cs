@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string CostitemName { get; set; }
         public List<vierprice> Chicked { get; set; }
         public string GrandName { get; set; }
-
+        public int id { get; set; }
         public string Rategory { get; set; }
     }
 }

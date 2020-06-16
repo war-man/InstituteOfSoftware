@@ -110,7 +110,7 @@
                 success: function (successData) {     
                     //关闭
                     layer.close(indexlayer);     
-                    if (successData.resut == "okk") {                         
+                    if (successData.result == "okk") {                         
                         layui.use(['layer', 'table'], function () {
                             var table = layui.table;
                             var layer = layui.layer;
@@ -211,14 +211,20 @@
                 , exts: 'xls|xlsx'//只允许上传Excle文件
                 , done: function (res) {
                     var indexss = layer.load(1);
-                    if (res.msg == "ok") {
-                       
+                    if (res.msg == "ok") {                     
                         table.render({
                             elem: '#tabletest2'
                             , data:res.data
-                            , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                             , cols: [[
-                                  { field: 'StuName', title: '姓名' }
+                                {
+                                    field: 'StuName', title: '姓名', templet: function (let) {
+                                        if (let.StuName.trim().length<=0 || let.StuName == undefined) {
+                                            layer.msg('备案的学生姓名不能为空，否则会导入不进去，请修改Excel文件!!!', { icon: 2, time: 4000 });
+                                        } else {
+                                            return let.StuName;
+                                        }
+                                    }
+                                }
                                 , {field: 'StuSex', title: '性别'}
                                 , { field: 'StuPhone', title: '联系电话' }
                                 , { field: 'StuEducational', title: '学历' }

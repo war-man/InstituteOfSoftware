@@ -57,6 +57,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 班级状态，升学！
         /// </summary>
         public int? ClassstatusID { get; set; }
+        /// <summary>
+        /// 班级照片
+        /// </summary>
+        public string ClassImage { get; set; }
     }
 }
 

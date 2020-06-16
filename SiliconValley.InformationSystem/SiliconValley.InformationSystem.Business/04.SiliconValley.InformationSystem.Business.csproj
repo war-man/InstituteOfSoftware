@@ -249,6 +249,7 @@
     <Compile Include="Shortmessage_Business\ShortmessageBusiness.cs" />
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
+    <Compile Include="StudentKeepOnRecordBusiness\HeiHuManeger.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\Sch_MarketManeger.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
     <Compile Include="StudentmanagementBusinsess\InterviewStudentsBusiness.cs" />

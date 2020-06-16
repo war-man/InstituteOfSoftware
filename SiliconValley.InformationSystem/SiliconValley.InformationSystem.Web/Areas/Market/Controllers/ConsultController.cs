@@ -123,7 +123,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //查看是否有这个学生
         public ActionResult SeracherIsno(string id)
         {
-            List<StudentPutOnRecord> find = CM_Entity.GetStudentPutRecored().Where(s => s.StuName == id).ToList();
+            List<ExportStudentBeanData> find = CM_Entity.GetStudentPutRecored(id,false);
             return Json(find, JsonRequestBehavior.AllowGet);
         }
         //获取学生综合数据的方法
@@ -226,34 +226,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// </summary>
         /// <param name="month">月份名称</param>
         /// <returns></returns>
-        public ActionResult MonthStudentData(int id)
-        {
-            //获取未报名学生
-            List<StudentPutOnRecord> list_stu = CM_Entity.GetMonStudent(id).Where(s => s.StuStatus_Id != (SM_Entity.GetStu("已报名").Data as StuStatus).Id).ToList();
-            //获取未分量的学生
-            List<Consult> find_all = CM_Entity.GetIQueryable().ToList();
-            List<StudentPutOnRecord> getNoExit = new List<StudentPutOnRecord>();
-            foreach (StudentPutOnRecord studentdata in list_stu)
-            {
-                Consult findvalue = find_all.Where(a => a.StuName == studentdata.Id).FirstOrDefault();
-                if (findvalue == null)
-                {
-                    getNoExit.Add(studentdata);
-                }
-            }
-            var data = getNoExit.Select(s => new
-            {
-                Id = s.Id,
-                StuName = s.StuName,
-                StuSex = s.StuSex,
-                StuStatus_Id = SM_Entity.GetEntity(s.StuStatus_Id).StatusName,
-                StuPhone = s.StuPhone,
-                EmployeesInfo_Id = CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
-                Region_id = CM_Entity.GetRegionName(s.Region_id).RegionName
-            }).ToList();
+        //public ActionResult MonthStudentData(int id)
+        //{
+        //    //获取未报名学生
+        //    List<StudentPutOnRecord> list_stu = CM_Entity.GetMonStudent(id).Where(s => s.StuStatus_Id != (SM_Entity.GetStu("已报名").Data as StuStatus).Id).ToList();
+        //    //获取未分量的学生
+        //    List<Consult> find_all = CM_Entity.GetIQueryable().ToList();
+        //    List<StudentPutOnRecord> getNoExit = new List<StudentPutOnRecord>();
+        //    foreach (StudentPutOnRecord studentdata in list_stu)
+        //    {
+        //        Consult findvalue = find_all.Where(a => a.StuName == studentdata.Id).FirstOrDefault();
+        //        if (findvalue == null)
+        //        {
+        //            getNoExit.Add(studentdata);
+        //        }
+        //    }
+        //    var data = getNoExit.Select(s => new
+        //    {
+        //        Id = s.Id,
+        //        StuName = s.StuName,
+        //        StuSex = s.StuSex,
+        //        StuStatus_Id = SM_Entity.GetEntity(s.StuStatus_Id).StatusName,
+        //        StuPhone = s.StuPhone,
+        //        EmployeesInfo_Id = CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
+        //        Region_id = CM_Entity.GetRegionName(s.Region_id).RegionName
+        //    }).ToList();
 
-            return Json(data, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(data, JsonRequestBehavior.AllowGet);
+        //}
         //添加
         [HttpPost]
         public ActionResult Insertconsult()
@@ -306,8 +306,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             consult.TeacherName = Convert.ToInt32(Request.Form["teacherid"]);
             a.Success= CM_Entity.AddSing(consult);
             return Json(a, JsonRequestBehavior.AllowGet);
-        }
-
-         
+        }         
     }
 }

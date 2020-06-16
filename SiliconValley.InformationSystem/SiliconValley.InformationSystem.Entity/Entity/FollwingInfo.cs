@@ -23,11 +23,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int Id { get; set; }
         /// <summary>
-        /// 咨询师编号
+        /// 分量编号
         /// </summary>
         public Nullable<int> Consult_Id { get; set; }
         /// <summary>
-        /// 备注
+        /// 市场类型
         /// </summary>
         public string Rank { get; set; }
         /// <summary>

@@ -16,7 +16,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     using SiliconValley.InformationSystem.Entity.Base_SysManage;
     using SiliconValley.InformationSystem.Business.Common;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
-
+    using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
+    using SiliconValley.InformationSystem.Business.MarketChair_Business;
     public class NetClientRecordController : Controller
     {
         // GET: Market/NetClientRecord
@@ -25,7 +27,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var elist = emanage.GetList();
             ViewBag.recorder = new SelectList(elist, "EmployeeId", "EmpName");
-            BindSelect();
+
             return View();
         }
         /// <summary>
@@ -35,10 +37,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <param name="limit"></param>
         /// <param name="AppCondition"></param>
         /// <returns></returns>
-        public ActionResult GetData(int page,int limit,string AppCondition){
+        public ActionResult GetData(int page, int limit, string AppCondition)
+        {
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
-            ChannelStaffBusiness channel = new ChannelStaffBusiness();
-            var list= ncrmanage.GetList();
+            List<NetClientRecordView> ncrlist = new List<NetClientRecordView>();
+            var list = ncrmanage.GetList();
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
@@ -49,19 +52,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 string IsDel = str[4];
                 string start_time = str[5];
                 string end_time = str[6];
-                list = list.Where(e => e.StuName.Contains(name)).ToList();
-                list = list.Where(e => e.InformationSource.Contains(InformationSource)).ToList();
-                if (!string.IsNullOrEmpty(registrant))
-                {
-                    list = list.Where(e =>e.EmployeeId==registrant).ToList();
-                }
-                if (!string.IsNullOrEmpty(IsFaceConsult))
-                {
-                    list = list.Where(e =>e.IsFaceConsult==bool.Parse(IsFaceConsult)).ToList();
-                }
+                //list = list.Where(e => e.StuName.Contains(name)).ToList();
+                //list = list.Where(e => e.InformationSource.Contains(InformationSource)).ToList();
+                //if (!string.IsNullOrEmpty(registrant))
+                //{
+                //    list = list.Where(e =>e.EmployeeId==registrant).ToList();
+                //}
+                //if (!string.IsNullOrEmpty(IsFaceConsult))
+                //{
+                //    list = list.Where(e =>e.IsFaceConsult==bool.Parse(IsFaceConsult)).ToList();
+                //}
                 if (!string.IsNullOrEmpty(IsDel))
                 {
-                    list = list.Where(e =>e.IsDel==bool.Parse(IsDel)).ToList();
+                    list = list.Where(e => e.IsDel == bool.Parse(IsDel)).ToList();
                 }
                 if (!string.IsNullOrEmpty(start_time))
                 {
@@ -75,37 +78,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
             }
             var mylist = list.OrderBy(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
-            var newlist = from e in mylist
-                          select new
-                          {
-                              #region 获取属性值 
-                              e.Id,
-                              netemp= GetNetConsultTea(e.EmployeeId).EmpName,
-                              e.NetClientDate,
-                              channeltea = e.MarketTeaId==null ? null: GetNetConsultTea(e.MarketTeaId).EmpName,
-                              e.StuName,
-                              e.StuSex,
-                              e.StuAge,
-                              e.InformationSource,
-                              e.Education,
-                              e.Region,
-                              e.ContactInformation,
-                              e.QQNum,
-                              e.WeChatNum,
-                              e.IsFaceConsult,
-                              e.CallBackCase,
-                              e.SecondCallBack,
-                              e.ThirdCallBack,
-                              e.IsDel,
-                              #endregion
-                          };
+            foreach (var item in mylist)
+            {
+                #region 获取属性值 
+                var ncrview = ncrmanage.GetNcrviewById(item.Id);
+                ncrlist.Add(ncrview);
+                #endregion
+            }
             var newobj = new
-               {
-                  code = 0,
-                   msg = "",
-                 count = list.Count(),
-                  data = newlist
-                };
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = ncrlist
+            };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
@@ -114,92 +100,53 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public EmployeesInfo GetNetConsultTea(string empid) {
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-           var NetConsultTeaobj = empmanage.GetEntity(empid);
-            return NetConsultTeaobj;
-            }
-    
-        /// 绑定登记人和市场对接老师两个下拉框的方法
-        /// </summary>
-        /// <returns></returns>
-        public bool BindSelect()
-        {
-            EmployeesInfoManage emanage = new EmployeesInfoManage();
-            DepartmentManage dmanage = new DepartmentManage();
-            PositionManage pmanage = new PositionManage();
-            bool result = true;
-            try
-            {
-                //获取网络部，绑定网络咨询师下拉框
-                var deptid = dmanage.GetList().Where(d => d.DeptName == "网络部").FirstOrDefault().DeptId;//获取找到网络部部门编号
-                var pobj = pmanage.GetList().Where(s => s.DeptId == deptid).ToList();
-                var elist = emanage.GetList();
-                List<EmployeesInfo> elist2 = new List<EmployeesInfo>();
-                foreach (var e in elist)
-                {
-                    foreach (var p in pobj)
-                    {
-                        if (p.Pid == e.PositionId)
-                        {
-                            elist2.Add(e);
-                        }
-                    }
-                }
-                ViewBag.nettea = new SelectList(elist2, "EmployeeId", "EmpName");
+        //public EmployeesInfo GetNetConsultTea(string empid) {
+        //    EmployeesInfoManage empmanage = new EmployeesInfoManage();
+        //   var NetConsultTeaobj = empmanage.GetEntity(empid);
+        //    return NetConsultTeaobj;
+        //    }
 
-                //获取市场部，绑定市场对接老师下拉框
-                var mid = dmanage.GetList().Where(d => d.DeptName == "市场部").FirstOrDefault().DeptId;//获取找到网络部部门编号
-                var markettobj = pmanage.GetList().Where(s => s.DeptId == mid).ToList();
-                List<EmployeesInfo> elist3 = new List<EmployeesInfo>();
-                foreach (var e in elist)
-                {
-                    foreach (var m in markettobj)
-                    {
-                        if ( m.Pid==e.PositionId)
-                        {
-                            elist3.Add(e);
-                        }
-                    }
-                }
-                ViewBag.markettea = new SelectList(elist3, "EmployeeId", "EmpName");
-                result = true;
-                BusHelper.WriteSysLog("网咨学生信息添加、修改及详情页的登记人和市场对接老师下拉框的绑定，绑定成功。", EnumType.LogType.添加数据);
-            }
-            catch (Exception)
-            {
-                result = false;
-                BusHelper.WriteSysLog("网咨学生信息添加、修改及详情页的登记人和市场对接老师下拉框的绑定，绑定失败。", EnumType.LogType.添加数据);
-            }
-
-            return result;
-        }
 
         //添加网咨学员信息
-        public ActionResult AddNetConsultStuinfo() {
-            BindSelect();
+        public ActionResult AddNetConsultStuinfo(int id)
+        {
+            NetClientRecordManage nmanage = new NetClientRecordManage();
+            var ncr = nmanage.GetEntity(id);
+            ViewBag.Number = nmanage.GetList().Where(s => s.SPRId == ncr.SPRId).ToList().Count()-1;
+            ViewBag.Id = id;
             return View();
         }
         [HttpPost]
-        public ActionResult AddNetConsultStuinfo(NetClientRecord ncr) {
+        public ActionResult AddNetConsultStuinfo(NetClientRecord ncr)
+        {
             NetClientRecordManage nmanage = new NetClientRecordManage();
             var AjaxResultxx = new AjaxResult();
             try
             {
                 var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
-                                                               
-                string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
-                // ncr.EmployeeId=session['网络咨询师'];网咨信息登记者即为正在登录该页面的员工
-                ncr.EmployeeId = eid;//防止测试的报错暂时设置一个死值
-                ncr.NetClientDate = DateTime.Now;
+
+                string eid = UserName.EmpNumber;
+                var oldncr = nmanage.GetEntity(ncr.Id);
+                NetClientRecord ncrnew = new NetClientRecord();
+                ncrnew.SPRId = oldncr.SPRId;
+                ncrnew.EmpId = eid;
+                ncrnew.NetClientDate = DateTime.Now;
                 nmanage.Insert(ncr);
-               AjaxResultxx= nmanage.Success();
+                AjaxResultxx = nmanage.Success();
+                if (AjaxResultxx.Success){
+                    var ncrlist = nmanage.GetList().Where(s => s.SPRId == oldncr.SPRId).ToList();
+                    foreach (var item in ncrlist)
+                    {  
+                        item.EmpId = eid;
+                        nmanage.Update(item);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 AjaxResultxx = nmanage.Error(ex.Message);
             }
-            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -207,33 +154,37 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public ActionResult DetailInfo(int Id) {
+        public ActionResult CallbackDetailInfo(int Id)
+        {
             NetClientRecordManage ncr = new NetClientRecordManage();
-            var n= ncr.GetEntity(Id);
+            var n = ncr.GetNcrviewById(Id);
             ViewBag.Id = Id;
-            BindSelect();
+            //BindSelect();
             return View(n);
         }
-        public ActionResult GetNetById(int id) {
-            NetClientRecordManage ncr = new NetClientRecordManage();
-            var n= ncr.GetEntity(id);
-            return Json(n,JsonRequestBehavior.AllowGet);
+        public ActionResult GetCallbackInfoById(int id)
+        {
+            NetClientRecordManage ncrmanage = new NetClientRecordManage();
+            var ncrview= ncrmanage.GetNcrviewById(id);
+            return Json(ncrview, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 编辑网咨学员信息
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public ActionResult EditView(int Id) {
+        public ActionResult EditCallbackInfo(int Id)
+        {
             NetClientRecordManage ncr = new NetClientRecordManage();
             var n = ncr.GetEntity(Id);
             ViewBag.Id = Id;
             ViewBag.mydate = n.NetClientDate;
-            BindSelect();
+
             return View(n);
         }
         [HttpPost]
-        public ActionResult EditNetConsultStuinfo(NetClientRecord ncr) {
+        public ActionResult EditCallbackInfo(NetClientRecord ncr)
+        {
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             var AjaxResultxx = new AjaxResult();
             try
@@ -245,26 +196,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 AjaxResultxx = ncrmanage.Error(ex.Message);
             }
-            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult EditNetStu(int id, string name, bool ismarry) {
+        public ActionResult EditNetStu(int id, string name, bool ismarry)
+        {
             NetClientRecordManage ncrinfo = new NetClientRecordManage();
             var AjaxResultxx = new AjaxResult();
             try
             {
-                var emp= ncrinfo.GetEntity(id);
-                switch (name)
-                {
-                    case "IsFaceConsult":
-                       
-                            emp.IsFaceConsult = ismarry;
-                        break;
-                    case "IsDel":
-                            emp.IsDel =ismarry;
-
-                        break;
-                }
+                var emp = ncrinfo.GetEntity(id);
+               
                 ncrinfo.Update(emp);
                 AjaxResultxx = ncrinfo.Success();
             }

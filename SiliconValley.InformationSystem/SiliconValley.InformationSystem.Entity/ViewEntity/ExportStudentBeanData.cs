@@ -120,10 +120,5 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 关系人
         /// </summary>
         public string Party { get; set; }
-
-        /// <summary>
-        /// 身份证
-        /// </summary>
-        public string IdCade { get; set; }
     }
 }

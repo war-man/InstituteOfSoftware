@@ -108,6 +108,7 @@ namespace SiliconValley.InformationSystem.Depository
             }
 
             dbContext.Database.CommandTimeout = 5 * 60;
+
             return dbContext;
         }
 

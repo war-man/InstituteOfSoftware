@@ -22,53 +22,123 @@
         border-radius: 50%;
     }
 </style>
-<ul class="layui-timeline">
+<div style="float:left;">
+    <ul class="layui-timeline">
 
-    @{
-        int Total = 0;
-        foreach (var item in ViewBag.vier as List<vierprice>)
-        {
-            decimal db = 0;
-            <li class="layui-timeline-item">
-                <i class="layui-icon layui-timeline-axis"></i>
-                <div class="layui-timeline-content layui-text">
-                    @foreach (var item1 in item.Chicked)
-                    {
-
-                        db += item1.Amountofmoney;
-                        Total += Convert.ToInt32(item1.Amountofmoney);
-
-                    }
-                    <h3 class="layui-timeline-title">@item.Date (@db)</h3>
-
-                    @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
-                    {
-                        <p>@s</p>
-                        foreach (var item1 in item.Chicked)
+        @{
+            int Total = 0;
+            foreach (var item in ViewBag.vier as List<vierprice>)
+            {
+                decimal db = 0;
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        @foreach (var item1 in item.Chicked)
                         {
-                            if (item1.Rategory == s)
+
+                            db += item1.Amountofmoney;
+                            Total += Convert.ToInt32(item1.Amountofmoney);
+
+                        }
+                        <h3 class="layui-timeline-title">@item.Date (@db)</h3>
+
+                        @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
+                        {
+                            <p>@s</p>
+                            foreach (var item1 in item.Chicked)
                             {
-                                <ul>
-                                    <li>@item1.GrandName @item1.CostitemName,缴纳: @item1.Amountofmoney</li>
-                                </ul>
+                                if (item1.Rategory == s)
+                                {
+                                    <ul>
+                                        <li>@item1.GrandName @item1.CostitemName,缴纳: @item1.Amountofmoney</li>
+                                    </ul>
+                                }
                             }
+
                         }
 
-                    }
 
-
-                </div>
-            </li>
+                    </div>
+                </li>
+            }
         }
-    }
 
 
-</ul>
+    </ul>
+</div>
+
+<div style="float:right;">
+
+    <ul class="layui-timeline">
+
+        @{
+            int Tota2 = 0;
+            foreach (var item in ViewBag.Tuitionrefund as List<vierprice>)
+            {
+                decimal db = 0;
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        @foreach (var item1 in item.Chicked)
+                        {
+
+                            db += item1.Amountofmoney;
+                            Tota2 += Convert.ToInt32(item1.Amountofmoney);
+
+                        }
+                        <h3 class="layui-timeline-title">@item.Date (@db)</h3>
+
+                        @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
+                        {
+                            <p>@s</p>
+                            foreach (var item1 in item.Chicked)
+                            {
+                                if (item1.Rategory == s)
+                                {
+                                    <ul>
+                                        <li>@item1.GrandName @item1.CostitemName,退款: @item1.Amountofmoney</li>
+                                    </ul>
+                                }
+                            }
+
+                        }
+
+
+                    </div>
+                </li>
+            }
+            int Tota3 = Total - Tota2;
+        }
+
+
+    </ul>
+</div>
+
 <div style="">
     <ul class="site-doc-icon site-doc-anim">
-        <li>
-            <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">总共:<label style="font:18pt;color:#000000;">@Total</label>  元</div>
-        </li>
+        @{
+            if (Total > 0)
+            {
+                <li style="float:left;margin-left:220px;">
+                    <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">收款合计:<label style="font:18pt;color:#000000;">@Total</label>  元</div>
+                </li>
+                if (Tota2 > 0)
+                {
+                    <li style="float:left;margin-left:20px;">
+                        <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">退款合计:<label style="font:18pt;color:#000000;">@Tota2</label>  元</div>
+                    </li>
+                    <li style="float:left;margin-left:20px;">
+                        <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">合计:<label style="font:18pt;color:#000000;">@Tota3</label>  元</div>
+                    </li>
+                }
+
+
+
+
+            }
+
+        }
+
     </ul>
 </div>
 

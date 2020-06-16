@@ -2,7 +2,6 @@
   "ExportStudentBeanData": {
     "StuName": "学生姓名",
     "StuSex": "学生性别",
-    "IdCade": "身份证",
     "StuBirthy": "出生日期",
     "Stuphone": "联系电话",
     "StuSchoolName": "毕业学校",

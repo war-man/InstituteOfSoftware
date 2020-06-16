@@ -12,6 +12,7 @@ using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -22,16 +23,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         StuStateManeger ST_Entity = new StuStateManeger();
         EmployeesInfoManage Enplo_Entity;
         ConsultTeacherManeger ConsultTeacher;
-        // GET: /Market/FollwingInfo/FollwingInfoIndex
-        //获取当前上传的操作人
-        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+        // GET: /Market/FollwingInfo/GetTableData
+        
         static int f_id = 0;
         public ActionResult FollwingInfoIndex()
         {
             ConsultTeacher = new ConsultTeacherManeger();
 
             //判断是哪个咨询师
-            
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
             f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()==null?0: ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             return View();
         }
@@ -89,19 +90,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <param name="id">学生名称</param>
         /// <returns></returns>
         public ActionResult GetMonthStudent(string id)
-        {             
-            List<StudentPutOnRecord> stu_list = CM_Entity.GetStudentPutRecored().Where(s=>s.StuName==id).ToList();
-            List<StudentPutOnRecord> find_list = new List<StudentPutOnRecord>();
+        {
+            List<ExportStudentBeanData> stu_list = CM_Entity.GetStudentPutRecored(id,true);
+            List<ExportStudentBeanData> find_list = new List<ExportStudentBeanData>();
+            List<Consult> find_consult = new List<Consult>();
             if (f_id!=0)
-            {
-                List<Consult> find_consult = CM_Entity.GetIQueryable().Where(c => c.TeacherName == f_id).ToList();//获取XX咨询师的分量情况
-                foreach (Consult item2 in find_consult)
+            {                
+                foreach (ExportStudentBeanData item2 in stu_list)
                 {
-                    StudentPutOnRecord find_s = stu_list.Where(s => s.Id == item2.StuName).FirstOrDefault();
-                    if (find_s != null)
+                    find_consult = CM_Entity.GetIQueryable().Where(c => c.TeacherName == f_id && c.StuName==item2.Id).ToList();//获取XX咨询师的分量情况
+                    if (find_consult.Count>0)
                     {
-                        find_list.Add(find_s);
-                    }
+                        find_list.Add(item2);
+                    }                     
                 }
                 //获取这个学生的跟踪信息次数
                 int j = 0;
@@ -151,6 +152,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个添加方法
         public ActionResult AddFunction()
         {
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
             Enplo_Entity = new EmployeesInfoManage();
             try
             {
@@ -247,40 +250,106 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult ListStudentView(string id)
         {
             string[] stulist = id.Split(',');
-            List<StudentPutOnRecord> student = CM_Entity.GetStudentPutRecored();
-            List<StudentPutOnRecord> findresult = new List<StudentPutOnRecord>();
+            List<ExportStudentBeanData> student = new List<ExportStudentBeanData>();
+
             foreach (string item1 in stulist)
             {
                 if (!string.IsNullOrEmpty(item1))
                 {
-                    foreach (StudentPutOnRecord item2 in student)
-                    {
-                        if (item2.Id==Convert.ToInt32(item1))
-                        {
-                            findresult.Add(item2);
-                        }
-                    }
+                     
+                     student.AddRange(CM_Entity.GetStudentPutRecored(item1,false));
+                        
                 }
             }
-            List<StudentData> data = findresult.Select(s => new StudentData() {
-                Id=s.Id,
+            List<StudentData> data = student.Select(s => new StudentData() {
+                Id=Convert.ToInt32(s.Id),
                 stuSex = s.StuSex,
                 StuName = s.StuName,
-                StuPhone = s.StuPhone,
+                StuPhone = s.Stuphone,
                 StuSchoolName = s.StuSchoolName,
                 StuAddress = s.StuAddress,
-                StuInfomationType_Id = CM_Entity.getTypeName(s.StuInfomationType_Id.ToString(), true).Name,
-                StuStatus_Id = ST_Entity.GetIdGiveName(s.StuStatus_Id.ToString(),true).Success==true? (ST_Entity.GetIdGiveName(s.StuStatus_Id.ToString(), true).Data as StuStatus).StatusName:null,
-                StuIsGoto = s.StuIsGoto == false ? "否" : "是",
+                StuInfomationType_Id = s.stuinfomation,//CM_Entity.getTypeName(s.StuInfomationType_Id.ToString(), true).Name,
+                StuStatus_Id = s.StatusName,//ST_Entity.GetIdGiveName(s.StuStatus_Id.ToString(),true).Success==true? (ST_Entity.GetIdGiveName(s.StuStatus_Id.ToString(), true).Data as StuStatus).StatusName:null,
+                StuIsGoto = s.StuisGoto == false ? "否" : "是",
                 StuVisit = s.StuVisit,
-                EmployeesInfo_Id = CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
-                StuDateTime = s.StuDateTime,
-                StuEntering = CM_Entity.GetEmplyeesInfo(s.StuEntering).EmpName,
-                AreName =CM_Entity.GetRegionName(s.Region_id).RegionName
+                EmployeesInfo_Id = s.empName,//CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
+                StuDateTime = s.BeanDate,
+                StuEntering = s.StuEntering,
+                AreName =s.RegionName,//CM_Entity.GetRegionName(s.Region_id).RegionName,
+                Party=s.Party
             }).ToList();
             ViewBag.Student = data;
             return View();
         }
 
+        /// <summary>
+        /// 获取分量学生数据
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public ActionResult GetTableData(int limit,int page)
+        {
+            List<Consult> find_consult= CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();
+
+            StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
+
+            List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();
+            foreach (Consult item in find_consult)
+            {
+                list.Add(s_Entity.whereStudentId(item.StuName.ToString()));
+            }
+
+            string Name = Request.QueryString["name"];
+            string Phone = Request.QueryString["phone"];
+            string StarDate = Request.QueryString["staTime"];
+            string EndDate = Request.QueryString["endTime"];
+
+            if (!string.IsNullOrEmpty(Name))
+            {
+                list = list.Where(l => l.StuName.Contains(Name)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(Phone))
+            {
+                list = list.Where(l => l.Stuphone==Phone).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(StarDate) && StarDate!="")
+            {
+                DateTime d1 = Convert.ToDateTime(StarDate);
+                list = list.Where(l => l.BeanDate >= d1).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(EndDate) && EndDate!="")
+            {
+                DateTime d2 = Convert.ToDateTime(EndDate);
+                list = list.Where(l => l.BeanDate <= d2).ToList();
+            }
+            var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).Select(l=>new {
+                Id=l.Id,
+                StuName=l.StuName,
+                StuSex= l.StuSex,
+                Stuphone = l.Stuphone,
+                BeanDate= CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
+            }).ToList();
+            var data = new {data= mydata, count=list.Count,code=0,msg=""};
+
+            return Json(data,JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult MyFollwingInfoIndex()
+        {
+            ConsultTeacher = new ConsultTeacherManeger();
+
+            //判断是哪个咨询师
+
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+
+            f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
+
+            return View();
+        }
     }
 }

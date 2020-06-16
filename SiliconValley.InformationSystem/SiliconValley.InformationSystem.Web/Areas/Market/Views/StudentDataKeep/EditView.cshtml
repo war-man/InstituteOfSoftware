@@ -28,7 +28,7 @@
         }
 
         .TextAreCss1 {
-            height: 80px;
+            height: 48px;
             width:91%;
            
         }    
@@ -168,39 +168,25 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">学生状态:</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.StuStatus_Id, ViewBag.state as IEnumerable<SelectListItem>)
-                            
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">备案 &nbsp; 人:</label>
-                        <div class="layui-input-block">
-                            <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />
-                            <input name="e_Name" id="e_Name" class="layui-input linu" disabled="disabled" /> 
-                        </div>
-                    </div>                    
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">关&nbsp; 系&nbsp;人:</label>
                         <div class="layui-input-block">
                             <input name="Party" id="Party" placeholder="关系人" class="layui-input linu" />
                         </div>
                     </div>
+
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
+                        <label class="layui-form-label">备案 &nbsp; 人:</label>
                         <div class="layui-input-block">
-                            <input name="Reak" id="Reak" placeholder="说明" class="layui-input"  style="height: 38px;width:200px"/>
+                            <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />
+                            <input name="e_Name" id="e_Name" class="layui-input linu" disabled="disabled" />
                         </div>
                     </div>
                 </div>
-                <div class="layui-row layui-form-item">
+                <div class="layui-form-item">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                        <label class="layui-form-label">身&nbsp; 份&nbsp;证:</label>
+                        <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
                         <div class="layui-input-block">
-                            <input name="IdCade" id="IdCade" placeholder="身份证" class="layui-input" lay-verify="identity" style="width:92%"/>
+                            <textarea name="Reak" id="Reak" class="layui-input TextAreCss1"> </textarea>                          
                         </div>
                     </div>
                 </div>
@@ -354,7 +340,6 @@
                             $("#e_Name")[0].innerText = successdata.e_Name;
                             $("#StuEntering_1")[0].innerText = successdata.StuEntering_1;
                             $("#StuAddress").attr("title", successdata.StuAddress);
-                            $("#IdCade")[0].value = successdata.Idcode;
                             form.val("myform1", successdata);
                         });
                         IsDisable(successdata.StuIsGoto);

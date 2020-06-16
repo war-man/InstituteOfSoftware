@@ -1,0 +1,82 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.ClassSchedule
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ClassImages</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+</head>
+<body>
+    <div>
+        @Html.HiddenFor(a=>a.id)
+   
+    </div>
+    <div>
+
+        <div class="layui-upload">
+            <div style="float:left;padding-left:20px;">
+                <button type="button" class="layui-btn" id="test1">班级照片</button>
+                <div class="layui-upload-list">
+
+                    @{
+                        if (Model.ClassImage != null)
+                        {
+
+                            <img class="layui-upload-img" style="width:255px;height:227px;" id="demo1" src="~/Areas/Teachingquality/ClassImages/@Model.ClassImage">
+                        }
+                        else
+                        {
+                            <img class="layui-upload-img" style="width:255px;height:227px;" id="demo1" src="~/Areas/Teachingquality/ClassImages/ClassImages.jpg">
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+<script>
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '/Teachingquality/ClassSchedule/AddClassImages' //改成您自己的上传接口
+            , data: {
+                id: $("#id").val()
+            }
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+      
+    });
+</script>

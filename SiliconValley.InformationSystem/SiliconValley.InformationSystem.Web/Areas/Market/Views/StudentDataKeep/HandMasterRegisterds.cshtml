@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "HandMasterRegisterds";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .inputCssOne{
+    width:200px;
+    display:inline-block;
+    }
+</style>
+<div>
+    <form class="layui-form">
+        <div class="layui-row">
+            <div class="layui-col-sm3">
+                <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
+                <input name="findNamevalue" id="findNamevalue" class="layui-input inputCssOne"/>
+            </div>
+            <div class="layui-col-sm3">
+                <label class="spanCss2">联系电话:</label>
+                <input name="findPhonevalue" id="findPhonevalue" class="layui-input inputCssOne" />
+            </div>
+            <div class="layui-col-sm3 divCss3">
+                <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:148px"><i class="layui-icon">&#xe615;</i> 查询</button>
+            </div>
+        </div>           
+    </form>
+</div>
+
+<table id="tabletest1" lay-filter="tabletest1"></table>
+
+<script type="text/html" id="toolbarDemo1">
+    <div class="layui-btn-container">        
+        <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
+    </div>
+</script>
+
+<script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
+<script>
+    //注册学生学号
+    function ZhuceClass() {
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var checkStatus = table.checkStatus('tabletest1');
+            if (checkStatus.data.length <= 0) {
+                layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
+            } else {
+                var ids = "";
+                for (var i = 0; i < checkStatus.data.length; i++) {
+                    ids = ids + checkStatus.data[i].Id + ",";
+                }
+                layer.open({
+                    type: 2
+                    , content: '/Market/StudentDataKeep/Registeredstudentnumber/' + ids
+                    , area: ['800px', '420px']
+                    , title: '注册学号页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            }
+        });
+    }
+    //这是一个模糊查询的方法
+    $("#searchBtn").click(function () {
+        var findNamevalue = $("#findNamevalue").val();
+        var findPhonevalue = $("#findPhonevalue").val();
+
+        layui.use(['table'], function () {
+            var table = layui.table;
+            $.ajax({
+                url: '/Market/StudentDataKeep/GetTableData',
+                type: 'GET',
+                data: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'limit': 20, 'page': 1 },
+                success: function (Sucdata) {
+                    table.render({
+                        elem: '#tabletest1'
+                        , toolbar: '#toolbarDemo1'
+                        , cols: [[
+                            { type: 'checkbox' }
+                            , { field: 'StuName', title: '姓名' }
+                            , { field: 'StuSex', title: '性别' }
+                            , { field: 'Stuphone', title: '联系电话' }
+                            , { field: 'empName', title: '备案人' }
+                            , { field: 'RegionName', title: '区域' }
+                            , { field: 'BeanDate', title: '备案日期', templet: function (res) { return TimeChange(res.BeanDate); } }
+                        ]]
+                        , data: Sucdata.data
+                        , page: true
+                    });
+                }
+            });
+        });
+    });
+
+
+    
+</script>
+

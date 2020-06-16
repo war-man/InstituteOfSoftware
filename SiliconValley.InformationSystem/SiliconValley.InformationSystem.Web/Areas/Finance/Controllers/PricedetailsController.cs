@@ -15,17 +15,22 @@ using Newtonsoft.Json;
 using System.Web.Script.Serialization;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.ClassesBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 {
+   
     [CheckLogin]
     public class PricedetailsController : Controller
     {
- 
+
         private readonly StudentFeeStandardBusinsess dbtext;
         public PricedetailsController()
         {
-            dbtext = new StudentFeeStandardBusinsess();
+         
+               dbtext = new StudentFeeStandardBusinsess();
         }
         // GET: Teachingquality/Pricedetails
         //专业
@@ -36,7 +41,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         BaseBusiness<CostitemsX> costitemssX = new BaseBusiness<CostitemsX>();
 
         //学员费用明目
-    CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
+        CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
+        //预入费业务类
+        BaseBusiness<Preentryfee> Preentryfeebusenn = new BaseBusiness<Preentryfee>();
         //本科管理
         EnrollmentBusinesse enrollmentBusinesse = new EnrollmentBusinesse();
         //学员费用明目页面
@@ -156,10 +163,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         [HttpGet]
         public ActionResult StudentPrice(string id)
         {
-           
+            decimal Amountofmoney = 0;
+            //学员信息
+            StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+            var Student = dbtext.StudentFind(id);
             //阶段
             ViewBag.Stage = Grandcontext.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
-            ViewBag.student = JsonConvert.SerializeObject(dbtext.StudentFind(id));
+            ViewBag.student = JsonConvert.SerializeObject(Student);
+            var Preentry= Preentryfeebusenn.GetList().Where(a => a.identitydocument == studentInformationBusiness.GetEntity(id).identitydocument && a.Refundornot == null).ToList();
+            foreach (var item in Preentry)
+            {
+                Amountofmoney = Amountofmoney + item.Amountofmoney;
+            }
+            ViewBag.Amountofmoney = Amountofmoney;
             return View();
         }
         [HttpPost]
@@ -217,8 +233,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         public ActionResult Receipt()
         {
             //学员费用
-            BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
-            var personlist = SessionHelper.Session["person"] as List<StudentFeeRecord>;
+            BaseBusiness<Payview> studentfee = new BaseBusiness<Payview>();
+            var personlist = SessionHelper.Session["person"] as List<Payview>;
             string Invoicenumber = "";
             int counts = studentfee.GetList().Count();
             if (counts<10)
@@ -266,6 +282,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             string student = Request.QueryString["student"];
             ViewBag.vier = dbtext.FienPrice(student);
+            ViewBag.Tuitionrefund = dbtext.FienTuitionrefund(dbtext.FienPrice(student));
             return View();
         }
         [HttpGet]
@@ -310,7 +327,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         public ActionResult Nominaldata(int page, int limit, string StudentID, string Name, string TypeID, string qBeginTime, string qEndTime)
         {
             var x = dbtext.Nominaldata(StudentID, Name, TypeID, qBeginTime, qEndTime);
-            
             var dataList = x.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
             var data = new
             {
@@ -320,7 +336,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
                 data = dataList
             };
             return Json(data, JsonRequestBehavior.AllowGet);
-          
         }
         /// <summary>
         /// 获取总额统计
@@ -345,7 +360,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return Json(dbtext.PaymentcommodityIsdele(id, Isdele), JsonRequestBehavior.AllowGet);
         }
-
         /// <summary>
         /// 费用入账
         /// </summary>
@@ -386,7 +400,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             ViewBag.Passornot = Request.QueryString["Passornot"];
             return View();
         }
-
         /// <summary>
         /// 审核入账是否成功
         /// </summary>
@@ -398,5 +411,156 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return Json(dbtext.Tuitionentry(id, whether, OddNumbers), JsonRequestBehavior.AllowGet);
         }
-    }
+
+        StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
+        /// <summary>
+        /// 缴纳预入费页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Prepayments()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 预入费缴纳操作数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="Name">学员姓名</param>
+        /// <returns></returns>
+        public ActionResult PrepaymentsDate(int page, int limit,string Name)
+        {
+           var costlist= studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a=>a.StatusName=="未报名").ToList();
+            if (!string.IsNullOrEmpty(Name))
+            {
+                costlist = costlist.Where(a => a.StuName.Contains(Name)).ToList();
+            }
+            var dataList = costlist.OrderBy(a => a.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            //  var x = dbtext.GetList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = costlist.Count,
+                data = dataList
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Paytheadvancefee(int id)
+        {
+        ViewBag.ExportStudentBeanData = studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a => a.Id == id).FirstOrDefault();
+            return View();
+        }
+        /// <summary>
+        /// 预入费缴纳
+        /// </summary>
+        /// <param name="preentryfee"></param>
+        /// <returns></returns>
+        public ActionResult PaytheadvancefeeAdd(Preentryfee preentryfee)
+        {
+          return Json(dbtext.PaytheadvancefeeAdd(preentryfee));
+        }
+        /// <summary>
+        /// 获取已交预入费的学员页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult PreentryfeeDate()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取已交预入费的学员数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult PreentryfeeDates(int page, int limit)
+        {
+            return Json(dbtext.PreentryfeeDates(page, limit), JsonRequestBehavior.AllowGet);
+        }
+        
+        /// <summary>
+        /// 退预入费页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Preentryfeerefund(int id)
+        {
+            //班级业务类
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            var x = Preentryfeebusenn.GetEntity(id);
+            ViewBag.ExportStudentBeanData = studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a => a.Id == x.keeponrecordid).FirstOrDefault();
+            ViewBag.obj = x;
+            ViewBag.ClassNumber = classScheduleBusiness.GetEntity(x.ClassID).ClassNumber;
+            return View();
+        }
+        /// <summary>
+        /// 退预入费数据业务操作
+        /// </summary>
+        /// <param name="refund">数据对象</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Preentryfeerefund(Refund refund)
+        {
+            return Json(dbtext.Preentryfeerefund(refund), JsonRequestBehavior.AllowGet);
+       
+        }
+        /// <summary>
+        /// 预入费作废
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Preentryfezuofei(int id)
+        {
+            return Json(dbtext.Preentryfezuofei(id), JsonRequestBehavior.AllowGet);
+
+        }
+        /// <summary>
+        /// 学员退费操作数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Tuitionrefund()
+        {
+            return View();
+        }
+        [HttpGet]
+        /// <summary>
+        /// 退费页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult TuitionreHome(string id)
+        {
+            //学员信息
+            StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+            //学员班级
+            ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
+            ViewBag.studentid= id;
+            ViewBag.Stage = Grandcontext.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
+            var x = studentInformationBusiness.GetEntity(id);
+            x.Education = scheduleForTraineesBusiness.SutdentCLassName(id) == null ? "暂无" : scheduleForTraineesBusiness.SutdentCLassName(id).ClassID;
+           
+            return View(x);
+        }
+
+        public ActionResult TuitionreStage(int Grand_id,string StudentID)
+        {
+           
+            return Json(dbtext.TuitionreStage(StudentID, Grand_id),JsonRequestBehavior.AllowGet);
+        }
+
+    
+        [HttpPost]
+        public ActionResult TuitionreHomes(string Tuitionrefunds)
+        {
+            //引入序列化
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            //序列化
+            var list = serializer.Deserialize<List<TuitionrefundView>>(Tuitionrefunds);
+
+            return Json(dbtext.TuitionreHomes(list), JsonRequestBehavior.AllowGet);
+        }
+    } 
 }

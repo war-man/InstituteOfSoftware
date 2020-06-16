@@ -342,8 +342,8 @@ namespace SiliconValley.InformationSystem.Business
         /// <returns></returns>
         public List<T> GetList()
         {
-           //return Service.GetList<T>();
-           return Redislist();
+           return Service.GetList<T>();
+           //return Redislist();
         }
 
         /// <summary>

@@ -8,53 +8,55 @@
     <button type="button" id="butbing"  class="layui-btn">图像展示</button>
 </div>
 <form class="layui-form" action="">
-    <div class="layui-container">
+    <div class="layui-carousel-left">
         <div class="layui-row ">
 
-            <div class="layui-col-xs12">
+           
+            <div class="layui-row layui-form-item">
+
+                <div class="layui-col-xs2.5">
+
+                    <label class="layui-form-label" style="width:100px">班级名称</label>
+                    <div class="layui-input-inline">
+                        @Html.DropDownList("ClassName", ViewBag.ClassName as SelectList, "请选择", new Dictionary<string, object>() { { "name", "ClassName" } })
+
+
+                    </div>
+                </div>
+                <div class="layui-col-xs2.5">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-xs3">
+
+                    <label class="layui-form-label">学号</label>
+                    <div class="layui-input-block">
+                        <input type="text" lay-verify="identityi" style="width:200px;" name="identitydocument" class="layui-input" />
+
+                    </div>
+
+                </div>
+
+                <div class="layui-col-xs4">
+
+                    <label class="layui-form-label" style="width:100px">出勤标题</label>
+                    <div class="layui-input-inline">
+                        <select name="AttendanceTitle" id="AttendanceTitle" lay-search="">
+                            <option value="">请选择出勤状态</option>
+                            <option value="早操出勤">早操出勤</option>
+                            <option value="上课出勤">上课出勤</option>
+                            <option value="晚自习出勤">晚自习出勤</option>
+
+                        </select>
+
+
+                    </div>
+                </div>
+            </div>
                 <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs4" style="margin-left:-60px;">
-
-                        <label class="layui-form-label" style="width:100px">班级名称</label>
-                        <div class="layui-input-inline">
-                            @Html.DropDownList("ClassName", ViewBag.ClassName as SelectList, "请选择", new Dictionary<string, object>() { { "name", "ClassName" } })
-
-
-                        </div>
-                    </div>
-                    <div class="layui-col-xs4">
-                        <label class="layui-form-label" style="margin-left:-40px;">姓名</label>
-                        <div class="layui-input-inline">
-                            <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-col-xs4" style="margin-left:-60px;">
-
-                        <label class="layui-form-label">学号</label>
-                        <div class="layui-input-block">
-                            <input type="text" lay-verify="identityi"  style="width:200px;" name="identitydocument" class="layui-input" />
-
-                        </div>
-
-                    </div>
-
-                    <div class="layui-col-xs4" style="margin-left:-160px;">
-
-                        <label class="layui-form-label" style="width:100px">出勤标题</label>
-                        <div class="layui-input-inline">
-                            <select name="AttendanceTitle" id="AttendanceTitle" lay-search="">
-                                <option value="">请选择出勤状态</option>
-                                <option value="早操出勤">早操出勤</option>
-                                <option value="上课出勤">上课出勤</option>
-                                <option value="晚自习出勤">晚自习出勤</option>
-
-                            </select>
-
-
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6" style="margin-left:-60px;">
+                    <div class="layui-col-xs2.5">
                         <label class="layui-form-label" style="width:100px;">出勤状态</label>
                         <div class="layui-input-inline">
                             <select name="Attendancestatus" id="Attendancestatus" lay-search="">
@@ -69,7 +71,7 @@
                     <div class="layui-col-xs4">
 
 
-                        <div class="layui-inline" style="margin-left:-240px;">
+                        <div class="layui-inline">
                             <label for="" class="layui-form-label">时间段</label>
                             <div class="layui-input-inline startTime">
                                 <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
@@ -84,15 +86,15 @@
                     </div>
 
 
-
-                    <div style="position:absolute;left:90%;top:0px;">
+                </div>
+                    <div style="position:absolute;left:85%;top:104px;">
                         <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
                     </div>
 
 
-                </div>
+                
 
-            </div>
+           
 
         </div>
     </div>
@@ -105,7 +107,7 @@
     <canvas id="chart" style="display:none"> 你的浏览器不支持HTML5 canvas </canvas>
 </div>
 <script src="~/Areas/Obtainemployment/Scripts/Drawing.js"></script>
-@section script{
+@section script{}
     @*头部工具栏*@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
@@ -290,16 +292,16 @@
                     , { field: 'RegistrarName', title: '登记人姓名' }
                 ]]
                 , page: true
-                , limit: 8
-                , limits: [8, 10, 15]
+                , limit: 15
+                , limits: [15, 20, 25]
             });
-            //注册或编辑学员信息
+            //添加
             function Registeredtrainees(name, id) {
 
                 layer.open({
                     title: name,
                     type: 2,
-                    area: ['680px', '740px']
+                    area: ['680px', '540px']
                     , content: "/Teachingquality/StudentAttendanc/Registerattendance?id=" + id
                     , end: function () { table.reload('idTest'); select(); }
                     , anim: 1,
@@ -375,6 +377,7 @@
             $("#chart").css("display", "none");
         });
         $("#butbing").click(function () {
+
             $("#nutext").css("display", "none");
             $("#chart").css("display", "block");
             
@@ -383,4 +386,4 @@
 
   
 
-}
+

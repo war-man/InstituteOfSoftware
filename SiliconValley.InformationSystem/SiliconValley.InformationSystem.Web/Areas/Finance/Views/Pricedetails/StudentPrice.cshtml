@@ -77,7 +77,7 @@
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" }, { "class", "layui-input " } })
                             <input type="text" style="display:none;" id="Amountofmoney1" name="Amountofmoney1" />
-
+                            <div style="position:absolute;left:200px;top:-41px;color:dodgerblue;width:200px;" id="Tuitionrefund"></div>
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
@@ -135,7 +135,7 @@
 </body>
 </html>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
-<script>
+<script>//Amountofmoney
     var student = JSON.parse('@Html.Raw(ViewBag.student)');
     $("#StudentNumber").text(student.StudentNumber);
     $("#identitydocument").text(student.identitydocument);
@@ -195,7 +195,7 @@
                             Totalsum = Totalsum + item.Amountofmoney;
                             $("#Amountofmoney1").val(item.id);
                         } else if (item.Name == "食宿费") {
-                            console.log("伙食费")
+                           
                             $("#Amountofmoneys1").val(item.id);
                             $("#Amountofmoneys").val(item.Amountofmoney);
                             Totalsum = Totalsum + item.Amountofmoney;
@@ -209,6 +209,13 @@
                     }
                     // zafei
                     $("#Unitpricename").html(optionstring);
+                    var Amountofmoney12 = JSON.parse('@Html.Raw(ViewBag.Amountofmoney)');
+                    
+                    if (Amountofmoney12>0) {
+                        Totalsum = Totalsum - Amountofmoney12;
+                        $("#Tuitionrefund").css("display", "block");
+                        $("#Tuitionrefund").text("已扣除预入费" + Amountofmoney12+"元");
+                    }
                     $("#Totalsum").text(Totalsum)
                     form.render();
                 });
@@ -243,6 +250,7 @@
         });
         //监听提交
         form.on('submit(demo1)', function (data) {
+         //   window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 830, 600);
             var db = data.field;
 
             var obj = {};

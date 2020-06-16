@@ -183,7 +183,7 @@
                 </div>
 
             </div>
-   
+
         </form>
 
         @*调岗异动的详情页*@
@@ -293,7 +293,7 @@
                 </div>
 
             </div>
-  
+
         </form>
 
         @*加薪异动的详情页*@
@@ -405,6 +405,115 @@
             </div>
 
         </form>
+
+        @*续签异动的详情页*@
+        <form class="layui-form" action="" lay-filter="ContractRenewal" id="ContractRenewal" hidden>
+            <div class="layui-container">
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="empName" name="empName" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">部门:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">入职时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="EntryTime" name="EntryTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">异动类型:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="type" name="type" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">确认续签时间:</label>
+                        <div class="layui-input-block" >
+                            <input type="text" id="TransactionTime" name="TransactionTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">前合同起始时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="BeforeContractStartTime" name="BeforeContractStartTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">前合同终止时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="BeforeContractEndTime" name="BeforeContractEndTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">续签后起始时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="AfterContractStartTime" name="AfterContractStartTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">续签后终止时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="AfterContractEndTime" name="AfterContractEndTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">自我评价:</label>
+                        <div class="layui-input-block">
+                            <textarea id="Reason" name="Reason" class="layui-input" readonly style="border:0px;height:100px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">备注:</label>
+                        <div class="layui-input-block">
+                            <textarea id="Remark" name="Remark" class="layui-input" readonly style="border:0px;height:100px;"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
     </div>
 
 
@@ -436,7 +545,6 @@
                         data.TransactionTime = GetYMD(data.TransactionTime);
                         console.log(data);
                         form.val("TransferPosition", data);
-
                     }
                     else if (data.type == "加薪") {
                         $("#IncreaseSalary").show();
@@ -445,8 +553,18 @@
                         $("#balance").val(abs(data.PresentSalary - data.PreviousSalary));
                         console.log(data);
                         form.val("IncreaseSalary", data);
-
+                    } else if (data.type == "续签") {
+                        $("#ContractRenewal").show();
+                        data.EntryTime = GetYMD(data.EntryTime);
+                        data.TransactionTime = GetYMD(data.TransactionTime);
+                        data.BeforeContractStartTime = GetYMD(data.BeforeContractStartTime);
+                        data.BeforeContractEndTime = GetYMD(data.BeforeContractEndTime);
+                        data.AfterContractStartTime = GetYMD(data.AfterContractStartTime);
+                        data.AfterContractEndTime = GetYMD(data.AfterContractEndTime);
+                        console.log(data.BeforeContractStartTime);
+                        form.val("ContractRenewal", data);
                     }
+                    
                 });
             })
         }

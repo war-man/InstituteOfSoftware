@@ -7,6 +7,7 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.Consult_Business;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
 {
@@ -15,18 +16,20 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
     /// </summary>
    public static class EmployandCounTeacherCoom
     {
+       public static ConsultTeacherManeger Consult_entity = new ConsultTeacherManeger();
+       public static ConsultManeger consult = new ConsultManeger();
+       static FollwingInfoManeger follwing = new FollwingInfoManeger();
         /// <summary>
         /// 获取所有的咨询师，然后转化为员工集合
         /// </summary>
         /// <param name="all">false---返回在职咨询师，true--返回全部咨询师</param>
         /// <returns></returns>
         public static List<Emp_consult> getallCountTeacher(bool all)
-        {
-            ConsultTeacherManeger consult = new ConsultTeacherManeger();
+        {             
             EmployeesInfoManage employeesInfo = new EmployeesInfoManage();
             List<Emp_consult> list = new List<Emp_consult>();//在职咨询师
             List<Emp_consult> list2 = new List<Emp_consult>();//全部咨询师
-            consult.GetList().ForEach(c =>
+            Consult_entity.GetList().ForEach(c =>
             {
                 Emp_consult e = new Emp_consult();
                 e.consultercherid = c.Id;
@@ -85,7 +88,50 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             EmployeesInfoManage business = new EmployeesInfoManage();
             return business.GetEntity(findata.Employees_Id).EmpName;
         }
- 
- 
+        
+        /// <summary>
+        /// 根据员工编号获取咨询师编号
+        /// </summary>
+        /// <param name="idName"></param>
+        /// <returns></returns>
+        public static ConsultTeacher GetConsultTeacherId(string idName)
+        {
+           return Consult_entity.GetList().Where(c => c.Employees_Id == idName).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 批量添加分量数据
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static AjaxResult AddConsultData(List<Consult> list)
+        {
+           return consult.Add_Data(list);
+        }
+
+
+        public static List<ConsultTeacher> GetTeacher()
+        {
+            EmployeesInfoManage employeesInfo = new EmployeesInfoManage();
+           return Consult_entity.GetList().Select(c => new ConsultTeacher() { Employees_Id = employeesInfo.GetEntity(c.Employees_Id).EmpName, Id = c.Id }).ToList();
+        }
+             
+        /// <summary>
+        /// 添加咨询跟踪数据
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static AjaxResult AddFllow(List<FollwingInfo> list)
+        {
+            AjaxResult a = new AjaxResult();
+            a.Success = follwing.Addlist(list);
+            return a;
+        }
+
+
+        public static Consult findConsult(int sid)
+        {
+           return consult.AccordingStuIdGetConsultData(sid);
+        }
     }
 }

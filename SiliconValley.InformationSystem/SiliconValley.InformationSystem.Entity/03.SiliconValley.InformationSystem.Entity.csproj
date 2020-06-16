@@ -184,6 +184,7 @@
     <Compile Include="Entity\HeadClass.cs" />
     <Compile Include="Entity\Headmaster.cs" />
     <Compile Include="Entity\HeadMasterGrand.cs" />
+    <Compile Include="Entity\HeiHu.cs" />
     <Compile Include="Entity\HomeWorkFinishRate.cs" />
     <Compile Include="Entity\HygienicDeduction.cs" />
     <Compile Include="Entity\InStock.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="Entity\PayviewPaymentver.cs" />
     <Compile Include="Entity\PerInfo.cs" />
     <Compile Include="Entity\Position.cs" />
+    <Compile Include="Entity\Preentryfee.cs" />
     <Compile Include="Entity\Prefunding.cs" />
     <Compile Include="Entity\Pricedormitoryarticles.cs" />
     <Compile Include="Entity\PrintGoodsApply.cs" />
@@ -243,6 +245,7 @@
     <Compile Include="Entity\Reconcile.cs" />
     <Compile Include="Entity\RecruitingDataSummary.cs" />
     <Compile Include="Entity\RecruitPhoneTrace.cs" />
+    <Compile Include="Entity\Refund.cs" />
     <Compile Include="Entity\Region.cs" />
     <Compile Include="Entity\RemovalRecords.cs" />
     <Compile Include="Entity\ReplenishmentRecord.cs" />
@@ -279,6 +282,7 @@
     <Compile Include="Entity\StudentFeeRecord.cs" />
     <Compile Include="Entity\StudentFeeStandard.cs" />
     <Compile Include="Entity\StudentInformation.cs" />
+    <Compile Include="Entity\StudentInformationview.cs" />
     <Compile Include="Entity\Studentmate.cs" />
     <Compile Include="Entity\StudentPutOnRecord.cs" />
     <Compile Include="Entity\Studenttuitionfeestandard.cs" />
@@ -309,6 +313,7 @@
     <Compile Include="Entity\TreeClass.cs" />
     <Compile Include="Entity\Trialapplication.cs" />
     <Compile Include="Entity\Tuitionallocation.cs" />
+    <Compile Include="Entity\Tuitionrefund.cs" />
     <Compile Include="Entity\Tung.cs" />
     <Compile Include="Entity\TungFloor.cs" />
     <Compile Include="Entity\Undergra.cs" />
@@ -323,6 +328,7 @@
     <Compile Include="SqlDate.cs" />
     <Compile Include="ViewEntity\AccdationView.cs" />
     <Compile Include="ViewEntity\AchievementView.cs" />
+    <Compile Include="ViewEntity\ADDdataview.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\AmountTopView.cs" />
     <Compile Include="ViewEntity\AnPaiData.cs" />
@@ -383,14 +389,17 @@
     <Compile Include="ViewEntity\GetYear.cs" />
     <Compile Include="ViewEntity\GrandClass.cs" />
     <Compile Include="ViewEntity\GrandClassAnpaiEvningSelf.cs" />
-    <Compile Include="ViewEntity\grand_number.cs" />
+    <Compile Include="ViewEntity\HeadmasterView.cs" />
     <Compile Include="ViewEntity\HealthRegistrationtableview.cs" />
     <Compile Include="ViewEntity\InsuranceStudentView.cs" />
     <Compile Include="ViewEntity\InsuranceView.cs" />
     <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
+    <Compile Include="ViewEntity\NetClientRecordView.cs" />
+    <Compile Include="ViewEntity\PutStudentDataView.cs" />
     <Compile Include="ViewEntity\SatisficingConfigDataView.cs" />
+    <Compile Include="ViewEntity\ScheduleForTraineesview.cs" />
     <Compile Include="ViewEntity\Sch_Market.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionAreaView.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionView.cs" />
@@ -450,6 +459,7 @@
     <Compile Include="ViewEntity\ShowEchartsView.cs" />
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
     <Compile Include="ViewEntity\simpleDataClass.cs" />
+    <Compile Include="ViewEntity\SingUpStudent.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="ViewEntity\StaffOfRoomwithFormdataView.cs" />
     <Compile Include="ViewEntity\Staff_Cost_StatisticesDetailView.cs" />
@@ -457,6 +467,7 @@
     <Compile Include="ViewEntity\StudentData.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
     <Compile Include="ViewEntity\StudentFeeRecordView.cs" />
+    <Compile Include="ViewEntity\StudentpaymentView.cs" />
     <Compile Include="ViewEntity\StudentUnionDepartmentView.cs" />
     <Compile Include="ViewEntity\StuHomeWorkView.cs" />
     <Compile Include="ViewEntity\SuccessionrecordView.cs" />
@@ -473,11 +484,15 @@
     <Compile Include="ViewEntity\TraineeDateVIew.cs" />
     <Compile Include="ViewEntity\TransactionView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
+    <Compile Include="ViewEntity\tuition.cs" />
+    <Compile Include="ViewEntity\tuitiondetails.cs" />
+    <Compile Include="ViewEntity\TuitionrefundView.cs" />
     <Compile Include="ViewEntity\TungView.cs" />
     <Compile Include="ViewEntity\T_ConsultTeacherData.cs" />
     <Compile Include="ViewEntity\UninhabitedList.cs" />
     <Compile Include="ViewEntity\vierprice.cs" />
     <Compile Include="ViewEntity\ZhuanghuanluData.cs" />
+    <Compile Include="ZhuceShowData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

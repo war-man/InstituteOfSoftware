@@ -238,6 +238,26 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
+        public AjaxResult My_Delete(List<TeacherNight> list)
+        {
+            //删除
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Delete(list);
+                a.Success = true;
+                a.Msg = "删除成功！";
+                Redis.RemoveCache("TeacherNight");
+            }
+            catch (Exception ex)
+            {
+                a.Msg = ex.Message;
+                a.Success = false;
+
+            }
+
+            return a;
+        }
         ///// <summary>
         ///// 获取空教室
         ///// </summary>
@@ -269,7 +289,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="new_t"></param>
         /// <returns></returns>
-        public AjaxResult Edit_Data(TeacherNight new_t)
+        public AjaxResult Edit_Data(List<TeacherNight> new_t)
         {
             AjaxResult a = new AjaxResult();
             try
@@ -287,6 +307,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
+        public AjaxResult Edit_Data(TeacherNight new_t)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Update(new_t);
+                a.Success = true;
+                a.Msg = "编辑成功！！";
+                Redis.RemoveCache("TeacherNight");
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = "数据编辑有误，请刷新重试！！";
+            }
+            return a;
+        }
         /// <summary>
         /// 更改日期
         /// </summary>

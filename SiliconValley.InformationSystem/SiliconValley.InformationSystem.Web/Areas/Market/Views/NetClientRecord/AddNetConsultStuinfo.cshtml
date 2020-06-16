@@ -11,9 +11,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>AddNetConsultStuinfo</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <style>
         #but1 {
             position: absolute;
@@ -41,117 +40,72 @@
 </head>
 <body>
     <div>
-        <form class="layui-form" action="">
+        <form class="layui-form" action="" lay-filter="formtest">
             <div class="layui-container">
-
+                <input id="Id" name="Id" type="hidden" value="@ViewBag.Id" />
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">姓名</label>
-                        <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.StuName, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="StuName" id="StuName" class="layui-input" style="border:0px" readonly="readonly">
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">性别</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="StuSex" value="False" title="男" checked="">
-                                <input type="radio" name="StuSex" value="True" title="女">
-                            </div>
-                       
+                        <label class="layui-form-label">性别:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="StuSex" id="StuSex" class="layui-input" style="border:0px" readonly="readonly">
+                        </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">年龄</label>
+                        <label class="layui-form-label">联系电话:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.StuAge, new Dictionary<string, object>() { { "lay-verify", "myAge" }, { "class", "layui-input " } })
+                            <input type="text" name="StuPhone" id="StuPhone" class="layui-input" style="border:0px" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">备案人:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="SprEmp" id="SprEmp" class="layui-input" style="border:0px" readonly="readonly">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">回访人:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Empname" id="Empname" class="layui-input" style="border:0px" readonly="readonly">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="width:140px;margin-left:-60px;">市场对接老师:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="channeltea" id="channeltea" class="layui-input" style="border:0px" readonly="readonly">
                         </div>
                     </div>
 
                 </div>
 
                 <div class="layui-row layui-form-item">
-
-                    @*<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-            <label class="layui-form-label">登记者</label>
-            <div class="layui-input-inline">
-                @Html.DropDownListFor(a => a.EmployeeId, ViewBag.nettea as SelectList, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
-            </div>
-        </div>*@
+                   
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">联系方式</label>
+                        <label class="layui-form-label">回访次数:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ContactInformation, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "class", "layui-input " } })
+                            <input type="text" class="layui-input" readonly="readonly" style="border:0px"  value="@ViewBag.Number" />
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">信息来源</label>
-                        <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.InformationSource, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">市场对接老师</label>
+                        <label class="layui-form-label">学生等级:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(a => a.MarketTeaId, ViewBag.markettea as SelectList, "--请选择--", new Dictionary<string, object>() { { "class", "layui-input " } })
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">学历</label>
-                        <div class="layui-input-block">
-                            <select name="Education" id="Education">
-                                <option value="初中">初中</option>
-                                <option value="高中">高中</option>
-                                <option value="中专">中专</option>
-                                <option value="大专">大专</option>
-                                <option value="本科">本科</option>
-                                <option value="小学">群众</option>
+                            <select name="Grade" id="Grade">
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
                             </select>
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">QQ号</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.QQNum, new Dictionary<string, object>() { { "class", "layui-input " } })
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">微信号</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.WeChatNum, new Dictionary<string, object>() { { "class", "layui-input " } })
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">地区</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Region, new Dictionary<string, object>() { { "class", "layui-input " } })
-                        </div>
-                    </div>
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">是否面咨</label>
-                        <div class="layui-input-block">
-                            <input type="radio" name="IsFaceConsult" value="False" title="否" checked="">
-                            <input type="radio" name="IsFaceConsult" value="True" title="是">
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">入学状态</label>
-                        <div class="layui-input-block">
-                            <input type="radio" name="IsDel" value="False" title="未入学" checked="">
-                            <input type="radio" name="IsDel" value="True" title="已入学">
                         </div>
                     </div>
 
@@ -168,22 +122,6 @@
 
                 </div>
 
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                        <label class="layui-form-label">第二次回访</label>
-                        <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.SecondCallBack, new Dictionary<string, object>() { { "class", "layui-input linu" } })
-                        </div>
-                    </div>
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                        <label class="layui-form-label">第三次回访</label>
-                        <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.ThirdCallBack, new Dictionary<string, object>() { { "class", "layui-input linu" } })
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
             <div class="layui-form-item">
@@ -196,47 +134,45 @@
     </div>
 
     <script>
+        $(function () {
+            loadnetinfo();// 初始化编辑数据加载
+        });
+        function loadnetinfo() {
+            var id = $("#Id").val();
+            console.log(id);
+            $.get("/Market/NetClientRecord/GetCallbackInfoById/" + id, function (data) {
+                layui.use(['layer', 'form', 'table'], function () {
+                    var form = layui.form;
+                    form.val("formtest", data);
+
+                });
+            })
+        }
+
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
 
-            //日期验证
-            laydate.render({
-                elem: '#NetClientDate',
-            });
-            form.verify({
-                myAge: function (value, item) {
-                    if (value == '') {
-                        return '';
-                    } else {
-                        var v = /^(?:[1-9][0-9]?|1[01][0-9]|120)$/;
-                        if (!v.test(value)) {
-                            return '年龄必须是1-120的数字';
-                        }
-                    }
-                }//联系电话
-            });
 
-            //动态绑定岗位属性的下拉框的值
-            $.ajax({
-                url: '/Market/NetClientRecord/BindPidSelect',
-                dataType: 'json',
-                type: 'get',
-                success: function (data) {
-                    console.log(data.data);
-                    $.each(data.data, function (index, item) {
-                        $('#Pid').append(new Option(item.PositionName, item.Pid));// 下拉菜单里添加元素
-                    });
-                    layui.form.render("select");
-                    //重新渲染 固定写法
-                }
-            });
+            ////动态绑定岗位属性的下拉框的值
+            //$.ajax({
+            //    url: '/Market/NetClientRecord/BindPidSelect',
+            //    dataType: 'json',
+            //    type: 'get',
+            //    success: function (data) {
+            //        console.log(data.data);
+            //        $.each(data.data, function (index, item) {
+            //            $('#Pid').append(new Option(item.PositionName, item.Pid));// 下拉菜单里添加元素
+            //        });
+            //        layui.form.render("select");
+            //        //重新渲染 固定写法
+            //    }
+            //});
 
             //添加提交
             form.on('submit(demo1)', function (data) {
-                console.log('添加提交：'+data);
                 $.post("/Market/NetClientRecord/AddNetConsultStuinfo", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function () {

@@ -9,6 +9,7 @@
 
 namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -19,7 +20,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     /// </summary>
     [Table(name: "StudentPutOnRecord")]
     public partial class StudentPutOnRecord: IEqualityComparer<StudentPutOnRecord>
-    {
+    { 
       
         /// <summary>
         /// 学生备案数据编号
@@ -121,19 +122,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string ConsultTeacher { get; set; }
 
         /// <summary>
-        /// 咨询师编号
-        /// </summary>
-        public string ConsultId { get; set; }
-
-        /// <summary>
         /// 备案日期(只有年月日)
         /// </summary>
         public DateTime BeanDate { get; set; }
-
-        /// <summary>
-        /// 身份证
-        /// </summary>
-        public string IdCade { get; set; }
 
         public bool Equals(StudentPutOnRecord x, StudentPutOnRecord y)
         {
@@ -147,5 +138,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         {
             return 0;
         }
+
+        
     }
 }

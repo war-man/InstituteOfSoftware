@@ -20,20 +20,48 @@
             overflow: hidden;
             height: 15px;
             line-height: 15px;
-        }        
+        }
+    
+        .NoneCss{
+    display:none;
+    }
     </style>
 }
 <script type="text/html" id="toolbarDemo1">
     <div class="layui-btn-container">
-        <button type="button" class="layui-btn layui-btn-sm" lay-event="getCheckData">
-            <i class="layui-icon">&#xe624;</i> 添加
-        </button>
-        <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto">
-            <i class="layui-icon">&#xe601;</i>
-            Excel文件导入
-        </button>
-        <button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>
-        <button class="layui-btn layui-btn-sm" onclick="ChangeGotoSchoolstate()"> <i class="layui-icon">&#xe714;</i> 转上门</button>
+        @{
+            int r = Convert.ToInt32(ViewBag.Pers);
+            if (r != -1)
+            {
+                <button type="button" class="layui-btn layui-btn-sm" lay-event="getCheckData">
+                    <i class="layui-icon">&#xe624;</i> 添加
+                </button>
+                <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto">
+                    <i class="layui-icon">&#xe601;</i>
+                    Excel文件导入
+                </button>
+            }
+
+            if (r == 0)
+            {
+                <button class="layui-btn layui-btn-sm" onclick="ChangeGotoSchoolstate()"> <i class="layui-icon">&#xe714;</i> 转上门</button>
+                <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
+                <button class="layui-btn layui-btn-sm" onclick="ChangTeacher()"> <i class="layui-icon">&#xe714;</i> 转换咨询师</button>
+                <button class="layui-btn layui-btn-sm" onclick="SignUp()"> <i class="layui-icon">&#xe714;</i>报名/预录学生信息下载</button>
+            }
+
+            if (r == 0 || r == 2)
+            {
+                <button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>
+                <button class="layui-btn layui-btn-sm" onclick="InSchoolStudentData()"> <i class="layui-icon">&#xe714;</i> 查看在校学生信息</button>
+                <button class="layui-btn layui-btn-sm" onclick="GetMony()"> <i class="layui-icon">&#xe714;</i> 查看学生缴费信息</button>
+            }
+
+            if (r == 2)
+            {
+                <button class="layui-btn layui-btn-sm" onclick="shortMessage()"> <i class="layui-icon">&#xe681;</i>发送短信</button>
+            }
+        }
     </div>
 </script>
 <script type="text/html" id="barDemo1">
@@ -42,6 +70,7 @@
     <a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>
 </script>
 <div class="layui-collapse" lay-accordion>
+    <input type="hidden" id="rr" value="@r"/>
     <div class="layui-colla-item">
         <h2 class="layui-colla-title">数据查询</h2>
         <div class="layui-colla-content">
@@ -59,7 +88,7 @@
                         <label class="spanCss2">信息来源:</label>
                         <div class="divCss1">
                             @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
-                         
+
                         </div>
 
                     </div>
@@ -90,8 +119,8 @@
                         <div class="divCss1">
                             @Html.DropDownList("S_consultTeacher", ViewBag.teacherlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
                         </div>
-                        
-                    
+
+
                     </div>
                 </div>
                 <div class="layui-row divCss2">
@@ -100,7 +129,7 @@
                         <div class="divCss1">
                             @Html.DropDownList("S_status", ViewBag.slist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
                         </div>
-                      
+
                     </div>
                     <div class="layui-col-sm3">
                         <label class="spanCss2">关 &nbsp; 系&nbsp;人:</label>
@@ -122,7 +151,20 @@
 
 <table id="tabletest1" lay-filter="tabletest1"></table>
 
+<div id="TeacherDiv" class="NoneCss">
+    <form class="layui-form">
+        <div class="layui-row">
+            @Html.DropDownList("Teacher", ViewBag.Teacher as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+        </div>
+         <div class="layui-row">
+             <div style="text-align:center;margin-top:100px">
+                 <button type="button" class="layui-btn" lay-submit="" lay-filter="ToIes">确定</button>
+             </div>           
+         </div>
+    </form>    
+</div>
 <script>
+ 
     //转换时间的方法
     function TimeChange(newtime) {
         if (newtime == null)
@@ -146,7 +188,7 @@
     function LoadTable() {
         layui.use('table', function () {
             var table = layui.table;
-            table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
+            table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData', where: { 'findNamevalue': null } });
         });
 
     }
@@ -156,7 +198,7 @@
             var layer = layui.layer;
             layer.msg(msg, {
                 icon: 2,
-                shade:0.8
+                shade: 0.8
             });
         });
     }
@@ -170,6 +212,7 @@
             });
         });
     }
+
     $(function () {
         //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
         $(document).keydown(function (event) {
@@ -197,76 +240,82 @@
             var findEndvalue = $("#findEndvalue").val();//获取结束时间
             var findAreavalue = $("#findAreavalue").val();//获取区域
             var findBeanManvalue = $("#findBeanManvalue").val();//获取备案人
+            var S_consultTeacher = $("#S_consultTeacher").val();
+            var S_status = $("#S_status").val();
+            var S_party = $("#S_party").val();
+            var S_intosysMan = $("#S_intosysMan").val();
+
             layui.use('table', function () {
                 var table = layui.table;
                 table.reload('tabletest1', {
-                    url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
-                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue } //设定异步数据接口的额外参数
+                    url: '/Market/StudentDataKeep/GetTableData'
+                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue, "S_consultTeacher": S_consultTeacher, "S_status": S_status, "S_party": S_party, "S_intosysMan": S_intosysMan } //设定异步数据接口的额外参数
                 });
             });
         });
     });
+
 
     //数据导出页面
     function ExcelExport() {
         layui.use('layer', function () {
             layer.open({
                 type: 2,
-                content: '/Market/StudentDataKeep/ExportView' 
+                content: '/Market/StudentDataKeep/ExportView'
                 , area: ['700px', '480px'],
                 title: '导出备案数据页面'
                 , shade: 0.8
                 , anim: 4
                 , skin: 'demo-class'
                 , scrollbar: false
-            });           
+            });
         });
 
     }
 
     var sid = 0;
-    function LoadConsultdata(tid,rake) {
-                    $.ajax({
-                        url: '/Market/Consult/AddSingConsultdata',
-                        data: { "teacherid": tid, "stuid": sid, "Rmark": rake },
-                        type:'POST',
-                        success: function (suc) {
-                            if (suc.Success) {
-                                layui.use(['layer','table'], function () {
-                                    var layer = layui.layer;
-                                    
-                                    var table = layui.table;
-                                    $.ajax({
-                                        url: '/Market/StudentDataKeep/ZhipaiConsustTacher',
-                                        type: 'POST',
-                                        data: { "teaid": tid, "stuid": sid,},
-                                        success: function (result) {
-                                            if (result.Success) {
-                                                layer.msg('指派成功！！！', {
-                                                    icon: 1, shade: 0.8
-                                                });
-                                                table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
-                                            } else {
-                                                TiShi("系统异常，请刷新重试!!!");
-                                            }
-                                             
-                                        } 
+    function LoadConsultdata(tid, rake) {
+        $.ajax({
+            url: '/Market/Consult/AddSingConsultdata',
+            data: { "teacherid": tid, "stuid": sid, "Rmark": rake },
+            type: 'POST',
+            success: function (suc) {
+                if (suc.Success) {
+                    layui.use(['layer', 'table'], function () {
+                        var layer = layui.layer;
+
+                        var table = layui.table;
+                        $.ajax({
+                            url: '/Market/StudentDataKeep/ZhipaiConsustTacher',
+                            type: 'POST',
+                            data: { "teaid": tid, "stuid": sid, },
+                            success: function (result) {
+                                if (result.Success) {
+                                    layer.msg('指派成功！！！', {
+                                        icon: 1, shade: 0.8
                                     });
-                                    
-                                });
-                                
-                            } else {
-                                TiShi("系统异常，请刷新重试!!!");
+                                    table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData', where: { 'findNamevalue': null } });
+                                } else {
+                                    TiShi("系统异常，请刷新重试!!!");
+                                }
+
                             }
-                        }
+                        });
+
                     });
+
+                } else {
+                    TiShi("系统异常，请刷新重试!!!");
+                }
+            }
+        });
     }
+
     layui.use(['table', 'laydate', 'form', 'element'], function () {
         var table = layui.table;
         var laydate = layui.laydate;
         var form = layui.form;
         var element = layui.element;
-        //日期
 
         //月份小于10的前面加个0
         function MoDay(a) {
@@ -317,25 +366,21 @@
 
         table.render({
             elem: '#tabletest1'
-            , url: '/Market/StudentDataKeep/GetTableData'
+            , url: '/Market/StudentDataKeep/TableData'
             , toolbar: '#toolbarDemo1'
             , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             , cols: [[
                 { type: 'checkbox' }
                 , { field: 'StuName', title: '姓名' }
-                , { field: 'StuSex', title: '性别',width:60 }
+                , { field: 'StuSex', title: '性别', width: 60 }
                 , { field: 'Stuphone', title: '联系电话' }
-                , { field: 'stuinfomation', title: '信息来源' }
-                , {
-                    field: 'StuisGoto', title: '是否上门', templet: function (res) {
-                        if (res.StuisGoto == false || res.StuisGoto == null) {
-                            return "未上门";
-                        }  else {
-                            return "已上门";
-                        }
-                    }
-                }
-                , { field: 'StatusName', title: '学生状态' }
+                , { field: 'stuinfomation', title: '信息来源'}
+                , { field: 'StuisGoto', title: '是否上门', templet: function (res) { if (res.StuisGoto == false || res.StuisGoto == null) { return "未上门"; } else { return "已上门"; } } }
+                , { field: 'StatusName', title: '上门日期' }
+                , { field: 'StatusName', title: '学生状态'}  
+                , { field: 'StuSchoolName', title: '学校'}
+                , { field: 'StuEducational', title: '学历'}
+                , { field: 'StuAddress', title: '家庭住址' }                 
                 , { field: 'empName', title: '备案人' }
                 , { field: 'RegionName', title: '区域' }
                 , { field: 'ConsultTeacher', title: '咨询师' }
@@ -347,7 +392,13 @@
                 , {
                     fixed: 'right', title: '操作', width: 250, templet: function (res) {
                         if (res.ConsultTeacher == null) {
-                            return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a ><a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>';
+                            var my_r = $("#rr").val();
+                            if (my_r == "2" || my_r== "3") {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
+                            } else {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a ><a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>';
+                            }
+                             
                         } else {
                             return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
                         }
@@ -356,7 +407,7 @@
             ]]
             , page: true
             , limits: [20, 40, 50, 60, 80, 100]
-            ,limit:20
+            , limit: 20
         });
 
         //头工具栏事件
@@ -366,7 +417,7 @@
                 case 'getCheckData':
                     layer.open({
                         type: 2,
-                        content: '/Market/StudentDataKeep/AddorEdit'  
+                        content: '/Market/StudentDataKeep/AddorEdit'
                         , area: ['950px', '710px'],
                         title: '添加备案信息页面'
                         , shade: 0.8
@@ -389,6 +440,7 @@
                     break;
             };
         });
+
         //监听行工具事件
         table.on('tool(tabletest1)', function (obj) {
             var data = obj.data;
@@ -407,7 +459,7 @@
                 layer.open({
                     type: 2,
                     content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id
-                    , area: ['800px', '690px'],
+                    , area: ['800px', '740px'],
                     title: '备案数据详情'
                     , shade: 0.8
                     , anim: 4
@@ -428,48 +480,83 @@
             }
         });
 
-        //双击获取跟踪详情
         //监听行双击事件
         table.on('rowDouble(tabletest1)', function (obj) {
             var id = obj.data.Id;
-            layer.confirm("亲！是要查看跟踪信息吗?", { icon: 3, shade: 0.8, title: '温馨提示' }, function (index) {
-                layer.close(index);
-                if (obj.data.consultName == null) {
-                    layer.msg("请先指派咨询师!!!", { icon: 6, shade:0.8 });
-                } else {
-                    layer.open({
-                        type: 2,
-                        content: '/Market/Consult/FollwingInfoView/' + id
-                        , area: ['950px', '710px'],
-                        title: '跟踪信息信息页面'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                        , scrollbar: false
-                    });
-                    
-                }                 
-                
+            var myrr = $("#rr").val();
+            if (myrr=="0") {
+                layer.confirm("亲！是要查看跟踪信息吗?", { icon: 3, shade: 0.8, title: '温馨提示' }, function (index) {
+                    layer.close(index);
+                    if (obj.data.ConsultTeacher == null) {
+                        layer.msg("请先指派咨询师!!!", { icon: 6, shade: 0.8 });
+                    } else {
+                        layer.open({
+                            type: 2,
+                            content: '/Market/Consult/FollwingInfoView/' + id
+                            , area: ['950px', '760px'],
+                            title: '跟踪信息信息页面'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                            , scrollbar: false
+                        });
+
+                    }
+
+                });
+            }
+            
+        });
+
+        //监听提交
+        form.on('submit(ToIes)', function (data) { 
+            layer.closeAll();
+            var index_2 = layer.load(1);
+            var checkStatus = table.checkStatus('tabletest1');
+            var ids = "";
+            for (var i = 0; i < checkStatus.data.length; i++) {
+                ids = ids + checkStatus.data[i].Id + ",";
+            }
+            $.ajax({
+                url: '/Market/StudentDataKeep/ChangTeacher',
+                type:"POST",
+                data: { "id": ids,"teacherid":data.field.Teacher},
+                success: function (sucdata) {
+                    layer.close(index_2);
+                    if (sucdata.Success) {
+                        layer.msg(sucdata.Msg, { shade: 0.8, icon: 1 });
+                    } else {
+                        layer.msg(sucdata.Msg, { shade: 0.8, icon: 2 });
+                    }
+                }
             });
+            table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
+            form.render();
+            return false;
         });
     });
-
+ 
     function PostDataChange(strid, date) {
-          $.ajax({
-              url: '/Market/StudentDataKeep/UpdateGotoSchool',
-              data: { "ids": strid, "date": date },
-              type:'POST',
-              success: function (suc) {
-                  if (suc.Success) {
-                      layer.msg('操作成功！！！', { icon: 1, shade: 0.8 });
-                      table.reload('tabletest1', { url:'/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
-                  } else {
-                      layer.msg('操作失败，请刷新重试！！！', { icon: 2, shade: 0.8 });
-                  }
-              }
-          });
+        $.ajax({
+            url: '/Market/StudentDataKeep/UpdateGotoSchool',
+            data: { "ids": strid, "date": date },
+            type: 'POST',
+            success: function (suc) {
+                if (suc.Success) {
+                    layer.msg('操作成功！！！', { icon: 1, shade: 0.8 });
+                    layui.use('table', function () {
+                        var table = layui.table;
+                        table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData', where: { 'findNamevalue': null } });
+                    });
+
+                } else {
+                    layer.msg('操作失败，请刷新重试！！！', { icon: 2, shade: 0.8 });
+                }
+            }
+        });
     }
 
+    //转上门
     function ChangeGotoSchoolstate() {
         layui.use(['table', 'layer'], function () {
             var table = layui.table;
@@ -485,11 +572,11 @@
                     var dateFormat = /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))$/;
 
                     if (dateFormat.test(date)) {
-                        //获取选中的id                        
+                        //获取选中的id
                         checkStatus.data.forEach(f => {
                             strid = strid + f.Id + ",";
                         });
-                         PostDataChange(strid, date);
+                        PostDataChange(strid, date);
                         layer.close(index);
                     } else {
                         layer.msg('请输入正确的日期！！例如:2020-02-11', { icon: 2, shade: 0.8 });
@@ -498,8 +585,148 @@
                 });
 
             }
-            });
-        }
+        });
+    }
+
+    //注册学生学号
+    function ZhuceClass() {
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var checkStatus = table.checkStatus('tabletest1');
+            if (checkStatus.data.length <= 0) {
+                layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
+            } else {
+                var ids = "";
+                for (var i = 0; i < checkStatus.data.length; i++) {
+                    ids = ids + checkStatus.data[i].Id + ",";
+                }
+                layer.open({
+                    type: 2
+                    , content: '/Market/StudentDataKeep/Registeredstudentnumber/' + ids
+                    , area: ['800px', '480px']
+                    , title: '注册学号页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            }
+        });
+    }
+
+    //判断备案数据是否只选中一条
+    function One(url,title,width,height,Ishava) {
+        layui.use(['layer', 'table'], function () {
+            var layer = layui.layer;
+            var table = layui.table;
+            var checkStatus = table.checkStatus('tabletest1');
+            console.log(checkStatus.data.length);
+            if (checkStatus.data.length == 1) {
+                if (Ishava) {
+                    $.ajax({
+                        url: '/Market/StudentDataKeep/Ture/' + checkStatus.data[0].Id,
+                        success: function (suc) {
+                            if (suc.Success) {
+                                layer.open({
+                                    type: 2
+                                    , content: url + checkStatus.data[0].Id
+                                    , area: [width, height]
+                                    , title: title
+                                    , shade: 0.8
+                                    , anim: 4
+                                    , skin: 'demo-class'
+                                });            
+                            } else {
+                                layer.msg('该备案学生还没有在校信息！！！', {icon:5});
+                            }
+                        }
+                    });
+                } else {
+                    layer.open({
+                        type: 2
+                        , content: url + checkStatus.data[0].Id
+                        , area: [width, height]
+                        , title: title
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });            
+                }
+                
+            } else if (checkStatus.data.length <= 0) {
+                layer.msg('请选择备案数据!', { icon: 2, shade: 0.8 });
+            } else {
+                layer.msg('最多只能选择一条数据!', { icon: 2, shade: 0.8 });
+            }
+
+        });
+    }
+
+    //一键转换咨询师
+    function ChangTeacher() {
+        layui.use(['layer','table'], function () {
+            var layer = layui.layer;
+            var table = layui.table;
+            var checkStatus = table.checkStatus('tabletest1');
+
+            if (checkStatus.data.length <= 0) {
+                layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
+            } else {
+                 
+               // $("#TeacherDiv").removeClass("NoneCss");
+                layer.open({
+                    type: 1,
+                    title: '选择咨询师',
+                    area: ['500px', '300px'],
+                    content: $('#TeacherDiv')  
+                });
+
+            }
+
+        });
+    }
+
+    //查看在校学生信息
+    function InSchoolStudentData() {
+        var url = '/Market/StudentDataKeep/GetStudent/';
+        var title = '在校学生信息';
+        var height = '400px';
+        var width = '700px';
+        One(url, title, width, height, true);
+    }
+
+    //查看学生缴费信息
+    function GetMony() {
+        
+    }
+
+    //短信发送
+    function shortMessage() {
+        layer.open({
+            type: 2
+            , content: '/Market/StudentDataKeep/ShortInfoMationView'
+            , area: ['550px', '400px']
+            , title: '短信发送页面'
+            , shade: 0.8
+            , anim: 4
+            , skin: 'demo-class'
+        });        
+    }
+
+    //报名 / 预录学生信息下载
+    function SignUp() {
+        layer.open({
+            type: 2
+            , content: '/Market/StudentDataKeep/Sign_up'
+            , area: ['550px', '600px']
+            , title: '下载报名学生或已交预录费学生页面'
+            , shade: 0.8
+            , anim: 4
+            , skin: 'demo-class'
+        });    
+         
+    }
 </script>
+ 
 
 

@@ -2,8 +2,7 @@
 @{
     Layout = null;
 }
-@using SiliconValley.InformationSystem.Entity.MyEntity
-@model  SiliconValley.InformationSystem.Entity.MyEntity.TeacherNight
+
 <!DOCTYPE html>
 
 <html>
@@ -16,31 +15,41 @@
 <body>
     <form id="addmaster_form" class="layui-form" lay-filter="addmaster_form" style="margin-top:20px">
         <div class="layui-row layui-form-item">
-            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="LableCss1">值班日期:</label>
                 <div class="layui-input-block">
-                    <input type="hidden" value="@Model.Id" id="Id" name="Id" />
+                    <input type="hidden" value="@ViewBag.ids" id="Id" name="Id" />
                     @{
-                        DateTime date = Model.OrwatchDate;
+                        DateTime date = ViewBag.time;
                         string d = date.Year + "-" + date.Month + "-" + date.Day;
                     }
-                    <input type="text" id="OrwatchDate" name="OrwatchDate" value="@d" class="layui-input" style="width:130px;" lay-verify="required" />
+                    <input type="text" id="OrwatchDate" name="OrwatchDate" value="@d" class="layui-input" lay-verify="required" />
                 </div>
             </div>
-            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                <label class="LableCss1">值班老师:</label>
-                <div class="layui-input-block">
-                    <input type="text" id="Tearcher_Id" name="Tearcher_Id" class="layui-input" style="width:130px;" value="@ViewBag.empName" disabled="disabled"/>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="LableCss1">值班老师:</label>
+                    <div class="layui-input-block">
+                     
+                        @{
+                            List<string> list = ViewBag.teachers as List<string>;
+                            foreach (string item in list)
+                            {
+                                <input type="checkbox" name="teacher" lay-skin="primary" id="teacher" title="@item" checked="checked">
+                            }
+                        }
+                    </div>
                 </div>
             </div>
-        </div>         
-        <div class="layui-row layui-form-item">
-            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;">
-                <button type="submit" class="layui-btn" lay-submit="" lay-filter="EditTrue">点击修改</button>
-                <button type="button" class="layui-btn" onclick="Myclose()">取消关闭</button>
+              
             </div>
-        </div>
-    </form>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="EditTrue">点击修改</button>
+                    <button type="button" class="layui-btn" onclick="Myclose()">取消关闭</button>
+                </div>
+            </div>
+</form>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
@@ -57,9 +66,15 @@
 
             //监听提交
             form.on('submit(EditTrue)', function (data) {
-                    $.ajax({
-                        url: '/Educational/TeacherNight/EditMasterFunction',
-                        data: data.field,
+                var teacher=""; 
+                $(":checked").each(function (index,ele) {
+                    teacher = teacher + $(ele)[0].title + ",";                  
+                });
+
+               // console.log(teacher);
+                $.ajax({
+                    url: '/Educational/TeacherNight/EditMasterFunction',
+                        data: { "ids": data.field.Id, "Teachers": teacher, "time": data.field.OrwatchDate },
                         type: 'POST',
                         success: function (sudata) {
                             if (sudata.Success == false) {
