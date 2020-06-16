@@ -118,6 +118,39 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">所在区域:</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>)
+                        </div>
+                    </div>
+                   
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label needTextColor">备 案 &nbsp;人:</label>
+                        <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />
+                        <input name="e_Name" id="e_Name" lay-verify="required" class="layui-input linu" readonly="readonly" placeholder="备案人" />
+                        <div style="margin-top:-30px;text-align:right;width:328px;">
+                            <button type="button" class="layButCss1 butCss2" id="beanMan"> <i class="layui-icon layui-icon-search" style="font-size: 26px; color:lightseagreen;"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">家庭住址:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuAddress, new Dictionary<string, object>() { { "placeholder", "家庭住址" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">关&nbsp; 系&nbsp;人:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.Party, new Dictionary<string, object>() { { "placeholder", "关系人" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                     
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">学校名称:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(s => s.StuSchoolName, new Dictionary<string, object>() { { "placeholder", "学校名称" }, { "class", "layui-input linu" } })
@@ -136,36 +169,7 @@
                         </div>
 
                     </div>
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">家庭住址:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.StuAddress, new Dictionary<string, object>() { { "placeholder", "家庭住址" }, { "class", "layui-input linu" } })
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label needTextColor">备 案 &nbsp;人:</label>                        
-                            <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />                            
-                                <input name="e_Name" id="e_Name" lay-verify="required" class="layui-input linu" readonly="readonly" placeholder="备案人"/>
-                                <div style="margin-top:-30px;text-align:right;width:328px;">
-                                    <button type="button" class="layButCss1 butCss2" id="beanMan"> <i class="layui-icon layui-icon-search" style="font-size: 26px; color:lightseagreen;"></i></button>
-                                </div>                                                 
-                    </div>
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">所在区域:</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>)
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">出生日期:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.StuBirthy, new Dictionary<string, object>() { { "placeholder", "YY-MM-DD" }, { "lay-verify", "StuBirthy" }, { "class", "layui-input linu" } })
-                        </div>
-                    </div>
+                    
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -212,11 +216,11 @@
                         <div class="layui-input-block">
                             @Html.TextBoxFor(s => s.StuQQ, new Dictionary<string, object>() { { "placeholder", "QQ" }, { "class", "layui-input linu" } })
                         </div>
-                    </div>                    
+                    </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">关&nbsp; 系&nbsp;人:</label>
+                        <label class="LableCss1">出生日期:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.Party, new Dictionary<string, object>() { { "placeholder", "关系人" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(s => s.StuBirthy, new Dictionary<string, object>() { { "placeholder", "YY-MM-DD" }, { "lay-verify", "StuBirthy" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
                 </div>
@@ -386,7 +390,7 @@
 
         //提交数据
         form.on('submit(tijiao)', function (data) {
-            layer.confirm('确定备案吗？(如果备案成功则不能修改备案人，学生姓名，学生电话号码)', { title: '温馨提示！', icon: 3 }, function (index) {
+            layer.confirm('确定备案吗？(如果备案成功则不能修改备案人)', { title: '温馨提示！', icon: 3 }, function (index) {
                 var mylayerinde = layer.load(1);
                 $.ajax({
                     url: "/Market/StudentDataKeep/StudentDataKeepAdd",
