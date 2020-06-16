@@ -150,6 +150,7 @@
 </div>
 
 <table id="tabletest1" lay-filter="tabletest1"></table>
+
 <div id="TeacherDiv" class="NoneCss">
     <form class="layui-form">
         <div class="layui-row">
@@ -373,18 +374,13 @@
                 , { field: 'StuName', title: '姓名' }
                 , { field: 'StuSex', title: '性别', width: 60 }
                 , { field: 'Stuphone', title: '联系电话' }
-                , { field: 'stuinfomation', title: '信息来源' }
-                , {
-                    field: 'StuisGoto', title: '是否上门', templet: function (res) {
-                        if (res.StuisGoto == false || res.StuisGoto == null) {
-                            return "未上门";
-                        } else {
-                            return "已上门";
-                        }
-                    }
-                }
-                , { field: 'StatusName', title: '学生状态' }
-                , { field: 'StuEducational', title: '学历' }
+                , { field: 'stuinfomation', title: '信息来源'}
+                , { field: 'StuisGoto', title: '是否上门', templet: function (res) { if (res.StuisGoto == false || res.StuisGoto == null) { return "未上门"; } else { return "已上门"; } } }
+                , { field: 'StatusName', title: '上门日期' }
+                , { field: 'StatusName', title: '学生状态'}  
+                , { field: 'StuSchoolName', title: '学校'}
+                , { field: 'StuEducational', title: '学历'}
+                , { field: 'StuAddress', title: '家庭住址' }                 
                 , { field: 'empName', title: '备案人' }
                 , { field: 'RegionName', title: '区域' }
                 , { field: 'ConsultTeacher', title: '咨询师' }

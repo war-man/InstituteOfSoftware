@@ -42,6 +42,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     public class StudentDataKeepController : BaseMvcController
     {
         // GET: /Market/StudentDataKeep/ShortInfomationFuntion
+
         #region 创建实体
         //创建一个用于操作数据的备案实体
         private StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
