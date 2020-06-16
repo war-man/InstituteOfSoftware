@@ -331,7 +331,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 StuName=l.StuName,
                 StuSex= l.StuSex,
                 Stuphone = l.Stuphone,
-                BeanDate= CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
+                StuSchoolName=l.StuSchoolName,
+                StuEducational=l.StuEducational,
+                StuAddress=l.StuAddress,
+                stuinfomation=l.stuinfomation,
+                StatusName=l.StatusName,
+                StuisGoto=l.StuisGoto,
+                StuVisit=l.StuVisit,
+                empName=l.empName,
+                BeanDate=l.BeanDate,
+                StuEntering=l.StuEntering,
+                StatusTime=l.StatusTime,
+                RegionName=l.RegionName,
+                Reak=l.Reak,
+                Party=l.Party,
+                MarketType=l.MarketType,
+                CountBeanDate = CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
             }).ToList();
             var data = new {data= mydata, count=list.Count,code=0,msg=""};
 

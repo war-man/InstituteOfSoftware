@@ -120,5 +120,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 关系人
         /// </summary>
         public string Party { get; set; }
+
+        /// <summary>
+        /// 市场类型
+        /// </summary>
+        public string MarketType { get; set; }
     }
 }

@@ -228,6 +228,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 if (olds.Id>=54118)
                 {
                     StudentPutOnRecord fins = this.whereStudentId(olds.Id);//找到要修改的实体
+                    fins.StuName = olds.StuName;
+                    fins.StuPhone = olds.StuPhone;
                     fins.StuSex = olds.StuSex;
                     fins.StuBirthy = olds.StuBirthy;
                     fins.StuSchoolName = olds.StuSchoolName;
@@ -250,6 +252,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 else
                 {
                     Sch_Market finds = this.whereMarketId(olds.Id);
+                    finds.StudentName = olds.StuName;
+                    finds.Phone = olds.StuPhone;
                     finds.Area = olds.Region_id==null?finds.Area:region_Entity.GetEntity(olds.Region_id).RegionName;
                     finds.Education = olds.StuEducational;
                     finds.Remark = olds.Reak;
@@ -556,17 +560,17 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 one.Reak = item.Remark;
                 one.StuName = item.StudentName;
                 one.StuSex = string.IsNullOrEmpty(item.Sex) ? "男" : item.Sex;
-                one.EmployeesInfo_Id = Enplo_Entity.FindEmpData(item.SalePerson, false)?.EmployeeId ?? Enplo_Entity.FindEmpData("何娉", false).EmployeeId;
+                one.EmployeesInfo_Id = Enplo_Entity.FindEmpData(item.SalePerson, false)?.EmployeeId ?? null;
                 var mm = Enplo_Entity.FindEmpData(item.SalePerson, false);
                 if (string.IsNullOrEmpty(item.SalePerson) || item.SalePerson == "其他")
                 {
-                    one.Reak = one.Reak + "由于该备案人为空所以默认备案人为何娉";
+                   
                 }
                 else
                 {
                     if (Enplo_Entity.FindEmpData(item.SalePerson, false).EmpName == null)
                     {
-                        one.Reak = one.Reak + "。由于该备案人已离职所以默认备案人为何娉,真实备案人为:" + item.SalePerson + ",";
+                        one.Reak = one.Reak + ".由于该备案人已离职,员工数据丢失,所以在此标注真实备案人为:" + item.SalePerson + ",";
                     }
                 }
 
@@ -587,7 +591,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 }
                 else if (item.MarketState == "已报名交清" || item.MarketState == "已报名未交清")
                 {
-                    one.StuStatus_Id = 1012;//默认未报名
+                    one.StuStatus_Id = 1012; 
                 }
                 one.StuInfomationType_Id = StuInfomationType_Entity.SerchSingleData(item.Source, false) == null ? StuInfomationType_Entity.SerchSingleData("渠道", false).Id : StuInfomationType_Entity.SerchSingleData(item.Source, false).Id;
                 one.Region_id = region_Entity.SerchRegionName(item.Area, false)?.ID ?? null;
@@ -598,8 +602,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                     one.ConsultTeacher = item.Inquiry;
                     if (Enplo_Entity.FindEmpData(item.Inquiry,false)==null)
                     {
-                        one.ConsultTeacher = "何娉";
-                        one.Reak = one.Reak + "之前咨询师是:" + item.Inquiry + "但是离职了，由于没有员工信息所以默认为何娉";
+                        one.ConsultTeacher = null;
+                        one.Reak = one.Reak + "之前咨询师是:" + item.Inquiry + "但是离职了。";
                     }
                                          
                 }
@@ -615,7 +619,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 }
             }
             
-            // this.Add_data(studentlist); 祁胜东,17674129299   13549595811（家里） 
+            // this.Add_data(studentlist);  
 
             List<Consult> Consultlist = new List<Consult>();
             all = all.Where(a1 => a1.Inquiry != null && !string.IsNullOrEmpty(a1.Inquiry)).ToList();

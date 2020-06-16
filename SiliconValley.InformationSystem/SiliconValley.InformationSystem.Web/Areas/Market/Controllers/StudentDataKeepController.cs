@@ -48,10 +48,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         private StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
 
         ExcelHelper Excel_Entity;
-
-        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
        
-        
         #endregion
 
 
@@ -59,6 +56,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
             //获取信息来源的所有数据
             List<SelectListItem> se = s_Entity.StuInfomationType_Entity.GetList().Select(s => new SelectListItem { Text = s.Name, Value = s.Name }).ToList();
             se.Add(new SelectListItem() { Text = "请选择", Selected = true, Value = "Value" });
@@ -279,6 +277,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //添加备案数据
         public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
         {
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
             s_Entity.Stustate_Entity = new StuStateManeger();
             AjaxResult a;
             try
@@ -714,7 +713,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //将Excel中的数据导入到数据库中
         public bool AddExcelToServer(List<MyExcelClass> list)
         {
-
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
             s_Entity.region_Entity = new RegionManeges();
             s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
             s_Entity.Stustate_Entity = new StuStateManeger();
