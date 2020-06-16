@@ -41,7 +41,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             List<NetClientRecordView> ncrlist = new List<NetClientRecordView>();
-            var list = ncrmanage.GetList();
+            var list = ncrmanage.GetList().Where(s=>string.IsNullOrEmpty(Convert.ToString(s.NetClientDate))).ToList();
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
@@ -112,7 +112,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             NetClientRecordManage nmanage = new NetClientRecordManage();
             var ncr = nmanage.GetEntity(id);
-            ViewBag.Number = nmanage.GetList().Where(s => s.SPRId == ncr.SPRId).ToList().Count()-1;
+            ViewBag.Number = nmanage.GetList().Where(s => s.SPRId == ncr.SPRId).ToList().Count() - 1;
             ViewBag.Id = id;
             return View();
         }
@@ -133,10 +133,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ncrnew.NetClientDate = DateTime.Now;
                 nmanage.Insert(ncr);
                 AjaxResultxx = nmanage.Success();
-                if (AjaxResultxx.Success){
+                if (AjaxResultxx.Success)
+                {
                     var ncrlist = nmanage.GetList().Where(s => s.SPRId == oldncr.SPRId).ToList();
                     foreach (var item in ncrlist)
-                    {  
+                    {
                         item.EmpId = eid;
                         nmanage.Update(item);
                     }
@@ -165,9 +166,50 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult GetCallbackInfoById(int id)
         {
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
-            var ncrview= ncrmanage.GetNcrviewById(id);
+            var ncrview = ncrmanage.GetNcrviewById(id);
             return Json(ncrview, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult SelectChannelemp()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取所有的渠道员工(包含离职的)
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetMarketTea(int page, int limit, string ename)
+        {
+            ChannelStaffBusiness channelmanage = new ChannelStaffBusiness();
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            var cslist = channelmanage.GetAll();
+            if (!string.IsNullOrEmpty(ename))
+            {
+                cslist = cslist.Where(e => empinfo.GetInfoByEmpID(e.EmployeesInfomation_Id).EmpName.Contains(ename)).ToList();
+            }
+            var mylist = cslist.OrderBy(e => e.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            var newlist = from e in mylist
+                          select new
+                          {
+                              #region 获取属性值 
+                              e.ID,
+                              empid=e.EmployeesInfomation_Id,
+                              empname = empinfo.GetInfoByEmpID(e.EmployeesInfomation_Id).EmpName,
+                              Position = empinfo.GetPositionByEmpid(e.EmployeesInfomation_Id).PositionName,
+                              Sex = empinfo.GetInfoByEmpID(e.EmployeesInfomation_Id).Sex,
+                              empstate = empinfo.GetInfoByEmpID(e.EmployeesInfomation_Id).IsDel,
+                              #endregion
+                          };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = newlist.Count(),
+                data = newlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// 编辑网咨学员信息
         /// </summary>
@@ -178,8 +220,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             NetClientRecordManage ncr = new NetClientRecordManage();
             var n = ncr.GetEntity(Id);
             ViewBag.Id = Id;
-            ViewBag.mydate = n.NetClientDate;
-
+            var trackdata = ncr.GetList().Where(s =>s.SPRId==n.SPRId&& s.NetClientDate != null).ToList();//获取跟踪的数据（没有跟踪时间的是初始数据即不属于跟踪数据）
+            ViewBag.Number = trackdata.Count();
+            ViewBag.ncrlist = trackdata;
             return View(n);
         }
         [HttpPost]
@@ -189,6 +232,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
+                var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
+
+                string eid = UserName.EmpNumber;
+                ncr.EmpId = eid;
+                ncr.NetClientDate = DateTime.Now;
                 ncrmanage.Update(ncr);
                 AjaxResultxx = ncrmanage.Success();
             }
@@ -206,7 +254,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             try
             {
                 var emp = ncrinfo.GetEntity(id);
-               
+
                 ncrinfo.Update(emp);
                 AjaxResultxx = ncrinfo.Success();
             }
