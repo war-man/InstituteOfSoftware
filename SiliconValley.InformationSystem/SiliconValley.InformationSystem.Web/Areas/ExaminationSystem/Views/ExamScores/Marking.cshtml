@@ -774,7 +774,7 @@
 
                 $(".scoreitem").each(function (index, elem) {
 
-                    score += parseInt($(elem).val());
+                    score += parseFloat($(elem).val());
 
                 });
                 $("#answerScores").val(score);
@@ -790,7 +790,7 @@
                 //获取到当前最大的值
                 var max = $(this).attr("max");
 
-                if (parseInt(cuscore) > parseInt(max)) {
+                if (parseFloat(cuscore) > parseFloat(max)) {
 
                     $(this).val(0);
                 }

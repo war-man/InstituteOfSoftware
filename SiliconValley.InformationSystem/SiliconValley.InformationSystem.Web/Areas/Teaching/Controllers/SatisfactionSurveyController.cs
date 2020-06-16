@@ -1764,9 +1764,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             //提供 JoinSurveyStudents
 
-           var studentlist = db_survey.JoinSurveyStudents(surveyResultID);
+           var survey = db_survey.AllsatisficingResults().Where(d => d.ID == surveyResultID).FirstOrDefault();
 
-            ViewBag.SurveyConfigId = surveyResultID;
+           var studentlist = db_survey.JoinSurveyStudents((int)survey.SatisficingConfig);
+
+            ViewBag.SurveyConfigId = survey.SatisficingConfig;
 
             ViewBag.studentlist = studentlist;
 

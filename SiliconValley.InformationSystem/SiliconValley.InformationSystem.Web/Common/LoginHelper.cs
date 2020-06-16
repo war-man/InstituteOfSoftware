@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.IO;
 
+
 namespace SiliconValley.InformationSystem.Web.Common
 {
     public class LoginHelper
