@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             List<StudentInformation> resullist = new List<StudentInformation>();
             foreach (var item in stuid)
             {
-                var studentobj = student.GetEntity(item.StudentNumber);
+                var studentobj = student.GetList().Where(a => a.StudentNumber == item.StudentNumber).FirstOrDefault();
 
                 if (studentobj != null)
                     resullist.Add(studentobj);

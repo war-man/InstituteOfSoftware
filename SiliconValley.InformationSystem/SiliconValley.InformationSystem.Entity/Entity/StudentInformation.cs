@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 身份证号
         /// </summary>
-      
+     
         public string identitydocument { get; set; }
         /// <summary>
         /// 电话号码
