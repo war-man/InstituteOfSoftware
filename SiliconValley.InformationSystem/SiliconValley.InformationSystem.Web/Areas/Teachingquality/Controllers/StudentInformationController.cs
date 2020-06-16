@@ -843,7 +843,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             List<StudentInformation> students = new List<StudentInformation>();
             var classname = classschedu.GetList().Where(a => a.ClassNumber == id).FirstOrDefault();
-           var student= Stuclass.ClassStudent(classname.id).Where(a=>a.InsitDate>Convert.ToDateTime("2020-06-07")).ToList();
+            //var student = Stuclass.ClassStudent(classname.id);
             var da = "";
             if (ye==true)
             {
@@ -856,26 +856,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             var n = da.Substring(0, 2);
             var y = da.Substring(2, 2);
             var r = da.Substring(4, 2);
-            foreach (var item in student)
+            //foreach (var item in student)
+            //{
+            //  item.StudentNumber=n+y+  item.StudentNumber.Substring(4, item.StudentNumber.Length - 4);
+            //    item.InsitDate = Convert.ToDateTime("19" + n + "-" + y + "-" + r);
+            //    students.Add(item);
+            //}
+            //    dbtext.Update(students);
+
+
+            var x = Stuclass.GetList().Where(a => a.ID_ClassName == classname.id).ToList();
+            foreach (var item in x)
             {
-              item.StudentNumber=n+y+  item.StudentNumber.Substring(4, item.StudentNumber.Length - 4);
-                item.InsitDate = Convert.ToDateTime("20" + n + "-" + y + "-" + r);
-                students.Add(item);
-            }
-                dbtext.Update(students);
-
-
-                //var x = Stuclass.GetList().Where(a => a.ID_ClassName == classname.id).ToList();
-                //foreach (var item in x)
-                //{
-                //    var stuid = item.StudentID;
-                //    var stu = item.StudentID.Substring(4, stuid.Length - 4);
-                //    item.StudentID = n + y + stu;
-
-                //}
-                //Stuclass.Update(x);
+                var stuid = item.StudentID;
+                var stu = item.StudentID.Substring(4, stuid.Length - 4);
+                item.StudentID = n + y + stu;
 
             }
+            Stuclass.Update(x);
+
+        }
         /// <summary>
         /// 修改班级学号
         /// </summary>
@@ -938,14 +938,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             return null;
         }
-
+        /// <summary>
+        /// 修改班级学号及学生学号
+        /// </summary>
+        /// <returns></returns>
         public ActionResult StudentClassID()
         {
           var x=  classschedu.GetList();
             foreach (var item in x)
             {
                 bool ye = item.grade_Id == 1 ? true : false;
-                Classstu(item.ClassNumber, ye);
+                StudentXueGai(item.ClassNumber, ye);
 
             }
             return null;
@@ -1199,6 +1202,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 scheduleForTrainees.Add(item);
             }
             Stuclass.Update(scheduleForTrainees);
+            return null;
+        }
+
+        public ActionResult text3()
+        {
+            List<ScheduleForTrainees> scheduleForTrainees = new List<ScheduleForTrainees>();
+            List<ScheduleForTrainees> s2 = new List<ScheduleForTrainees>();
+            var classstu = Stuclass.GetList();
+            foreach (var item in classstu)
+            {
+               
+                foreach (var item1 in scheduleForTrainees)
+                {
+                    if (item.StudentID==item1.StudentID)
+                    {
+                        s2.Add(item);
+                    }
+                }
+                scheduleForTrainees.Add(item);
+            }
+            return null;
+        }
+
+        public ActionResult text4()
+        {
+            List<StudentInformation> studentInformation = new List<StudentInformation>();
+            List<StudentInformation> s2 = new List<StudentInformation>();
+            var x=   dbtext.GetList();
+            foreach (var item in x)
+            {
+              var st=  Stuclass.GetList().Where(a => a.StudentID == item.StudentNumber).FirstOrDefault();
+                if (st==null)
+                {
+                    studentInformation.Add(item);
+                }
+            }
             return null;
         }
        

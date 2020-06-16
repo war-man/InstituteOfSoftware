@@ -1324,11 +1324,6 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }
             return obj1;
         }
-
-       
-
-
-
         List<Tuitionrefund> tuitionrefundsz = new List<Tuitionrefund>();
         public object TuitionreHomes(List<TuitionrefundView> tuitionrefunds)
         {
@@ -1414,7 +1409,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 }
             } 
         }
-          /// <summary>
+        /// <summary>
           /// 递归循环拿到退费名目
           /// </summary>
           /// <param name="studentFeeRecords"></param>
