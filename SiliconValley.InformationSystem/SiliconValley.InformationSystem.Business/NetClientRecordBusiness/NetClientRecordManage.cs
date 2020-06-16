@@ -24,7 +24,7 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
             try
             {
                 ncr.SPRId = id;
-                ncr.EmpId = sdkmanage.GetEntity(id).EmployeesInfo_Id;//跟踪回访人首先默认为备案人，有不同则跟踪信息表修改
+               /* ncr.EmpId = sdkmanage.GetEntity(id).EmployeesInfo_Id;*///跟踪回访人首先默认为备案人，有不同则跟踪信息表修改
                 ncr.MarketTeaId = null;
                 ncr.IsDel = false;
                 this.Insert(ncr);
@@ -51,7 +51,7 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
                 {
                     NetClientRecord ncr = new NetClientRecord();
                     ncr.SPRId = item.Id;
-                    ncr.EmpId = item.EmployeesInfo_Id;//跟踪回访人首先默认为备案人，有不同则跟踪信息表修改
+                   /* ncr.EmpId = item.EmployeesInfo_Id;*///跟踪回访人首先默认为备案人，有不同则跟踪信息表修改
                     ncr.MarketTeaId = null;
                     ncr.IsDel = false;
                     this.Insert(ncr);
@@ -84,8 +84,8 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
             ncr.Id = item.Id;
             ncr.SPRId = item.SPRId;
             ncr.EmpId = item.EmpId;
-            ncr.Channelemp = channelemp==null?null: channelemp.EmpName;
-            ncr.Empname = emp.EmpName;
+            ncr.Channelemp = channelemp==null ? null: channelemp.EmpName;
+            ncr.Empname = emp==null?null: emp.EmpName;
             ncr.StuName = sdk.StuName;
             ncr.StuSex = sdk.StuSex;
             ncr.StuPhone = sdk.Stuphone;
