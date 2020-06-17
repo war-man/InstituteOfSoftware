@@ -31,7 +31,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 内训次数
         /// </summary>
-        public int InternalTraining_Count { get ; set; }
+        public List<grand_number> InternalTraining_Count { get ; set; }
 
         /// <summary>
         /// 职业素养课，语数外 体育 次数

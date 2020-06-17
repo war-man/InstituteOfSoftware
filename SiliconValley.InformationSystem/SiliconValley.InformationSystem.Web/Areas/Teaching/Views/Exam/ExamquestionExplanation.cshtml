@@ -40,10 +40,10 @@
                 <i style="font-size:20px;" class="icon layui-icon-search"></i>
 
             </button>
-            
+
             <button style="width:150px;height:40px; text-align:center;" id="download" class="layui-btn layui-btn-radius layui-btn-primary">
                 下载机试题
-               
+
 
             </button>
         </div>
@@ -353,6 +353,7 @@
                 });
 
             }
+
             function downloadquestion(examtype, level, kecheng = "0") {
 
                 window.open("/ExaminationSystem/StudentExamSys/MockComputerquestion?examType=" + examtype + "&kecheng=" + kecheng + "&level=" + level);
@@ -419,7 +420,6 @@
 
             });
 
-
             $(document).off("click", ".option").on("click", ".option", function () {
 
                 $(this).find("input").click();
@@ -461,24 +461,23 @@
             $(document).off("click", "#search").on("click", "#search", function () {
 
 
-                 level = $("#level").val();
-                 kecheng = "0";
+                level = $("#level").val();
+                kecheng = "0";
 
                 if (type == "2") {
                     kecheng = $("#course").val();
                 }
 
-                 examtype = $("#examtype").val();
+                examtype = $("#examtype").val();
 
                 $("#choicequestionlist").html("");
                 $("#answerquestionlist").html("");
                 loadchoicequestiondata(examtype, level, kecheng);
                 loadanswerquestiondata(examtype, level, kecheng);
 
-                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                parent.layer.close(index); //再执行关闭   
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
             });
-
 
         });
 

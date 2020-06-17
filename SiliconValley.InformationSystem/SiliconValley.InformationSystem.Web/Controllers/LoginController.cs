@@ -67,11 +67,13 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                     {
                         err.Msg = "用户名或密码错误";
                     }
+
                 }
 
                 //手机短信验证码登录
                 if (loginType == "phone")
                 {
+
 
                     EmployeesInfo emp = empmanage.GetList().Where(e => e.Phone == mobile).FirstOrDefault();
 

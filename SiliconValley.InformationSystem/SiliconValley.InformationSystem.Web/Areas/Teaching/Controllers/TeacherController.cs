@@ -1353,6 +1353,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpGet]
         public ActionResult AddProfessionala()
         {
+            var gradlist = db_grand.AllGrand().Select(d => new SelectListItem { Text = d.GrandName, Value = d.Id.ToString() });
+
+            ViewBag.grandlist = gradlist;
+
             return View();
         }
         //专业老师培训业务类

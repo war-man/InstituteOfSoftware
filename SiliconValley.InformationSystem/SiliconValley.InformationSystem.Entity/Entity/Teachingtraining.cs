@@ -42,5 +42,11 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
         public Nullable<System.DateTime> AddTime { get; set; }
 
+        /// <summary>
+        /// 阶段
+        /// </summary>
+        public int Grand { get; set; }
+
+
     }
 }
