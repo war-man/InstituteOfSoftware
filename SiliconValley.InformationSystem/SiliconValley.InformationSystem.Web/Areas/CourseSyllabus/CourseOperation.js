@@ -90,7 +90,7 @@ layui.use(['table', 'layer','form'], function () {
 
                 layer.open({
                     type: 2,
-                    area: ["900px", "420px"],
+                    area: ["900px", "520px"],
                     skin: "demo-class2",
                     shade: [0],
                     title: "新增课程",
