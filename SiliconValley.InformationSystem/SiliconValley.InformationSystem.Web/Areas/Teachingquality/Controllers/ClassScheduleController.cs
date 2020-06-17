@@ -97,6 +97,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //获取数据
         public ActionResult GetDate(int page ,int limit,string ClassNumber,string Major_Id,string grade_Id,string BaseDataEnum_Id,string ClassstatusID)
         {
+            BaseBusiness<ScheduleForTraineesview> ScheduleForTraineesviewBusiness = new BaseBusiness<ScheduleForTraineesview>();
             try
             {
                 List<ClassSchedule> list = new List<ClassSchedule>();
@@ -202,7 +203,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     //  HeadmasterName = classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault() != null?"班级已升学或毕业":dbtext.HeadSraffFine(a.id).EmployeeId==null?"未设置老师": dbtext.HeadSraffFine(a.id).EmpName,
                     //Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
                     IsBool = classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault() == null ? "正常" : classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault().TypeName,
-                    stuclasss = Stuclass.ClassStudent(a.id).Count()
+                    stuclasss = ScheduleForTraineesviewBusiness.GetListBySql<ScheduleForTraineesview>("select * from ScheduleForTraineesview where Classid=" + a.id).Count()
               }).OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
            
             //  var x = dbtext.GetList();
@@ -966,6 +967,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
             
+        }
+
+        public ActionResult EmpHearClass()
+        {
+            var EmpNumber = Base_UserBusiness.GetCurrentUser().EmpNumber;
+            var id = Hadmst.GetList().Where(a => a.informatiees_Id == EmpNumber && a.IsDelete == false).FirstOrDefault().ID;
+            var x = Hadmst.EmpClass(id, false).Select(a=>new {
+                ClassNumber=a.ClassNumber+"(" +Grandcontext.GetEntity(a.grade_Id).GrandName+")",
+                a.id
+            }).Distinct().ToList();
+           
+         
+            return Json(x,JsonRequestBehavior.AllowGet);
         }
     }
 }
