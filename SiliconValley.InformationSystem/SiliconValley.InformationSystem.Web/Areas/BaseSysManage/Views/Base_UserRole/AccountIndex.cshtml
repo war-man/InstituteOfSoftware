@@ -6,60 +6,106 @@
 
 
 @section style{
-    
+
     <style>
         #mywarp {
+            width: 100%;
+        }
+
+        .moreBtnul li {
+            margin-top: 15px;
+            font-size: 14px;
+            padding-left: 20px;
+            cursor: pointer;
+        }
+
+            .moreBtnul li:hover {
+                border-bottom: 1px solid #cfc0c0;
+                color: red;
+            }
+
+        #innputPasswd {
+            border-top: 0px solid white;
+            border-left: 0px solid white;
+            border-right: 0px solid white;
+
             width:100%;
-            
         }
     </style>
-    
-    }
 
-    <div id="mywarp">
+}
 
-        <div id="searchdiv">
-            <form class="layui-form">
-                <div class="layui-form-item">
+<div id="mywarp">
+
+    <div id="searchdiv">
+        <form class="layui-form">
+            <div class="layui-form-item">
 
 
-                    <div class="layui-inline" >
-                        <label class="layui-form-label">开关</label>
-                        <div class="layui-input-inline" style="width:100px;">
-                            <input type="checkbox" name="close" lay-skin="switch" lay-text="员工编号|员工名称">
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        <label class="layui-form-label" style="width:100px;">关键字：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="searchcontent"  autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        
-                        <div class="layui-input-inline">
-                            <button type="button" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="search">查询</button>
-                        </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">开关</label>
+                    <div class="layui-input-inline" style="width:100px;">
+                        <input type="checkbox" name="close" lay-skin="switch" lay-text="员工编号|员工名称">
                     </div>
                 </div>
-            </form>
-        </div>
 
-        <table class="layui-hide" id="accaountTable" lay-filter="accaountTable"></table>
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="createAccount"><i class="layui-icon layui-icon-add-1"></i>创建账号</button>
-                <button class="layui-btn layui-btn-sm" lay-event="roleManage"><i class="layui-icon layui-icon-group"></i>角色管理</button>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:100px;">关键字：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="searchcontent" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
 
+                <div class="layui-inline">
+
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="search">查询</button>
+                    </div>
+                </div>
             </div>
-        </script>
-
+        </form>
     </div>
 
+    <table class="layui-hide" id="accaountTable" lay-filter="accaountTable"></table>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="createAccount"><i class="layui-icon layui-icon-add-1"></i>创建账号</button>
+            <button class="layui-btn layui-btn-sm" lay-event="roleManage"><i class="layui-icon layui-icon-group"></i>角色管理</button>
+            <button class="layui-btn layui-btn-sm" lay-event="modifyPasswd"><i class="layui-icon layui-icon-senior"></i>设置密码</button>
+        </div>
+    </script>
+
+</div>
+
+<script type="text/template" id="moreTemplate">
+
+    <ul class="moreBtnul" style="list-style-type:none;">
+        <li class="modifyPasswd">修改密码</li>
+        <li class="resetPasswd">重置密码</li>
+    </ul>
+
+</script>
+
+<script type="text/template" id="inputPassTemplate">
+
+    <hr />
+    <form class="layui-form">
+        <div>
+          
+            <input type="text" name="passwd" maxlength="6" id="innputPasswd" placeholder="新密码" >
+
+        </div>
+
+        <div style="text-align:center; margin-top:15px;">
+            <button type="button" id="commitPasswd" class="layui-btn layui-btn-primary">确定</button>
+        </div>
+    </form>
+
+</script>
+
+
 @section script{
-        
+
 
     <script>
 
@@ -86,10 +132,13 @@
         }
 
         layui.use(['table','layer','form'], function(){
-        
+
             var table = layui.table;
             var form = layui.form;
             var layer = layui.layer;
+
+            var TOPINDEX = undefined;
+            var USER = undefined;
 
             table.render({
                 elem: '#accaountTable'
@@ -104,8 +153,8 @@
                     , {
                         field: 'EmpName', title: '所属员工', width: "30%", templet: '<div>{{d.Emp.EmpName}}</div>' }
                     , { field: 'EmployeeId', title: '员工编号', width: "30%", templet: '<div>{{d.Emp.EmployeeId}}</div>' }
-                  
-                  
+
+
                 ]]
                 , page: true
             });
@@ -122,7 +171,7 @@
                           state: data.field.close,
                           empnumber: data.field.searchcontent,
 
-                      } 
+                      }
                   });
 
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
@@ -151,7 +200,7 @@
 
                             }
                         });
-                        
+
                         break;
                     case 'roleManage':
                         var data = checkStatus.data;
@@ -160,15 +209,13 @@
 
                             layer.msg('请选择账号！', { icon: 2 }, function () {
 
-                               
+
                             });
 
                             return;
 
                         }
-
                         //创建账号
-
                         layer.open({
 
                             type: 2,
@@ -184,11 +231,128 @@
                         });
 
                         break;
+
+                    case 'modifyPasswd':
+                        var data = checkStatus.data;
+
+                        if (data.length == 0) {
+
+                            layer.msg('请选择账号！', { icon: 2 }, function () {
+
+
+                            });
+                            return;
+                        }
+                        USER = checkStatus.data[0].UserId;
+                      
+                        TOPINDEX = layer.open({
+
+                            type: 1,
+                            area: ['300px', '200px'],
+                            title: " ",
+                            content: $("#moreTemplate").html(),
+                           
+                        });
+
+                        break;
                 };
             });
 
+            //重置密码
+            $(document).off("click", ".resetPasswd").on("click", ".resetPasswd", function () {
+                
+                layer.close(TOPINDEX);
+
+                if (USER == undefined || USER.length == 0) {
+
+                    return;
+                }
+
+                var loadindex = layer.load(1);
+
+                $.post("/BaseSysManage/Base_UserRole/ResetPasswd", { userid: USER }, function (result) {
+
+                    layer.close(loadindex);
+
+                    if (result.ErrorCode == 200) {
+
+                        layer.msg("密码已重置!", { icon: 1 });
+                    }
+                    else {
+                        layer.msg("服务器异常!!", { icon: 2 });
+                    }
+
+
+
+                    USER = undefined;
+
+                });
+
+
+            });
+
+            //修改密码
+            $(document).off("click", ".modifyPasswd").on("click", ".modifyPasswd", function () {
+
+                layer.close(TOPINDEX);
+
+                if (USER == undefined || USER.length == 0) {
+
+                    return;
+                }
+
+                TOPINDEX = layer.open({
+
+                    type: 1,
+                    area: ['300px', '200px'],
+                    title: "修改密码",
+                    content: $("#inputPassTemplate").html(),
+                    end: function () {
+                        USER = undefined;
+                    }
+                    
+                });
+
+            });
+
+            
+            $(document).off("click", "#commitPasswd").on("click", "#commitPasswd", function () {
+
+                var loadindex = layer.load(1);
+
+                //获取密码
+                var inputPasswd = $("#innputPasswd").val();
+
+                var reg = /^[0-9a-zA-Z]*$/g; 
+
+                var Is = reg.test(inputPasswd);
+                
+                if (Is != true || inputPasswd.length != 6) {
+
+                    layer.msg("密码不能出现中文， 长度为6");
+
+                    return;
+                }
+
+                $.post('/BaseSysManage/Base_UserRole/UpdatePasswd', { userid: USER, passwd: inputPasswd }, function (result) {
+
+                    layer.close(loadindex);
+
+                    layer.close(TOPINDEX);
+
+                    if (result.ErrorCode == 200) {
+
+                        layer.msg("密码已修改!", { icon: 1 });
+                    }
+                    else {
+                        layer.msg("服务器异常!!", { icon: 2 });
+                    }
+
+                });
+
+            });
         });
 
 
     </script>
-    }
+}
