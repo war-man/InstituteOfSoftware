@@ -967,7 +967,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 {
                     da = item.ClassNumber.Substring(0, item.ClassNumber.Length - 1);
                 }
-                else
+                else if(item.grade_Id == 1002)
                 {
                     da = item.ClassNumber.Substring(2, 6);
                 }

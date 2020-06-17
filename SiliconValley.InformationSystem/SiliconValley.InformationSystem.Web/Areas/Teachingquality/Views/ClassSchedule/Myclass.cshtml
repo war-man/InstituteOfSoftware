@@ -88,6 +88,18 @@
 <div style="width:79%;float:left;" id="classid">
 
 </div>
+<div style="width:20%;">
+    <div class="layui-collapse" lay-filter="test">
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">带班历史</h2>
+            <div class="layui-colla-content">
+              
+            </div>
+        </div>
+       
+    </div>
+  
+</div>
 
 
 <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
@@ -171,11 +183,34 @@
     }
     date();
 
+
     $("body").on("click", ".div1", function (e) {
         e.stopPropagation();
         window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
     })
+    layui.use(['element', 'layer'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
 
+        $.post("/Teachingquality/ClassSchedule/EmpHearClass", function (data) {
+        
+            for (var i = 0; i < data.length; i++) {
+                if (i == 0) {
+                    $(".layui-colla-content").append($('<button type="button" class="layui-btn layui-btn-warm classid" value=' + data[i].id + ' style="margin-top:10px;margin-left:10px;">' + data[i].ClassNumber + '</button>'));
+                } else {
+                    $(".layui-colla-content").append($('<button type="button" class="layui-btn layui-btn-warm classid" value=' + data[i].id + ' style="margin-top:10px;">' + data[i].ClassNumber + '</button>'));
+                }
+
+            }
+         
+        })
+        $("body").on("click", ".classid",function () {
+            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $(this).val();
+         
+        })
+
+       
+    });
     
 </script>
 
