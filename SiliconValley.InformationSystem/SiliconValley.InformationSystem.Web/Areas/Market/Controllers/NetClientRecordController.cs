@@ -95,18 +95,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// 通过员工编号获取员工
-        /// </summary>
-        /// <param name="empid"></param>
-        /// <returns></returns>
-        //public EmployeesInfo GetNetConsultTea(string empid) {
-        //    EmployeesInfoManage empmanage = new EmployeesInfoManage();
-        //   var NetConsultTeaobj = empmanage.GetEntity(empid);
-        //    return NetConsultTeaobj;
-        //    }
-
-
         //添加网咨学员信息
         public ActionResult AddNetConsultStuinfo(int id)
         {
@@ -120,32 +108,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult AddNetConsultStuinfo(NetClientRecord ncr)
         {
             NetClientRecordManage nmanage = new NetClientRecordManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
+            string eid = UserName.EmpNumber;
             try
             {
-                var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
-
-                string eid = UserName.EmpNumber;
                 var oldncr = nmanage.GetEntity(ncr.Id);
                 NetClientRecord ncrnew = new NetClientRecord();
                 ncrnew.SPRId = oldncr.SPRId;
                 ncrnew.EmpId = eid;
                 ncrnew.NetClientDate = DateTime.Now;
-                nmanage.Insert(ncr);
+                ncrnew.IsDel = oldncr.IsDel;
+                ncrnew.Grade = ncr.Grade;
+                ncrnew.CallBackCase = ncr.CallBackCase;
+                nmanage.Insert(ncrnew);
                 AjaxResultxx = nmanage.Success();
-                if (AjaxResultxx.Success)
-                {
-                    var ncrlist = nmanage.GetList().Where(s => s.SPRId == oldncr.SPRId).ToList();
-                    foreach (var item in ncrlist)
-                    {
-                        item.EmpId = eid;
-                        nmanage.Update(item);
-                    }
-                }
+            //    BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加了一条回访学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
+               
             }
             catch (Exception ex)
             {
                 AjaxResultxx = nmanage.Error(ex.Message);
+              //  BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加回访数据出错:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
@@ -204,10 +190,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 code = 0,
                 msg = "",
-                count = newlist.Count(),
+                count = cslist.Count(),
                 data = newlist
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+     
+        /// <summary>
+        /// 获取回访信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetCallBackInfoByNid(int id) {
+            NetClientRecordManage ncrmanage = new NetClientRecordManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            ChannelStaffBusiness channel = new ChannelStaffBusiness();
+            var AjaxResultxx = new AjaxResult();
+            if (!string.IsNullOrEmpty(id.ToString()))
+            {
+                var ncr = ncrmanage.GetNcrviewById(id);
+                AjaxResultxx.Data = ncr;
+                AjaxResultxx.Success = true;
+            }
+            else
+            {
+                AjaxResultxx.Success = false;
+                AjaxResultxx.Data = "";
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -218,27 +227,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult EditCallbackInfo(int Id)
         {
             NetClientRecordManage ncr = new NetClientRecordManage();
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            List<NetClientRecordView> ncrviewlist = new List<NetClientRecordView>();
             var n = ncr.GetEntity(Id);
             ViewBag.Id = Id;
             var trackdata = ncr.GetList().Where(s =>s.SPRId==n.SPRId&& s.NetClientDate != null).ToList();//获取跟踪的数据（没有跟踪时间的是初始数据即不属于跟踪数据）
-            ViewBag.Number = trackdata.Count();
-            ViewBag.ncrlist = trackdata;
-            return View(n);
+            foreach (var item in trackdata)
+            {
+                var ncrview = ncr.GetNcrviewById(item.Id);
+                ncrviewlist.Add(ncrview);
+            }
+            var nview = ncr.GetNcrviewById(Id);
+            ViewBag.Number = ncrviewlist.Count();
+            var newlist = from e in trackdata
+                          select new
+                          {
+                              #region 获取属性值 
+                              e.Id,
+                              e.EmpId,
+                              empname = empinfo.GetInfoByEmpID(e.EmpId).EmpName,
+                              e.NetClientDate,
+                              e.MarketTeaId,
+                              e.Grade,
+                              e.IsDel
+                              #endregion
+                          };
+
+            ViewBag.ncrlist = ncrviewlist;
+            return View(nview);
         }
         [HttpPost]
-        public ActionResult EditCallbackInfo(NetClientRecord ncr)
+        public ActionResult EditCallbackInfo()
         {
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
+            int fid=Convert.ToInt32(Request.Form["F_Id"]);
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
+            string eid = UserName.EmpNumber;
+            NetClientRecord n = new NetClientRecord();
             try
             {
-                var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
-
-                string eid = UserName.EmpNumber;
-                ncr.EmpId = eid;
-                ncr.NetClientDate = DateTime.Now;
-                ncrmanage.Update(ncr);
+                n.EmpId = eid;
+                n.NetClientDate = DateTime.Now;
+                ncrmanage.Update(n);
                 AjaxResultxx = ncrmanage.Success();
+            
             }
             catch (Exception ex)
             {

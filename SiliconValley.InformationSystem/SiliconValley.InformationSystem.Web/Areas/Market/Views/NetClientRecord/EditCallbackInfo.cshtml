@@ -4,8 +4,8 @@
 }
 
 <!DOCTYPE html>
-@model SiliconValley.InformationSystem.Entity.MyEntity.NetClientRecord
-@using SiliconValley.InformationSystem.Entity.MyEntity;
+@model SiliconValley.InformationSystem.Entity.ViewEntity.NetClientRecordView
+@using SiliconValley.InformationSystem.Entity.ViewEntity
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -35,6 +35,18 @@
 
         .linu {
             height: 120px;
+        }
+
+        .LableCss1 {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
         }
     </style>
 
@@ -75,46 +87,41 @@
 
                     </div>
                 </div>
-                    <div class="layui-row layui-form-item">
-                    
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-row layui-form-item">
 
-                            <label class="layui-form-label">回访次数:</label>
-                            <div class="layui-input-block">
-                                <input type="text" class="layui-input" readonly="readonly" style="border:0px" value="@ViewBag.Number" />
-                            </div>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <input type="hidden" id="MarketTeaId" name="MarketTeaId" class="layui-input" />
-                            <label class="layui-form-label" style="margin-left:-60px;width:140px;">市场对接老师:</label>
-                            <div class="layui-input-block">
-                                <input type="text" id="channeltea" name="channeltea" class="layui-input" style="width:250px;" readonly="readonly" />
-                                <i class="layui-icon layui-icon-search" id="iconbtn" style="font-size: 25px; color:lightseagreen;float:left;margin:-28px 250px;"></i>
-                            </div>
-                        </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
+                        <label class="layui-form-label">回访次数:</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" readonly="readonly" style="border:0px" value="@ViewBag.Number" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <input type="hidden" id="MarketTeaId" name="MarketTeaId" class="layui-input" />
+                        <label class="layui-form-label" style="margin-left:-60px;width:140px;">市场对接老师:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="Channelemp" name="Channelemp" class="layui-input" style="width:250px;" readonly="readonly" />
+                            <i class="layui-icon layui-icon-search" id="iconbtn" style="font-size: 25px; color:lightseagreen;float:left;margin:-28px 250px;"></i>
+                        </div>
                     </div>
 
                 </div>
 
-</form>
-        <div class="layui-tab">
-            <ul class="layui-tab-title">
+            </div>
+
+        </form>
+        <div class="layui-tab" lay-filter="test">
+            <ul class="layui-tab-title" >
                 @{
-                    List<NetClientRecord> list = ViewBag.ncrlist as List<NetClientRecord>;
+                    List<NetClientRecordView> list = (ViewBag.ncrlist) as List<NetClientRecordView>;
                     int i = 1;
                     if (list.Count > 0)
                     {
                         foreach (var item in list)
                         {
-                            //if (i == 1)
-                            //{
-                            <li id=@i class="layui-this">第<span>@i</span>次跟踪</li>
-                            //}
-                            //else
-                            //{
-                            // <li id="@item.Id">第<span>@i</span>次跟踪</li>
-                            //}
+                 
+                            <li id=@item.Id class="layui-this">第<span>@i</span>次跟踪</li>
+                 
                             i++;
                         }
                     }
@@ -133,6 +140,15 @@
                                 <div class="layui-row layui-form-item">
                                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                                         <input type="hidden" id="F_Id" name="F_Id" value="@list[0].Id" />
+                                        <input type="hidden" id="EmpId" name="EmpId" value="@list[0].EmpId" />
+                                        <label class="layui-form-label">回访人:</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" id="Empname" name="Empname" disabled="disabled" value="@list[0].Empname" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-form-item">
+                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                                         <label class="layui-form-label">跟踪日期:</label>
                                         <div class="layui-input-block">
                                             <input class="layui-input" id="NetClientDate" name="NetClientDate" disabled="disabled" value="@list[0].NetClientDate" />
@@ -143,39 +159,7 @@
                                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                                         <label class="LableCss1">学生等级:</label>
                                         <div class="layui-input-block">
-                                            <select name="Grade" id="Grade">
-                                                @{
-                                                    if (list[0].Grade.Contains("A"))
-                                                    {
-                                                        <option value="A" selected="selected">A</option>
-                                                        <option value="B">B</option>
-                                                        <option value="C">C</option>
-                                                        <option value="D">D</option>
-                                                    }
-                                                    else if (list[0].Grade.Contains("B"))
-                                                    {
-                                                        <option value="A">A</option>
-                                                        <option value="B" selected="selected">B</option>
-                                                        <option value="C">C</option>
-                                                        <option value="D">D</option>
-                                                    }
-                                                    else if (list[0].Grade.Contains("C"))
-                                                    {
-                                                        <option value="A">A</option>
-                                                        <option value="B">B</option>
-                                                        <option value="C" selected="selected">C</option>
-                                                        <option value="D">D</option>
-                                                    }
-                                                    else if (list[0].Grade.Contains("D"))
-                                                    {
-                                                        <option value="A">A</option>
-                                                        <option value="B">B</option>
-                                                        <option value="C">C</option>
-                                                        <option value="D" selected="selected">D</option>
-                                                    }
-                                                }
-                                            </select>
-
+                                            <input class="layui-input" id="Grade" name="Grade" disabled="disabled" value="@list[0].Grade" />
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +167,7 @@
                                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                                         <label class="layui-form-label">跟踪情况:</label>
                                         <div class="layui-input-block">
-                                            <textarea class="layui-input TextAreCss1" id="My_TailAfterSituation" name="My_TailAfterSituation">
+                                            <textarea class="layui-input linu" id="CallBackCase" name="CallBackCase">
                                                          @list[0].CallBackCase 
                                                     </textarea>
                                         </div>
@@ -223,43 +207,54 @@
             $.get("/Market/NetClientRecord/GetCallbackInfoById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
+                    changeDateTimeFormat($("#NetClientDate").val());
                     form.val("formtest", data);
 
                 });
-            })
+            });
+
         }
 
+        //返回选择的"市场对接老师"对象
         function GetEmpData(Itemnames) {
             $("#MarketTeaId").val(Itemnames.empid);
-            $("#channeltea").val(Itemnames.empname);
+            $("#Channelemp").val(Itemnames.empname);
             console.log("返回的：" + Itemnames.empid + "," + Itemnames.empname);
             console.log("市场老师编号：" + $("#MarketTeaId").val());
-            console.log("市场老师名称：" + $("#channeltea").val());
-         
+            console.log("市场老师名称：" + $("#Channelemp").val());
+
         }
 
-        layui.use(['form', 'layedit', 'laydate'], function () {
+        layui.use(['form', 'layedit', 'laydate','element'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
-                , laydate = layui.laydate;
+                , laydate = layui.laydate
+                , element = layui.element;
 
-            //市场对接老师选择
+            //"市场对接老师"选择
             $("#iconbtn").click(function () {
                 console.log("图标点击");
-                    layer.open({
-                        type: 2
-                        , area: ["500px", "400px"]
-                        , title: "选择员工"
-                        , content: '/Market/NetClientRecord/SelectChannelemp' 
-                        , anim: 2
-                    });
+                layer.open({
+                    type: 2
+                    , area: ["500px", "400px"]
+                    , title: "选择员工"
+                    , content: '/Market/NetClientRecord/SelectChannelemp'
+                    , anim: 2
+                });
             });
 
             //日期验证
             laydate.render({
                 elem: '#NetClientDate',
             });
+
+            element.on('tab(test)', function (data) {
+                console.log(this); //当前Tab标题所在的原始DOM元素
+                console.log(data.index); //得到当前Tab的所在下标
+                console.log(data.elem); //得到当前的Tab大容器
+            });
+
 
             //添加提交
             form.on('submit(demo1)', function (data) {
@@ -287,6 +282,60 @@
             });
 
         });
+
+        //给ul中的li注册点击事件
+        $(".layui-tab-title li").click(function () {
+            var fid = $(this).attr("id");
+            $("#F_Id").val(fid);
+            console.log("跟踪id:" + fid);
+            $.ajax({
+                url: '/Market/NetClientRecord/GetCallBackInfoByNid/' + fid,
+                type: "GET",
+                success: function (SucData) {
+                    console.log("hahaha");
+                    if (SucData.Success) {
+                        layui.use('form', function () {
+                            var form = layui.form;
+                            console.log("回访人:" + SucData.Data.Empname);
+                           
+                            $("#Empname").val(SucData.Data.Empname);
+                            $("#Grade").val(SucData.Data.Grade);
+                            $("#CallBackCase").val(SucData.Data.CallBackCase);
+                            $("#NetClientDate").val(changeDateTimeFormat(SucData.Data.NetClientDate));
+                            form.render();
+                        })
+
+                    } else {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('系统操作有误，请重试！！！', { icon: 2 });
+                        });
+                    }
+                }
+            });
+        });
+        //时间格式转换
+        function changeDateTimeFormat(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
+            } else {
+                return "";
+            }
+        }
     </script>
 </body>
 </html>
