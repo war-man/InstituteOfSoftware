@@ -326,26 +326,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 DateTime d2 = Convert.ToDateTime(EndDate);
                 list = list.Where(l => l.BeanDate <= d2).ToList();
             }
-            var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).Select(l=>new {
-                Id=l.Id,
-                StuName=l.StuName,
-                StuSex= l.StuSex,
+            var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).Select(l => new {
+                Id = l.Id,
+                StuName = l.StuName,
+                StuSex = l.StuSex,
                 Stuphone = l.Stuphone,
-                StuSchoolName=l.StuSchoolName,
-                StuEducational=l.StuEducational,
-                StuAddress=l.StuAddress,
-                stuinfomation=l.stuinfomation,
-                StatusName=l.StatusName,
-                StuisGoto=l.StuisGoto,
-                StuVisit=l.StuVisit,
-                empName=l.empName,
-                BeanDate=l.BeanDate,
-                StuEntering=l.StuEntering,
-                StatusTime=l.StatusTime,
-                RegionName=l.RegionName,
-                Reak=l.Reak,
-                Party=l.Party,
-                MarketType=l.MarketType,
+                StuSchoolName = l.StuSchoolName,
+                StuEducational = l.StuEducational,
+                StuAddress = l.StuAddress,
+                stuinfomation = l.stuinfomation,
+                StatusName = l.StatusName,
+                StuisGoto = l.StuisGoto,
+                StuVisit = l.StuVisit,
+                empName = l.empName,
+                BeanDate = l.BeanDate,
+                StuEntering = l.StuEntering,
+                StatusTime = l.StatusTime,
+                RegionName = l.RegionName,
+                Reak = l.Reak,
+                Party = l.Party,
+                MarketType = l.MarketType,
+                StuQQ = l.StuQQ,
                 CountBeanDate = CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
             }).ToList();
             var data = new {data= mydata, count=list.Count,code=0,msg=""};

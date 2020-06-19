@@ -8,6 +8,7 @@ using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.Consult_Business;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 
 namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
 {
@@ -18,6 +19,8 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
     {
        public static ConsultTeacherManeger Consult_entity = new ConsultTeacherManeger();
        public static ConsultManeger consult = new ConsultManeger();
+       public static StudentDataKeepAndRecordBusiness Studentrecond= new StudentDataKeepAndRecordBusiness();
+
        static FollwingInfoManeger follwing = new FollwingInfoManeger();
         /// <summary>
         /// 获取所有的咨询师，然后转化为员工集合

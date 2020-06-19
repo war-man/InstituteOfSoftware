@@ -21,10 +21,11 @@
             height: 15px;
             line-height: 15px;
         }
-    
-        .NoneCss{
-    display:none;
-    }
+
+        .NoneCss
+        {
+            display: none;
+        }
     </style>
 }
 <script type="text/html" id="toolbarDemo1">
@@ -73,7 +74,7 @@
     <a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>
 </script>
 <div class="layui-collapse" lay-accordion>
-    <input type="hidden" id="rr" value="@r"/>
+    <input type="hidden" id="rr" value="@r" />
     <div class="layui-colla-item">
         <h2 class="layui-colla-title">数据查询</h2>
         <div class="layui-colla-content">
@@ -143,7 +144,8 @@
                         <input name="S_intosysMan" id="S_intosysMan" class="inputCss1" />
                     </div>
                     <div class="layui-col-sm3 divCss3">
-                        <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:148px"><i class="layui-icon">&#xe615;</i> 查询</button>
+                        <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:108px"><i class="layui-icon">&#xe615;</i> 查询</button>
+                        <button type="button" class="layui-btn" style="margin-right:45px;width:108px" onclick="LoadTable()"><i class="layui-icon">&#xe63d;</i> 重新加载</button>
                     </div>
                 </div>
             </form>
@@ -159,15 +161,21 @@
         <div class="layui-row">
             @Html.DropDownList("Teacher", ViewBag.Teacher as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
         </div>
-         <div class="layui-row">
-             <div style="text-align:center;margin-top:100px">
-                 <button type="button" class="layui-btn" lay-submit="" lay-filter="ToIes">确定</button>
-             </div>           
-         </div>
-    </form>    
+        <div class="layui-row">
+            <div style="text-align:center;margin-top:100px">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="ToIes">确定</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="OutDateDiv" class="NoneCss" style="text-align:center">
+    <input type="text" class="layui-input" name="OutDate" id="OutDate" style="width:200px;margin-top:20px;display:inline-block" />
+
+    <button type="button" class="layui-btn" onclick="ChangeTime()">确定</button>
 </div>
 <script>
- 
+    var date = "";
     //转换时间的方法
     function TimeChange(newtime) {
         if (newtime == null)
@@ -191,7 +199,7 @@
     function LoadTable() {
         layui.use('table', function () {
             var table = layui.table;
-            table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData', where: { 'findNamevalue': null } });
+            table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
         });
 
     }
@@ -205,37 +213,10 @@
             });
         });
     }
-    //这个方法是用于当有姓名相同的就会显示与姓名相同的数据
-    function LoadTableSeache(name) {
-        layui.use('table', function () {
+    //模糊查询
+    function my_searchBtn() {
+        layui.use(['table'], function () {
             var table = layui.table;
-            table.reload('tabletest1', {
-                url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
-                , where: { 'findNamevalue': name } //设定异步数据接口的额外参数
-            });
-        });
-    }
-
-    $(function () {
-        //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
-        $(document).keydown(function (event) {
-            if (event.keyCode === 90 && event.ctrlKey === true) {
-                layui.use('layer', function () {
-                    var layer = layui.layer;
-                    layer.open({
-                        type: 2,
-                        content: '/Market/StudentDataKeep/AddorEdit' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                        , area: ['950px', '710px'],
-                        title: '添加备案信息'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                });
-            }
-        });
-        //这是一个模糊查询的方法
-        $("#searchBtn").click(function () {
             var findNamevalue = $("#findNamevalue").val();
             var findPhonevalue = $("#findPhonevalue").val();
             var findInformationvalue = $("#findInformationvalue").val();
@@ -248,17 +229,37 @@
             var S_party = $("#S_party").val();
             var S_intosysMan = $("#S_intosysMan").val();
 
-            layui.use('table', function () {
-                var table = layui.table;
-                table.reload('tabletest1', {
-                    url: '/Market/StudentDataKeep/GetTableData'
-                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue, "S_consultTeacher": S_consultTeacher, "S_status": S_status, "S_party": S_party, "S_intosysMan": S_intosysMan } //设定异步数据接口的额外参数
-                });
+            table.reload('tabletest1', {
+                url: '/Market/StudentDataKeep/GetTableData'
+                , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue, "S_consultTeacher": S_consultTeacher, "S_status": S_status, "S_party": S_party, "S_intosysMan": S_intosysMan } //设定异步数据接口的额外参数
             });
         });
+    };
+    $(function () {
+        //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
+        $(document).keydown(function (event) {
+            if (event.keyCode === 90 && event.ctrlKey === true) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.open({
+                        type: 2,
+                        content: '/Market/StudentDataKeep/AddorEdit'
+                        , area: ['950px', '710px'],
+                        title: '添加备案信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                });
+            }
+        });
+
+        //这是一个模糊查询的方法
+        $("#searchBtn").click(function () {
+            my_searchBtn();
+        });
+
     });
-
-
     //数据导出页面
     function ExcelExport() {
         layui.use('layer', function () {
@@ -277,34 +278,20 @@
     }
 
     var sid = 0;
-    function LoadConsultdata(tid, rake) {
+    function LoadConsultdata(tid, rake, tname) {
+
         $.ajax({
             url: '/Market/Consult/AddSingConsultdata',
-            data: { "teacherid": tid, "stuid": sid, "Rmark": rake },
+            data: { "teacherid": tid, "stuid": sid, "Rmark": rake, "TeacherName": tname },
             type: 'POST',
             success: function (suc) {
                 if (suc.Success) {
-                    layui.use(['layer', 'table'], function () {
+                    layui.use(['layer'], function () {
                         var layer = layui.layer;
-
-                        var table = layui.table;
-                        $.ajax({
-                            url: '/Market/StudentDataKeep/ZhipaiConsustTacher',
-                            type: 'POST',
-                            data: { "teaid": tid, "stuid": sid, },
-                            success: function (result) {
-                                if (result.Success) {
-                                    layer.msg('指派成功！！！', {
-                                        icon: 1, shade: 0.8
-                                    });
-                                    table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData', where: { 'findNamevalue': null } });
-                                } else {
-                                    TiShi("系统异常，请刷新重试!!!");
-                                }
-
-                            }
+                        layer.msg('指派成功！！！', {
+                            icon: 1, shade: 0.8
                         });
-
+                        my_searchBtn();
                     });
 
                 } else {
@@ -319,7 +306,7 @@
         var laydate = layui.laydate;
         var form = layui.form;
         var element = layui.element;
-
+        var layer = layui.layer;
         //月份小于10的前面加个0
         function MoDay(a) {
             if (a < 10) {
@@ -366,6 +353,14 @@
                 }
             }
         })
+        //上门日期
+        laydate.render({
+            elem: '#OutDate',
+            format: 'yyyy-MM-dd',
+            done: function (value) {
+                date = value;
+            }
+        });
 
         table.render({
             elem: '#tabletest1'
@@ -373,35 +368,32 @@
             , toolbar: '#toolbarDemo1'
             , cols: [[
                 { type: 'checkbox' }
-                , { field: 'StuName', title: '姓名' ,width:80}
-                , { field: 'StuSex', title: '性别', width: 60}
-                , { field: 'Stuphone', title: '联系电话', width: 120 }
-                , { field: 'stuinfomation', title: '信息来源', width: 80}
-                , { field: 'StuisGoto', title: '是否上门', width: 80,templet: function (res) { if (res.StuisGoto == false || res.StuisGoto == null) { return "未上门"; } else { return "已上门"; } } }
-                , { field: 'StuVisit', title: '上门日期', width: 120, templet: function (res) { return TimeChange(res.StuVisit); }}
+                , { field: 'StuName', title: '姓名', width: 80 }
+                , { field: 'StuSex', title: '性别', width: 60 }
+                , { field: 'Stuphone', title: '联系电话', width: 140 }
+                , { field: 'StuQQ', title: 'QQ', width: 80 }
+                , { field: 'StuSchoolName', title: '学校', width: 80 }
+                , { field: 'RegionName', title: '区域', width: 80 }
+                , { field: 'stuinfomation', title: '信息来源', width: 80 }
+                , { field: 'ConsultTeacher', title: '咨询师', width: 80 }
+                , { field: 'empName', title: '备案人', width: 80 }
+                , { field: 'StuEducational', title: '学历', width: 80 }
+                , { field: 'Party', title: '关联人', width: 100 }
                 , { field: 'StatusName', title: '学生状态', width: 80 }
-                , { field: 'StatusTime', title: '报名日期', width: 120,templet: function (res) { return TimeChange(res.StatusTime); }}  
-                , { field: 'StuSchoolName', title: '学校', width: 80}
-                , { field: 'StuEducational', title: '学历',width: 80}
-                , { field: 'StuAddress', title: '家庭住址',width: 80}                 
-                , { field: 'empName', title: '备案人' ,width: 80}
-                , { field: 'Party', title: '关系人',width: 100 }
-                , { field: 'RegionName', title: '区域',width: 80}
-                , { field: 'ConsultTeacher', title: '咨询师' ,width: 80}
-                , { field: 'MarketType', title: '市场等级', width: 60 }
-                , { field: 'StuEntering', title: '录入人', width: 100 }
-                , { field: 'Reak', title: '其他说明' ,width: 100}
-                , { field: 'BeanDate', title: '备案日期', width: 120, templet: function (res) { return TimeChange(res.BeanDate);}}
+                , { field: 'MarketType', title: '市场类型', width: 60 }
+                , { field: 'StuEntering', title: '录入人员', width: 100 }
+                , { field: 'BeanDate', title: '备案日期', width: 120, templet: function (res) { return TimeChange(res.BeanDate); } }
                 , {
-                    fixed: 'right', title: '操作',width:250, templet: function (res) {
-                        if (res.ConsultTeacher == null) {
+                    fixed: 'right', title: '操作', width: 250, templet: function (res) {
+                        if (res.ConsultTeacher == null || res.ConsultTeacher.length <= 0) {
                             var my_r = $("#rr").val();
-                            if (my_r == "2" || my_r== "3") {
+                            if (my_r == "2" || my_r == "3") {
                                 return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
                             } else {
+
                                 return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a ><a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>';
                             }
-                             
+
                         } else {
                             return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
                         }
@@ -449,25 +441,53 @@
             var data = obj.data;
             //console.log(obj)
             if (obj.event === 'edit') {
-                layer.open({
-                    type: 2,
-                    content: '/Market/StudentDataKeep/EditView/' + data.Id
-                    , area: ['900px', '720px'],
-                    title: '补充备案信息'
-                    , shade: 0.8
-                    , anim: 4
-                    , skin: 'demo-class'
-                });
+                var id = Number(data.Id);
+                if (id >= 54118) {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/StudentDataKeep/EditView/' + data.Id
+                        , area: ['900px', '720px'],
+                        title: '补充备案信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } else {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/Sch_Market/Sch_MarketEdit/' + data.Id
+                        , area: ['900px', '700px'],
+                        title: '补充备案信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+
             } else if (obj.event === 'del') {
-                layer.open({
-                    type: 2,
-                    content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id
-                    , area: ['800px', '740px'],
-                    title: '备案数据详情'
-                    , shade: 0.8
-                    , anim: 4
-                    , skin: 'demo-class'
-                });
+                var id = Number(data.Id)
+                if (id >= 54118) {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id
+                        , area: ['800px', '740px'],
+                        title: '备案数据详情'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } else {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/Sch_Market/Sch_MarketDetailsView/' + data.Id
+                        , area: ['800px', '740px'],
+                        title: '备案数据详情'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+
             } else if (obj.event === 'addconsult') {
                 //指派咨询师
                 sid = obj.data.Id;
@@ -487,7 +507,7 @@
         table.on('rowDouble(tabletest1)', function (obj) {
             var id = obj.data.Id;
             var myrr = $("#rr").val();
-            if (myrr=="0") {
+            if (myrr == "0") {
                 layer.confirm("亲！是要查看跟踪信息吗?", { icon: 3, shade: 0.8, title: '温馨提示' }, function (index) {
                     layer.close(index);
                     if (obj.data.ConsultTeacher == null) {
@@ -508,11 +528,11 @@
 
                 });
             }
-            
+
         });
 
-        //监听提交
-        form.on('submit(ToIes)', function (data) { 
+        //一键转换咨询师
+        form.on('submit(ToIes)', function (data) {
             layer.closeAll();
             var index_2 = layer.load(1);
             var checkStatus = table.checkStatus('tabletest1');
@@ -522,23 +542,23 @@
             }
             $.ajax({
                 url: '/Market/StudentDataKeep/ChangTeacher',
-                type:"POST",
-                data: { "id": ids,"teacherid":data.field.Teacher},
+                type: "POST",
+                data: { "id": ids, "teacherid": data.field.Teacher },
                 success: function (sucdata) {
                     layer.close(index_2);
                     if (sucdata.Success) {
-                        layer.msg(sucdata.Msg, { shade: 0.8, icon: 1 });
+                        layer.msg('操作成功！！！', { shade: 0.8, icon: 1 });
+                        my_searchBtn();
                     } else {
-                        layer.msg(sucdata.Msg, { shade: 0.8, icon: 2 });
+                        layer.msg('系统异常，请刷新重试！！！', { shade: 0.8, icon: 2 });
                     }
                 }
             });
-            table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
-            form.render();
+
             return false;
         });
     });
- 
+
     function PostDataChange(strid, date) {
         $.ajax({
             url: '/Market/StudentDataKeep/UpdateGotoSchool',
@@ -559,7 +579,9 @@
         });
     }
 
-    //转上门
+
+    var strid = 0;
+    //获取要转上门的备案Id
     function ChangeGotoSchoolstate() {
         layui.use(['table', 'layer'], function () {
             var table = layui.table;
@@ -568,29 +590,31 @@
             if (checkStatus.data.length <= 0) {
                 layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
             } else {
-                var strid = 0;
-                var date = null;
-                layer.prompt({ title: '请输入上门日期' }, function (val, index) {
-                    date = val;
-                    var dateFormat = /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))$/;
 
-                    if (dateFormat.test(date)) {
-                        //获取选中的id
-                        checkStatus.data.forEach(f => {
-                            strid = strid + f.Id + ",";
-                        });
-                        PostDataChange(strid, date);
-                        layer.close(index);
-                    } else {
-                        layer.msg('请输入正确的日期！！例如:2020-02-11', { icon: 2, shade: 0.8 });
-                    }
-
+                checkStatus.data.forEach(f => {
+                    strid = strid + f.Id + ",";
                 });
-
+                layer.open({
+                    type: 1,
+                    title: '上门日期选择',
+                    shade: 0.8,
+                    anim: 4,
+                    skin: 'demo-class',
+                    area: ['400px', '200px'],
+                    content: $('#OutDateDiv')
+                });
             }
         });
     }
+    ////转上门
+    function ChangeTime() {
+        if (date.length > 0) {
+            PostDataChange(strid, date);
+        } else {
+            layer.msg('请选择日期！！！', { icon: 2, shade: 0.8 });
+        }
 
+    }
     //注册学生学号
     function ZhuceClass() {
         layui.use(['table', 'layer'], function () {
@@ -618,7 +642,7 @@
     }
 
     //判断备案数据是否只选中一条
-    function One(url,title,width,height,Ishava) {
+    function One(url, title, width, height, Ishava) {
         layui.use(['layer', 'table'], function () {
             var layer = layui.layer;
             var table = layui.table;
@@ -638,9 +662,9 @@
                                     , shade: 0.8
                                     , anim: 4
                                     , skin: 'demo-class'
-                                });            
+                                });
                             } else {
-                                layer.msg('该备案学生还没有在校信息！！！', {icon:5});
+                                layer.msg('该备案学生还没有在校信息！！！', { icon: 5 });
                             }
                         }
                     });
@@ -653,9 +677,9 @@
                         , shade: 0.8
                         , anim: 4
                         , skin: 'demo-class'
-                    });            
+                    });
                 }
-                
+
             } else if (checkStatus.data.length <= 0) {
                 layer.msg('请选择备案数据!', { icon: 2, shade: 0.8 });
             } else {
@@ -667,7 +691,7 @@
 
     //一键转换咨询师
     function ChangTeacher() {
-        layui.use(['layer','table'], function () {
+        layui.use(['layer', 'table'], function () {
             var layer = layui.layer;
             var table = layui.table;
             var checkStatus = table.checkStatus('tabletest1');
@@ -675,13 +699,11 @@
             if (checkStatus.data.length <= 0) {
                 layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
             } else {
-                 
-               // $("#TeacherDiv").removeClass("NoneCss");
                 layer.open({
                     type: 1,
                     title: '选择咨询师',
                     area: ['500px', '300px'],
-                    content: $('#TeacherDiv')  
+                    content: $('#TeacherDiv')
                 });
 
             }
@@ -700,7 +722,7 @@
 
     //查看学生缴费信息
     function GetMony() {
-        
+
     }
 
     //短信发送
@@ -713,7 +735,7 @@
             , shade: 0.8
             , anim: 4
             , skin: 'demo-class'
-        });        
+        });
     }
 
     //报名 / 预录学生信息下载
@@ -726,10 +748,10 @@
             , shade: 0.8
             , anim: 4
             , skin: 'demo-class'
-        });    
-         
+        });
+
     }
 </script>
- 
+
 
 

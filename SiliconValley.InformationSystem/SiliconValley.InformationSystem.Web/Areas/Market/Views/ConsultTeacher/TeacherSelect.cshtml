@@ -50,20 +50,17 @@
             var form = layui.form;      
 
             form.on('submit(truebtn)', function (data) {               
-                //console.log(data.field);
                 if (data.field.consultTeacherid == null) {
                     layer.msg("请先选择咨询师!!!", { icon: 6, shade: 0.8 });
                 } else {
-                    window.parent.LoadConsultdata(data.field.consultTeacherid, data.field.ramke);
+                    var teachename = $('input[name="consultTeacherid"]:checked')[0];
+                    var teacher=$(teachename).attr("title");
+                    window.parent.LoadConsultdata(data.field.consultTeacherid, data.field.ramke, teacher);
                     MyClose();
                 }
                 return false;  
             });
-
-        });
-
-         
-
+        });      
         function MyClose() {
             layui.use('layer', function () {
                 //var layer = layui.layer;

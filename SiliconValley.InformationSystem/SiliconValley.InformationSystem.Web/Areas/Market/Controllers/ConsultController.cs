@@ -298,13 +298,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult AddSingConsultdata()
         {
             AjaxResult a = new AjaxResult();
+          
             Consult consult = new Consult();
             consult.ComDate = DateTime.Now;
             consult.IsDelete = false;
             consult.Rmark = Request.Form["Rmark"];
-            consult.StuName =  Convert.ToInt32(Request.Form["stuid"]);
-            consult.TeacherName = Convert.ToInt32(Request.Form["teacherid"]);
+            consult.StuName =  Convert.ToInt32(Request.Form["stuid"]);//备案Id
+            consult.TeacherName = Convert.ToInt32(Request.Form["teacherid"]);//咨询Id
+           
             a.Success= CM_Entity.AddSing(consult);
+            if (a.Success)
+            {
+                  var name = Request.Form["TeacherName"];//获取咨询师名字
+                if (consult.StuName>=54118)
+                {
+                    StudentPutOnRecord find = EmployandCounTeacherCoom.Studentrecond.GetEntity(consult.StuName);
+                    find.ConsultTeacher = name;
+                    a.Success= EmployandCounTeacherCoom.Studentrecond.My_update(find);
+                }
+                else
+                {
+                    Sch_Market find = EmployandCounTeacherCoom.Studentrecond.whereMarketId(consult.StuName);
+                    find.Inquiry = name;
+                    a= EmployandCounTeacherCoom.Studentrecond.s_entity.MyUpdate(find);                 
+                }
+                  
+            }
             return Json(a, JsonRequestBehavior.AllowGet);
         }         
     }

@@ -290,6 +290,21 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             return a;
         }
 
+        public bool My_update(StudentPutOnRecord olds)
+        {
+            bool s = true;
+            try
+            {
+                this.Update(olds);
+            }
+            catch (Exception)
+            {
+                s = false;
+                
+            }
+
+            return s;
+        }
         /// <summary>
         /// 将未上门学生改为已上门
         /// </summary>
@@ -334,7 +349,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             try
             {
                 this.Update(olds);
-                redisCache.RemoveCache("StudentKeepList");
+                //redisCache.RemoveCache("StudentKeepList");
             }
             catch (Exception)
             {
@@ -549,7 +564,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-15' ";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-18' ";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
             
@@ -596,7 +611,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 one.StuInfomationType_Id = StuInfomationType_Entity.SerchSingleData(item.Source, false) == null ? StuInfomationType_Entity.SerchSingleData("渠道", false).Id : StuInfomationType_Entity.SerchSingleData(item.Source, false).Id;
                 one.Region_id = region_Entity.SerchRegionName(item.Area, false)?.ID ?? null;
                 one.Party = item.RelatedPerson;
-                one.StuEntering = Enplo_Entity.FindEmpData(item.CreateUserName, false)?.EmpName ?? Enplo_Entity.FindEmpData("唐敏", false).EmpName;
+                one.StuEntering = Enplo_Entity.FindEmpData(item.CreateUserName, false)?.EmpName ?? null;
                 if (item.Inquiry != null)
                 {
                     one.ConsultTeacher = item.Inquiry;

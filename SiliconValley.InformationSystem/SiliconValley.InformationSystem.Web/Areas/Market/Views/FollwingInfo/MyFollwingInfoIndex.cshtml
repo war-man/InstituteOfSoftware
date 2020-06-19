@@ -172,21 +172,20 @@
                 , { field: 'StuName', title: '姓名',width:80 }
                 , { field: 'StuSex', title: '性别', width: 60 }
                 , { field: 'Stuphone', title: '联系电话', width: 100 }
-                , { field: 'StuSchoolName', title: '学校', width: 120  }
-                , { field: 'StuEducational', title: '学历', width: 80 }
-                , { field: 'StuAddress', title: '家庭住址', width: 120 }
-                , { field: 'stuinfomation', title: '信息来源', width: 80  }
-                , { field: 'StatusName', title: '学生状态', width: 80 }
-                , { field: 'StatusTime', title: '报名日期', templet: function (res) { return TimeChange(res.StuVisit); }, width: 120 }
-                , { field: 'StuisGoto', title: '是否上门', templet: function (res) { if (res.StuisGoto == false || res.StuisGoto == null) { return "未上门"; } else { return "已上门"; } }, width: 80 }
-                , { field: 'StuVisit', title: '访问日期', templet: function (res) { return TimeChange(res.StuVisit); }, width: 120  }                 
-                , { field: 'empName', title: '备案人', width: 100 }
-                , { field: 'Party', title: '关系人', width: 100 }
-                , { field: 'StuEntering', title: '录入人', width: 100 }                               
+                , { field: 'StuQQ', title: 'QQ', width: 80 }
+                , { field: 'StuSchoolName', title: '学校', width: 120 }
                 , { field: 'RegionName', title: '区域', width: 80 }
-            , { field: 'MarketType', title: '市场类型', width: 60 }
-                , { field: 'Reak', title: '其他说明', width: 80 }                              
-                , { field: 'BeanDate', title: '分量日期', templet: function (res) { return TimeChange(res.BeanDate); }, width: 100  }               
+                , { field: 'stuinfomation', title: '信息来源', width: 80 }
+                , { field: 'ConsultTeacher', title: '咨询师', width: 80 }
+                , { field: 'empName', title: '备案人', width: 100 }
+                , { field: 'StuEducational', title: '学历', width: 80 }
+                , { field: 'Party', title: '关联人', width: 100 }
+                , { field: 'StatusName', title: '学生状态', width: 80 }
+                , { field: 'MarketType', title: '市场类型', width: 60 }
+                , { field: 'StuEntering', title: '录入人员', width: 100 }
+                , { field: 'CountBeanDate', title: '分量日期', templet: function (res) { return TimeChange(res.BeanDate); }, width: 100 } 
+                , { field: 'BeanDate', title: '备案日期', width: 120, templet: function (res) { return TimeChange(res.BeanDate); } }
+                , { field: 'Reak', title: '其他说明', width: 80 }                                                       
                 , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 320 }
             ]]
             , page: true

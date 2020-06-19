@@ -201,13 +201,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
             //获取信息来源的所有数据
             ViewBag.infomation = s_Entity.StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
-
-            //获取学生状态来源的所有数据
-            //s_Entity.Stustate_Entity = new StuStateManeger();
-            //List<SelectListItem> ss = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
-            //SelectListItem s1 = new SelectListItem() { Value = "-1", Text = "请选择", Selected = true };
-            //ss.Add(s1);
-            //ViewBag.state = ss;
+            
             //获取所有区域
             SelectListItem s2 = new SelectListItem() { Text = "区域外", Value = "区域外" ,Selected=true};
             var r_list = s_Entity.GetEffectiveRegionAll(true).Select(r => new SelectListItem { Text = r.RegionName, Value = r.ID.ToString() }).ToList();
@@ -425,35 +419,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             if (!string.IsNullOrEmpty(id) && id != "undifind")
             {
                 ExportStudentBeanData finds = s_Entity.findId(id);
-                var newdata = new
-                {
-                    EmployeesInfo_Id =s_Entity.GetEntity(finds.Id).EmployeesInfo_Id,
-                    Id = finds.Id,
-                    Reak = finds.Reak,
-                    StuAddress = finds.StuAddress,
-                    StuBirthy = finds.StuBirthy,
-                    StuDateTime =s_Entity.GetEntity(finds.Id).StuDateTime,
-                    StuEducational = finds.StuEducational,
-                    StuEntering = finds.StuEntering,
-                    StuInfomationType_Id =s_Entity.StuInfomationType_Entity.SerchSingleData(finds.stuinfomation,false).Id,
-                    Region_id =s_Entity.region_Entity.SerchRegionName(finds.RegionName,false)?.ID??null,
-                    StuIsGoto = finds.StuisGoto==null?false: finds.StuisGoto,
-                    StuName = finds.StuName,
-                    StuPhone = finds.Stuphone,
-                    StuQQ = finds.StuQQ,
-                    StuSchoolName = finds.StuSchoolName,
-                    StuSex = finds.StuSex==null?"男": finds.StuSex,
-                    StuVisit = finds.StuVisit,
-                    StuWeiXin = finds.StuWeiXin,
-                    e_Name = finds.empName,
-                    StuEntering_1 = finds.StuEntering,
-                    InfomationTypeName = finds.stuinfomation, /*StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id) == null ? "未定义" : StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id).Name,*/
-                    StatusName = finds.StatusName,//Stustate_Entity.GetEntity(finds.StuStatus_Id) == null ? "未填写" : Stustate_Entity.GetEntity(finds.StuStatus_Id).StatusName,
-                    Region_Name = finds.RegionName,//finds.Region_id == null ? "区域外" : region_Entity.GetEntity(finds.Region_id).ID.ToString(),
-                    Party = finds.Party,
-                    reamke=finds.Reak
-                };
-                return Json(newdata, JsonRequestBehavior.AllowGet);
+                int intId = Convert.ToInt32(id);
+ 
+                    StudentPutOnRecord finds2 = s_Entity.GetEntity(intId);
+                    var newdata = new
+                    {
+                        EmployeesInfo_Id = finds2.EmployeesInfo_Id,
+                        Id = finds.Id,
+                        Reak = finds.Reak,
+                        StuAddress = finds.StuAddress,
+                        StuBirthy = finds.StuBirthy,
+                        StuDateTime = s_Entity.GetEntity(finds.Id).StuDateTime,
+                        StuEducational = finds.StuEducational,
+                        StuEntering = finds.StuEntering,
+                        StuInfomationType_Id = s_Entity.StuInfomationType_Entity.SerchSingleData(finds.stuinfomation, false)?.Id ?? null,
+                        Region_id = s_Entity.region_Entity.SerchRegionName(finds.RegionName, false)?.ID ?? null,
+                        StuIsGoto = finds.StuisGoto == null ? false : finds.StuisGoto,
+                        StuName = finds.StuName,
+                        StuPhone = finds.Stuphone,
+                        StuQQ = finds.StuQQ,
+                        StuSchoolName = finds.StuSchoolName,
+                        StuSex = finds.StuSex == null ? "男" : finds.StuSex,
+                        StuVisit = finds.StuVisit,
+                        StuWeiXin = finds.StuWeiXin,
+                        e_Name = finds.empName,
+                        StuEntering_1 = finds.StuEntering,
+                        InfomationTypeName = finds.stuinfomation,
+                        StatusName = finds.StatusName,
+                        Region_Name = finds.RegionName,
+                        Party = finds.Party,
+                        reamke = finds.Reak
+                    };
+                    return Json(newdata, JsonRequestBehavior.AllowGet);               
             }
             else
             {
@@ -461,7 +458,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
 
         }
-        //数据详情查看页面
+        //数据详情查看页面 2020年之后的数据详情页面
         public ActionResult LookDetailsView(string id)
         {
             s_Entity.Stustate_Entity = new StuStateManeger();
@@ -512,31 +509,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         #endregion
 
-
-        #region 指派咨询师
-        /// <summary>
-        /// 指派咨询师
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult ZhipaiConsustTacher()
-        {
-            int stu = Convert.ToInt32(Request.Form["stuid"]);
-
-            int teacherid = Convert.ToInt32(Request.Form["teaid"]);
-
-            StudentPutOnRecord findata = s_Entity.GetEntity(stu);
-
-            findata.ConsultTeacher = EmployandCounTeacherCoom.getallCountTeacher(false).Where(g => g.consultercherid == teacherid).ToList()[0].empname;
-
-            AjaxResult a = new AjaxResult();
-            a.Success = s_Entity.ZhipaiConsultTeacher(findata);
-
-            return Json(a, JsonRequestBehavior.AllowGet);
-        }
-        #endregion
- 
-
+        
         #region Excle文件导入
         //文件上传页面
         public ActionResult ExcleIntoView()
@@ -1276,7 +1249,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
 
         #region 一键转咨询师
-
          public ActionResult ChangTeacher()
         {
             string[] id = Request.Form["id"].Split(',') ;
@@ -1319,7 +1291,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             return Json(a, JsonRequestBehavior.AllowGet);
         }
-
         #endregion
 
 

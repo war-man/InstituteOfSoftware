@@ -106,7 +106,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label needTextColor">电 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 话:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.StuPhone, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "联系电话" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(s => s.StuPhone, new Dictionary<string, object>() {{ "placeholder", "联系电话" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -191,12 +191,6 @@
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
-                    @*<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-            <label class="LableCss1">学生状态:</label>
-            <div class="layui-input-block">
-                @Html.DropDownListFor(s => s.StuStatus_Id, ViewBag.state as IEnumerable<SelectListItem>)
-            </div>
-        </div>*@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">咨&nbsp;询 &nbsp; 师:</label>
                         <div class="layui-input-block">

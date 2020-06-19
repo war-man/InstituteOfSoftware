@@ -592,11 +592,37 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         public Consult AccordingStuIdGetConsultData(int studentID)
         {
            List<Consult> find= this.GetListBySql<Consult>("select * from Consult where StuName=" + studentID);
-
-            return find[0];
+            if (find.Count>0)
+            {
+                return find[0];
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
-        
+        /// <summary>
+        /// 修改数据
+        /// </summary>
+        /// <param name="news"></param>
+        /// <returns></returns>
+        public AjaxResult MyUpdate(Consult news)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Update(news);
+                a.Success = true;
+            }
+            catch (Exception)
+            {
+                a.Success = false;               
+            }
+
+            return a;
+        }
 
         #region  给跟踪业务使用的方法
         //给咨询分量的数据
