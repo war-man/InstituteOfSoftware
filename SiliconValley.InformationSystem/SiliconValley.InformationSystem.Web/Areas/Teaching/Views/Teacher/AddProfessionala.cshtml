@@ -47,6 +47,16 @@
                         </div>
 
                     </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label" id="lab1">阶段</label>
+                        <div class="layui-input-inline">
+
+                            @*@Html.TextBoxFor(a => a.TrainingTitle, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入培训标题" }, { "class", "layui-input bordel" } })*@
+                            @Html.DropDownListFor(d=>d.Grand, ViewBag.grandlist as IEnumerable<SelectListItem> )
+                        </div>
+                    </div>
+
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label" id="lab1">培训标题</label>
                         <div class="layui-input-inline">

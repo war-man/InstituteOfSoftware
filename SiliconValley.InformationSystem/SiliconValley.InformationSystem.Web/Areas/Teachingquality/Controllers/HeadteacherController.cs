@@ -156,6 +156,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpGet]
         public ActionResult AddProfessionala()
         {
+            GrandBusiness db_grand = new GrandBusiness();
+            
+            var gradlist = db_grand.AllGrand().Select(d => new SelectListItem { Text = d.GrandName, Value = d.Id.ToString() });
+
+            ViewBag.grandlist = gradlist;
+
             return View();
         }
         //班主任职业素养培训数据记录

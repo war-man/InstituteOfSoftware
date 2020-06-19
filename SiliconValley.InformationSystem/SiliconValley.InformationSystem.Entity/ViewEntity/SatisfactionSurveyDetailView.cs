@@ -10,6 +10,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
 
     public class SatisfactionSurveyDetailView
     {
+        public int SatisficingConfigId { get; set; }
+
         public EmployeesInfo Emp { get; set; }
         /// <summary>
         /// 调查时间

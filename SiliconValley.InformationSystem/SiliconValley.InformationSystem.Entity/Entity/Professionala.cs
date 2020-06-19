@@ -49,5 +49,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 添加时间
         /// </summary>
         public Nullable<System.DateTime> AddTime { get; set; }
+
+        public int Grand { get; set; }
     }
 }

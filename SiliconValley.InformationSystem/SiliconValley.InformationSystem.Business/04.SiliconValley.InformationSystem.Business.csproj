@@ -282,6 +282,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="bin\Debug\zh-Hans\" />
+    <Folder Include="bin\Release\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Depository\02.SiliconValley.InformationSystem.Depository.csproj">
       <Project>{8a91cd26-c6bb-4f0e-819c-8ef3be0a0d6e}</Project>
       <Name>02.SiliconValley.InformationSystem.Depository</Name>
@@ -294,10 +298,6 @@
       <Project>{59b37762-4cc3-45cf-b910-ae11eb6ee79b}</Project>
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Debug\zh-Hans\" />
-    <Folder Include="bin\Release\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

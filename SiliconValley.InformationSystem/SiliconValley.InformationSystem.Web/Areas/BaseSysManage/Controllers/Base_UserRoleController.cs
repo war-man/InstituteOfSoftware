@@ -784,6 +784,53 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 重置密码
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public ActionResult ResetPasswd(string userid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_user.ResetPasswd(userid);
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+                result.ErrorCode = 500;
+            }
+
+            return Json(result);
+
+            
+        }
+
+        public ActionResult UpdatePasswd(string userid,string passwd)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_user.UpdatePassword(userid, passwd);
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+                result.ErrorCode = 500;
+            }
+
+            return Json(result);
+
+
+        }
+
 
     }
 }

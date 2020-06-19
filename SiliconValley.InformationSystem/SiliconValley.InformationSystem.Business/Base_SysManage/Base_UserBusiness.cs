@@ -42,7 +42,7 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
             if (!condition.IsNullOrEmpty() && !keyword.IsNullOrEmpty())
                 q = q.Where($@"{condition}.Contains(@0)", keyword);
 
-            var list= q.Where(where).GetPagination(pagination).ToList();
+            var list = q.Where(where).GetPagination(pagination).ToList();
             SetProperty(list);
 
             return list;
@@ -157,7 +157,7 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
         /// </summary>
         /// <param name="oldPwd">老密码</param>
         /// <param name="newPwd">新密码</param>
-        public AjaxResult ChangePwd(string oldPwd,string newPwd)
+        public AjaxResult ChangePwd(string oldPwd, string newPwd)
         {
             AjaxResult res = new AjaxResult() { Success = true };
             string userId = Operator.UserId;
@@ -234,7 +234,7 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
             view.Sex = user.Sex;
             view.UserId = user.UserId;
             view.UserName = user.UserName;
-            
+
 
             return view;
         }
@@ -245,10 +245,10 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
         /// </summary>
         public void createAccount(string userName, string empNumber)
         {
-            
+
             EmployeesInfoManage dbemp = new EmployeesInfoManage();
             //获取员工
-           var emp = dbemp.GetInfoByEmpID(empNumber);
+            var emp = dbemp.GetInfoByEmpID(empNumber);
 
             //获取身份证后6位
 
@@ -271,6 +271,29 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
             this.AddData(user);
 
 
+        }
+
+        public void ResetPasswd(string UserId)
+        {
+            var account = this.GetList().Where(d => d.UserId == UserId).FirstOrDefault();
+
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+
+            var emp = dbemp.GetInfoByEmpID(account.EmpNumber);
+
+            account.Password = Extention.ToMD5String(emp.IdCardNum.Substring(12));
+
+            this.Update(account);
+
+        }
+
+        public void UpdatePassword(string UserId, string Password)
+        {
+            var account = this.GetList().Where(d => d.UserId == UserId).FirstOrDefault();
+
+            account.Password = Extention.ToMD5String(Password);
+
+            this.Update(account);
         }
 
         public bool IsContains(List<string> rolelist, string roleid)

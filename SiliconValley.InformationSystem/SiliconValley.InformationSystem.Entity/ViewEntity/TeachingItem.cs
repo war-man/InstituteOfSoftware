@@ -19,9 +19,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public int Course { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public float NodeNumber { get; set; }
     }
 }

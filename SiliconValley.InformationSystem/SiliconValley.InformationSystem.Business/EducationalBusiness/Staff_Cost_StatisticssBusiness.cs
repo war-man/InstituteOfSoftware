@@ -143,17 +143,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             Staff_Cost_StatisticesDetailView resultObj = new Staff_Cost_StatisticesDetailView(); //返回值
 
-            if (dep.DeptName.Contains("教学"))
-            {
-                //获取到专业课时
-                resultObj.teachingitems = teachingitems(empObj, date);
-            }
-            else
-            {
-                //职业素养课，语数外 体育 课时
-                resultObj.otherTeaccher_count = teachingitems(empObj, date, "other");
-            }
+            resultObj.emp = empObj;
 
+         
+           resultObj.teachingitems = teachingitems(empObj, date);
+          
+                //职业素养课，语数外 体育 课时
+           resultObj.otherTeaccher_count = teachingitems(empObj, date, "other");
+         
+    
             //内训课时
             resultObj.InternalTraining_Count = InternalTraining_Count(empObj);
 
@@ -180,9 +178,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             #region 获取内训课时
 
-            int InternalTraining_Count(EmployeesInfo emp)
+            List<grand_number> InternalTraining_Count(EmployeesInfo emp)
             {
-                int result = 0;
+
+                List<grand_number> retulist = new List<grand_number>();
 
                 if (dep.DeptName.Contains("教质"))
                 {
@@ -202,14 +201,46 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
                         var resultlist = templist.Where(d => d.Trainee == headmaster.ID).ToList();
 
-                        result = resultlist.Count;
+
+                        if (resultlist != null)
+                        {
+
+                            //在进行阶段分类
+
+                            resultlist.ForEach(d => {
+
+                                var item = retulist.Where(x => x.grand == d.Grand).FirstOrDefault();
+                                if (item == null)
+                                {
+                                    grand_number grand_Number = new grand_number();
+                                    grand_Number.grand = d.Grand;
+                                    grand_Number.number = 1;
+
+                                    retulist.Add(grand_Number);
+                                }
+                                else
+                                {
+                                    retulist.ForEach(c => {
+
+                                        if (c.grand == d.Grand)
+                                        {
+                                            c.number += 1;
+                                        }
+                                    });
+                                }
+
+                            });
+                        }
+
                     }
 
-                    return 0;
+
                 }
 
                 if (dep.DeptName.Contains("教学"))
                 {
+                    
+
                     BaseBusiness<Teachingtraining> temptedb_achtran = new BaseBusiness<Teachingtraining>();
 
                     //按照时间筛选出培训记录
@@ -221,13 +252,38 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
                     var teacher = tempdb_teacher.GetTeachers(isContains_Jiaowu: false, IsNeedDimission: true).Where(d => d.EmployeeId == emp.EmployeeId).FirstOrDefault();
 
+                 
                     var resultlist = templist.Where(d => d.Trainee == teacher.TeacherID).ToList();
+                    //在进行阶段分类
 
-                    result = resultlist.Count;
+                    resultlist.ForEach(d=> {
+
+                       var item = retulist.Where(x => x.grand == d.Grand).FirstOrDefault();
+                        if (item == null)
+                        {
+                            grand_number grand_Number = new grand_number();
+                            grand_Number.grand = d.Grand;
+                            grand_Number.number = 1;
+
+                            retulist.Add(grand_Number);
+                        }
+                        else
+                        {
+                            retulist.ForEach(c => {
+
+                                if (c.grand == d.Grand)
+                                {
+                                    c.number += 1;
+                                }
+                            });
+                        }
+
+                    });
+                  
 
                 }
 
-                return result;
+                return retulist;
 
 
             }
@@ -808,25 +864,263 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
         }
 
+
+        //保存详细数据
+        public void SaveStaff_CostData(List<Staff_Cost_StatisticesDetailView> data, List<Cose_StatisticsItems> Cost, string filename)
+        {
+
+            if (data == null)
+            {
+                return;
+
+            }
+            var workbook = new HSSFWorkbook();
+
+            //创建工作区
+            var sheet = workbook.CreateSheet("课时费费用详细");
+
+            #region 表头样式
+
+            HSSFCellStyle HeadercellStyle = (HSSFCellStyle)workbook.CreateCellStyle();
+            HSSFFont HeadercellFont = (HSSFFont)workbook.CreateFont();
+
+            HeadercellStyle.Alignment = HorizontalAlignment.Center;
+            HeadercellFont.IsBold = true;
+
+            HeadercellStyle.SetFont(HeadercellFont);
+
+            #endregion
+
+
+          
+            HSSFCellStyle ContentcellStyle = (HSSFCellStyle)workbook.CreateCellStyle();
+            HSSFFont ContentcellFont = (HSSFFont)workbook.CreateFont();
+
+            ContentcellStyle.Alignment = HorizontalAlignment.Center;
+
+            CreateHeader();
+
+            int num = 1;
+
+            CourseBusiness dbcourse = new CourseBusiness();
+
+            GrandBusiness dbgrand = new GrandBusiness();
+
+            data.ForEach(d =>
+            {
+
+                var row = (HSSFRow)sheet.CreateRow(num);
+
+                CreateCell(row, ContentcellStyle, 0, d.emp.EmpName);
+                CreateCell(row, ContentcellStyle, 1, db_emp.GetPobjById(d.emp.PositionId).PositionName);
+
+                List<TeachingItem> teachingItems = d.teachingitems;
+
+                float S1 = 0;
+                float S2 = 0;
+                float S3 = 0;
+                float S4 = 0;
+                float Y1 = 0;
+
+                teachingItems.ForEach(x =>
+                {
+
+                    var course = dbcourse.GetCurriculas().Where(c => c.CurriculumID == x.Course).FirstOrDefault();
+
+                    var grand = dbgrand.AllGrand().Where(g => g.Id == course.Grand_Id).FirstOrDefault();
+
+                    if (grand.GrandName.Contains("S1"))
+                    {
+                        S1 += x.NodeNumber;
+                    }
+
+                    if (grand.GrandName.Contains("S2"))
+                    {
+                        S2 += x.NodeNumber;
+                    }
+
+                    if (grand.GrandName.Contains("S3"))
+                    {
+                        S3 += x.NodeNumber;
+                    }
+
+                    if (grand.GrandName.Contains("S4"))
+                    {
+                        S4 += x.NodeNumber;
+                    }
+
+                    if (grand.GrandName.Contains("Y1"))
+                    {
+                        Y1 += x.NodeNumber;
+                    }
+
+                });
+
+                List<grand_number> leixunlist = d.InternalTraining_Count;
+
+                int lS1 = 0;
+                int lS2 = 0;
+                int Ls3 = 0;
+                int lS4 = 0;
+                int lY1 = 0;
+
+                leixunlist.ForEach(x =>
+                {
+                    var grand = dbgrand.AllGrand().Where(c=>c.Id == x.grand).FirstOrDefault();
+
+
+                    if (grand.GrandName.Contains("S1"))
+                    {
+                        lS1 += x.number;
+                    }
+
+                    if (grand.GrandName.Contains("S2"))
+                    {
+                        lS2 += x.number;
+                    }
+
+                    if (grand.GrandName.Contains("S3"))
+                    {
+                        Ls3 += x.number;
+                    }
+
+                    if (grand.GrandName.Contains("S4"))
+                    {
+                        lS4 += x.number;
+                    }
+
+                    if (grand.GrandName.Contains("Y1"))
+                    {
+                        lY1 += x.number;
+                    }
+
+                });
+                //内训次数
+
+
+
+                CreateCell(row, ContentcellStyle, 2, Y1.ToString());
+                CreateCell(row, ContentcellStyle, 3, S1.ToString());
+                CreateCell(row, ContentcellStyle, 4, S2.ToString());
+                CreateCell(row, ContentcellStyle, 5, S3.ToString());
+                CreateCell(row, ContentcellStyle, 6, S4.ToString());
+
+
+                CreateCell(row, ContentcellStyle, 7, lS1.ToString());
+                CreateCell(row, ContentcellStyle, 8, lS2.ToString());
+                CreateCell(row, ContentcellStyle, 9, Ls3.ToString());
+                CreateCell(row, ContentcellStyle, 10, lS4.ToString());
+                CreateCell(row, ContentcellStyle, 11, lY1.ToString());
+
+                float otherTeaccher_count = 0;
+
+                d.otherTeaccher_count.ForEach(o=>
+                {
+                    otherTeaccher_count += o.NodeNumber;
+                });
+                
+                CreateCell(row, ContentcellStyle, 12, otherTeaccher_count.ToString());
+                CreateCell(row, ContentcellStyle, 13, d.BottomClassHour.ToString());
+                CreateCell(row, ContentcellStyle, 14, d.SatisfactionScore.ToString());
+
+                var cost = Cost.Where(c => c.Emp.EmployeeId == d.emp.EmployeeId).FirstOrDefault();
+
+                CreateCell(row, ContentcellStyle, 15, cost.EachingHourCost.ToString());
+
+                CreateCell(row, ContentcellStyle, 16, cost.MarkingCost.ToString());
+                CreateCell(row, ContentcellStyle, 17, cost.InvigilateCost.ToString());
+                CreateCell(row, ContentcellStyle, 18, cost.CurriculumDevelopmentCost.ToString());
+
+                num++;
+
+            });
+
+            string pathName = System.Web.HttpContext.Current.Server.MapPath("/Areas/Educational/CostHistoryFiles/" + filename + ".xls");
+
+            FileStream stream = new FileStream(pathName, FileMode.Create, FileAccess.ReadWrite);
+
+            workbook.Write(stream);
+
+            stream.Close();
+
+            stream.Dispose();
+
+            workbook.Close();
+
+            void CreateHeader()
+            {
+                HSSFRow Header = (HSSFRow)sheet.CreateRow(0);
+                Header.HeightInPoints = 40;
+
+                CreateCell(Header, HeadercellStyle, 0, "姓名");
+
+                CreateCell(Header, HeadercellStyle, 1, "职务");
+
+                CreateCell(Header, HeadercellStyle, 2, "Y1课时");
+
+                CreateCell(Header, HeadercellStyle, 3, "S1课时");
+
+                CreateCell(Header, HeadercellStyle, 4, "S2课时");
+
+                CreateCell(Header, HeadercellStyle, 5, "S3课时");
+
+                CreateCell(Header, HeadercellStyle, 6, "S4课时");
+
+                CreateCell(Header, HeadercellStyle, 7, "S1内训课时");
+
+                CreateCell(Header, HeadercellStyle, 8, "S2内训课时");
+
+                CreateCell(Header, HeadercellStyle, 9, "S3内训课时");
+
+                CreateCell(Header, HeadercellStyle, 10, "S4内训课时");
+
+                CreateCell(Header, HeadercellStyle, 11, "Y1内训课时");
+
+                CreateCell(Header, HeadercellStyle, 12, "质素，语数外，体育课时");
+
+                CreateCell(Header, HeadercellStyle, 13, "底课时");
+
+                CreateCell(Header, HeadercellStyle, 14, "满意度分数");
+
+                CreateCell(Header, HeadercellStyle, 15, "课时费");
+
+                CreateCell(Header, HeadercellStyle, 16, "阅卷费");
+
+                CreateCell(Header, HeadercellStyle, 17, "监考费");
+
+                CreateCell(Header, HeadercellStyle, 18, "课程研发费");
+            }
+
+            void CreateCell(HSSFRow row, HSSFCellStyle TcellStyle, int index, string value)
+            {
+                HSSFCell Header_Name = (HSSFCell)row.CreateCell(index);
+
+                Header_Name.SetCellValue(value);
+
+                Header_Name.CellStyle = TcellStyle;
+            }
+
+        }
+
+
         /// <summary>
         /// 费用统计
         /// </summary>
         /// <param name="empid">员工</param>
         /// <param name="date">日期</param>
-        public Cose_StatisticsItems Statistics_Cost(string empid, string date, int workingDays)
+        public Cose_StatisticsItems Statistics_Cost(Staff_Cost_StatisticesDetailView data)
         {
            
-
             Cose_StatisticsItems result = new Cose_StatisticsItems();
 
-            result.Emp = db_emp.GetInfoByEmpID(empid);
+            result.Emp = data.emp;
 
-            var data = this.Staff_CostData(empid, DateTime.Parse(date), workingDays);
+            //var data = this.Staff_CostData(empid, DateTime.Parse(date), workingDays);
 
             ///课时费
             result.EachingHourCost = (decimal)this.EachingHourCost(data.teachingitems, data.BottomClassHour, data.SatisfactionScore);
 
-            result.OtherTeachingCost = OtherTeachingCost(data.otherTeaccher_count);
+            result.OtherTeachingCost = OtherTeachingCost(data.otherTeaccher_count , data.BottomClassHour);
 
             ///值班费
             result.DutyCost = Duty_Cost(data.Duty_Count);
@@ -840,12 +1134,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             ///教材研发费用
             result.CurriculumDevelopmentCost = CurriculumDevelopmentCost(data.TeachingMaterial_Node) + PPTDevelopmentCost(data.PPT_Node);
 
-
             ///内训费
             ///
-            result.InternalTrainingCost = this.InternalTrainingCost(data.InternalTraining_Count);
+            result.InternalTrainingCost = this.InternalTrainingCost(data.InternalTraining_Count, result.Emp);
 
-           
+              
             return result;
         }
 
@@ -1114,21 +1407,64 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// 内训费用
         /// </summary>
         /// <returns></returns>
-        public decimal InternalTrainingCost(int count)
+        public decimal InternalTrainingCost(List<grand_number> list, EmployeesInfo emp)
         {
             //读取配置文件
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/Cost.xml"));
-
             //根节点
             var xmlRoot = xmlDocument.DocumentElement;
+            var dep = this.GetDeparmentByEmp(emp.EmployeeId);
 
-            //获取标准费用
-            var cost = xmlRoot.GetElementsByTagName("InternalTrainingCost")[0].InnerText;
+            decimal result = 0;
 
-            return count * int.Parse(cost);
+            if (emp.EmpName.Contains("教质"))
+            {
+                int num = 0;
 
-           
+                list.ForEach(d=>
+                {
+                    num += d.number;
+                });
+
+                //获取标准费用
+                var cost = xmlRoot.GetElementsByTagName("OtherTeachingCose")[0].InnerText;
+
+                result = num * int.Parse(cost);
+            }
+
+            if (emp.EmpName.Contains("教学"))
+            {
+                decimal currentresult = 0;
+
+                //获取标准费用
+                var Professionala = (XmlElement)xmlRoot.GetElementsByTagName("Professionala")[0];
+
+                list.ForEach(d =>
+                {
+          
+                    var nodelist = Professionala.ChildNodes;
+
+                    foreach (XmlElement item in nodelist)
+                    {
+                        var grand = item.GetAttribute("grand");
+
+                        if (d.grand == int.Parse(grand))
+                        {
+                            var cost = item.InnerText;
+
+                            currentresult += d.number * int.Parse(cost);
+
+                            break;
+                        }
+                    }
+
+                });
+
+                result = currentresult;
+            }
+
+            return result;
         }
 
 
@@ -1206,9 +1542,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return count * int.Parse(cost);
         }
 
-        public decimal OtherTeachingCost(List<TeachingItem> items)
+        public decimal OtherTeachingCost(List<TeachingItem> items, float buttonHours = 0)
         {
             decimal result = 0;
+
             CourseBusiness tempdb_course = new CourseBusiness();
 
             items.ForEach(d=> {
@@ -1217,7 +1554,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
              
                 Curriculum course = tempdb_course.GetCurriculas().Where(x=>x.CurriculumID == d.Course).FirstOrDefault();
 
-                result += (decimal)course.PeriodMoney * (decimal)d.NodeNumber;
+                decimal nodenumber = 0;
+
+                var temp1 = d.NodeNumber - buttonHours;
+                if (temp1 >= 0)
+                {
+                    nodenumber = (decimal)temp1;
+
+                    buttonHours = 0;
+                }
+                else
+                {
+                    nodenumber = (decimal)buttonHours - (decimal)d.NodeNumber;
+
+                    buttonHours = buttonHours - d.NodeNumber;
+                }
+
+                result += (decimal)course.PeriodMoney * (decimal)nodenumber;
 
             });
 
@@ -1242,8 +1595,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             //创建工作区
             var sheet = workbook.CreateSheet("费用统计");
-
-            
+   
             #region 表头样式
 
             HSSFCellStyle HeadercellStyle = (HSSFCellStyle)workbook.CreateCellStyle();

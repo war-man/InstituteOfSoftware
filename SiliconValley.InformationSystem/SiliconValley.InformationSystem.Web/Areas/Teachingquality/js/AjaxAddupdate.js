@@ -280,7 +280,7 @@ function ajaxUniomss(url, datae) {
         type: 'POST',
         async: true,
         cache: false,
-        timeout: 2000,
+   
         data: datae,
 
         beforeSend: function () {//执行中

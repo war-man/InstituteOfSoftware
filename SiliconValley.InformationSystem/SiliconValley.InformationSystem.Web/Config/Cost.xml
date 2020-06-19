@@ -18,4 +18,14 @@
   <!--语数外 质素 军事-->
   <OtherTeachingCose>30</OtherTeachingCose>
 
+  <!--教学培训费-->
+  <Professionala>
+    <item grand="1002">55</item>
+    <item grand="1">55</item>
+    <item grand="2">55</item>
+    <item grand="3">65</item>
+    <item grand="4">65</item>
+  </Professionala>
+
+
 </root>
