@@ -564,10 +564,10 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-18' ";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-19' ";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
-            
+
             foreach (ADDdataview item in all)
             {
 
@@ -579,7 +579,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 var mm = Enplo_Entity.FindEmpData(item.SalePerson, false);
                 if (string.IsNullOrEmpty(item.SalePerson) || item.SalePerson == "其他")
                 {
-                   
+
                 }
                 else
                 {
@@ -606,7 +606,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 }
                 else if (item.MarketState == "已报名交清" || item.MarketState == "已报名未交清")
                 {
-                    one.StuStatus_Id = 1012; 
+                    one.StuStatus_Id = 1012;
                 }
                 one.StuInfomationType_Id = StuInfomationType_Entity.SerchSingleData(item.Source, false) == null ? StuInfomationType_Entity.SerchSingleData("渠道", false).Id : StuInfomationType_Entity.SerchSingleData(item.Source, false).Id;
                 one.Region_id = region_Entity.SerchRegionName(item.Area, false)?.ID ?? null;
@@ -615,26 +615,26 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 if (item.Inquiry != null)
                 {
                     one.ConsultTeacher = item.Inquiry;
-                    if (Enplo_Entity.FindEmpData(item.Inquiry,false)==null)
+                    if (Enplo_Entity.FindEmpData(item.Inquiry, false) == null)
                     {
                         one.ConsultTeacher = null;
                         one.Reak = one.Reak + "之前咨询师是:" + item.Inquiry + "但是离职了。";
                     }
-                                         
+
                 }
-                 //studentlist.Add(one);
+
                 try
                 {
                     this.Insert(one);
                 }
                 catch (Exception ex)
                 {
-                    
+
                     string str1 = ex.Message;
                 }
             }
-            
-            // this.Add_data(studentlist);  
+
+
 
             List<Consult> Consultlist = new List<Consult>();
             all = all.Where(a1 => a1.Inquiry != null && !string.IsNullOrEmpty(a1.Inquiry)).ToList();
@@ -660,6 +660,10 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                                 consult.StuName = Convert.ToInt32(findstudent.Id);
                                 consult.TeacherName = teacher.Id;
                                 consult.IsDelete = false;
+                                if (!string.IsNullOrEmpty(item.MarketType))
+                                {
+                                   consult.MarketType= item.MarketType.Substring(0, 1);
+                                }
                                 Consultlist.Add(consult);
                             }
 
@@ -687,28 +691,23 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                         if (string.IsNullOrEmpty(item.Info) && item.MarketType != null)
                         {
                             follwing.TailAfterSituation = "跟踪结果:市场类型为" + item.MarketType;
-                            follwing.Rank = item.MarketType.Substring(0,1);
+                           
                         }
                         else if (!string.IsNullOrEmpty(item.Info) && item.MarketType == null)
                         {
-                            follwing.Rank = "D";
-                            follwing.TailAfterSituation = item.Info;
-                            follwing.Rmark = "该市场类型由信息部人员随意添加，如有错误，请联系咨询师确认信息准确性";
+                             
+                            follwing.TailAfterSituation = item.Info;                            
                         }
                         else if(!string.IsNullOrEmpty(item.Info) && item.MarketType != null)
                         {
                             follwing.TailAfterSituation = item.Info;
-                            follwing.Rank = item.MarketType.Substring(0,1);
+                           
                         }
                         follwing.IsDelete = false;
                         string date = item.CreateDate.Year + "-" + item.CreateDate.Month + "-" + item.CreateDate.Day;
                         follwing.FollwingDate = Convert.ToDateTime(date);
 
-                        if (follwing.Rank!=null || follwing.TailAfterSituation !=null)
-                        {
-                            listinfo.Add(follwing);
-                        }
-                         
+                        listinfo.Add(follwing);
                     }
                 }
             }
@@ -755,7 +754,6 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         }
         #endregion
 
-      
         /// <summary>
         /// 获取StudentPutOnRecord表的所有数据
         /// </summary>
@@ -763,6 +761,21 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         public List<ExportStudentBeanData> GetSudentDataAll()
         {
             List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
+
+            return listall;
+        }
+
+        /// <summary>
+        /// 获取备案的所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> GetAll()
+        {
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
+
+            List<Sch_MarketView> list2= this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView");
+
+            listall.AddRange(LongrageDataToViewmodel(list2));
 
             return listall;
         }

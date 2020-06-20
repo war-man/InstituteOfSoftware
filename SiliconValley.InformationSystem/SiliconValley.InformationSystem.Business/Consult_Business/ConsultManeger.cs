@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
     {
         EmployeesInfoManage emp_Entity = new EmployeesInfoManage();
         ConsultTeacherManeger Ct_Entity = new ConsultTeacherManeger();
-        FollwingInfoManeger Fi_Entity = new FollwingInfoManeger();
+       public FollwingInfoManeger Fi_Entity = new FollwingInfoManeger();
         StudentDataKeepAndRecordBusiness Stu_Entity = new StudentDataKeepAndRecordBusiness();
         RegionManeges RM_Entity = new RegionManeges();
         StuInfomationTypeManeger ST_Entity = new StuInfomationTypeManeger();
@@ -679,10 +679,32 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             return finds_list;
         }
 
-        public FollwingInfoManeger GetFollwingManeger()
-        {
-            return new FollwingInfoManeger();
-        }
+        
         #endregion
+
+        public void OneUpdate()
+        {
+            List<FollwingInfo> list = Fi_Entity.GetList();
+            List<Consult> c = new List<Consult>();
+            foreach (FollwingInfo item in list)
+            {
+                Consult finda= this.GetEntity(item.Consult_Id);
+               // finda.MarketType = item.Rank;
+                c.Add(finda);
+            }
+
+            try
+            {
+                this.Update(c);
+            }
+            catch (Exception ex)
+            {
+                string w = ex.Message;
+                 
+            }
+
+            
+        }
+
     }
 }

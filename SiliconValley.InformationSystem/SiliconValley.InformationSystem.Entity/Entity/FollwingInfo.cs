@@ -25,11 +25,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 分量编号
         /// </summary>
-        public Nullable<int> Consult_Id { get; set; }
-        /// <summary>
-        /// 市场类型
-        /// </summary>
-        public string Rank { get; set; }
+        public Nullable<int> Consult_Id { get; set; }        
         /// <summary>
         /// 咨询内容
         /// </summary>

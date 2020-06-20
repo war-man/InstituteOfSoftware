@@ -28,5 +28,17 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
 
             return true;
         }
+
+        /// <summary>
+        /// 根据分量获取所有的咨询跟踪数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<FollwingInfo> GetFoll_ConsltId(int id)
+        {
+           return GetListBySql<FollwingInfo>(" select * from FollwingInfo where Consult_Id=" + id);
+        }
+
+      
     }
 }
