@@ -430,7 +430,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         /// <returns></returns>
         public ActionResult PrepaymentsDate(int page, int limit,string Name)
         {
-           var costlist= studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a=>a.StatusName=="未报名").ToList();
+           var costlist= studentDataKeepAndRecordBusiness.GetSudentDataAll();
             if (!string.IsNullOrEmpty(Name))
             {
                 costlist = costlist.Where(a => a.StuName.Contains(Name)).ToList();
@@ -561,6 +561,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             var list = serializer.Deserialize<List<TuitionrefundView>>(Tuitionrefunds);
 
             return Json(dbtext.TuitionreHomes(list), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 获取退费数据
+        /// </summary>
+        /// <returns></returns>
+      
+        public ActionResult RefunditemsDates(int page, int limit)
+        {
+            return Json(dbtext.Refunditems(page, limit), JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public ActionResult RefunditemsDate()
+        {
+            return View();
+
         }
     } 
 }

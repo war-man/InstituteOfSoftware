@@ -173,32 +173,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //学员注册编辑
         public ActionResult Registeredtrainees()
         {
-            //阶段
-            GrandBusiness Grandcontext = new GrandBusiness();
-            //阶段id
-            //  var GranID = Grandcontext.GetList().Where(a => a.GrandName == "S1" || a.GrandName == "Y1").ToList(); ;
-            //List<ClassSchedule> classSchedules = new List<ClassSchedule>();
-            //foreach (var item in GranID)
-            //{
-            //    classSchedules.AddRange(classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false && a.ClassstatusID == null && a.grade_Id == item.Id).ToList());
-            //}
-            //ViewBag.List = classSchedules.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.id.ToString() });
-            string id = Request.QueryString["id"];
-            if (!string.IsNullOrEmpty(id) && id != "undefined")
-            {
 
-                ViewBag.Name = "编辑学员信息";
-                ViewBag.StudentID = id;
-                return View();
+          
+            string studentid = Request.QueryString["studentid"];
 
-            }
-            else
-            {
 
-                ViewBag.Name = "注册学员信息";
-                ViewBag.StudentID = false;
-                return View();
-            }
+    
+     
+            ViewBag.Name = "编辑学员信息";
+             
+                return View(dbtext.GetEntity(studentid));
 
         }
         RedisCache redis = new RedisCache();
@@ -1238,6 +1222,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     studentInformation.Add(item);
                 }
             }
+            return null;
+        }
+
+        public ActionResult  Text5()
+        {
+            List<ScheduleForTrainees> scheduleForTrainees = new List<ScheduleForTrainees>();
+            List<ScheduleForTrainees> x1 = new List<ScheduleForTrainees>();
+            var x = Stuclass.GetList().Where(a => a.ID_ClassName == 48).ToList();
+            foreach (var item in x)
+            {
+                foreach (var item1 in scheduleForTrainees)
+                {
+                    if (item.StudentID==item1.StudentID)
+                    {
+                        x1.Add(item);
+                    }
+                }
+                scheduleForTrainees.Add(item);
+            }
+            Stuclass.Delete(x1);
+
+
+
             return null;
         }
        

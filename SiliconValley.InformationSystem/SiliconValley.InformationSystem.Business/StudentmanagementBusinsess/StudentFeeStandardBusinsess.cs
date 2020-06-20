@@ -1028,6 +1028,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }
             return listvier;
         }
+        //备案业务类
+        StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
         /// <summary>
         /// 审核入账是否成功
         /// </summary>
@@ -1079,8 +1081,10 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                         }
                      
                     }
-                  
+                    var xz = studentInformationBusiness.GetEntity(studentFeeRecordslist[0].StudenID).StudentPutOnRecord_Id;
+                    studentDataKeepAndRecordBusiness.ChangeStudentState((int)xz);
                     retus.Msg = "入账成功";
+
                 }
                 else
                 {
@@ -1106,8 +1110,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         }
         //预入费业务类
         BaseBusiness<Preentryfee> Preentryfeebusenn = new BaseBusiness<Preentryfee>();
-        //备案业务类
-        StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
+      
         /// <summary>
         /// 预入费缴纳
         /// </summary>
@@ -1325,6 +1328,11 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             return obj1;
         }
         List<Tuitionrefund> tuitionrefundsz = new List<Tuitionrefund>();
+        /// <summary>
+        /// 阶段费用退款
+        /// </summary>
+        /// <param name="tuitionrefunds"></param>
+        /// <returns></returns>
         public object TuitionreHomes(List<TuitionrefundView> tuitionrefunds)
         {
             AjaxResult retus = null;
@@ -1438,6 +1446,63 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 }
             }
           
+        }
+
+        public class StudentRefunditems
+        {
+            public string Name { get; set; }
+            public string StudentId { get; set; }
+            public string identitydocument { get; set; }
+            public string Telephone { get; set; }
+            public bool Sex { get; set; }
+            public decimal Amountofmoney { get; set; }
+        }
+        /// <summary>
+        /// 获取所有退费数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public object Refunditems(int page, int limit)
+        {
+            BaseBusiness<Refunditemsview> RefunditemsviewBusiness = new BaseBusiness<Refunditemsview>();
+
+            List<StudentRefunditems> StudentRefunditemslist = new List<StudentRefunditems>();
+            var x= RefunditemsviewBusiness.GetList();
+           
+           
+                foreach (var item1 in x.Select(a => a.StudenID).Distinct().ToList())
+                {
+                StudentRefunditems studentRefunditems = new StudentRefunditems();
+                var student = studentInformationBusiness.GetEntity(item1);
+                studentRefunditems.StudentId = item1;
+                studentRefunditems.Name = student.Name;             
+                studentRefunditems.Telephone = student.Telephone;
+                studentRefunditems.Sex = student.Sex;
+                studentRefunditems.identitydocument = student.identitydocument;
+                foreach (var item in x)
+                    {
+                      if (item1==item.StudenID)
+                      {
+
+
+                        studentRefunditems.Amountofmoney = studentRefunditems.Amountofmoney+ item.Amountofmoney;
+
+                      }
+
+                     }
+                StudentRefunditemslist.Add(studentRefunditems);
+                }
+            var dataList = StudentRefunditemslist.OrderBy(a => a.StudentId).Skip((page - 1) * limit).Take(limit).ToList();
+            //  var x = dbtext.GetList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = StudentRefunditemslist.Count,
+                data = dataList
+            };
+            return data;
         }
     }
 }
