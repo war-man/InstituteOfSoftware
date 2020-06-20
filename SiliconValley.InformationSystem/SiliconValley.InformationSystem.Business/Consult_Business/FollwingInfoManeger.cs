@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Business.Consult_Business
 {
@@ -39,6 +40,47 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
            return GetListBySql<FollwingInfo>(" select * from FollwingInfo where Consult_Id=" + id);
         }
 
-      
+        /// <summary>
+        /// 添加单条数据
+        /// </summary>
+        /// <param name="news"></param>
+        /// <returns></returns>
+        public AjaxResult Addsingdate(FollwingInfo news)
+        {
+            AjaxResult a = new AjaxResult();
+            a.Success = true;
+            try
+            {
+                this.Insert(news);
+            }
+            catch (Exception)
+            {
+                a.Success = false;
+            }
+
+            return a;
+        }
+
+        /// <summary>
+        /// 编辑单条数据
+        /// </summary>
+        /// <param name="news"></param>
+        /// <returns></returns>
+        public AjaxResult UpdatesingDate(FollwingInfo news)
+        {
+            AjaxResult a = new AjaxResult();
+            a.Success = true;
+            try
+            {
+                this.Update(news);
+            }
+            catch (Exception)
+            {
+                a.Success = false;
+            }
+
+            return a;
+        }
+
     }
 }

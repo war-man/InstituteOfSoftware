@@ -83,6 +83,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.slist = ss;
 
             ViewBag.Pers = s_Entity.GetPostion(UserName.EmpNumber);
+
+            //获取市场类型
+            List<SelectListItem> typelist = new List<SelectListItem>() {
+                new SelectListItem() { Text = "--无--", Value = "0" },
+                new SelectListItem() { Text="A类",Value="A"},
+                new SelectListItem() { Text = "B类", Value = "B" },
+                new SelectListItem() { Text = "C类", Value = "C" } ,
+                new SelectListItem() { Text = "D类", Value = "D" }
+            };
+
+            ViewBag.type = typelist;
             return View();
         }
        
@@ -123,7 +134,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string findStatus = Request.QueryString["S_status"];//备案状态
             string findPary = Request.QueryString["S_party"];//关系人
             string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
-
+            string markety = Request.QueryString["marketype"];//市场类型
             if (!string.IsNullOrEmpty(findNamevalue))
             {
                 sb1.Append(" and StuName like  '%" + findNamevalue + "%'");
@@ -180,6 +191,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 sb1.Append(" and BeanDate <= '" + findEndvalue + "'");
                 sb2.Append(" and CreateDate <= '" + findEndvalue + "'");
+            }
+
+            if (markety!="0")
+            {
+                sb1.Append(" and MarketType = '" + markety + "'");
+                sb2.Append(" and MarketState = '" + markety + "'");
             }
             #endregion
                 
@@ -374,11 +391,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //获取信息来源的所有数据
             ViewBag.infomation =s_Entity.StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
 
-            //获取学生状态来源的所有数据
-            //List<SelectListItem> ss = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
-            //SelectListItem s1 = new SelectListItem() { Value = "-1", Text = "请选择", Selected = true };
-            //ss.Add(s1);
-            //ViewBag.state = ss;
             //获取所有区域
             SelectListItem s2 = new SelectListItem() { Text = "区域外", Value = "区域外" };
             var r_list = s_Entity.GetEffectiveRegionAll(true).Select(r => new SelectListItem { Text = r.RegionName, Value = r.ID.ToString() }).ToList();

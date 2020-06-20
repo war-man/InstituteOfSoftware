@@ -60,7 +60,12 @@
         overflow: hidden;
         height: 15px;
         line-height: 15px;
-    }        
+    }
+    .layui-unselect
+    {
+    display:inline-block;
+        width:150px;
+    }
 </style>
 
  
@@ -69,7 +74,7 @@
     <div class="layui-colla-item">
         <h2 class="layui-colla-title">数据查询</h2>
         <div class="layui-colla-content">
-            <form class="layui-form">
+            <form class="layui-form" lay-filter="Serch_from" id="Serch_from">
                 <div class="layui-row">
                     <div class="layui-col-sm2">
                         <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
@@ -77,7 +82,7 @@
                     </div>
                     <div class="layui-col-sm2">
                         <label class="spanCss2">联系电话:</label>
-                        <input name="findPhonevalue" id="phone" class="inputCss1" />
+                        <input name="findPhonevalue" id="findPhonevalue" class="inputCss1" />
                     </div>
                     <div class="layui-col-sm2">
                         <label class="spanCss2">开始时间:</label>
@@ -89,11 +94,40 @@
                             <input name="findEndvalue" id="endTime" class="inputCss1" />
                         </div>
                     </div>
-
                     <div class="layui-col-sm2">
-                         <button type="button" class="layui-btn" onclick="Query()">查询</button>
+                        <label class="spanCss2">备案人员:</label>
+                        <div style="display: inline-block;width:150px;">
+                            <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1" />
+                        </div>
                     </div>
-                </div>                
+                    
+                </div> 
+                <div class="layui-row" style="margin-top:20px">
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">信息来源:</label>
+                        @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                    </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 域:</label>
+                        @Html.DropDownList("findAreavalue", ViewBag.are as IEnumerable<SelectListItem>)
+                    </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">关 &nbsp; 系&nbsp;人:</label>
+                        <input name="S_party" id="S_party" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">市场类型:</label>
+                        @Html.DropDownList("Marktype", ViewBag.marketlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                    </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">学生状态:</label>
+                        @Html.DropDownList("statis", ViewBag.slist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                    </div>
+                    <div class="layui-col-sm2">
+                        <button type="button" class="layui-btn" onclick="Query()">查询</button>
+                        <button type="button" class="layui-btn" onclick="Load()">刷新</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -166,7 +200,7 @@
             var element = layui.element;
             table.render({
                 elem: '#follwing_form'
-                , url: '/Market/FollwingInfo/GetTableData'
+                , url: '/Market/FollwingInfo/OneTableData'
                 , toolbar: '#toolbarDemo1'
                 , cols: [[
                     { type: 'checkbox' }
@@ -299,17 +333,29 @@
             });
         });
         function Query() {
-            layui.use('table', function () {
+            layui.use(['table','form'], function () {
                 var table = layui.table;
+                var form = layui.form;
 
+                var data1 = form.val("Serch_from");
+               // console.log(data1);
                 table.reload('follwing_form', {
                     url: '/Market/FollwingInfo/GetTableData'
-                    , where: { "name": $("#name").val(), "phone": $("#phone").val(), "staTime": $("#staTime").val(), "endTime": $("#endTime").val() }
+                    , where: data1
                 });
             });
 
         }
 
-         
+        function Load() {
+            layui.use(['table', 'form'], function () {
+                var form = layui.form;
+                $("#Serch_from")[0].reset();
+                form.render();
+                var table = layui.table;
+               
+                table.reload('follwing_form', { url: '/Market/FollwingInfo/OneTableData'  });
+            });
+        }
     </script>
 

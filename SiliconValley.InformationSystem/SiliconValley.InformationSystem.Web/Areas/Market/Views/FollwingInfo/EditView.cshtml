@@ -31,7 +31,7 @@
 
         .TextAreCss1
         {
-            height: 100px;
+            height: 200px;
         }
 
         .butCss1
@@ -67,9 +67,11 @@
                             </div>
                         </div>
                         <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                            <label class="LableCss1">跟踪等级:</label>
+                            <label class="LableCss1">市场等级:</label>
                             <div class="layui-input-block">
-                                @Html.DropDownList("Marktype", ViewBag.marketlist as IEnumerable<SelectListItem> ,new Dictionary<string, object>() { })
+                                
+                                    @Html.DropDownList("Marktype", ViewBag.marketlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                                 
                             </div>
                         </div>
                     </div>
@@ -126,17 +128,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="layui-row layui-form-item">
-                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-
-                                                <label class="layui-form-label">说明:</label>
-                                                <div class="layui-input-block">
-                                                    <textarea class="layui-input TextAreCss1" id="My_Rmark" name="My_Rmark">
-                                                         @list[0].Rmark
-                                                    </textarea>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="layui-form-item" style="margin-top:40px;">
                                             <div class="layui-input-block">
                                                 <div style="width:65%;text-align:right">
@@ -165,53 +157,61 @@
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
         //转换时间的方法
-        function TimeChange(newtime) {
-            if (newtime == null)
+        function changeDateTimeFormat(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
+            } else {
                 return "";
-            var date = new Date(parseInt(newtime.slice(6)));
-            var year = date.getFullYear();
-            var month = date.getMonth();
-            if (month < 10) {
-                month = "0" + Number(month + 1);
             }
-            var day = date.getDate();
-            if (day < 10) {
-                day = "0" + day;
-            }
-            var result = year + '-' + month + '-' + day;
-            return result;
         }
-        //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+      
         layui.use(['element','form'], function () {
             var element = layui.element;
             var form = layui.form;
-            form.render(); //更新全部
+            form.render();  
 
-            form.on('submit(edit)', function (data) {
-                 console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            form.on('submit(edit)', function (data) {               
+                var Mydata = { "F_Id": data.field.F_Id, "My_TailAfterSituation": data.field.My_TailAfterSituation, "Marktype": $("#Marktype").val() };
+                //console.log(data);
                 $.ajax({
                     url: '/Market/FollwingInfo/EditFunction',
-                    data: data.field,
+                    data: Mydata,
                     type: "POST",
                     success: function (SucData) {
-                        if (SucData != "ok") {
-                            layer.msg(SucData, { icon: 2 });
-                        } else {                            
-                            layer.msg('编辑成功', { icon: 1,shade:0.8 }, function () {
-                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                                parent.layer.close(index); //再执行关闭
+                        if (SucData.Success) {
+                            layer.msg('操作成功', { icon: 1, shade: 0.8 }, function () {
+                                //刷新数据
+                                window.parent.Query();
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
                             });
+                        } else {
+                            layer.msg('系统异常，请刷新重试！！！', { icon: 2, shade:0.8 });
                         }
                     }
                 });
-                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                return false;  
             });
         });
         //关闭弹出层
         $("#no").click(function () {
-            //当你在iframe页面关闭自身时
-            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-            parent.layer.close(index); //再执行关闭   
+             
+            var index = parent.layer.getFrameIndex(window.name); 
+            parent.layer.close(index);  
         });
 
         //给ul中的li注册点击事件
@@ -223,35 +223,11 @@
                 success: function (SucData) {
                     if (SucData != "no") {
                         layui.use('form', function () {
-                            var form = layui.form;
-                            $("#MyRank")[0].innerHTML = "";
-                            if (SucData.Rank.indexOf("A") != -1) {
-                                $("<option value='A' selected='selected'>A</option>").appendTo($("#MyRank"));
-                                $("<option value='B'>B</option>").appendTo($("#MyRank"));
-                                $("<option value='C'>C</option>").appendTo($("#MyRank"));
-                                $("<option value='D'>D</option>").appendTo($("#MyRank"));
-                            } else if (SucData.Rank.indexOf("B") != -1) {
-                                $("<option value='A'>A</option>").appendTo($("#MyRank"));
-                                $("<option value='B' selected='selected'>B</option>").appendTo($("#MyRank"));
-                                $("<option value='C'>C</option>").appendTo($("#MyRank"));
-                                $("<option value='D'>D</option>").appendTo($("#MyRank"));
-                            } else if (SucData.Rank.indexOf("C") != -1) {
-                                $("<option value='A'>A</option>").appendTo($("#MyRank"));
-                                $("<option value='B'>B</option>").appendTo($("#MyRank"));
-                                $("<option value='C'selected='selected'>C</option>").appendTo($("#MyRank"));
-                                $("<option value='D'>D</option>").appendTo($("#MyRank"));
-                            } else if (SucData.Rank.indexOf("D") != -1) {
-                                $("<option value='A'>A</option>").appendTo($("#MyRank"));
-                                $("<option value='B'>B</option>").appendTo($("#MyRank"));
-                                $("<option value='C'>C</option>").appendTo($("#MyRank"));
-                                $("<option value='D'selected='selected'>D</option>").appendTo($("#MyRank"));
-                            }
-                             
+                            var form = layui.form;                                                    
                             form.val("myform", { 
-                                  "My_TailAfterSituation": SucData.TailAfterSituation
-                                , "My_Rmark": SucData.Rmark
+                                "My_TailAfterSituation": SucData.TailAfterSituation,
+                                "MyDate": changeDateTimeFormat(SucData.FollwingDate)
                             });
-                            $("#MyDate")[0].innerText = TimeChange(SucData.FollwingDate);
                             form.render();
                         })
                         

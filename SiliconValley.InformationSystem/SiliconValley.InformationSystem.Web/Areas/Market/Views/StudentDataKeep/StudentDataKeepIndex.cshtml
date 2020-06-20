@@ -52,6 +52,8 @@
             {
                 <button class="layui-btn layui-btn-sm" onclick="ChangTeacher()"> <i class="layui-icon">&#xe714;</i> 转换咨询师</button>
                 <button class="layui-btn layui-btn-sm" onclick="SignUp()"> <i class="layui-icon">&#xe714;</i>报名/预录学生信息下载</button>
+                <button class="layui-btn layui-btn-sm" onclick="AddConsult()"> <i class="layui-icon">&#xe714;</i> 添加跟踪</button>
+                <button class="layui-btn layui-btn-sm" onclick="EditConsult()"> <i class="layui-icon">&#xe714;</i>编辑跟踪信息</button>
             }
 
             if (r == 0 || r == 2)
@@ -78,7 +80,7 @@
     <div class="layui-colla-item">
         <h2 class="layui-colla-title">数据查询</h2>
         <div class="layui-colla-content">
-            <form class="layui-form">
+            <form class="layui-form" id="form_serch">
                 <div class="layui-row">
                     <div class="layui-col-sm3">
                         <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
@@ -123,17 +125,14 @@
                         <div class="divCss1">
                             @Html.DropDownList("S_consultTeacher", ViewBag.teacherlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
                         </div>
-
-
                     </div>
                 </div>
                 <div class="layui-row divCss2">
                     <div class="layui-col-sm3">
                         <label class="spanCss2">学生状态:</label>
                         <div class="divCss1">
-                            @Html.DropDownList("S_status", ViewBag.slist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                            @Html.DropDownList("S_status", ViewBag.slist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })                          
                         </div>
-
                     </div>
                     <div class="layui-col-sm3">
                         <label class="spanCss2">关 &nbsp; 系&nbsp;人:</label>
@@ -143,6 +142,14 @@
                         <label class="spanCss2">录 &nbsp; 入&nbsp;人:</label>
                         <input name="S_intosysMan" id="S_intosysMan" class="inputCss1" />
                     </div>
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">市场类型:</label>
+                        <div>
+                            @Html.DropDownList("marketype", ViewBag.type as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                        </div>
+                    </div>
+                </div>
+                <div  class="layui-row divCss2">
                     <div class="layui-col-sm3 divCss3">
                         <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:108px"><i class="layui-icon">&#xe615;</i> 查询</button>
                         <button type="button" class="layui-btn" style="margin-right:45px;width:108px" onclick="LoadTable()"><i class="layui-icon">&#xe63d;</i> 重新加载</button>
@@ -197,8 +204,11 @@
     }
     //table重载的方法
     function LoadTable() {
-        layui.use('table', function () {
+        layui.use(['table','form'], function () {
             var table = layui.table;
+            var form = layui.form;
+            $("#form_serch").rest();
+            form.render();
             table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
         });
 
@@ -750,6 +760,53 @@
             , skin: 'demo-class'
         });
 
+    }
+
+    //添加跟踪信息
+    function AddConsult() {
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var checkStatus = table.checkStatus('tabletest1');
+            if (checkStatus.data.length == 1 ) {
+               layer.open({
+                type: 2,
+                content: '/Market/FollwingInfo/AddFollwingInfo/' + checkStatus.data[0].Id
+                , area: ['800px', '580px'],
+                title: '添加跟踪页面'
+                , shade: 0.8
+                , anim: 4
+                , skin: 'demo-class'
+            });
+            } else {
+                layer.msg('只能选择一条数据！！', { icon: 2, shade: 0.8 });
+            }
+             
+        });
+         
+    }
+
+    function EditConsult() {
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var checkStatus = table.checkStatus('tabletest1');
+            if (checkStatus.data.length == 1) {
+                layer.open({
+                    type: 2,
+                    content: '/Market/FollwingInfo/EditView/' + checkStatus.data[0].Id
+                    , area: ['1000px', '680px'],
+                    title: '编辑跟踪页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            } else {
+                layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
+            }
+            
+        });
+        
     }
 </script>
 
