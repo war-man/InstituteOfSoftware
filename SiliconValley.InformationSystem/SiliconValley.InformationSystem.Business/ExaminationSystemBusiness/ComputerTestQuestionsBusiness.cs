@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 {
@@ -11,13 +9,12 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView;
     using SiliconValley.InformationSystem.Util;
-    using System.IO;
 
 
     /// <summary>
     /// 机试题业务类
     /// </summary>
-    public class ComputerTestQuestionsBusiness:BaseBusiness<MachTestQuesBank>
+    public class ComputerTestQuestionsBusiness : BaseBusiness<MachTestQuesBank>
     {
 
         private readonly QuestionLevelBusiness db_questionLevel;
@@ -48,7 +45,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return this.GetList();
         }
 
-        public ComputerTestQuestionsView ConvertToComputerTestQuestionsView(MachTestQuesBank machTestQuesBank,bool IsNeedProposition)
+        public ComputerTestQuestionsView ConvertToComputerTestQuestionsView(MachTestQuesBank machTestQuesBank, bool IsNeedProposition)
         {
 
             ComputerTestQuestionsView computerTestQuestionsView = new ComputerTestQuestionsView();
@@ -64,7 +61,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             {
                 computerTestQuestionsView.Course = courseBusiness.GetCurriculas().Where(d => d.CurriculumID == machTestQuesBank.Course).FirstOrDefault();
             }
-            
+
             computerTestQuestionsView.CreateDate = machTestQuesBank.CreateDate;
             computerTestQuestionsView.ID = machTestQuesBank.ID;
             computerTestQuestionsView.IsUsing = machTestQuesBank.IsUsing;
@@ -94,6 +91,35 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         }
 
+        /// <summary>
+        /// 读取rtf文件
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public string Read_RTF_File(string path)
+        {
+
+            System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
+
+            // Get the contents of the RTF file. Note that when it is
+            // stored in the string, it is encoded as UTF-16.
+            string s = System.IO.File.ReadAllText(path);
+
+            // Display the RTF text.
+            //System.Windows.Forms.MessageBox.Show(s);
+
+            // Convert the RTF to plain text.
+            rtBox.Rtf = s;
+            string plainText = rtBox.Text;
+
+            // Display plain text output in MessageBox because console
+            // cannot display Greek letters.
+            System.Windows.Forms.MessageBox.Show(plainText);
+
+            return plainText;
+
+        }
+
 
         /// <summary>
         /// 启用或者禁用
@@ -104,7 +130,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             foreach (var item in ComputerTestQuestionIds)
             {
 
-               var obj = this.AllComputerTestQuestion().Where(d=>d.ID== int.Parse(item)).FirstOrDefault();
+                var obj = this.AllComputerTestQuestion().Where(d => d.ID == int.Parse(item)).FirstOrDefault();
 
                 bool isUsing = obj.IsUsing == true ? false : true;
 
