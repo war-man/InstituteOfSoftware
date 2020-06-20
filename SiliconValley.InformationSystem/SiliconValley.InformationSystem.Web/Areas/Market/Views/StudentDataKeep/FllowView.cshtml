@@ -1,0 +1,76 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+@using System.Text;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FllowView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .DivCss1
+        {
+            width: 95%;
+            margin-left: auto;
+            margin-right:auto;
+            margin-top:20px;
+        }
+
+        .TextCss
+        {
+            font-size: 20px;
+            color: black;
+            letter-spacing: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="DivCss1">
+        <ul class="layui-timeline">
+            @{
+                List<FollwingInfo> list = ViewBag.list as List<FollwingInfo>;
+                foreach (FollwingInfo item in list)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(item.FollwingDate.ToString() + "," + item.TailAfterSituation);
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis"></i>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="layui-timeline-title TextCss">@sb</div>
+                        </div>
+                    </li>
+                }
+            }
+
+            @*<li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <div class="layui-timeline-title">2017年，layui 里程碑版本 2.0 发布</div>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <div class="layui-timeline-title">2016年，layui 首个版本发布</div>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <div class="layui-timeline-title">2015年，layui 孵化</div>
+                </div>
+            </li>*@
+        </ul>
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+
+    </script>
+</body>
+</html>

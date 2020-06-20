@@ -40,5 +40,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public Nullable<System.DateTime> ComDate { get; set; }
     
+        /// <summary>
+        /// 跟踪市场类型
+        /// </summary>
+        public string MarketType { get; set; }
     }
 }

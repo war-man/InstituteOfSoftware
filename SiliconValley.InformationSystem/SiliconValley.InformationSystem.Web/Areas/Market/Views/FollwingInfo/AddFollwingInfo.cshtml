@@ -31,7 +31,7 @@
 
         .TextAreCss1
         {
-            height: 100px;
+            height: 200px;
         }
 
         .butCss1
@@ -43,54 +43,12 @@
 </head>
 <body>
     <div style="width:90%;margin:0px auto;margin-top:40px;">
-        <form class="layui-form">
-
+        <form class="layui-form">          
             <div class="layui-row layui-form-item">
-
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="LableCss1">学生姓名:</label>
-                    <div class="layui-input-block">
-                        <input type="text" class="layui-input linu" readonly="readonly"  value="@ViewBag.Name" />
-                    </div>
-                </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                    <label class="layui-form-label">学生性别:</label>
-                    <div class="layui-input-block">
-                        @{
-                            if (ViewBag.Sex=="男")
-                            {
-                                <input type="text" class="layui-input" readonly="readonly" style="width:100%" disabled="disabled" value="男" />
-                            }
-                            else
-                            {
-                                <input type="text" class="layui-input" readonly="readonly" style="width:100%" disabled="disabled" value="女" />
-                            }
-                        }
-
-                    </div>
-                </div>
-
-            </div>
-            <div class="layui-row layui-form-item">
-
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                    <label class="LableCss1">跟踪次数:</label>
-                    <div class="layui-input-block">
-                        <input type="text" class="layui-input linu" readonly="readonly" value="@ViewBag.Number" />
-                    </div>
-
-                </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="LableCss1">学生等级:</label>
-                    <div class="layui-input-block">
-                        <select name="Rank" id="Rank">
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                        </select>
+                    <div class="layui-input-block">                 
+                        @Html.DropDownList("Rank", ViewBag.grand as IEnumerable<SelectListItem> ,new Dictionary<string, object>() { })
                     </div>
                 </div>
             </div>
@@ -101,16 +59,7 @@
                         @Html.TextArea("TailAfterSituation", new Dictionary<string, object>() { { "placeholder", "跟踪情况描述" }, { "class", "layui-input TextAreCss1" }, { "lay-verify", "required" } })
                     </div>
                 </div>
-            </div>
-            <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">其他说明:</label>
-                    <div class="layui-input-block">
-                        @Html.TextArea("Rmark", new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
-                    </div>
-                </div>
-            </div>
-
+            </div>             
             <div class="layui-form-item" style="margin-top:100px;">
                 <div class="layui-input-block">
                     <div style="width:65%;text-align:right">

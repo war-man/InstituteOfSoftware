@@ -41,7 +41,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     [CheckLogin]
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/ShortInfomationFuntion
+        // GET: /Market/StudentDataKeep/FllowView
 
         #region 创建实体
         //创建一个用于操作数据的备案实体
@@ -1369,7 +1369,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             return null;
         }
-        
+
+        #endregion
+
+        #region 获取跟踪详情
+        public ActionResult FllowView(int id)
+        {
+            //获取该备案数据的所有跟踪结果
+            Consult consult= EmployandCounTeacherCoom.consult.AccordingStuIdGetConsultData(id);
+            List<FollwingInfo> list= EmployandCounTeacherCoom.consult.Fi_Entity.GetFoll_ConsltId(consult.Id).OrderBy(c=>c.FollwingDate).ToList();
+            ViewBag.list = list;
+            return View();
+        }
         #endregion
     }
 }

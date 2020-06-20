@@ -67,9 +67,9 @@
                             </div>
                         </div>
                         <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                            <label class="LableCss1">跟踪总数:</label>
+                            <label class="LableCss1">跟踪等级:</label>
                             <div class="layui-input-block">
-                                <input type="text" class="layui-input linu" readonly="readonly" value="@ViewBag.Number" />
+                                @Html.DropDownList("Marktype", ViewBag.marketlist as IEnumerable<SelectListItem> ,new Dictionary<string, object>() { })
                             </div>
                         </div>
                     </div>
@@ -115,47 +115,7 @@
                                                     <input class="layui-input" id="MyDate" name="MyDate" disabled="disabled" value="@list[0].FollwingDate"/>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="layui-row layui-form-item">
-                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                                <label class="LableCss1">学生等级:</label>
-                                                <div class="layui-input-block">
-                                                    <select name="MyRank" id="MyRank">
-                                                        @{
-                                                            if (list[0].Rank.Contains("A"))
-                                                            {
-                                                                <option value="A" selected="selected">A</option>
-                                                                <option value="B">B</option>
-                                                                <option value="C">C</option>
-                                                                <option value="D">D</option>
-                                                            }
-                                                            else if (list[0].Rank.Contains("B"))
-                                                            {
-                                                                <option value="A">A</option>
-                                                                <option value="B" selected="selected">B</option>
-                                                                <option value="C">C</option>
-                                                                <option value="D">D</option>
-                                                            }
-                                                            else if (list[0].Rank.Contains("C"))
-                                                            {
-                                                                <option value="A">A</option>
-                                                                <option value="B">B</option>
-                                                                <option value="C" selected="selected">C</option>
-                                                                <option value="D">D</option>
-                                                            }
-                                                            else if (list[0].Rank.Contains("D"))
-                                                            {
-                                                                <option value="A">A</option>
-                                                                <option value="B">B</option>
-                                                                <option value="C">C</option>
-                                                                <option value="D" selected="selected">D</option>
-                                                            }
-                                                        }
-                                                    </select>
-
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </div>                       
                                         <div class="layui-row layui-form-item">
                                             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                                                 <label class="layui-form-label">跟踪情况:</label>

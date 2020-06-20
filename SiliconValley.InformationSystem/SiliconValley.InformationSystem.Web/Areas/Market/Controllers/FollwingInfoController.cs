@@ -26,6 +26,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         // GET: /Market/FollwingInfo/GetTableData
         
         static int f_id = 0;
+
+        public List<SelectListItem> GetMarketGrand()
+        {
+            List<SelectListItem> marketGrand = new List<SelectListItem>();
+            marketGrand.Add(new SelectListItem() { Text = "--无--", Value = "0" });
+            marketGrand.Add(new SelectListItem() { Text = "A类", Value = "A" });
+            marketGrand.Add(new SelectListItem() { Text = "B类", Value = "B" });
+            marketGrand.Add(new SelectListItem() { Text = "C类", Value = "C" });
+            marketGrand.Add(new SelectListItem() { Text = "D类", Value = "D" });
+            return marketGrand;
+        }
+
         public ActionResult FollwingInfoIndex()
         {
             ConsultTeacher = new ConsultTeacherManeger();
@@ -106,7 +118,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                 //获取这个学生的跟踪信息次数
                 int j = 0;
-                List<FollwingInfo> find = CM_Entity.GetFollwingManeger().GetIQueryable().ToList();
+                List<FollwingInfo> find = CM_Entity.Fi_Entity.GetIQueryable().ToList();
                 if (find_consult.Count == 1)
                 {
                     int i = 0;
@@ -140,13 +152,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个添加页面
         public ActionResult AddFollwingInfo(int id)
         {
-            StudentPutOnRecord find_Stu= CM_Entity.GetSingleStudent(id);
-            int consult_id = CM_Entity.GetIQueryable().Where(c=>c.StuName==id).FirstOrDefault().Id;           
-            SessionHelper.Session["consult_id"] = consult_id;
-            int Number= CM_Entity.GetFollwingManeger().GetIQueryable().Where(c => c.Consult_Id == consult_id).ToList().Count;
+            StudentPutOnRecord find_Stu= CM_Entity.GetSingleStudent(id);//获取备案信息
+            Consult consult = CM_Entity.GetIQueryable().Where(c=>c.StuName==id).FirstOrDefault();
+            List<SelectListItem> grand = GetMarketGrand().Where(c => c.Value.Equals(consult.MarketType) ? c.Selected = true : c.Selected = false).ToList();
+
+            SessionHelper.Session["consult_id"] = consult.Id;
+
             ViewBag.Name = find_Stu.StuName;
             ViewBag.Sex = find_Stu.StuSex;
-            ViewBag.Number = Number;
+            ViewBag.grand = grand;
             return View();
         }
         //这是一个添加方法
@@ -157,18 +171,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             Enplo_Entity = new EmployeesInfoManage();
             try
             {
+                int count_id=Convert.ToInt32( SessionHelper.Session["consult_id"]);//获取分量Id
+
                 string Rank = Request.Form["Rank"];
-                string Rmark = Request.Form["Rmark"];
                 string TailAfterSituation = Request.Form["TailAfterSituation"];
-                FollwingInfoManeger FM_Entity = CM_Entity.GetFollwingManeger();
+               
                 FollwingInfo new_f = new FollwingInfo();
                 new_f.Consult_Id = Convert.ToInt32(SessionHelper.Session["consult_id"]);
                 new_f.FollwingDate = DateTime.Now;
                 new_f.IsDelete = false;
                 new_f.TailAfterSituation = TailAfterSituation;
-                new_f.Rank = Rank;
-                new_f.Rmark = Rmark;
-                FM_Entity.Insert(new_f);
+
+                CM_Entity.Fi_Entity.Insert(new_f);
+
                 BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName +"添加了一条跟踪学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 return Json("ok",JsonRequestBehavior.AllowGet);
 
@@ -189,15 +204,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //获取该学生的Id
             ViewBag.Name = find_stu.StuName;
             ViewBag.Sex = find_stu.StuSex;
-            //获取跟踪总数
-            Consult find_consult = CM_Entity.GetIQueryable().Where(c => c.StuName == id).FirstOrDefault();
-            FollwingInfoManeger FM_Entity = CM_Entity.GetFollwingManeger();
-            int count= FM_Entity.GetIQueryable().Where(f => f.Consult_Id == find_consult.Id).ToList().Count;
-            ViewBag.Number = count + "次";
             //获取这个学生的所有咨询信息
             Consult find_c= CM_Entity.GetIQueryable().Where(c => c.StuName == id).FirstOrDefault();
-            List<FollwingInfo> flist= CM_Entity.GetFollwingManeger().GetIQueryable().Where(f => f.Consult_Id == find_c.Id).ToList();
+            List<FollwingInfo> flist= CM_Entity.Fi_Entity.GetIQueryable().Where(f => f.Consult_Id == find_c.Id).ToList();
             ViewBag.flist = flist;
+            //获取学生跟踪等级
+            List<SelectListItem> marketGrand = GetMarketGrand().Where(c => c.Value.Equals(find_c.MarketType) ? c.Selected = true : c.Selected = false).ToList();
+            
+
+            ViewBag.marketlist = marketGrand;
             return View();
         }
         //获取某个跟踪信息
@@ -206,7 +221,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             if (!string.IsNullOrEmpty(Id))
             {
                 int fid = Convert.ToInt32(Id);
-               FollwingInfo find=  CM_Entity.GetFollwingManeger().GetEntity(fid);
+               FollwingInfo find=  CM_Entity.Fi_Entity.GetEntity(fid);
                 return Json(find,JsonRequestBehavior.AllowGet);
             }
             else
@@ -225,11 +240,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     string My_TailAfterSituation = Request.Form["My_TailAfterSituation"];
                     string My_Rmark = Request.Form["My_Rmark"];
                     int F_Id = Convert.ToInt32(Request.Form["F_Id"]);
-                    FollwingInfo find_f = CM_Entity.GetFollwingManeger().GetEntity(F_Id);
-                    find_f.Rank = MyRank;
+                    FollwingInfo find_f = CM_Entity.Fi_Entity.GetEntity(F_Id);
+                    //find_f.Rank = MyRank;
                     find_f.Rmark = My_Rmark;
                     find_f.TailAfterSituation = My_TailAfterSituation;
-                    CM_Entity.GetFollwingManeger().Update(find_f);
+                    CM_Entity.Fi_Entity.Update(find_f);
                     //BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "成功编辑了一条跟踪信息数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
@@ -347,6 +362,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 Party = l.Party,
                 MarketType = l.MarketType,
                 StuQQ = l.StuQQ,
+                ConsultTeacher=l.ConsultTeacher,
                 CountBeanDate = CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
             }).ToList();
             var data = new {data= mydata, count=list.Count,code=0,msg=""};
@@ -367,5 +383,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             return View();
         }
+
+
     }
 }

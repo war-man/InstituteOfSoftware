@@ -1850,6 +1850,7 @@
     <Content Include="Areas\Market\Views\NetClientRecord\SelectChannelemp.cshtml" />
     <Content Include="Areas\Market\Views\Sch_Market\Sch_MarketDetailsView.cshtml" />
     <Content Include="Areas\Market\Views\Sch_Market\Sch_MarketEdit.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\FllowView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
