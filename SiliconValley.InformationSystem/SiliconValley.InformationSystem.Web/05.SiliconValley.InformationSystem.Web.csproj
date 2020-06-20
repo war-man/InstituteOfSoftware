@@ -361,6 +361,7 @@
   <ItemGroup>
     <Content Include="Areas\BaseSysManage\css\style.css" />
     <Content Include="Areas\BaseSysManage\js\style.js" />
+    <Content Include="Areas\Base_SysManage\Views\Base_AppSecret\Form.cshtml" />
     <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
     <Content Include="Areas\Courseware\images\timg.jpg" />
     <Content Include="Areas\Courseware\images\wen.jpg" />
@@ -867,7 +868,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Base_SysManage\Views\web.config" />
-    <Content Include="Areas\Base_SysManage\Views\Base_AppSecret\Form.cshtml" />
     <Content Include="Areas\Base_SysManage\Views\Base_AppSecret\Index.cshtml" />
     <Content Include="Areas\Base_SysManage\Views\Base_AppSecret\PermissionForm.cshtml" />
     <Content Include="Areas\Base_SysManage\Views\Base_DatabaseLink\Form.cshtml" />
@@ -947,7 +947,6 @@
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
-    <Content Include="Areas\Market\Views\NetClientRecord\DetailInfo.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\EditView.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\MarketChairIndex.cshtml" />
@@ -1210,7 +1209,6 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyDetail.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyHistoryView.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveylistView.cshtml" />
-    <Content Include="Areas\Teachingquality\StuImages\+name" />
     <Content Include="Areas\Finance\Views\Pricedetails\Costitems.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Studentpayment.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Typeeyesight.cshtml" />
@@ -1751,6 +1749,20 @@
     <Content Include="Areas\Market\Views\MarketChair\AddMarketChairView.cshtml" />
     <Content Include="Areas\Market\Views\Infomation\AddView.cshtml" />
     <Content Include="Areas\Market\Views\FollwingInfo\MyFollwingInfoIndex.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\ClassImages.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Myclass.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\IDcardphoto.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\Traineeinterview.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\Parentinterview.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\StudentEnll.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Classlists.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Paytheadvancefee.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\PreentryfeeDate.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Preentryfeerefund.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Prepayments.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Tuitionrefund.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\TuitionreHome.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\RefunditemsDate.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

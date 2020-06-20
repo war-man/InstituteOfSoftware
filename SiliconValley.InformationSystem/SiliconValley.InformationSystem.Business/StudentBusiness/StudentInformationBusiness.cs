@@ -243,7 +243,8 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             string xuehao = n + y + sfz + mingci;
             return xuehao;
         }
-         
+
+
         /// <summary>
         /// 以身份证查询是否有重复学员
         /// </summary>
