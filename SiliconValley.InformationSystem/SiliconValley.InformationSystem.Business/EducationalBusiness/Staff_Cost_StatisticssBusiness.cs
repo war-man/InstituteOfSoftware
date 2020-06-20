@@ -654,7 +654,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         {
                             if (item1.Course == course.CurriculumID)
                             {
-                                item1.NodeNumber += 4;
+                                if (type == "skill")
+                                {
+                                    item1.NodeNumber += 4;
+                                }
+                                else
+                                {
+                                    item1.NodeNumber += 2;
+                                }
+                                
                             }
                         }
                     }
