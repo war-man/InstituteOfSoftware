@@ -171,11 +171,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             ViewBag.Stage = Grandcontext.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
             ViewBag.student = JsonConvert.SerializeObject(Student);
             var Preentry= Preentryfeebusenn.GetList().Where(a => a.identitydocument == studentInformationBusiness.GetEntity(id).identitydocument && a.Refundornot == null).ToList();
-            foreach (var item in Preentry)
-            {
-                Amountofmoney = Amountofmoney + item.Amountofmoney;
-            }
-            ViewBag.Amountofmoney = Amountofmoney;
+
+            ViewBag.Amountofmoney = dbtext.PreentryfeeFinet(id);
+
+
             return View();
         }
         [HttpPost]
@@ -235,6 +234,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             //学员费用
             BaseBusiness<Payview> studentfee = new BaseBusiness<Payview>();
             var personlist = SessionHelper.Session["person"] as List<Payview>;
+            var Amonet = dbtext.PreentryfeeFinet(personlist[0].StudenID);
+            if (Amonet>0)
+            {
+                foreach (var item in personlist)
+                {
+                    var costit = costitemsBusiness.GetEntity(item.Costitemsid);
+                    if (costit.Rategory==8)
+                    {
+                        item.Amountofmoney = item.Amountofmoney - Amonet;
+                    }
+                }
+            }
             string Invoicenumber = "";
             int counts = studentfee.GetList().Count();
             if (counts<10)
@@ -430,7 +441,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         /// <returns></returns>
         public ActionResult PrepaymentsDate(int page, int limit,string Name)
         {
-           var costlist= studentDataKeepAndRecordBusiness.GetSudentDataAll();
+           var costlist= studentDataKeepAndRecordBusiness.GetAll();
             if (!string.IsNullOrEmpty(Name))
             {
                 costlist = costlist.Where(a => a.StuName.Contains(Name)).ToList();
@@ -449,7 +460,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 
         public ActionResult Paytheadvancefee(int id)
         {
-        ViewBag.ExportStudentBeanData = studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a => a.Id == id).FirstOrDefault();
+        ViewBag.ExportStudentBeanData = studentDataKeepAndRecordBusiness.GetAll().Where(a => a.Id == id).FirstOrDefault();
             return View();
         }
         /// <summary>

@@ -281,16 +281,16 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             var costitemslist = costitemsBusiness.costitemslist().Where(a => a.Rategory == idcost&&a.IsDelete==false).ToList();
             foreach (var item in costitemslist)
             {
-                var x = PayviewBusiness.GetList().Where(a => a.IsDelete == false && a.StudenID == studentid && a.Costitemsid == item.id).FirstOrDefault();
-                if (x!= null)
+                var x = studentfee.GetList().Where(a => a.IsDelete == false && a.StudenID == studentid && a.Costitemsid == item.id).FirstOrDefault();
+                if (x != null)
                 {
-                    var Paymentverid = PayviewPaymentverBusiness.GetList().Where(a => a.Payviewid == x.ID).FirstOrDefault().Paymentver;
-                  if(PaymentverificationBusiness.GetEntity(Paymentverid).Passornot==true|| PaymentverificationBusiness.GetEntity(Paymentverid).Passornot==null)
+                    var Paymentverid = PayviewPaymentverBusiness.GetList().Where(a => a.Payviewid == x.ID).Count();
+                    if (PaymentverificationBusiness.GetEntity(Paymentverid).Passornot == true || PaymentverificationBusiness.GetEntity(Paymentverid).Passornot == null)
                     {
                         countfee++;
                     }
                 }
-            
+
             }
 
             return costitemsBusiness.GetList().Where(a => a.Grand_id == Grand_id&&a.IsDelete==false).Select(a => new { a.id, a.Name, a.Amountofmoney, Rategory = costitemssX.GetEntity(a.Rategory).Name, countfee }).ToList();
@@ -1083,6 +1083,13 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                     }
                     var xz = studentInformationBusiness.GetEntity(studentFeeRecordslist[0].StudenID).StudentPutOnRecord_Id;
                     studentDataKeepAndRecordBusiness.ChangeStudentState((int)xz);
+
+                    var proes = Preentryfeebusenn.GetList().Where(a => a.keeponrecordid == xz && a.IsDit == false && a.Refundornot == null).ToList();
+                    foreach (var item in proes)
+                    {
+                        item.Refundornot = true;
+                    }
+                    Preentryfeebusenn.Update(proes);
                     retus.Msg = "入账成功";
 
                 }
@@ -1165,7 +1172,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             List<Preeviews> list = new List<Preeviews>();
             foreach (var item in preenlist)
             {
-              var Keep=  studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a=>a.Id==item.keeponrecordid).FirstOrDefault();
+              var Keep=  studentDataKeepAndRecordBusiness.GetAll().Where(a=>a.Id==item.keeponrecordid).FirstOrDefault();
                 var x = new Preeviews()
                 {
                     id= item.id,
@@ -1503,6 +1510,23 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 data = dataList
             };
             return data;
+        }
+        /// <summary>
+        /// 获取已交的预入费总额且使用
+        /// </summary>
+        /// <param name="Studentid">学号</param>
+        /// <returns></returns>
+        public decimal PreentryfeeFinet(string Studentid)
+        {
+            var x= Preentryfeebusenn.GetList().Where(a => a.keeponrecordid == studentInformationBusiness.GetEntity(Studentid).StudentPutOnRecord_Id && a.IsDit == false && a.Refundornot == null).ToList();
+            StudentRefunditems studentRefunditems = new StudentRefunditems();
+            foreach (var item in x)
+            {
+
+                studentRefunditems.Amountofmoney = studentRefunditems.Amountofmoney + item.Amountofmoney;
+            }
+            return studentRefunditems.Amountofmoney;
+
         }
     }
 }

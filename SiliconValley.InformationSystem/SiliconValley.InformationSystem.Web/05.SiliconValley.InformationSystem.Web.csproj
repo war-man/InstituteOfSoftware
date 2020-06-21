@@ -63,12 +63,6 @@
     <Reference Include="EntityFramework6.Npgsql">
       <HintPath>..\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core">
-      <HintPath>..\..\..\..\聊天室\SignalRChat\bin\Microsoft.AspNet.SignalR.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
-      <HintPath>..\..\..\..\聊天室\SignalRChat\bin\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
@@ -1851,6 +1845,10 @@
     <Content Include="Areas\Market\Views\Sch_Market\Sch_MarketDetailsView.cshtml" />
     <Content Include="Areas\Market\Views\Sch_Market\Sch_MarketEdit.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\FllowView.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\IDcardphoto.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\Parentinterview.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\Traineeinterview.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\RefunditemsDate.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
