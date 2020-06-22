@@ -15,12 +15,12 @@
 </head>
 <body>
     <div id="IDcard">
-            <img id="Identityjustimg" style="width:600px;height:260px;" />
+            <img id="Identityjustimg" src="@Model.Identityjustimg" style="width:600px;height:260px;" />
             <text style="font-size:22pt;">正面</text>
             <br />
-            <button type="button" src="~/Areas/Teachingquality/IDcardphotoImg/Identityjustimg/@Model.Identityjustimg" id="imgbut" class="layui-btn" style="margin-left:50%;">导出</button>
+            <button type="button"  id="imgbut" class="layui-btn" style="margin-left:50%;">导出</button>
             <br />
-            <img id="Identitybackimg" src="~/Areas/Teachingquality/IDcardphotoImg/Identitybackimg/@Model.Identitybackimg" style="width:600px;height:260px;" />
+            <img id="Identitybackimg" src="@Model.Identitybackimg" style="width:600px;height:260px;" />
             <text style="font-size:22pt;">反面</text>
 
         </div>

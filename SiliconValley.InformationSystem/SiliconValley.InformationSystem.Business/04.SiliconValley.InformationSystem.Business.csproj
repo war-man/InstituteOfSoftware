@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BceSdkDotNet, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\bce-dotnet-sdk-1.0.4\BceSdkDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.6\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -109,6 +113,7 @@
     <Compile Include="ClassesBusiness\HeadmasterBusiness.cs" />
     <Compile Include="ClassesBusiness\ScheduleForTraineesBusiness.cs" />
     <Compile Include="ClassSchedule_Business\ClassScheduleBusiness.cs" />
+    <Compile Include="Cloudstorage_Business\CloudstorageBusiness.cs" />
     <Compile Include="Common\BusHelper.cs" />
     <Compile Include="Common\Operator.cs" />
     <Compile Include="Consult_Business\ConsultManeger.cs" />
@@ -286,7 +291,6 @@
   <ItemGroup>
     <Folder Include="bin\Debug\zh-Hans\" />
     <Folder Include="bin\Release\" />
-    <Folder Include="CloudstorageBusiness\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Depository\02.SiliconValley.InformationSystem.Depository.csproj">

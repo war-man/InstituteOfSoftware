@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 using SiliconValley.InformationSystem.Business.Coursewaremaking_Business;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
@@ -36,6 +37,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
             return View();
 
         }
+        CloudstorageBusiness cloudstorageBusiness = new CloudstorageBusiness();
         /// <summary>
         /// 获取文件夹内容
         /// </summary>
@@ -43,55 +45,58 @@ namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
         public ActionResult CourDate()
         {
             var strs = Request.QueryString["str"];
-            List<string> db_Name = new List<string>();
-            var strPath = Server.MapPath("/Areas/Courseware" + strs);
-            List<string> str = getDirectory(strPath);
-
-            foreach (var item in str)
-            {
-                db_Name.Add(Path.GetFileName(item));
-            }
+         //   List<string> db_Name = new List<string>();
+          //  var strPath = Server.MapPath("/Areas/Courseware" + strs);
+            //List<string> str = getDirectory(strPath);
+           var x= cloudstorageBusiness.Getchildren("Courseware"+ strs);
+            
+            //foreach (var item in str)
+            //{
+            //    db_Name.Add(Path.GetFileName(item));
+            //}
            
-            return Json(db_Name, JsonRequestBehavior.AllowGet);
+            return Json(x, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 获取子文件地址
         /// </summary>
         /// <param name="path">文件夹路径</param>
         /// <returns></returns>
-        public static List<string> getDirectory(string path)
-        {
-            List<String> list = new List<string>();
-            DirectoryInfo root = new DirectoryInfo(path);
-            try
-            {
-                DirectoryInfo[] di = root.GetDirectories();
+        //public static List<string> getDirectory(string path)
+        //{
+        //    List<String> list = new List<string>();
+        //    DirectoryInfo root = new DirectoryInfo(path);
+        //    try
+        //    {
+        //        DirectoryInfo[] di = root.GetDirectories();
 
-                for (int i = 0; i < di.Length; i++)
-                {
-                    //   Console.WriteLine(di[i].FullName);
-                    list.Add(di[i].FullName);
-                }
-            }
-            catch (Exception)
-            {
+        //        for (int i = 0; i < di.Length; i++)
+        //        {
+        //            //   Console.WriteLine(di[i].FullName);
+        //            list.Add(di[i].FullName);
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
 
   
-            }
-            finally {
+        //    }
+        //    finally {
 
               
-                    for (int i = 0; i < root.GetFiles().Length; i++)
-                    {
-                        //   Console.WriteLine(di[i].FullName);
-                        list.Add(root.GetFiles()[i].FullName);
-                    }
+        //            for (int i = 0; i < root.GetFiles().Length; i++)
+        //            {
+        //                //   Console.WriteLine(di[i].FullName);
+        //                list.Add(root.GetFiles()[i].FullName);
+        //            }
             
                
-            }
+        //    }
               
-            return list;
-        }
+        //    return list;
+        //}
+
+     
         /// <summary>
         /// 保存文件
         /// </summary>
@@ -100,21 +105,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
         /// <returns></returns>
         public int fines(string url,string fineName)
         {
-            try
-            {
-                HttpPostedFileBase file = Request.Files[0];
-                //  var fi=  getDirectory()
-                file.SaveAs(Server.MapPath("/Areas/Courseware/" + url+ fineName + file.FileName));
-                return 1;
-            }
-            catch (Exception ex)
-            {
 
-                return 0;
-            }
-          
-           
+            HttpPostedFileBase file = Request.Files[0];
+            fineName = fineName + file.FileName;
+          return cloudstorageBusiness.Savefile("xinxihua", "Courseware/"+url, fineName, file.InputStream);
+                //  var fi=  getDirectory()
         }
+
+     
 
         //private List<string> GetFullFileName(string path)
         //{
@@ -187,13 +185,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
         [HttpPost]
         public ActionResult AddCoursewaremaking(Coursewaremaking coursewaremaking)
         {
+            coursewaremaking.Filename = coursewaremaking.RampDpersonID.Substring(coursewaremaking.RampDpersonID.Length - 4) + coursewaremaking.Filename;
             bool bot = false;
-           var cou= fines(coursewaremaking.Filepath, coursewaremaking.RampDpersonID.Substring(coursewaremaking.RampDpersonID.Length - 4));
-            if (cou>0)
+            var cou =  dbtext.AddCoursewaremaking(coursewaremaking);
+            if (cou ==true)
             {
-                coursewaremaking.Filename = coursewaremaking.RampDpersonID.Substring(coursewaremaking.RampDpersonID.Length - 4) + coursewaremaking.Filename;
+                fines(coursewaremaking.Filepath, coursewaremaking.RampDpersonID.Substring(coursewaremaking.RampDpersonID.Length - 4));
+              
                 bot = true;
-                bot = dbtext.AddCoursewaremaking(coursewaremaking);
+              ;
             }
             return Json(bot, JsonRequestBehavior.AllowGet);
         }
@@ -215,12 +215,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
             string URL = Request.QueryString["URL"];
             string filename = Request.QueryString["filename"];
             string[] finmae = filename.Split('.');
-            string pathName = "/Areas/Courseware/" + URL+filename;
-
+            string pathName = "/Areas/Courseware/" + URL + filename;
+            var stream =cloudstorageBusiness.DownloadFile("xinxihua", "Courseware/" + URL, filename);
             //开始下载
-            FileStream stream = new FileStream(Server.MapPath(pathName), FileMode.Open, FileAccess.Read);
+            //FileStream stream = new FileStream(.ImagesFine("xinxihua", URL, filename, 1), FileMode.Open, FileAccess.Read);
 
-            return File(stream, finmae[1], filename);
+            return File(stream, "application/msword", filename);
+            
         }
         /// <summary>
         /// 获取课件上传数据
@@ -245,9 +246,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
             try
             {
                 string yourPath = Request.QueryString["yourPath"];
-                FileInfo FileInfos = new FileInfo(Server.MapPath("/Areas/Courseware/" + yourPath));
-                FileInfos.Delete();
-                dbtext.RemoveCoursewaremaking(id);
+                if(cloudstorageBusiness.DeleteObject("xinxihua", "Courseware/" + yourPath))
+                {
+                    dbtext.RemoveCoursewaremaking(id);
+                }
+              
                 bit = true;
             }
             catch (Exception ex)
@@ -258,6 +261,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
             return Json(bit, JsonRequestBehavior.AllowGet);
             
             
+        }
+
+        public ActionResult text2()
+        {
+            return View();
+        }
+
+        public ActionResult text3()
+        {
+            return null;
         }
     }
 }

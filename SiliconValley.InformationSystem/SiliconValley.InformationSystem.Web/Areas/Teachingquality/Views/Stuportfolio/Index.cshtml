@@ -170,7 +170,8 @@
         $.post("/Teachingquality/Stuportfolio/Studentfine/" + $("#studentid").val(), function (data) {
             
             if (data.Picture != null) {
-                $("#stuimg").append($('<img src="/Areas/Teachingquality/studentImg/' + data.Picture +'"  style="width:150px;height:150px;"/>'))
+                
+                $("#stuimg").append($('<img src="' + data.Picture +'"  style="width:150px;height:150px;"/>'))
             } else {
                 $("#stuimg").append($('<img src="/Images/Login/guigu.png"  style="width:150px;height:150px;"/>'))
             }

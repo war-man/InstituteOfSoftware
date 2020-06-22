@@ -20,6 +20,11 @@ using System.Drawing.Imaging;
 using Newtonsoft.Json;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.Entity;
+using BaiduBce.Services.Bos;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
+using BaiduBce;
+using BaiduBce.Auth;
+using BaiduBce.Services.Bos.Model;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
@@ -560,6 +565,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return Json(dbtext.Studenttuitionfeestandard(id), JsonRequestBehavior.AllowGet);
         }
+        //对象存储业务类
+        CloudstorageBusiness cloudstorage_Business = new CloudstorageBusiness();
         //添加学员照片规格宽144高192
         [HttpGet]
         public ActionResult AddStudentimg()
@@ -567,7 +574,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string studentid = Request.QueryString["studentid"]; ;
             ViewBag.studentid = studentid;
             ViewBag.student = JsonConvert.SerializeObject(dbtext.StuClass(studentid));
-            ViewBag.Picture = dbtext.GetEntity(studentid).Picture == null ? "" : dbtext.GetEntity(studentid).Picture;
+            ViewBag.Picture = dbtext.GetEntity(studentid).Picture == null ? "" : cloudstorage_Business.ImagesFine("xinxihua", "StudentImage", dbtext.GetEntity(studentid).Picture,5);
             return View();
         }
         //添加学员照片规格宽144高192
@@ -579,20 +586,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             AjaxResult result = new AjaxResult();
             try
             {
+                
+
                 var fien = Request.Files[0];
                 string filename = fien.FileName;
                 string Extension = Path.GetExtension(filename);
                 string newfilename = id + Extension;
-
-
+              
                 if (dbtext.StudentAddImg(id, newfilename) == true)
                 {
 
                     result = new SuccessResult();
                     result.ErrorCode = 200;
-                    string path = Server.MapPath("~/Areas/Teachingquality/studentImg/" + newfilename);
 
-                    fien.SaveAs(path);
+                 var client=   cloudstorage_Business.BosClient();
+                    // 以数据流形式上传Object
+                   
+
+                     cloudstorage_Business.PutObject("xinxihua", "StudentImage", newfilename,fien.InputStream);
+
+
 
                     //  bitmap.Save(path);
                 }
@@ -698,7 +711,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string studentid = Request.QueryString["studentid"];
             ViewBag.studentid = studentid;
             var student = dbtext.GetEntity(studentid);
-
+            student.Identitybackimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identitybackimg", student.Identitybackimg, 5);
+            student.Identityjustimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identityjustimg", student.Identityjustimg, 5);
             return View(student);
         }
         /// <summary>
@@ -718,9 +732,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 {
                     result = new SuccessResult();
                     result.ErrorCode = 200;
-                    string path = Server.MapPath("~/Areas/Teachingquality/IDcardphotoImg/Identityjustimg/" + newfilename);
-
-                    fien.SaveAs(path);
+                    cloudstorage_Business.PutObject("xinxihua", "IDcardphotoImg/Identityjustimg", newfilename, fien.InputStream);
+                 
                 }
             }
             catch (Exception ex)
@@ -749,9 +762,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 {
                     result = new SuccessResult();
                     result.ErrorCode = 200;
-                    string path = Server.MapPath("~/Areas/Teachingquality/IDcardphotoImg/Identitybackimg/" + newfilename);
-
-                    fien.SaveAs(path);
+                    cloudstorage_Business.PutObject("xinxihua", "IDcardphotoImg/Identitybackimg", newfilename, fien.InputStream);
+                 
+                  
                 }
             }
             catch (Exception ex)
@@ -1247,6 +1260,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             return null;
         }
-       
+
+        public ActionResult text6()
+        {
+            CloudstorageBusiness cloudstorage_Business = new CloudstorageBusiness();
+           var z= cloudstorage_Business.Listfiles("xinxihua", "StudentImage");
+           var client = cloudstorage_Business.BosClient();
+
+            var list = client.ListObjects("xinxihua", "Stu");
+
+            var imageStream = client.GetObject("xinxihua", "StudentImage/19042000091400212.jpg");
+            // 获取ObjectMeta
+            ObjectMetadata meta = imageStream.ObjectMetadata;
+
+            // 获取Object的输入流
+            Stream objectContent = imageStream.ObjectContent;
+            var img = Image.FromStream(objectContent);
+            return null;
+           
+        }
+
+        public void GetObject(BosClient client, String bucketName, String objectKey)
+        {
+
+            // 获取Object，返回结果为BosObject对象
+            BosObject bosObject = client.GetObject(bucketName, objectKey);
+
+            // 获取ObjectMeta
+            ObjectMetadata meta = bosObject.ObjectMetadata;
+
+            // 获取Object的输入流
+            Stream objectContent = bosObject.ObjectContent;
+
+    // 处理Object
+
+    // 关闭流
+    objectContent.Close();
+        }
+
     }
 }

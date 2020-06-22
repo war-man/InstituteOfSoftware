@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 
 namespace SiliconValley.InformationSystem.Business.StudentportfolioBusiness
 {
@@ -19,6 +20,8 @@ namespace SiliconValley.InformationSystem.Business.StudentportfolioBusiness
         ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
         //学员班级表
         ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
+        //对象存储业务类
+        CloudstorageBusiness cloudstorage_Business = new CloudstorageBusiness();
         /// <summary>
         /// 获取学员基础信息
         /// </summary>
@@ -30,7 +33,7 @@ namespace SiliconValley.InformationSystem.Business.StudentportfolioBusiness
             var stu = new
             {
                 scheduleForTraineesBusiness.SutdentCLassName(Studentid).ClassID,
-                student.Picture,
+                Picture= cloudstorage_Business.ImagesFine("xinxihua", "StudentImage", student.Picture,5),
                 student.Name,
                 student.Nation,
                 student.Telephone,
