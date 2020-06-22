@@ -144,10 +144,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult CallbackDetailInfo(int Id)
         {
             NetClientRecordManage ncr = new NetClientRecordManage();
+            List<NetClientRecordView> ncrviewlist = new List<NetClientRecordView>();
+             ncrviewlist = ncr.GetNcrviewlist(Id);//获取回访记录集合
             var n = ncr.GetNcrviewById(Id);
+            ViewBag.ncrlist = ncrviewlist;
+            ViewBag.Number = ncrviewlist.Count();
             ViewBag.Id = Id;
             //BindSelect();
-            return View(n);
+            return View();
         }
         public ActionResult GetCallbackInfoById(int id)
         {
@@ -219,6 +223,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+        
         /// <summary>
         /// 编辑网咨学员信息
         /// </summary>
@@ -229,40 +234,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             NetClientRecordManage ncr = new NetClientRecordManage();
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             List<NetClientRecordView> ncrviewlist = new List<NetClientRecordView>();
-            var n = ncr.GetEntity(Id);
+           
             ViewBag.Id = Id;
-            var trackdata = ncr.GetList().Where(s =>s.SPRId==n.SPRId&& s.NetClientDate != null).ToList();//获取跟踪的数据（没有跟踪时间的是初始数据即不属于跟踪数据）
-            foreach (var item in trackdata)
-            {
-                var ncrview = ncr.GetNcrviewById(item.Id);
-                ncrviewlist.Add(ncrview);
-            }
-            var nview = ncr.GetNcrviewById(Id);
-            ViewBag.Number = ncrviewlist.Count();
-            var newlist = from e in trackdata
-                          select new
-                          {
-                              #region 获取属性值 
-                              e.Id,
-                              e.EmpId,
-                              empname = empinfo.GetInfoByEmpID(e.EmpId).EmpName,
-                              e.NetClientDate,
-                              e.MarketTeaId,
-                              e.Grade,
-                              e.IsDel
-                              #endregion
-                          };
-
+            ncrviewlist = ncr.GetNcrviewlist(Id);//获取回访记录集合
             ViewBag.ncrlist = ncrviewlist;
+            ViewBag.Number = ncrviewlist.Count();
+
+            var nview = ncr.GetNcrviewById(Id);
             return View(nview);
         }
         [HttpPost]
-        public ActionResult EditCallbackInfo()
+        public ActionResult EditCallbackInfo(NetClientRecord ncr,string callbackdata)
         {
+
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
-            int fid=Convert.ToInt32(Request.Form["F_Id"]);
+            int fid=Convert.ToInt32(Request.Form["Id"]);
+            var datas = Request.Form["callbackdata"];
             var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             string eid = UserName.EmpNumber;
             NetClientRecord n = new NetClientRecord();
@@ -281,22 +270,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult EditNetStu(int id, string name, bool ismarry)
-        {
-            NetClientRecordManage ncrinfo = new NetClientRecordManage();
-            var AjaxResultxx = new AjaxResult();
-            try
-            {
-                var emp = ncrinfo.GetEntity(id);
 
-                ncrinfo.Update(emp);
-                AjaxResultxx = ncrinfo.Success();
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = ncrinfo.Error(ex.Message);
-            }
-            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
-        }
     }
 }
