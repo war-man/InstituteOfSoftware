@@ -102,61 +102,7 @@
 
                     </div>
                 </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths">
-                    <label class="layui-form-label">研&nbsp;&nbsp;&nbsp;&nbsp;发&nbsp;&nbsp;&nbsp;人</label>
-                    @Html.Hidden("RampDpersonID")
-                    @Html.Hidden("department")
-                    <div class="layui-input-block">
-                        <div id="CLassNames">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" style="width:176px;height:36px;">
-                                <i class="layui-icon" style="margin-left:143px;" id="ClassName">&#xe615;</i>
-                            </button>
-                        </div>
-                        <input type="text" class="layui-input linu " id="Lists" style="display:none; border:0px;width:300px;" readonly="readonly" />
-
-
-                    </div>
-
-                </div>
-
-
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths">
-                    <label class="layui-form-label">课&nbsp;件&nbsp;类&nbsp;型</label>
-                    <div class="layui-input-block">
-
-                        @Html.DropDownListFor(a => a.MakingType, ViewBag.MakingType as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" } })
-                    </div>
-                </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths">
-                    <label class="layui-form-label">课&nbsp;件&nbsp;标&nbsp;题</label>
-                    <div class="layui-input-block">
-                        @Html.TextBoxFor(a => a.Title, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入课件标题" }, { "class", "layui-input" } })
-                    </div>
-                </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths" id="StaID" style="display:none;">
-                    <label class="layui-form-label">阶&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段</label>
-                    <div class="layui-input-block">
-
-                        @Html.DropDownListFor(a => a.StageID, ViewBag.StageID as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" }, { "class", "wid" } })
-                    </div>
-                </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths" style="display:none;" id="domes">
-
-                </div>
-
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  widths">
-                    <label class="layui-form-label">章&nbsp;&nbsp;&nbsp;&nbsp;节&nbsp;&nbsp;&nbsp;数</label>
-                    <div class="layui-input-block">
-                        @Html.TextBoxFor(a => a.Chaptersnumber, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入章节" }, { "class", "layui-input wid" } })
-                    </div>
-                </div>
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 widths">
-                    <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label>
-                    <div class="layui-input-block">
-
-                        @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar " } })
-                    </div>
-                </div>
+             
 
                 <div style="position:absolute;top:500px;">
                     <div class="layui-input-block" style="padding:20px;margin-left:146px;text-align:center;width:300px;">
@@ -201,7 +147,7 @@
 
         upload.render({
             elem: '#test1'
-            , url: '/Courseware/Coursewaremaking/AddCoursewaremaking'
+            , url: '/Courseware/Coursewaremaking/text3'
             , auto: false //选择文件后不自动上传
             , accept: 'file'
             , bindAction: '#testListAction' //指向一个按钮触发上传
@@ -217,9 +163,7 @@
                 //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
                 obj.preview(function (index, file, result) {
 
-                    $("#test1").css("display", "none");
-                    $("#lab2").val(file.name);
-                    $("#lab2").css("display", "block");
+                  
 
                     //obj.resetFile(index, file, '123.jpg'); //重命名文件名，layui 2.3.0 开始新增
 
@@ -245,8 +189,8 @@
                     parent.GetDateProfessionala();
                     //假设这是iframe页
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index); //再执行关闭        
-                   
+                    parent.layer.close(index); //再执行关闭
+
                 });
 
             }
@@ -279,31 +223,6 @@
 
 
         })
-
-        //这个是专业是否显示
-        function Tuition() {
-            $($("#domes").children()).remove();
-            $("#domes").css("display", "block");
-            var templates = _.template($("#studenthtml").html());
-            var dates = templates({});
-            $("#domes").append($(dates));
-            form.render();
-        }
-        //监听阶段下拉框
-        form.on('select(Stage)', function (data) {
-            var str = $("#department").val();
-
-            if (str.match(RegExp(/教学/))) {
-                if ($(this).text() != "S1" && $(this).text() != "Y1") {
-
-                    Tuition();
-                } else {
-
-                    $($("#domes").children()).remove();
-                    $("#domes").css("display", "none");
-                }
-            }
-        });
 
         //监听提交
         form.on('submit(demo1)', function (data) {

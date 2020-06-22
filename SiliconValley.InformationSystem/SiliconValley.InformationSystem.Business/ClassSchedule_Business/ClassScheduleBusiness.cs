@@ -23,6 +23,7 @@ using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -2355,6 +2356,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return classesList;
         }
+        //对象存储boss
+        CloudstorageBusiness cloudstorageBusiness = new CloudstorageBusiness();
         /// <summary>
         /// 班主任详情
         /// </summary>
@@ -2372,7 +2375,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 Sex = employees.Sex,//性别
                 Phone = employees.Phone,//电话
                 DeptName = department.DeptName,//部门
-                Images = employees.Image//图片
+                Images = cloudstorageBusiness.ImagesFine("xinxihua", "EmpImage", employees.Image,20)//图片
             };
 
             return Headyees;

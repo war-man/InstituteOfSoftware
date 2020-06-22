@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.StudentBusiness;
+﻿using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.StudentportfolioBusiness;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
 
         /// 学员信息
         StudentInformationBusiness studentInformation = new StudentInformationBusiness();
+        //对象存储业务类
+        CloudstorageBusiness cloudstorage_Business = new CloudstorageBusiness();
         // GET: Teachingquality/Stuportfolio
         public ActionResult Index(string id)
         {
@@ -36,8 +39,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
         [HttpGet]
         public ActionResult IDcardphoto()
         {
-
-            return View(studentInformation.GetEntity(StudentID));
+            var student = studentInformation.GetEntity(StudentID);
+            student.Identitybackimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identitybackimg", student.Identitybackimg, 5);
+            student.Identityjustimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identityjustimg", student.Identityjustimg, 5);
+            return View(student);
         }
         //学员访谈
         [HttpGet]
