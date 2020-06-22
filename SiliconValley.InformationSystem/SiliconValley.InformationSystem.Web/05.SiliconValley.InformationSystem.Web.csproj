@@ -330,6 +330,7 @@
     <Compile Include="Areas\Teachingquality\Studentportfolio\StuportfolioController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
+    <Compile Include="Areas\Teaching\Controllers\ExamController.cs" />
     <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
     <Compile Include="Areas\Teaching\Controllers\ProjectController.cs" />
     <Compile Include="Areas\Teaching\Controllers\RecordOfConversationController.cs" />
@@ -1009,7 +1010,6 @@
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
-    <Content Include="Areas\Market\Views\NetClientRecord\EditView.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\MarketChairIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\ThisIsImageDataView.cshtml" />
@@ -1851,6 +1851,10 @@
     <Content Include="Areas\Market\Views\Sch_Market\Sch_MarketDetailsView.cshtml" />
     <Content Include="Areas\Market\Views\Sch_Market\Sch_MarketEdit.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\FllowView.cshtml" />
+    <Content Include="Areas\Educational\CostHistoryFiles\2020-4费用统计明细表.xls" />
+    <Content Include="Areas\Educational\CostHistoryFiles\2020-4费用统计表.xls" />
+    <Content Include="Areas\Educational\CostHistoryFiles\2020-5费用统计明细表.xls" />
+    <Content Include="Areas\Finance\Views\Pricedetails\RefunditemsDate.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

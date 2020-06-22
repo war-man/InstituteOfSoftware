@@ -108,34 +108,40 @@
                 </div>
 
             </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn " lay-submit="" lay-filter="demo1" style="margin-left:300px;">立即提交</button>
+                    <button class="layui-btn " id="btnclose1">关闭</button>
+                </div>
+            </div>
 
         </form>
-        <div class="layui-tab" lay-filter="test">
-            <ul class="layui-tab-title" >
-                @{
-                    List<NetClientRecordView> list = (ViewBag.ncrlist) as List<NetClientRecordView>;
-                    int i = 1;
-                    if (list.Count > 0)
-                    {
-                        foreach (var item in list)
+            <div class="layui-tab" lay-filter="test">
+                <ul class="layui-tab-title">
+                    @{
+                        List<NetClientRecordView> list = (ViewBag.ncrlist) as List<NetClientRecordView>;
+                        int i = 1;
+                        if (list.Count > 0)
                         {
-                 
-                            <li id=@item.Id class="layui-this">第<span>@i</span>次跟踪</li>
-                 
-                            i++;
+                            foreach (var item in list)
+                            {
+
+                                <li id=@item.Id name="@item.Id" class="layui-this">第<span>@i</span>次跟踪</li>
+
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <li class="layui-this">系统温馨提示</li>
                         }
                     }
-                    else
-                    {
-                        <li class="layui-this">系统温馨提示</li>
-                    }
-                }
-            </ul>
-            <div class="layui-tab-content">
-                @{
-                    if (list.Count > 0)
-                    {
-                        <form class="layui-form" id="myform" lay-filter="myform">
+                </ul>
+                <div class="layui-tab-content">
+                    @{
+                        if (list.Count > 0)
+                        {
+                            <form class="layui-form" id="myform" lay-filter="myform">
                             <div class="layui-tab-item layui-show">
                                 <div class="layui-row layui-form-item">
                                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -175,26 +181,21 @@
                                 </div>
 
                             </div>
-                        </form>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="layui-tab-item layui-show">
+                                <h3>
+                                    该学生还没有跟踪信息哟!!!
+                                </h3>
+                            </div>
+                        }
                     }
-                    else
-                    {
-                        <div class="layui-tab-item layui-show">
-                            <h3>
-                                该学生还没有跟踪信息哟!!!
-                            </h3>
-                        </div>
-                    }
-                }
+                </div>
             </div>
-        </div>
 
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn demo1" lay-submit="" @*lay-filter="demo1"*@  style="margin-left:300px;">立即提交</button>
-                <button class="layui-btn " id="btnclose1">关闭</button>
-            </div>
-        </div>
+           
     </div>
 
     <script>
@@ -203,11 +204,17 @@
         });
         function loadnetinfo() {
             var id = $("#Id").val();
-            console.log(id);
             $.get("/Market/NetClientRecord/GetCallbackInfoById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
-                    changeDateTimeFormat($("#NetClientDate").val());
+                    var count =@ViewBag.Number;
+                    console.log("跟踪数量：" + count);
+                    if (count>0) {
+                        data.Empname = $("#Empname").val();
+                        data.NetClientDate = changeDateTimeFormat($("#NetClientDate").val());
+                        data.Grade = $("#Grade").val();
+                        data.CallBackCase = $("#CallBackCase").val();
+                    }
                     form.val("formtest", data);
 
                 });
@@ -251,18 +258,17 @@
 
             element.on('tab(test)', function (data) {
                 console.log(this); //当前Tab标题所在的原始DOM元素
-                console.log(data.index); //得到当前Tab的所在下标
+                console.log("下标："+data.index); //得到当前Tab的所在下标
                 console.log(data.elem); //得到当前的Tab大容器
             });
 
-
             //添加提交
-            $(".demo1").on('click', function (data) {
-                var data1 = form.val('formtest');
-                var data2 = form.val('myform');
-                console.log('添加提交1：' + data1);
-                console.log('添加提交2：' + data2);
-                $.post("/Market/NetClientRecord/EditCallbackInfo", data2, function (data) {
+            form.on('submit(demo1)', function (data) {
+               
+                console.log("改变的情况：" + $("#CallBackCase").val());
+                data.field.callbackdata = JSON.stringify(CallBackList());
+                console.log("添加的回访数据：" + data.field.callbackdata);
+                $.post("/Market/NetClientRecord/EditCallbackInfo", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
@@ -316,6 +322,23 @@
                 }
             });
         });
+
+        //循环回访数据，将编辑后的数据存在数组中
+        function CallBackList() {
+            var arr = new Array();
+            $(".layui-tab-title").each(function () {
+                $(this).find('li').each(function () {
+                    console.log($(this).attr("id"));
+
+                    var obj = { "F_Id": $("#F_Id").val(), "CallBackCase": $("#CallBackCase").val() };
+                    console.log(obj);
+                    arr.push(obj);
+                });
+            });
+            console.log("arr:"+arr);
+            return arr;
+        }
+
         //时间格式转换
         function changeDateTimeFormat(cellval) {
             if (cellval != null) {

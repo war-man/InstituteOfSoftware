@@ -11,7 +11,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// </summary>
    public class ExportStudentBeanData
     {
-        /// <summary>
+        /// <summary> 
         /// 备案编号
         /// </summary>
         public int? Id { get; set; }
