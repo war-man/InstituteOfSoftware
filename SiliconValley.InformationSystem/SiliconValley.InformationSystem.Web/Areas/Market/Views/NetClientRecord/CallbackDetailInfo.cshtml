@@ -5,7 +5,7 @@
 
 <!DOCTYPE html>
 @model SiliconValley.InformationSystem.Entity.ViewEntity.NetClientRecordView
-@using SiliconValley.InformationSystem.Entity.MyEntity;
+@using SiliconValley.InformationSystem.Entity.ViewEntity;
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -13,31 +13,35 @@
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .linu {
+            height: 80px;
+        }
+    </style>
+
 </head>
 <body>
     <div>
         <form class="layui-form" action="" lay-filter="formtest">
-            <fieldset>
-                <legend></legend>
-            </fieldset>
             <div class="layui-container">
                 <input id="Id" name="Id" type="hidden" value="@ViewBag.Id" />
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">姓名:</label>
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.StuName, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">性别:</label>
                         <div class="layui-input-block ">
                             @Html.TextBoxFor(a => a.StuSex, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">联系方式:</label>
+                        <label class="layui-form-label">联系电话:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.StuPhone, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
@@ -46,19 +50,48 @@
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">学历:</label>
-                        @Html.TextBoxFor(a => a.StuEducational, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                        <label class="layui-form-label">出生日期:</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.StuBirthy, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                        </div>
                     </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">学历:</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.StuEducational, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                        </div>
+                        </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">毕业学校:</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.StuSchoolName, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                        </div>
+                    </div>
+                    </div>
+
+                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">QQ号:</label>
-                        @Html.TextBoxFor(a => a.StuQQ, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
-                    </div>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.StuQQ, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                       </div>
+                        </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">微信:</label>
-                        @Html.TextBoxFor(a => a.StuWeiXin, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
-                    </div>                  
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.StuWeiXin, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                      </div>
+                        </div>
 
-                </div>
+                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                            <label class="layui-form-label">家庭住址:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.StuAddress, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                            </div>
+                        </div>
+                    </div>
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -67,78 +100,166 @@
                             @Html.TextBoxFor(a => a.SprEmp, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">回访人:</label>
-                        <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.Empname, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                        <label class="layui-form-label">备案时间:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.BeanDate, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
                     </div>
 
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">是否面咨:</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.IsFaceConsult, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                       </div>
+                        </div>
+                    </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">面咨时间:</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.StuVisit, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                       </div>
+                        </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">是否报名:</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.StuStatus, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                      </div>
+                        </div>
+
+                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                            <label class="layui-form-label">报名时间:</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.StatusTime, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">所在区域:</label>
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.RegionName, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
-                    </div>                   
-
-                </div>
-
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label" style="margin-left:-60px;width:130px;">市场对接老师:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Channelemp, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
-                        </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">咨询师:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.consultemp, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">是否面咨:</label>
+                        <label class="layui-form-label" style="margin-left:-60px;width:130px;">市场对接老师:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.IsFaceConsult, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.Channelemp, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
                     </div>
-                   
                 </div>
 
-               
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">入学状态:</label>
+                        <label class="layui-form-label">回访次数:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.StuStatus, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
-
+                            <input type="text" class="layui-input" readonly="readonly" style="border:0px" value="@ViewBag.Number" />
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">跟踪时间:</label>
+                    <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+                        <label class="layui-form-label">其他说明:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.NetClientDate, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
-
+                            @Html.TextAreaFor(a => a.Reak, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input" } })
                         </div>
                     </div>
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                        <label class="layui-form-label">追踪情况:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.CallBackCase, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input linu" } })
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block" style="margin-left:450px;">
-                    <button class="layui-btn " id="btnclose1">关闭</button>
                 </div>
             </div>
-        </form>
+                <div class="layui-tab" lay-filter="test">
+                    <ul class="layui-tab-title">
+                        @{
+                            List<NetClientRecordView> list = (ViewBag.ncrlist) as List<NetClientRecordView>;
+                            int i = 1;
+                            if (list.Count > 0)
+                            {
+                                foreach (var item in list)
+                                {
+
+                                    <li id=@item.Id name="@item.Id" class="layui-this">第<span>@i</span>次跟踪</li>
+
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <li class="layui-this">系统温馨提示</li>
+                            }
+                        }
+                    </ul>
+                    <div class="layui-tab-content">
+                        @{
+                            if (list.Count > 0)
+                            {
+                                @*<form class="layui-form" id="myform" lay-filter="myform">*@
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <input type="hidden" id="F_Id" name="F_Id" value="@list[0].Id" />
+                                    <input type="hidden" id="EmpId" name="EmpId" value="@list[0].EmpId" />
+                                    <label class="layui-form-label">回访人:</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input" id="Empname" name="Empname" disabled="disabled" value="@list[0].Empname" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <label class="layui-form-label">回访日期:</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input" id="NetClientDate" name="NetClientDate" disabled="disabled" value="@list[0].NetClientDate" />
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <label class="layui-form-label">学生等级:</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input" id="Grade" name="Grade" disabled="disabled" value="@list[0].Grade" />
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <label class="layui-form-label">跟踪情况:</label>
+                                    <div class="layui-input-block">
+                                        <textarea class="layui-input linu" id="CallBackCase" name="CallBackCase"  disabled="disabled"> 
+                                                         @list[0].CallBackCase 
+                                                    </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            @*</form>*@
+                            }
+                            else
+                            {
+                            <div class="layui-tab-item layui-show">
+                                <h3>
+                                    该学生还没有跟踪信息哟!!!
+                                </h3>
+                            </div>
+                            }
+                            }
+                        </div>
+                </div>
+
+</form>
     </div>
 
     <script>
@@ -151,28 +272,61 @@
             $.get("/Market/NetClientRecord/GetCallbackInfoById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
-                   
-                    data.NetClientDate = changeDateTimeFormat(data.NetClientDate);
+                    var count =@ViewBag.Number;
+                    console.log("等级："+$("#Grade").val());
+                    if (count > 0) {
+                        data.Empname = $("#Empname").val();
+                        data.NetClientDate = changeDateTimeFormat($("#NetClientDate").val());
+                        data.Grade = $("#Grade").val();
+                        data.CallBackCase = $("#CallBackCase").val();
+                    }
+                    data.BeanDate = changeDateTimeFormat(data.BeanDate);
+                    data.StuVisit = changeDateTimeFormat(data.StuVisit);
+                    data.StatusTime = changeDateTimeFormat(data.StatusTime);
                     form.val("formtest", data);
 
                 });
             })
         }
 
+        //给ul中的li注册点击事件
+        $(".layui-tab-title li").click(function () {
+            var fid = $(this).attr("id");
+            $("#F_Id").val(fid);
+            console.log("跟踪id:" + fid);
+            $.ajax({
+                url: '/Market/NetClientRecord/GetCallBackInfoByNid/' + fid,
+                type: "GET",
+                success: function (SucData) {
+                    if (SucData.Success) {
+                        layui.use('form', function () {
+                            var form = layui.form;
+                            console.log("回访人:" + SucData.Data.Empname);
+
+                            $("#Empname").val(SucData.Data.Empname);
+                            $("#Grade").val(SucData.Data.Grade);
+                            $("#CallBackCase").val(SucData.Data.CallBackCase);
+                            $("#NetClientDate").val(changeDateTimeFormat(SucData.Data.NetClientDate));
+                            form.render();
+                        })
+
+                    } else {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('系统操作有误，请重试！！！', { icon: 2 });
+                        });
+                    }
+                }
+            });
+        });
+
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
-                , laydate = layui.laydate;
+                , laydate = layui.laydate
+                , element = layui.element;
 
-
-
-            //关闭添加页面
-            $("#btnclose1").click(function () {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload('mynetinfo');
-                parent.layer.close(index);
-            });
 
         });
 

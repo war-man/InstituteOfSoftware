@@ -172,10 +172,11 @@
         $.post("/Teachingquality/ClassSchedule/EmpClass", function (data) {
 
             for (var i = 0; i < data.length; i++) {
+                console.log(data[i].ClassImage);
                 if (data[i].ClassImage == null) {
                     $("#classid").append($('<div class="div1" style="width:150px;height:150px;float:left;margin-left:20px;margin-top:20px;">  <input type="text" value=' + data[i].id + ' style="display:none" /> <img  style="width:150px;height:150px;" src="/Areas/Teachingquality/ClassImages/ClassImages.jpg" /> <div style="height:30px;margin-top:-91px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div><</div>'));
                 } else {
-                    $("#classid").append($('<div class="div1" style="width:150px;height:150px;float:left;margin-left:20px;margin-top:20px;">  <input type="text" value=' + data[i].id + ' style="display:none" /> <img  style="width:150px;height:150px;" src="/Areas/Teachingquality/ClassImages/' + data[i].ClassImage + '" /> <div style="height:30px;margin-top:-91px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div><</div>'));
+                    $("#classid").append($('<div class="div1" style="width:150px;height:150px;float:left;margin-left:20px;margin-top:20px;">  <input type="text" value=' + data[i].id + ' style="display:none" /> <img  style="width:150px;height:150px;" src="' + data[i].ClassImage + '" /> <div style="height:30px;margin-top:-91px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div><</div>'));
                 }
 
             }

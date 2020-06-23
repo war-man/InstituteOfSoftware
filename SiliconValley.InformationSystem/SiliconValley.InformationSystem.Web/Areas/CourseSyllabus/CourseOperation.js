@@ -77,6 +77,40 @@ layui.use(['table', 'layer','form'], function () {
         , page: true
     });
 
+    form.on('select(majorfilter)', function (data) {
+
+
+        table.reload('Courselist', {
+
+            url: '/CourseSyllabus/Course/SerachByMajor/'
+            , where: { major: data.value} 
+  
+        });
+      
+    });  
+    form.on('select(grandfilter)', function (data) {
+
+        table.reload('Courselist', {
+
+            url: '/CourseSyllabus/Course/SerachByGrand/'
+            , where: { grand: data.value }
+
+        });
+
+    });
+
+    $("#searchbtn").click(function () {
+
+        var txt = $("#searchinput").val();
+
+        table.reload('Courselist', {
+
+            url: '/CourseSyllabus/Course/SerachByName'
+            , where: { name: txt }
+
+        });
+
+    });
 
     //监听头部工具栏事件
 

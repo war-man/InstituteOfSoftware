@@ -23,6 +23,7 @@ using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -162,7 +163,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         public List<ClassStudentView> ClassStudentneViewList(int classid)
         {
             //学员班级
-            ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
+            ScheduleForTraineesBusiness scheduleForTraineesBusinessz = new ScheduleForTraineesBusiness();
+          var scheduleForTraineesBusiness=  scheduleForTraineesBusinessz.GetListBySql<ScheduleForTrainees>("select * from ScheduleForTrainees");
             //学员信息表
             StudentInformationBusiness student = new StudentInformationBusiness();
 
@@ -170,9 +172,9 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
             List<ScheduleForTrainees> scheduleFors = new List<ScheduleForTrainees>();
            
-            var x = scheduleForTraineesBusiness.GetList().Where(a => a.ID_ClassName == classid&&a.CurrentClass==true).ToList();
+            var x = scheduleForTraineesBusiness.Where(a => a.ID_ClassName == classid&&a.CurrentClass==true).ToList();
             
-            var y = scheduleForTraineesBusiness.GetList().Where(a => a.ID_ClassName == classid && a.CurrentClass == false).ToList();
+            var y = scheduleForTraineesBusiness.Where(a => a.ID_ClassName == classid && a.CurrentClass == false).ToList();
             foreach (var item in y)
             {
                 if (!this.show(scheduleFors, item))
@@ -205,7 +207,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 classStudentView.StuNameID = student.GetEntity(item.StudentID).StudentNumber;
                 if (item.CurrentClass == false)
                 {
-                    var z = scheduleForTraineesBusiness.GetList().Where(a => a.StudentID == item.StudentID&&a.CurrentClass==true).FirstOrDefault();
+                    var z = scheduleForTraineesBusiness.Where(a => a.StudentID == item.StudentID&&a.CurrentClass==true).FirstOrDefault();
                     
                     if (z!=null)
                     {
@@ -213,7 +215,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     }
                     else
                     {
-                     var ClaStudent= scheduleForTraineesBusiness.GetList().Where(a => a.CurrentClass == false && a.IsGraduating == true&&a.StudentID==item.StudentID).FirstOrDefault();
+                     var ClaStudent= scheduleForTraineesBusiness.Where(a => a.CurrentClass == false && a.IsGraduating == true&&a.StudentID==item.StudentID).FirstOrDefault();
                         if (ClaStudent!=null)
                         {
                             classStudentView.Statusname = "毕业";
@@ -1038,10 +1040,11 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             List<ClassDynamics> listDyanmics = new List<ClassDynamics>();
             foreach (var item in classDyan)
             {
-                var ClassStu = ss.GetList().Where(a => a.StudentID == item.Studentnumber).FirstOrDefault();
-                if (ClassStu!=null)
+               
+                if (item.FormerClass == ClassID)
                 {
-                    if (item.FormerClass == ClassID)
+                    var ClassStu = ss.GetList().Where(a => a.StudentID == item.Studentnumber).FirstOrDefault();
+                    if (ClassStu != null)
                     {
                         listDyanmics.Add(item);
                     }
@@ -2353,6 +2356,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return classesList;
         }
+        //对象存储boss
+        CloudstorageBusiness cloudstorageBusiness = new CloudstorageBusiness();
         /// <summary>
         /// 班主任详情
         /// </summary>
@@ -2370,7 +2375,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 Sex = employees.Sex,//性别
                 Phone = employees.Phone,//电话
                 DeptName = department.DeptName,//部门
-                Images = employees.Image//图片
+                Images = cloudstorageBusiness.ImagesFine("xinxihua", "EmpImage", employees.Image,20)//图片
             };
 
             return Headyees;

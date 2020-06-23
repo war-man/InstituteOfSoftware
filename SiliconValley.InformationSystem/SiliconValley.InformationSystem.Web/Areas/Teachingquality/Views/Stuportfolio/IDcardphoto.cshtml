@@ -1,0 +1,44 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.StudentInformation
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>IDcardphoto</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div id="IDcard">
+            <img id="Identityjustimg" src="@Model.Identityjustimg" style="width:600px;height:260px;" />
+            <text style="font-size:22pt;">正面</text>
+            <br />
+            <button type="button"  id="imgbut" class="layui-btn" style="margin-left:50%;">导出</button>
+            <br />
+            <img id="Identitybackimg" src="@Model.Identitybackimg" style="width:600px;height:260px;" />
+            <text style="font-size:22pt;">反面</text>
+
+        </div>
+</body>
+</html>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+       
+        $("#imgbut").click(function () {
+            var img = $("#IDcard").children("img");
+            for (var i = 0; i < img.length; i++) {
+                var name = $(img[i]).attr("src").split('/');
+                download(name[5], $(img[i]).attr("src"))
+
+            }
+        })
+    });
+</script>

@@ -85,7 +85,18 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             var examType = examination.ExamType;
             var examview = db_exam.ConvertToExaminationView(examination);
 
-            var list = db_choiceQuestion.AllChoiceQuestionData();
+
+            //从缓存中获取数据
+            RedisCache redisCache = new RedisCache();
+
+            var list = new List<MultipleChoiceQuestion>();
+
+            list.AddRange(redisCache.GetCache <List<MultipleChoiceQuestion>>("MultipleChoiceQuestion"));
+
+            if (list == null || list.Count == 0)
+            {
+                list.AddRange(db_choiceQuestion.AllChoiceQuestionData());
+            }
 
             var templist = new List<ChoiceQuestionTableView>();
 
@@ -243,7 +254,20 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
           
             var examview = db_exam.ConvertToExaminationView(examination);
-            var list = db_answerQuextion.AllAnswerQuestion();
+
+            //从缓存中获取数据
+
+            RedisCache redisCache = new RedisCache();
+
+            var list = new List<AnswerQuestionBank>();
+
+            list.AddRange(redisCache.GetCache<List<AnswerQuestionBank>>("AnswerQuestionBank"));
+
+            if (list == null || list.Count == 0)
+            {
+                list.AddRange(db_answerQuextion.AllAnswerQuestion());
+            }
+            
             var templist = new List<AnswerQuestionView>();
             //foreach (var item in list)
             //{
@@ -384,7 +408,20 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             //获取专业
 
             var examview = db_exam.ConvertToExaminationView(examination);
-            var list = db_computerQuestion.AllComputerTestQuestion();
+
+            //从缓存中获取数据
+
+            RedisCache redisCache = new RedisCache();
+
+            var list = new List<MachTestQuesBank>();
+
+            list.AddRange(redisCache.GetCache<List<MachTestQuesBank>>("MachTestQuesBank"));
+
+            if (list == null || list.Count == 0)
+            {
+                list.AddRange(db_computerQuestion.AllComputerTestQuestion());
+            }
+
             var templist = new List<ComputerTestQuestionsView>();
 
             List<Curriculum> sourchlist = new List<Curriculum>();

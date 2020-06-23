@@ -1,21 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <exam id="8">
-    <course id="12" />
-  </exam>
-  <exam id="1010">
-    <course id="16" />
-  </exam>
-  <exam id="1012">
-    <course id="1034" />
-  </exam>
-  <exam id="1012">
-    <course id="11" />
-  </exam>
-  <exam id="1013">
-    <course id="11" />
-  </exam>
-  <exam id="2012">
-    <course id="11" />
-  </exam>
+
 </root>

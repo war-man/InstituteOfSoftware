@@ -71,6 +71,7 @@
     <Compile Include="Base_SysManage\EnumType.cs" />
     <Compile Include="Base_SysManage\ViewEntity\AccountView.cs" />
     <Compile Include="Base_SysManage\ViewEntity\Weixin_info.cs" />
+    <Compile Include="Cloudstorage.cs" />
     <Compile Include="Entity\Accdationinformation.cs" />
     <Compile Include="Entity\AddCourse.cs" />
     <Compile Include="Entity\AdmissArrangement.cs" />
@@ -399,6 +400,7 @@
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\NetClientRecordView.cs" />
     <Compile Include="ViewEntity\PutStudentDataView.cs" />
+    <Compile Include="ViewEntity\Refunditemsview.cs" />
     <Compile Include="ViewEntity\SatisficingConfigDataView.cs" />
     <Compile Include="ViewEntity\ScheduleForTraineesview.cs" />
     <Compile Include="ViewEntity\Sch_Market.cs" />
