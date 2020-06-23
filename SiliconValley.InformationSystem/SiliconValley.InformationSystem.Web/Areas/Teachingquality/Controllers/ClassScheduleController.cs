@@ -25,6 +25,7 @@ using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using System.IO;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
@@ -883,6 +884,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
            
         }
+
+        //对象存储boss
+        CloudstorageBusiness cloudstorageBusiness = new CloudstorageBusiness();
+
         //添加活动视图
         public ActionResult AddClassactivities()
         {
@@ -917,7 +922,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 ClassRemarks = a.ClassRemarks,
                 ClassStatus = a.ClassStatus,
                 IsDelete = a.IsDelete,
-                a.ClassImage,
+                ClassImage= cloudstorageBusiness.ImagesFine("xinxihua", "ClassImages", a.ClassImage,20),
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 
             //Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
@@ -954,11 +959,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     dbtext.Update(cl);
                     result = new SuccessResult();
                     result.ErrorCode = 200;
-                    string path = Server.MapPath("~/Areas/Teachingquality/ClassImages/" + newfilename);
-
-                    fien.SaveAs(path);
-               
-            }
+                  cloudstorageBusiness.PutObject("xinxihua", "ClassImages", newfilename, fien.InputStream);
+                    }
             catch (Exception ex)
             {
                 result = new SuccessResult();

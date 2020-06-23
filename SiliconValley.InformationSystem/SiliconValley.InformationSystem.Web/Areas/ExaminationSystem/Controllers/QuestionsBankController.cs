@@ -296,13 +296,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// </summary>
         /// <param name="majorid">专业</param>
         /// <returns></returns>
-        public ActionResult CourseData(int grandid)
+        public ActionResult CourseData(int majorid)
         {
             CourseBusiness courseBusiness = new CourseBusiness();
 
             List<Curriculum> curricullist = new List<Curriculum>();
 
-           var list = courseBusiness.GetCurriculas().Where(d => d.Grand_Id == grandid);
+           var list = courseBusiness.GetCurriculas().Where(d => d.MajorID == majorid);
 
             if (list != null)
             {

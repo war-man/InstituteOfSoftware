@@ -23,6 +23,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
     public class CourseController : Controller
     {
         private readonly CourseBusiness db_course;
+     
         private readonly SpecialtyBusiness db_major;
         private readonly GrandBusiness db_grand;
         private readonly CourseTypeBusiness db_coursetype;
@@ -45,8 +46,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         // GET: /CourseSyllabus/Course/AddorEditfunction
         public ActionResult CourseIndex()
         {
+            ViewBag.grands = db_grand.AllGrand();
+            ViewBag.majors = db_major.GetSpecialties();
+
             return View();
         }
+
 
 
         /// <summary>
@@ -79,6 +84,195 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         }
 
 
+        public ActionResult SerachByMajor(int page, int limit, string major = null)
+        {
+          
+
+            if (string.IsNullOrEmpty(major))
+            {      
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = new List<CourseView>(),
+                    count = 0
+                };
+
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+
+            try
+            {        
+                int majorid = int.Parse(major);
+
+                var list = new List<Curriculum>();
+
+                if (majorid == 0)
+                {
+                    list = db_course.Curriculas();
+                }
+                else
+                {
+                    list = db_course.GetCurriculaByMajor(majorid);
+                }
+
+
+                var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
+
+                List<CourseView> resultlist = new List<CourseView>();
+
+                foreach (var item in skiplist)
+                {
+                    resultlist.Add(db_course.ToCourseView(item));
+                }
+
+
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = resultlist,
+                    count = list.Count
+                };
+                return Json(obj, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = new List<CourseView>(),
+                    count = 0
+                };
+
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult SerachByGrand(int page, int limit, string grand = null)
+        {
+
+
+            if (string.IsNullOrEmpty(grand))
+            {
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = new List<CourseView>(),
+                    count = 0
+                };
+
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+
+            try
+            {
+                int grandid = int.Parse(grand);
+
+                var list = new List<Curriculum>();
+
+                if (grandid == 0)
+                {
+                    list = db_course.Curriculas();
+                }
+                else
+                {
+                    list = db_course.GetCurriculas().Where(d => d.Grand_Id == grandid).ToList();
+                }
+
+
+                var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
+
+                List<CourseView> resultlist = new List<CourseView>();
+
+                foreach (var item in skiplist)
+                {
+                    resultlist.Add(db_course.ToCourseView(item));
+                }
+
+
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = resultlist,
+                    count = list.Count
+                };
+                return Json(obj, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = new List<CourseView>(),
+                    count = 0
+                };
+
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public ActionResult SerachByName(int page, int limit, string name = null)
+        {
+            if (name == null)
+            {
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = new List<CourseView>(),
+                    count = 0
+                };
+
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+
+            try
+            {
+              
+                var list = db_course.Curriculas().Where(d=>d.CourseName.Contains(name)).ToList();
+
+                var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
+
+                List<CourseView> resultlist = new List<CourseView>();
+
+                foreach (var item in skiplist)
+                {
+                    resultlist.Add(db_course.ToCourseView(item));
+                }
+
+
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = resultlist,
+                    count = list.Count
+                };
+                return Json(obj, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+
+                var obj = new
+                {
+                    code = 0,
+                    msg = "",
+                    data = new List<CourseView>(),
+                    count = 0
+                };
+
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         /// <summary>
         /// 课程操作视图

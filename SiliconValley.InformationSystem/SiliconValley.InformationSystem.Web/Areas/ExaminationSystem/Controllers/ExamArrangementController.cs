@@ -408,7 +408,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     db_examination.ExamCouresConfigAdd(examination.ID, course);
                 }
 
-                // 
+                //将考试 题目存储到redis缓存
+                RedisCache redisCache = new RedisCache();
+
+                redisCache.RemoveCache("MultipleChoiceQuestion");
+                redisCache.SetCache("MultipleChoiceQuestion", db_choiceQuestion.AllChoiceQuestionData());
+
+                redisCache.RemoveCache("AnswerQuestionBank");
+                redisCache.SetCache("AnswerQuestionBank", db_answerQuestion.AllAnswerQuestion());
+
+                redisCache.RemoveCache("MachTestQuesBank");
+                redisCache.SetCache("MachTestQuesBank", db_computerTestQuestion.AllComputerTestQuestion());
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";

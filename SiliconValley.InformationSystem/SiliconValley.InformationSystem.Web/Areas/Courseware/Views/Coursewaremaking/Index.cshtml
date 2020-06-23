@@ -176,7 +176,7 @@
         var layer = layui.layer;
         var form = layui.form;
         var laydate = layui.laydate;
-        $.post("/Courseware/Coursewaremaking/CourDate?str=/首页", function (data) {
+        $.post("/Courseware/Coursewaremaking/CourDate?str=/首页/", function (data) {
 
             for (var i = 0; i < data.length; i++) {
                 var a1 = data[i].split('.');
@@ -489,7 +489,7 @@
 
     });
     function GetDateProfessionala() {
-        var tb = $("#lab1").text() == "" ? "首页" : $("#lab1").text();
+        var tb = $("#lab1").text() == "" ? "首页/" : $("#lab1").text();
         data("/" + tb);
         layui.use(['table'], function () {
             var table = layui.table;

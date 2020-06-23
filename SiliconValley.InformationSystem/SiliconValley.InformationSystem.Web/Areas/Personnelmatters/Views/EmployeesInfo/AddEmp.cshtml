@@ -567,9 +567,7 @@
             //添加提交
             form.on('submit(demo1)', function (data) {
                 var loadindex = layer.load(1);
-                if (data.field.month == "" && data.field.day == "") {
-                    data.field.Birthday = null;
-                } else {
+                if (data.field.month!= "" && data.field.day != "") {
                     data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
                 }
                
