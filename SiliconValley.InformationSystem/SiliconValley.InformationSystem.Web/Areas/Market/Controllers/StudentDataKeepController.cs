@@ -53,6 +53,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
 
         #region 数据操作
+
+         public List<SelectListItem> Marketgrand()
+        {
+            List<SelectListItem> typelist = new List<SelectListItem>() {
+                new SelectListItem() { Text = "--无--", Value = "0" },
+                new SelectListItem() { Text="A类",Value="A"},
+                new SelectListItem() { Text = "B类", Value = "B" },
+                new SelectListItem() { Text = "C类", Value = "C" } ,
+                new SelectListItem() { Text = "D类", Value = "D" }
+            };
+
+            return typelist;
+        }
+
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
@@ -85,15 +99,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Pers = s_Entity.GetPostion(UserName.EmpNumber);
 
             //获取市场类型
-            List<SelectListItem> typelist = new List<SelectListItem>() {
-                new SelectListItem() { Text = "--无--", Value = "0" },
-                new SelectListItem() { Text="A类",Value="A"},
-                new SelectListItem() { Text = "B类", Value = "B" },
-                new SelectListItem() { Text = "C类", Value = "C" } ,
-                new SelectListItem() { Text = "D类", Value = "D" }
-            };
-
-            ViewBag.type = typelist;
+            ViewBag.type = Marketgrand();
             return View();
         }
        
@@ -193,7 +199,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 sb2.Append(" and CreateDate <= '" + findEndvalue + "'");
             }
 
-            if (markety!="0")
+            if (markety!="0" && !string.IsNullOrEmpty(markety))
             {
                 sb1.Append(" and MarketType = '" + markety + "'");
                 sb2.Append(" and MarketState = '" + markety + "'");
@@ -396,14 +402,58 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var r_list = s_Entity.GetEffectiveRegionAll(true).Select(r => new SelectListItem { Text = r.RegionName, Value = r.ID.ToString() }).ToList();
             r_list.Add(s2);
             ViewBag.area = r_list;
+
+            //获取所有市场类型
+             ExportStudentBeanData find= s_Entity.findId(id);
+            ViewBag.typemarket = Marketgrand().Select(c => new SelectListItem() { Text = c.Text, Value = c.Value, Selected = c.Value == find.MarketType ? true : false }).ToList();
             return View();
         }
 
         //创建一个用于编辑的处理方法
         public ActionResult EditFunction(StudentPutOnRecord olds)
-        {
-            //需要判断是咨询部人员修改还是网络部人员修改  SessionHelper.Session["UserId"]=""
-            AjaxResult a = s_Entity.Update_data(olds);
+        {         
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息  //需要判断是咨询部人员修改还是网络部人员修改   
+            int IdCorad = s_Entity.GetPostion(UserName.EmpNumber);
+            AjaxResult a = new AjaxResult();
+            StuInfomationType fins= s_Entity.StuInfomationType_Entity.GetEntity(olds.StuInfomationType_Id);
+            if(fins.Name.Contains("网络"))
+            {
+                if (IdCorad != 3 && IdCorad != 2)
+                {
+                    a.Success = false;
+                    a.Msg = "抱歉，这条备案数据你没有权限修改！！";
+                    return Json(a, JsonRequestBehavior.AllowGet);
+                }
+                 
+            }
+            else if(IdCorad != 0 && IdCorad != 4)
+            {
+                a.Success = false;
+                a.Msg = "抱歉，这条备案数据你没有权限修改！！";
+                return Json(a, JsonRequestBehavior.AllowGet);
+            }
+              a = s_Entity.Update_data(olds);    
+            string marketvalue= Request.Form["market"];
+            if (!string.IsNullOrEmpty(marketvalue) && marketvalue!="0")
+            {
+                //判断是否有分量
+               Consult consult=  EmployandCounTeacherCoom.consult.AccordingStuIdGetConsultData(olds.Id);
+                if (consult!=null)
+                {
+                   if(consult.MarketType!= marketvalue)
+                    {
+                        consult.MarketType = marketvalue;
+                        a= EmployandCounTeacherCoom.consult.MyUpdate(consult);
+                    }
+                }
+                else
+                {
+                    a.Success = false;
+
+                    a.Msg = "没有指定咨询师，无法修改市场类型！！！";
+                }
+            }
+
             return Json(a, JsonRequestBehavior.AllowGet);
         }
 
@@ -1069,14 +1119,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //生成字段名称 
             List<string> Head = new List<string>();
             int indexss = 0;
-            foreach (DataColumn col in data.Columns)
+            try
             {
-                if (indexss != 0)
+                foreach (DataColumn col in data.Columns)
                 {
-                    Head.Add(jo[col.ColumnName].ToString());
+                    if (indexss != 0)
+                    {
+                        Head.Add(jo[col.ColumnName].ToString());
+                    }
+                    indexss++;
                 }
-                indexss++;
             }
+            catch (Exception ex)
+            {
+                string s = ex.Message;
+                
+            }
+           
             Excel_Entity = new ExcelHelper();
 
             List<ExportStudentBeanData> entity = s_Entity.GetListBySql<ExportStudentBeanData>(str).Select(s => new ExportStudentBeanData()

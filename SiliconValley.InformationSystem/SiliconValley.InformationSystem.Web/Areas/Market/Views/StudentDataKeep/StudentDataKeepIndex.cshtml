@@ -52,8 +52,8 @@
             {
                 <button class="layui-btn layui-btn-sm" onclick="ChangTeacher()"> <i class="layui-icon">&#xe714;</i> 转换咨询师</button>
                 <button class="layui-btn layui-btn-sm" onclick="SignUp()"> <i class="layui-icon">&#xe714;</i>报名/预录学生信息下载</button>
-                <button class="layui-btn layui-btn-sm" onclick="AddConsult()"> <i class="layui-icon">&#xe714;</i> 添加跟踪</button>
-                <button class="layui-btn layui-btn-sm" onclick="EditConsult()"> <i class="layui-icon">&#xe714;</i>编辑跟踪信息</button>
+                <button class="layui-btn layui-btn-sm" onclick="AddConsult()"> <i class="layui-icon">&#xe624;</i> 添加跟踪</button>
+                <button class="layui-btn layui-btn-sm" onclick="EditConsult()"> <i class="layui-icon">&#xe642;</i>编辑跟踪信息</button>
             }
 
             if (r == 0 || r == 2)
@@ -80,7 +80,7 @@
     <div class="layui-colla-item">
         <h2 class="layui-colla-title">数据查询</h2>
         <div class="layui-colla-content">
-            <form class="layui-form" id="form_serch">
+            <form class="layui-form" id="form_serch" lay-filter="form_serch">
                 <div class="layui-row">
                     <div class="layui-col-sm3">
                         <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
@@ -144,7 +144,7 @@
                     </div>
                     <div class="layui-col-sm3">
                         <label class="spanCss2">市场类型:</label>
-                        <div>
+                        <div class="divCss1">
                             @Html.DropDownList("marketype", ViewBag.type as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
                         </div>
                     </div>
@@ -207,7 +207,7 @@
         layui.use(['table','form'], function () {
             var table = layui.table;
             var form = layui.form;
-            $("#form_serch").rest();
+            $("#form_serch")[0].reset();
             form.render();
             table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
         });
@@ -390,7 +390,7 @@
                 , { field: 'StuEducational', title: '学历', width: 80 }
                 , { field: 'Party', title: '关联人', width: 100 }
                 , { field: 'StatusName', title: '学生状态', width: 80 }
-                , { field: 'MarketType', title: '市场类型', width: 60 }
+                , { field: 'MarketType', title: '市场类型', width: 80 }
                 , { field: 'StuEntering', title: '录入人员', width: 100 }
                 , { field: 'BeanDate', title: '备案日期', width: 120, templet: function (res) { return TimeChange(res.BeanDate); } }
                 , {
@@ -526,7 +526,7 @@
                         layer.open({
                             type: 2,
                             content: '/Market/StudentDataKeep/FllowView/'+id
-                            , area: ['950px', '760px'],
+                            , area: ['900px', '660px'],
                             title: '跟踪信息信息页面'
                             , shade: 0.8
                             , anim: 4
@@ -753,7 +753,7 @@
         layer.open({
             type: 2
             , content: '/Market/StudentDataKeep/Sign_up'
-            , area: ['550px', '600px']
+            , area: ['550px', '500px']
             , title: '下载报名学生或已交预录费学生页面'
             , shade: 0.8
             , anim: 4
