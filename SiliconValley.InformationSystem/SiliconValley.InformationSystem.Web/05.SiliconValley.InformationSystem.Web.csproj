@@ -63,12 +63,6 @@
     <Reference Include="EntityFramework6.Npgsql">
       <HintPath>..\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core">
-      <HintPath>..\..\..\..\聊天室\SignalRChat\bin\Microsoft.AspNet.SignalR.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
-      <HintPath>..\..\..\..\聊天室\SignalRChat\bin\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
@@ -390,6 +384,22 @@
     <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\190819970724000089\AnswerSheet.txt" />
     <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\190820010330000019\AnswerSheet.txt" />
     <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\191120000910000129\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200119990224000061012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200119990224000061013\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200120001220000031014\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200519970802000101013\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000804000111013\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000823000131013\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000831000202012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000901000212012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000902000222012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000903000232012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000904000242012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000905000252012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000906000262012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000907000272012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000908000282012\AnswerSheet.txt" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000909000292012\AnswerSheet.txt" />
     <Content Include="Areas\ExaminationSystem\Images\img1.png" />
     <Content Include="Areas\ExaminationSystem\Images\已完成.jpg" />
     <Content Include="Areas\ExaminationSystem\Images\商务科技.png" />
@@ -1749,6 +1759,22 @@
     <Content Include="Areas\Market\Views\MarketChair\AddMarketChairView.cshtml" />
     <Content Include="Areas\Market\Views\Infomation\AddView.cshtml" />
     <Content Include="Areas\Market\Views\FollwingInfo\MyFollwingInfoIndex.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200119990224000061012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200119990224000061013\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200120001220000031014\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200519970802000101013\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000804000111013\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000823000131013\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000831000202012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000901000212012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000902000222012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000903000232012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000904000242012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000905000252012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000906000262012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000907000272012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000908000282012\computerfielnaem.rar" />
+    <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\200520000909000292012\computerfielnaem.rar" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3481,14 +3507,6 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SignalRChat_Common\SignalRChat_Common.csproj">
-      <Project>{d305a3ec-96ad-415e-998b-789097686c08}</Project>
-      <Name>SignalRChat_Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SignalRChat_Model\SignalRChat_Model.csproj">
-      <Project>{469f9301-044c-443f-9cbd-9f63ad9be807}</Project>
-      <Name>SignalRChat_Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Business\04.SiliconValley.InformationSystem.Business.csproj">
       <Project>{572473ad-730a-4e3b-9ae5-078d96dacdac}</Project>
       <Name>04.SiliconValley.InformationSystem.Business</Name>

@@ -23,6 +23,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
     public class CourseController : Controller
     {
         private readonly CourseBusiness db_course;
+     
         private readonly SpecialtyBusiness db_major;
         private readonly GrandBusiness db_grand;
         private readonly CourseTypeBusiness db_coursetype;
