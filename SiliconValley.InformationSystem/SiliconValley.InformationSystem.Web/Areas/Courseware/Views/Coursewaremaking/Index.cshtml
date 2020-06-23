@@ -246,7 +246,7 @@
                     var data = checkStatus.data;
 
                     for (var i = 0; i < data.length; i++) {
-                        download(data[i].Filename, "/Areas/Courseware/" + data[i].Filepath + data[i].Filename);
+                        download(data[i].Filename, data[i].Filepath);
 
                     }
                     console.log(data)
@@ -270,8 +270,10 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                console.log(data);
-                download(data.Filename, "/Areas/Courseware/" + data.Filepath + data.Filename);
+                //console.log(data);
+                //download(data.Filename,  data.Filepath + data.Filename);   
+          
+                window.location.href = "/Courseware/Coursewaremaking/Filedownload?URL=" + data.Filepath + "&filename=" + data.Filename;
             }
         });
     })
@@ -406,13 +408,14 @@
 
     //下载多个文件
     function download(name, href) {
-
-        var a = document.createElement("a"), //创建a标签
-            e = document.createEvent("MouseEvents"); //创建鼠标事件对象
-        e.initEvent("click", false, false); //初始化事件对象
-        a.href = href; //设置下载地址
-        a.download = name; //设置下载文件名
-        a.dispatchEvent(e); //给指定的元素，执行事件click事件
+        console.log(name, href);
+        window.location.href = "/Courseware/Coursewaremaking/Filedownload?URL=" + href + "&filename=" + name;
+        //var a = document.createElement("a"), //创建a标签
+        //    e = document.createEvent("MouseEvents"); //创建鼠标事件对象
+        //e.initEvent("click", false, false); //初始化事件对象
+        //a.href = href; //设置下载地址
+        //a.download = name; //设置下载文件名
+        //a.dispatchEvent(e); //给指定的元素，执行事件click事件
     }
 
     var count = 0;
