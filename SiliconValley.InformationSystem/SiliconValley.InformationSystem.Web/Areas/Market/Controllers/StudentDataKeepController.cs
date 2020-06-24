@@ -1439,7 +1439,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         #endregion
 
-
         #region 报名、预录
         public ActionResult Sign_up()
         {
@@ -1460,7 +1459,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #endregion
-
 
         #region 获取跟踪详情
         public ActionResult FllowView(int id)
