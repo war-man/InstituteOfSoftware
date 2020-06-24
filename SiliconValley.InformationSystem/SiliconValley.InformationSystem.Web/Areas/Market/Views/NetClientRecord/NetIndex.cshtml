@@ -6,23 +6,34 @@
 @model SiliconValley.InformationSystem.Entity.MyEntity.NetClientRecord
 @using SiliconValley.InformationSystem.Entity.MyEntity;
 @*模糊查询*@
-@*<fieldset>
+<fieldset>
     <legend>条件查询</legend>
 
     <form class="layui-form" action="" lay-filter="formtest">
         <div class="layui-row layui-form-item">
 
             <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                <label class="layui-form-label" style="width:100px;">学生姓名：</label>
+                <label class="layui-form-label" style="width:120px;margin-left:-15px;">学生姓名：</label>
                 <div class="layui-input-block" style="width:230px;">
                     <input type="text" id="StuName" name="StuName" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                <label class="layui-form-label" style="width:100px;">信息来源：</label>
+                <label class="layui-form-label" style="width:100px;margin-left:-5px;">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</label>
                 <div class="layui-input-block" style="width:230px;">
-                    <input type="text" id="InformationSource" name="InformationSource" autocomplete="off" class="layui-input">
+                    <select class="layui-input" id="stusex" name="stusex" autocomplete="off">
+                        <option value="">--请选择--</option>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:100px;margin-left:-10px;">备&nbsp;&nbsp;案&nbsp;&nbsp;人：</label>
+                <div class="layui-input-block" style="width:230px;">
+                    <input type="text" id="recordemp" name="recordemp" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
@@ -31,56 +42,45 @@
                 <div class="layui-input-block" style="width:230px;">
                     <select name="IsFaceConsult" id="IsFaceConsult" lay-search="">
                         <option value="">--请选择--</option>
-                        <option value="True">是</option>
-                        <option value="False">否</option>
+                        <option value="是">是</option>
+                        <option value="否">否</option>
                     </select>
                 </div>
             </div>
         </div>
 
         <div class="layui-row layui-form-item">
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:120px;margin-left:-15px;">所在区域：</label>
+                <div class="layui-input-block" style="width:230px;">
+                    @Html.DropDownList("findAreavalue", ViewBag.are as IEnumerable<SelectListItem>,"--请选择--")
+                </div>
+            </div>
 
             <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                <label class="layui-form-label" style="width:100px;">是否入学：</label>
+                <label class="layui-form-label" style="width:120px;margin-left:-18px;">毕业学校：</label>
                 <div class="layui-input-block" style="width:230px;">
-                    <select id="IsDel" name="IsDel" lay-search="">
+                    <input type="text" id="graduschool" name="graduschool" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:120px;margin-left:-18px;">入学状态：</label>
+                <div class="layui-input-block" style="width:230px;">
+                    <select name="status" id="status" lay-search="">
                         <option value="">--请选择--</option>
-                        <option value="False">未入学</option>
-                        <option value="True">已入学</option>
+                        <option value="未报名">是</option>
+                        <option value="已报名">否</option>
                     </select>
                 </div>
             </div>
 
-
-            <div class="layui-inline">
-                <label class="layui-form-label" style="width:120px;">登记时间：</label>
-                <div class="layui-inline" style="margin-left:-50px;">
-                    <label class="layui-form-label">从：</label>
-                    <div class="layui-input-inline" style="width:200px;">
-                        <input type="text" id="start_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-inline" style="margin-left:-50px;">
-                    <label class="layui-form-label">至：</label>
-                    <div class="layui-input-inline" style="width:200px;">
-                        <input type="text" id="end_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-            </div>
-            <button class="layui-btn" type="button" id="Conditionselect" style="margin-left:20px;">查询</button>
+            <button class="layui-btn" type="button" id="Conditionselect" style="margin-left:275px;">查询</button>
         </div>
     </form>
-</fieldset>*@
+</fieldset>
 
-@*头部工具栏*@
-@*<script type="text/html" id="toolbarDemo">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="addNetStu">添加网咨学生信息</button>
-        </div>
-    </script>*@
-
-<table id="network" lay-filter="netConsult"></table>
+<table id="network" lay-filter="netConsult" style="margin-top:20px;"></table>
 @*行工具操作*@
 <script type="text/html" id="barDemo1">
     <a class="layui-btn layui-btn-xs" lay-event="add">添加回访信息</a>
@@ -108,8 +108,10 @@
                     { field: 'StuName', title: '学生姓名', width: 110, sort: true }
                     , { field: 'StuSex', title: '性别', width: 90, sort: true }
                     , { field: 'StuPhone', title: '联系电话', sort: true, width: 120 }
+                    , { field: 'SprEmp', title: '备案人', sort: true, width: 120 }
                     , { field: 'StuEducational', title: '学历', sort: true, width: 105 }
                     , { field: 'RegionName', title: '所在区域', sort: true, width: 120 }
+                    , { field: 'StuSchoolName', title: '毕业学校', sort: true, width: 120 }
                     , { field: 'IsFaceConsult', title: '是否面咨', width: 100 }
                     , { field: 'Channelemp', title: '市场对接老师', width: 150 }
                     , { field: 'StuStatus', title: '入学状态', width: 110, unresize: true }
@@ -117,16 +119,6 @@
                 ]]
                 , page: true
             });
-
-            ////头工具栏事件
-            //table.on('toolbar(netConsult)', function (obj) {
-            //    //var checkStatus = table.checkStatus(obj.config.id);
-            //    switch (obj.event) {
-            //        case 'addNetStu':
-            //            AddNetStu();
-            //            break;
-            //    };
-            //});
 
             //监听行工具事件
             table.on('tool(netConsult)', function (obj) {
@@ -166,27 +158,27 @@
             });
 
             //模糊查询点击事件
-            //$("#Conditionselect").click(function () {
-            //    var name = $("#StuName").val();//网咨学生姓名
-            //    var InformationSource = $("#InformationSource").val();//信息来源
-            //    var registrant = $("#EmployeeId").val();//登记人
-            //    var IsFaceConsult = $("#IsFaceConsult").val();//是否面咨
-            //    var IsDel = $("#IsDel").val();//是否入学
-            //    var start_time = $("#start_time").val();//起始时间
-            //    var end_time = $("#end_time").val();//终止时间
+            $("#Conditionselect").click(function () {
+                var name = $("#StuName").val();//网咨学生姓名
+                var stusex = $("#stusex").val();//学生性别
+                var recordemp = $("#recordemp").val();//备案人
+                var IsFaceConsult = $("#IsFaceConsult").val();//是否面咨
+                var findAreavalue = $("#findAreavalue").val();//所在区域
+                var graduschool = $("#graduschool").val();//毕业学校
+                var status = $("#status").val();//入学状态
+                console.log("所在区域：" + findAreavalue);
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('mynetinfo', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }, where: {
+                            AppCondition: name + "," + stusex + "," + recordemp + "," + IsFaceConsult + "," + findAreavalue + "," + graduschool + "," + status
+                        }
+                    });
+                });
 
-            //    layui.use(['table'], function () {
-            //        var table = layui.table;
-            //        table.reload('mynetinfo', {
-            //            page: {
-            //                curr: 1 //重新从第 1 页开始
-            //            }, where: {
-            //                AppCondition: name + "," + InformationSource + "," + registrant + "," + IsFaceConsult + "," + IsDel + "," + start_time + "," + end_time
-            //            }
-            //        });
-            //    });
-
-            //});
+            });
 
             //日期
             var startTime = laydate.render({

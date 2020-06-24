@@ -981,7 +981,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var isleapyear = ChineseCalendar.IsLeapYear(year);
             if (isleapyear==true) {
                 var leapmonth = ChineseCalendar.GetLeapMonth(year);
-                month = leapmonth - 1;
+                if (month>leapmonth) {
+                    month = month - 1;
+                }
+                    
             }
           
             string date = string.Format("{0}/{1}", month, day);
