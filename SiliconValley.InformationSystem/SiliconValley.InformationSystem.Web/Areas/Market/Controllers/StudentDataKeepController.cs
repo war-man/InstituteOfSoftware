@@ -34,6 +34,9 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using System.Threading;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using System.Text.RegularExpressions;
+using BaiduBce;
+using BaiduBce.Auth;
+using BaiduBce.Services.Bos;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -53,6 +56,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
 
         #region 数据操作
+
+         public List<SelectListItem> Marketgrand()
+        {
+            List<SelectListItem> typelist = new List<SelectListItem>() {
+                new SelectListItem() { Text = "--无--", Value = "0" },
+                new SelectListItem() { Text="A类",Value="A"},
+                new SelectListItem() { Text = "B类", Value = "B" },
+                new SelectListItem() { Text = "C类", Value = "C" } ,
+                new SelectListItem() { Text = "D类", Value = "D" }
+            };
+
+            return typelist;
+        }
+
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
@@ -85,15 +102,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Pers = s_Entity.GetPostion(UserName.EmpNumber);
 
             //获取市场类型
-            List<SelectListItem> typelist = new List<SelectListItem>() {
-                new SelectListItem() { Text = "--无--", Value = "0" },
-                new SelectListItem() { Text="A类",Value="A"},
-                new SelectListItem() { Text = "B类", Value = "B" },
-                new SelectListItem() { Text = "C类", Value = "C" } ,
-                new SelectListItem() { Text = "D类", Value = "D" }
-            };
-
-            ViewBag.type = typelist;
+            ViewBag.type = Marketgrand();
             return View();
         }
        
@@ -123,16 +132,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //string str1 = "select * from StudentBeanView where 1=1 ";
             //string str2 = "select * from Sch_MarketView where 1=1 ";
             #region 模糊查询
-            string findNamevalue = Request.QueryString["findNamevalue"];//姓名
-            string findPhonevalue = Request.QueryString["findPhonevalue"];//电话
+            string findNamevalue = Request.QueryString["findNamevalue"].Trim();//姓名
+            string findPhonevalue = Request.QueryString["findPhonevalue"].Trim();//电话
             string findInformationvalue = Request.QueryString["findInformationvalue"];//信息来源
             string findStartvalue = Request.QueryString["findStartvalue"];//录入开始时间
-            string findEndvalue = Request.QueryString["findEndvalue"];//录入结束时间
-            string findBeanManvalue = Request.QueryString["findBeanManvalue"];//备案人
+            string findEndvalue = Request.QueryString["findEndvalue"].Trim();//录入结束时间
+            string findBeanManvalue = Request.QueryString["findBeanManvalue"].Trim();//备案人
             string findAreavalue = Request.QueryString["findAreavalue"];//区域
             string findTeacher = Request.QueryString["S_consultTeacher"];//咨询师
             string findStatus = Request.QueryString["S_status"];//备案状态
-            string findPary = Request.QueryString["S_party"];//关系人
+            string findPary = Request.QueryString["S_party"].Trim();//关系人
             string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
             string markety = Request.QueryString["marketype"];//市场类型
             if (!string.IsNullOrEmpty(findNamevalue))
@@ -193,7 +202,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 sb2.Append(" and CreateDate <= '" + findEndvalue + "'");
             }
 
-            if (markety!="0")
+            if (markety!="0" && !string.IsNullOrEmpty(markety))
             {
                 sb1.Append(" and MarketType = '" + markety + "'");
                 sb2.Append(" and MarketState = '" + markety + "'");
@@ -396,14 +405,58 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var r_list = s_Entity.GetEffectiveRegionAll(true).Select(r => new SelectListItem { Text = r.RegionName, Value = r.ID.ToString() }).ToList();
             r_list.Add(s2);
             ViewBag.area = r_list;
+
+            //获取所有市场类型
+             ExportStudentBeanData find= s_Entity.findId(id);
+            ViewBag.typemarket = Marketgrand().Select(c => new SelectListItem() { Text = c.Text, Value = c.Value, Selected = c.Value == find.MarketType ? true : false }).ToList();
             return View();
         }
 
         //创建一个用于编辑的处理方法
         public ActionResult EditFunction(StudentPutOnRecord olds)
-        {
-            //需要判断是咨询部人员修改还是网络部人员修改  SessionHelper.Session["UserId"]=""
-            AjaxResult a = s_Entity.Update_data(olds);
+        {         
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息  //需要判断是咨询部人员修改还是网络部人员修改   
+            int IdCorad = s_Entity.GetPostion(UserName.EmpNumber);
+            AjaxResult a = new AjaxResult();
+            StuInfomationType fins= s_Entity.StuInfomationType_Entity.GetEntity(olds.StuInfomationType_Id);
+            if(fins.Name.Contains("网络"))
+            {
+                if (IdCorad != 3 && IdCorad != 2)
+                {
+                    a.Success = false;
+                    a.Msg = "抱歉，这条备案数据你没有权限修改！！";
+                    return Json(a, JsonRequestBehavior.AllowGet);
+                }
+                 
+            }
+            else if(IdCorad != 0 && IdCorad != 4)
+            {
+                a.Success = false;
+                a.Msg = "抱歉，这条备案数据你没有权限修改！！";
+                return Json(a, JsonRequestBehavior.AllowGet);
+            }
+              a = s_Entity.Update_data(olds);    
+            string marketvalue= Request.Form["market"];
+            if (!string.IsNullOrEmpty(marketvalue) && marketvalue!="0")
+            {
+                //判断是否有分量
+               Consult consult=  EmployandCounTeacherCoom.consult.AccordingStuIdGetConsultData(olds.Id);
+                if (consult!=null)
+                {
+                   if(consult.MarketType!= marketvalue)
+                    {
+                        consult.MarketType = marketvalue;
+                        a= EmployandCounTeacherCoom.consult.MyUpdate(consult);
+                    }
+                }
+                else
+                {
+                    a.Success = false;
+
+                    a.Msg = "没有指定咨询师，无法修改市场类型！！！";
+                }
+            }
+
             return Json(a, JsonRequestBehavior.AllowGet);
         }
 
@@ -871,9 +924,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>        
         public FileStreamResult DownFile()
         {
-            string rr = Server.MapPath("/uploadXLSXfile/Template/Excle模板.xls");  //获取下载文件的路径         
-            FileStream stream = new FileStream(rr, FileMode.Open);
-            return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
+            const string accessKeyId = "a43996ac0c6d40c69d3ebb47127909e9"; // 用户的Access Key ID
+            const string secretAccessKey = "2cfdf8b1f0e548f28cafcfd1aafc9226"; // 用户的Secret Access Key
+            const string endpoint = "http://bj.bcebos.com";
+            // 初始化一个BosClient
+            BceClientConfiguration config = new BceClientConfiguration();
+             config.Credentials = new DefaultBceCredentials(accessKeyId, secretAccessKey);
+            config.Endpoint = endpoint;
+            BosClient client = new BosClient(config);
+
+           
+            var filedata = client.GetObject("xinxihua", "/TangminFiles/Template/Excle模板.xls");
+
+            Stream  stream=  s_Entity.MyFiles.DownloadFile("xinxihua", "/TangminFiles/Template/", "Excle模板.xls");
+
+
+            //string rr = Server.MapPath("/uploadXLSXfile/Template/Excle模板.xls");  //获取下载文件的路径         
+            //FileStream stream = new FileStream(rr, FileMode.Open);
+            return File(filedata.ObjectContent, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }
 
         #endregion
@@ -1069,14 +1137,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //生成字段名称 
             List<string> Head = new List<string>();
             int indexss = 0;
-            foreach (DataColumn col in data.Columns)
+            try
             {
-                if (indexss != 0)
+                foreach (DataColumn col in data.Columns)
                 {
-                    Head.Add(jo[col.ColumnName].ToString());
+                    if (indexss != 0)
+                    {
+                        Head.Add(jo[col.ColumnName].ToString());
+                    }
+                    indexss++;
                 }
-                indexss++;
             }
+            catch (Exception ex)
+            {
+                string s = ex.Message;
+                
+            }
+           
             Excel_Entity = new ExcelHelper();
 
             List<ExportStudentBeanData> entity = s_Entity.GetListBySql<ExportStudentBeanData>(str).Select(s => new ExportStudentBeanData()
@@ -1361,7 +1438,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(t, JsonRequestBehavior.AllowGet);
         }
         #endregion
-
+         
 
         #region 报名、预录
         public ActionResult Sign_up()
@@ -1383,6 +1460,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #endregion
+
 
         #region 获取跟踪详情
         public ActionResult FllowView(int id)

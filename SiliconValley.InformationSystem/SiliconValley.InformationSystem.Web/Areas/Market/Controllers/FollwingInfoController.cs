@@ -338,16 +338,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
 
             string Name = Request.QueryString["findNamevalue"].Trim();
-            int count = Name.Length;
             string Phone = Request.QueryString["findPhonevalue"].Trim();
-            string StarDate = Request.QueryString["findStartvalue"].Trim();
-            string EndDate = Request.QueryString["findEndvalue"].Trim();
+            string StarDate = Request.QueryString["findStartvalue"];
+            string EndDate = Request.QueryString["findEndvalue"];
             string findBeanManvalue = Request.QueryString["findBeanManvalue"].Trim();//备案人
-            string findInformationvalue = Request.QueryString["findInformationvalue"].Trim();//信息来源
-            string findAreavalue = Request.QueryString["findAreavalue"].Trim();//区域
+            string findInformationvalue = Request.QueryString["findInformationvalue"];//信息来源
+            string findAreavalue = Request.QueryString["findAreavalue"];//区域
             string S_party = Request.QueryString["S_party"].Trim();//关系人
-            string Marktype = Request.QueryString["Marktype"].Trim();//市场类型
-            string statis = Request.QueryString["statis"].Trim();//学生状态
+            string Marktype = Request.QueryString["Marktype"];//市场类型
+            string statis = Request.QueryString["statis"];//学生状态
             if (Name.Length!=0)
             {
                 list = list.Where(l => l.StuName.Contains(Name)).ToList();
@@ -371,8 +370,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
 
             if (findBeanManvalue.Length!=0)
-            {              
-                    list = list.Where(l=>l.empName!=null).Where(l => l.empName.Contains(findBeanManvalue)).ToList();
+            {
+                list = list.Where(l => l.empName != null).ToList();
+                list=list.Where(l => l.empName.Contains(findBeanManvalue)).ToList();
             }
 
             if (findInformationvalue.Length!=0 && findInformationvalue!="0")

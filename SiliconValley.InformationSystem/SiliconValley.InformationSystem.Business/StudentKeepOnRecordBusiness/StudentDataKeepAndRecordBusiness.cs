@@ -18,6 +18,7 @@ using SiliconValley.InformationSystem.Business.PositionBusiness;
 using System.Text.RegularExpressions;
 using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -46,9 +47,13 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         public NetClientRecordManage NetClient_Entity = new NetClientRecordManage();//用于添加网咨回访数据
 
         /// <summary>
-        /// 获取登录的岗位
+        /// 文件操作业务类
         /// </summary>
-        /// <param name="emp"></param>
+        public CloudstorageBusiness MyFiles = new CloudstorageBusiness();
+        /// <summary>
+        /// 获取登录的岗位3--网络咨询师，4--咨询助理，0--咨询主任，2--网络主任0--校办--(-1其他)
+        /// </summary>
+        /// <param name="emp"> </param>
         /// <returns></returns>
         public int GetPostion(string emp)
         {
@@ -229,6 +234,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 {
                     StudentPutOnRecord fins = this.whereStudentId(olds.Id);//找到要修改的实体
                     fins.StuName = olds.StuName;
+                    fins.EmployeesInfo_Id = olds.EmployeesInfo_Id;
                     fins.StuPhone = olds.StuPhone;
                     fins.StuSex = olds.StuSex;
                     fins.StuBirthy = olds.StuBirthy;
@@ -243,6 +249,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                     fins.Party = olds.Party;
                     fins.Region_id = olds.Region_id;
                     fins.Reak = olds.Reak;
+                    fins.ConsultTeacher = olds.ConsultTeacher;
                     this.Update(fins);
                     
                     //redisCache.RemoveCache("StudentKeepList");
@@ -564,7 +571,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-19' ";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-23' ";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
 

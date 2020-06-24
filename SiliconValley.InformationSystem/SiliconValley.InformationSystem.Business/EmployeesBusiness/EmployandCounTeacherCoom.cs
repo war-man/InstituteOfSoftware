@@ -9,6 +9,7 @@ using SiliconValley.InformationSystem.Business.Consult_Business;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
+ 
 
 namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
 {
@@ -136,5 +137,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         {
            return consult.AccordingStuIdGetConsultData(sid);
         }
+ 
+ 
     }
 }

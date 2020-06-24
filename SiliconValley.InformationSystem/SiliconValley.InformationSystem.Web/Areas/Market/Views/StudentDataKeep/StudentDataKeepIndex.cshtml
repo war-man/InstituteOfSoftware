@@ -52,8 +52,8 @@
             {
                 <button class="layui-btn layui-btn-sm" onclick="ChangTeacher()"> <i class="layui-icon">&#xe714;</i> 转换咨询师</button>
                 <button class="layui-btn layui-btn-sm" onclick="SignUp()"> <i class="layui-icon">&#xe714;</i>报名/预录学生信息下载</button>
-                <button class="layui-btn layui-btn-sm" onclick="AddConsult()"> <i class="layui-icon">&#xe714;</i> 添加跟踪</button>
-                <button class="layui-btn layui-btn-sm" onclick="EditConsult()"> <i class="layui-icon">&#xe714;</i>编辑跟踪信息</button>
+                <button class="layui-btn layui-btn-sm" onclick="AddConsult()"> <i class="layui-icon">&#xe624;</i> 添加跟踪</button>
+                <button class="layui-btn layui-btn-sm" onclick="EditConsult()"> <i class="layui-icon">&#xe642;</i>编辑跟踪信息</button>
             }
 
             if (r == 0 || r == 2)
@@ -80,17 +80,25 @@
     <div class="layui-colla-item">
         <h2 class="layui-colla-title">数据查询</h2>
         <div class="layui-colla-content">
-            <form class="layui-form" id="form_serch">
+            <form class="layui-form" id="form_serch" lay-filter="form_serch">
                 <div class="layui-row">
-                    <div class="layui-col-sm3">
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
                         <input name="findNamevalue" id="findNamevalue" class="inputCss1" />
                     </div>
-                    <div class="layui-col-sm3">
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">联系电话:</label>
                         <input name="findPhonevalue" id="findPhonevalue" class="inputCss1" />
                     </div>
-                    <div class="layui-col-sm3">
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">备&nbsp; 案&nbsp;&nbsp;人:</label>
+                        <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">关 &nbsp; 系&nbsp;人:</label>
+                        <input name="S_party" id="S_party" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">信息来源:</label>
                         <div class="divCss1">
                             @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
@@ -98,7 +106,7 @@
                         </div>
 
                     </div>
-                    <div class="layui-col-sm3">
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">所在区域:</label>
                         <div class="divCss1">
                             @Html.DropDownList("findAreavalue", ViewBag.are as IEnumerable<SelectListItem>)
@@ -106,53 +114,50 @@
                     </div>
                 </div>
                 <div class="layui-row divCss2">
-                    <div class="layui-col-sm3">
-                        <label class="spanCss2">备&nbsp; 案&nbsp;&nbsp;人:</label>
-                        <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1" />
-                    </div>
-                    <div class="layui-col-sm3">
+
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">开始时间:</label>
                         <input name="findStartvalue" id="findStartvalue" class="inputCss1" />
                     </div>
-                    <div class="layui-col-sm3">
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">结束时间:</label>
                         <div style="display: inline-block;width:150px;">
                             <input name="findEndvalue" id="findEndvalue" class="inputCss1" />
                         </div>
                     </div>
-                    <div class="layui-col-sm3">
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">咨 &nbsp; 询&nbsp;师:</label>
                         <div class="divCss1">
                             @Html.DropDownList("S_consultTeacher", ViewBag.teacherlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
                         </div>
                     </div>
-                </div>
-                <div class="layui-row divCss2">
-                    <div class="layui-col-sm3">
-                        <label class="spanCss2">学生状态:</label>
-                        <div class="divCss1">
-                            @Html.DropDownList("S_status", ViewBag.slist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })                          
-                        </div>
-                    </div>
-                    <div class="layui-col-sm3">
-                        <label class="spanCss2">关 &nbsp; 系&nbsp;人:</label>
-                        <input name="S_party" id="S_party" class="inputCss1" />
-                    </div>
-                    <div class="layui-col-sm3">
-                        <label class="spanCss2">录 &nbsp; 入&nbsp;人:</label>
-                        <input name="S_intosysMan" id="S_intosysMan" class="inputCss1" />
-                    </div>
-                    <div class="layui-col-sm3">
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">市场类型:</label>
-                        <div>
+                        <div class="divCss1">
                             @Html.DropDownList("marketype", ViewBag.type as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
                         </div>
                     </div>
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">学生状态:</label>
+                        <div class="divCss1">
+                            @Html.DropDownList("S_status", ViewBag.slist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-sm2">
+                        <label class="spanCss2">录 &nbsp; 入&nbsp;人:</label>
+                        <input name="S_intosysMan" id="S_intosysMan" class="inputCss1" />
+                    </div>
+
                 </div>
-                <div  class="layui-row divCss2">
-                    <div class="layui-col-sm3 divCss3">
-                        <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:108px"><i class="layui-icon">&#xe615;</i> 查询</button>
-                        <button type="button" class="layui-btn" style="margin-right:45px;width:108px" onclick="LoadTable()"><i class="layui-icon">&#xe63d;</i> 重新加载</button>
+
+                <div class="layui-row">
+                    <div class="layui-col-sm12">
+                        <div style="text-align:right">
+                            <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:108px"><i class="layui-icon">&#xe615;</i> 查询</button>
+                            <button type="button" class="layui-btn" style="margin-right:45px;width:108px" onclick="LoadTable()"><i class="layui-icon">&#xe63d;</i> 重新加载</button>
+                        </div>
+
                     </div>
                 </div>
             </form>
@@ -204,10 +209,10 @@
     }
     //table重载的方法
     function LoadTable() {
-        layui.use(['table','form'], function () {
+        layui.use(['table', 'form'], function () {
             var table = layui.table;
             var form = layui.form;
-            $("#form_serch").rest();
+            $("#form_serch")[0].reset();
             form.render();
             table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
         });
@@ -390,7 +395,7 @@
                 , { field: 'StuEducational', title: '学历', width: 80 }
                 , { field: 'Party', title: '关联人', width: 100 }
                 , { field: 'StatusName', title: '学生状态', width: 80 }
-                , { field: 'MarketType', title: '市场类型', width: 60 }
+                , { field: 'MarketType', title: '市场类型', width: 80 }
                 , { field: 'StuEntering', title: '录入人员', width: 100 }
                 , { field: 'BeanDate', title: '备案日期', width: 120, templet: function (res) { return TimeChange(res.BeanDate); } }
                 , {
@@ -525,8 +530,8 @@
                     } else {
                         layer.open({
                             type: 2,
-                            content: '/Market/StudentDataKeep/FllowView/'+id
-                            , area: ['950px', '760px'],
+                            content: '/Market/StudentDataKeep/FllowView/' + id
+                            , area: ['900px', '660px'],
                             title: '跟踪信息信息页面'
                             , shade: 0.8
                             , anim: 4
@@ -537,8 +542,8 @@
 
                 });
             }
-             
-           
+
+
         });
 
         //一键转换咨询师
@@ -753,7 +758,7 @@
         layer.open({
             type: 2
             , content: '/Market/StudentDataKeep/Sign_up'
-            , area: ['550px', '600px']
+            , area: ['550px', '500px']
             , title: '下载报名学生或已交预录费学生页面'
             , shade: 0.8
             , anim: 4
@@ -768,22 +773,28 @@
             var table = layui.table;
             var layer = layui.layer;
             var checkStatus = table.checkStatus('tabletest1');
-            if (checkStatus.data.length == 1 ) {
-               layer.open({
-                type: 2,
-                content: '/Market/FollwingInfo/AddFollwingInfo/' + checkStatus.data[0].Id
-                , area: ['800px', '580px'],
-                title: '添加跟踪页面'
-                , shade: 0.8
-                , anim: 4
-                , skin: 'demo-class'
-            });
+            if (checkStatus.data.length == 1) {
+                //判断是否指派了咨询师
+                if (checkStatus.data[0].ConsultTeacher.length <= 0 || checkStatus.data[0].ConsultTeacher == "") {
+                    layer.msg('请先指派咨询师！！！', { icon: 2, shade: 0.8 });
+                } else {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/FollwingInfo/AddFollwingInfo/' + checkStatus.data[0].Id
+                        , area: ['800px', '580px'],
+                        title: '添加跟踪页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+                
             } else {
                 layer.msg('只能选择一条数据！！', { icon: 2, shade: 0.8 });
             }
-             
+
         });
-         
+
     }
 
     function EditConsult() {
@@ -792,21 +803,27 @@
             var layer = layui.layer;
             var checkStatus = table.checkStatus('tabletest1');
             if (checkStatus.data.length == 1) {
-                layer.open({
-                    type: 2,
-                    content: '/Market/FollwingInfo/EditView/' + checkStatus.data[0].Id
-                    , area: ['1000px', '680px'],
-                    title: '编辑跟踪页面'
-                    , shade: 0.8
-                    , anim: 4
-                    , skin: 'demo-class'
-                });
+                //判断是否指派了咨询师
+                if (checkStatus.data[0].ConsultTeacher.length <= 0 || checkStatus.data[0].ConsultTeacher == "") {
+                    layer.msg('请先指派咨询师！！！', { icon: 2, shade: 0.8 });
+                } else {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/FollwingInfo/EditView/' + checkStatus.data[0].Id
+                        , area: ['1000px', '680px'],
+                        title: '编辑跟踪页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+
             } else {
                 layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
             }
-            
+
         });
-        
+
     }
 </script>
 
