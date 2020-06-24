@@ -34,6 +34,9 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using System.Threading;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using System.Text.RegularExpressions;
+using BaiduBce;
+using BaiduBce.Auth;
+using BaiduBce.Services.Bos;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -129,16 +132,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //string str1 = "select * from StudentBeanView where 1=1 ";
             //string str2 = "select * from Sch_MarketView where 1=1 ";
             #region 模糊查询
-            string findNamevalue = Request.QueryString["findNamevalue"];//姓名
-            string findPhonevalue = Request.QueryString["findPhonevalue"];//电话
+            string findNamevalue = Request.QueryString["findNamevalue"].Trim();//姓名
+            string findPhonevalue = Request.QueryString["findPhonevalue"].Trim();//电话
             string findInformationvalue = Request.QueryString["findInformationvalue"];//信息来源
             string findStartvalue = Request.QueryString["findStartvalue"];//录入开始时间
-            string findEndvalue = Request.QueryString["findEndvalue"];//录入结束时间
-            string findBeanManvalue = Request.QueryString["findBeanManvalue"];//备案人
+            string findEndvalue = Request.QueryString["findEndvalue"].Trim();//录入结束时间
+            string findBeanManvalue = Request.QueryString["findBeanManvalue"].Trim();//备案人
             string findAreavalue = Request.QueryString["findAreavalue"];//区域
             string findTeacher = Request.QueryString["S_consultTeacher"];//咨询师
             string findStatus = Request.QueryString["S_status"];//备案状态
-            string findPary = Request.QueryString["S_party"];//关系人
+            string findPary = Request.QueryString["S_party"].Trim();//关系人
             string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
             string markety = Request.QueryString["marketype"];//市场类型
             if (!string.IsNullOrEmpty(findNamevalue))
@@ -921,9 +924,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>        
         public FileStreamResult DownFile()
         {
-            string rr = Server.MapPath("/uploadXLSXfile/Template/Excle模板.xls");  //获取下载文件的路径         
-            FileStream stream = new FileStream(rr, FileMode.Open);
-            return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
+            const string accessKeyId = "a43996ac0c6d40c69d3ebb47127909e9"; // 用户的Access Key ID
+            const string secretAccessKey = "2cfdf8b1f0e548f28cafcfd1aafc9226"; // 用户的Secret Access Key
+            const string endpoint = "http://bj.bcebos.com";
+            // 初始化一个BosClient
+            BceClientConfiguration config = new BceClientConfiguration();
+             config.Credentials = new DefaultBceCredentials(accessKeyId, secretAccessKey);
+            config.Endpoint = endpoint;
+            BosClient client = new BosClient(config);
+
+           
+            var filedata = client.GetObject("xinxihua", "/TangminFiles/Template/Excle模板.xls");
+
+            Stream  stream=  s_Entity.MyFiles.DownloadFile("xinxihua", "/TangminFiles/Template/", "Excle模板.xls");
+
+
+            //string rr = Server.MapPath("/uploadXLSXfile/Template/Excle模板.xls");  //获取下载文件的路径         
+            //FileStream stream = new FileStream(rr, FileMode.Open);
+            return File(filedata.ObjectContent, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }
 
         #endregion
@@ -1442,6 +1460,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #endregion
+
 
         #region 获取跟踪详情
         public ActionResult FllowView(int id)

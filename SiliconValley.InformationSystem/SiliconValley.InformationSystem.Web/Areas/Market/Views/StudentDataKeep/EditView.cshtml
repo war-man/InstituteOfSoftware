@@ -292,11 +292,13 @@
 
             //修改数据
             form.on('submit(xiugai)', function (data) {
+                var formindex = layer.load(1);
                 $.ajax({
                     url: "/Market/StudentDataKeep/EditFunction",
                     data: data.field,
                     type: "POST",
                     success: function (successdata) {
+                        layer.close(formindex);
                         if (successdata.Success == true) {
                             layer.msg(successdata.Msg, {
                                 icon: 1,
