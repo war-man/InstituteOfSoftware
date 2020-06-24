@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
      }
     public class BreakController : Controller
     {
-        // GET: /Educational/Break/AddorEditView
+        // GET: /Educational/Break/BreakIndexView
         public ActionResult BreakIndexView()
         {
             ViewBag.classshche = MyEntity.Break_Entity.GetClassSchedules();

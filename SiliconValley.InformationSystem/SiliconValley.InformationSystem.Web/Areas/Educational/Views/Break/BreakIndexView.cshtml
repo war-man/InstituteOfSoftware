@@ -28,20 +28,8 @@
     <div class="layui-form">
         <div style=" width:800px; display:inline-block;">
             <label>班级:</label>
-            <div class="btn-group layui-container" style="width:120px;">
-                <button type="button" class="btn btn-default dropdown-toggle" id="selectGrand" grandid="0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    选择班级 <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="grandlist">
-                    <li>无</li>
-                    @{ 
-                        List<ClassSchedule> list= ViewBag.classshche as List<ClassSchedule>;
-                        foreach (ClassSchedule item in list)
-                        {
-                            <li >@item.ClassNumber</li>
-                        }
-                    }
-                </ul>
+            <div style="display:inline-block">
+
             </div>
             <label>开始时间:</label>
             <div class="btn-group layui-container" style="width:120px;">
