@@ -40,9 +40,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         public ActionResult FollwingInfoIndex()
         {
-            ConsultTeacher = new ConsultTeacherManeger();
-
-            //判断是哪个咨询师
+            ConsultTeacher = new ConsultTeacherManeger();            
             //获取当前上传的操作人
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
             f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()==null?0: ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
@@ -246,9 +244,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult EditFunction()
         {
             AjaxResult a = new AjaxResult();
-            if (f_id!=0)
-            {
-                try
+            ConsultTeacher = new ConsultTeacherManeger();
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();           
+                var f_ids = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()== null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;            
+            try
                 {
                     string MyRank = Request.Form["Marktype"];
                     string My_TailAfterSituation = Request.Form["My_TailAfterSituation"];
@@ -275,12 +274,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     //BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "编辑跟踪信息时出现:"+ex, Entity.Base_SysManage.EnumType.LogType.编辑数据);
                     return Json(a, JsonRequestBehavior.AllowGet);
                 }
-
-            }
-            else
-            {
-                return null;
-            }
              
         }
         //这是找到多个学生显示的页面

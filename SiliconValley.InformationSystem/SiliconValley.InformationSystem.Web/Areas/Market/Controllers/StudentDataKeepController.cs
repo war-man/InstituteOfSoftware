@@ -924,24 +924,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>        
         public FileStreamResult DownFile()
         {
-            const string accessKeyId = "a43996ac0c6d40c69d3ebb47127909e9"; // 用户的Access Key ID
-            const string secretAccessKey = "2cfdf8b1f0e548f28cafcfd1aafc9226"; // 用户的Secret Access Key
-            const string endpoint = "http://bj.bcebos.com";
-            // 初始化一个BosClient
-            BceClientConfiguration config = new BceClientConfiguration();
-             config.Credentials = new DefaultBceCredentials(accessKeyId, secretAccessKey);
-            config.Endpoint = endpoint;
-            BosClient client = new BosClient(config);
-
-           
-            var filedata = client.GetObject("xinxihua", "/TangminFiles/Template/Excle模板.xls");
-
-            Stream  stream=  s_Entity.MyFiles.DownloadFile("xinxihua", "/TangminFiles/Template/", "Excle模板.xls");
+            //const string accessKeyId = "a43996ac0c6d40c69d3ebb47127909e9"; // 用户的Access Key ID
+            //const string secretAccessKey = "2cfdf8b1f0e548f28cafcfd1aafc9226"; // 用户的Secret Access Key
+            //const string endpoint = "http://bj.bcebos.com";
+            //// 初始化一个BosClient
+            //BceClientConfiguration config = new BceClientConfiguration();
+            // config.Credentials = new DefaultBceCredentials(accessKeyId, secretAccessKey);
+            //config.Endpoint = endpoint;
+            //BosClient client = new BosClient(config);
 
 
-            //string rr = Server.MapPath("/uploadXLSXfile/Template/Excle模板.xls");  //获取下载文件的路径         
-            //FileStream stream = new FileStream(rr, FileMode.Open);
-            return File(filedata.ObjectContent, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
+            //var filedata = client.GetObject("xinxihua", "/TangminFiles/Template/Excle模板.xls");
+
+            //Stream  stream=  s_Entity.MyFiles.DownloadFile("xinxihua", "/TangminFiles/Template/", "Excle模板.xls");
+
+
+            string rr = Server.MapPath("/uploadXLSXfile/Template/Excle模板.xls");  //获取下载文件的路径         
+            FileStream stream = new FileStream(rr, FileMode.Open);
+            return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }
 
         #endregion

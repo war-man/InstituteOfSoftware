@@ -295,11 +295,12 @@
             
         });
     });
-    layui.use(['form', 'layedit', 'laydate'], function () {
+    layui.use(['form', 'layedit', 'laydate','table'], function () {
         var form = layui.form
             , layer = layui.layer
             , layedit = layui.layedit
-            , laydate = layui.laydate;
+            , laydate = layui.laydate
+            , table = layui.table;
         var ityy;
         //刷新界面 所有元素
         form.render();
@@ -398,9 +399,9 @@
                             time: 2000,
                             shade: 0.8
                         }, function () {
+                            window.parent.LoadTable2();
                             var Myindex = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(Myindex); //再执行关闭
-                            window.parent.LoadTable();
+                            parent.layer.close(Myindex); //再执行关闭                                            
                             layer.close(index);
                         });
                     } else {

@@ -13,11 +13,6 @@
             color: #fff;
             border: none;
         }
-
-        .linu
-        {
-            width: 150px;
-        }
     </style>
 }
     <script type="text/html" id="breaktoolbarDemo">
@@ -31,24 +26,18 @@
     </script>
 <div class="layui-form">
     <div class="layui-form">
-        <div style=" display:inline-block;">
-            <label>阶段:</label>
-            <div id="GrandDiv" style="display:inline-block">
-                @Html.DropDownList("mygrand", ViewBag.grandlist as IEnumerable<SelectListItem>,new Dictionary<string, object>() { { "class", "linu" }, { "lay-filter", "grandselect" } })
-            </div>
+        <div style=" width:800px; display:inline-block;">
             <label>班级:</label>
-            <div id="ClassDiv" style="display:inline-block">
-                <select>
-                    <option selected="selected" value="0">--请选择--</option>
-                </select>
+            <div style="display:inline-block">
+
             </div>
             <label>开始时间:</label>
-            <div class="btn-group layui-container" style="width:130px;">
-                <input class="layui-input" id="stateTime" placeholder="开始时间">
+            <div class="btn-group layui-container" style="width:120px;">
+                <input   class="layui-input" id="stateTime" placeholder="开始时间">
             </div>
             <label>结束时间:</label>
-            <div class="btn-group layui-container" style="width:130px;">
-                <input class="layui-input" id="endTime" placeholder="结束时间">
+            <div class="btn-group layui-container" style="width:120px;">
+                <input   class="layui-input" id="endTime" placeholder="结束时间">
             </div>
             <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="serchBaseData()">查询</button>
         </div>
@@ -94,7 +83,7 @@
         }
         //查询
         function serchBaseData() {
-            var classname = $("#classId").val();//获取班级名称
+            var classname = $("#selectGrand")[0].innerText;//获取班级名称
             var starDate = new Date($("#stateTime").val());
             var endDate = new Date($("#endTime").val());
             if (endDate - starDate >= 0) {
@@ -202,25 +191,7 @@
                     });
                 }
             });
-
-            //获取班级
-            form.on('select(grandselect)', function (data) {
-                $("#ClassDiv")[0].innerHTML = "";
-                if (data.value != "0") {
-                    $.ajax({
-                        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
-                        success: function (sudata) {
-                            //获取班级slect
-                            var classselect = $('<select id="classId" name="classId" class="layui-select linu" ><option value="0" selected>--请选择--</select>');
-                            for (var i = 0; i < sudata.length; i++) {
-                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
-                            }
-                            $("#ClassDiv").append(classselect);
-                            form.render(); //更新全部
-                        }
-                    });
-                }
-            });
+           
         });
 
         $(function () {

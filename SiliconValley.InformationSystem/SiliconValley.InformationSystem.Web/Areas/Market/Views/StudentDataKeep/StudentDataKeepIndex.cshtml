@@ -46,19 +46,19 @@
             {
                 <button class="layui-btn layui-btn-sm" onclick="ChangeGotoSchoolstate()"> <i class="layui-icon">&#xe714;</i> 转上门</button>
                 <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
-                <button class="layui-btn layui-btn-sm" onclick="GetMony()"> <i class="layui-icon">&#xe714;</i> 查看学生缴费信息</button>
+                @*<button class="layui-btn layui-btn-sm" onclick="GetMony()"> <i class="layui-icon">&#xe714;</i> 查看学生缴费信息</button>*@
             }
             if (r == 0)
             {
                 <button class="layui-btn layui-btn-sm" onclick="ChangTeacher()"> <i class="layui-icon">&#xe714;</i> 转换咨询师</button>
-                <button class="layui-btn layui-btn-sm" onclick="SignUp()"> <i class="layui-icon">&#xe714;</i>报名/预录学生信息下载</button>
+                @*<button class="layui-btn layui-btn-sm" onclick="SignUp()"> <i class="layui-icon">&#xe714;</i>报名/预录学生信息下载</button>*@
                 <button class="layui-btn layui-btn-sm" onclick="AddConsult()"> <i class="layui-icon">&#xe624;</i> 添加跟踪</button>
                 <button class="layui-btn layui-btn-sm" onclick="EditConsult()"> <i class="layui-icon">&#xe642;</i>编辑跟踪信息</button>
             }
 
             if (r == 0 || r == 2)
             {
-                <button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>
+                @*<button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>*@
                 <button class="layui-btn layui-btn-sm" onclick="InSchoolStudentData()"> <i class="layui-icon">&#xe714;</i> 查看在校学生信息</button>
 
             }
@@ -218,6 +218,14 @@
         });
 
     }
+
+    function LoadTable2() {
+        layui.use(['table'], function () {
+            var table = layui.table;
+            table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
+        });
+
+    }
     //错误提示提示
     function TiShi(msg) {
         layui.use(['layer'], function () {
@@ -306,7 +314,7 @@
                         layer.msg('指派成功！！！', {
                             icon: 1, shade: 0.8
                         });
-                        my_searchBtn();
+                        LoadTable2();
                     });
 
                 } else {
@@ -562,8 +570,8 @@
                 success: function (sucdata) {
                     layer.close(index_2);
                     if (sucdata.Success) {
-                        layer.msg('操作成功！！！', { shade: 0.8, icon: 1 });
-                        my_searchBtn();
+                        LoadTable2();
+                        layer.msg('操作成功！！！', { shade: 0.8, icon: 1 });                        
                     } else {
                         layer.msg('系统异常，请刷新重试！！！', { shade: 0.8, icon: 2 });
                     }
@@ -596,6 +604,7 @@
 
 
     var strid = 0;
+    var dateChange = 0;
     //获取要转上门的备案Id
     function ChangeGotoSchoolstate() {
         layui.use(['table', 'layer'], function () {
@@ -609,7 +618,7 @@
                 checkStatus.data.forEach(f => {
                     strid = strid + f.Id + ",";
                 });
-                layer.open({
+                dateChange= layer.open({
                     type: 1,
                     title: '上门日期选择',
                     shade: 0.8,
@@ -625,6 +634,7 @@
     function ChangeTime() {
         if (date.length > 0) {
             PostDataChange(strid, date);
+            layer.close(dateChange);
         } else {
             layer.msg('请选择日期！！！', { icon: 2, shade: 0.8 });
         }
@@ -824,6 +834,11 @@
 
         });
 
+    }
+
+    //添加咨询跟踪成功后
+    function Query() {
+        LoadTable2();
     }
 </script>
 
