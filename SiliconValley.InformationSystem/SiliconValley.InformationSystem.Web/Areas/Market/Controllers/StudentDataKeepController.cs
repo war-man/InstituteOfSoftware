@@ -76,10 +76,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
             //获取信息来源的所有数据
             List<SelectListItem> se = s_Entity.StuInfomationType_Entity.GetList().Select(s => new SelectListItem { Text = s.Name, Value = s.Name }).ToList();
-            se.Add(new SelectListItem() { Text = "请选择", Selected = true, Value = "Value" });
+            se.Add(new SelectListItem() { Text = "请选择", Selected = true, Value = "0" });
             ViewBag.infomation = se;
             //获取区域所有信息
-            SelectListItem newselectitem = new SelectListItem() { Text = "请选择", Value = "请选择", Selected = true };
+            SelectListItem newselectitem = new SelectListItem() { Text = "请选择", Value = "0", Selected = true };
             var r_list = s_Entity.GetEffectiveRegionAll(true).Select(r => new SelectListItem { Text = r.RegionName, Value = r.RegionName }).ToList();
             r_list.Add(newselectitem);
             ViewBag.are = r_list;
@@ -125,12 +125,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         
         public ActionResult GetTableData(int limit, int page)
         {
+            List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();
             StringBuilder sb1 = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
             sb1.Append("select * from StudentBeanView where 1=1 ");
             sb2.Append("select * from Sch_MarketView where 1=1 ");
-            //string str1 = "select * from StudentBeanView where 1=1 ";
-            //string str2 = "select * from Sch_MarketView where 1=1 ";
+ 
             #region 模糊查询
             string findNamevalue = Request.QueryString["findNamevalue"].Trim();//姓名
             string findPhonevalue = Request.QueryString["findPhonevalue"].Trim();//电话
@@ -145,8 +145,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
             string markety = Request.QueryString["marketype"];//市场类型
             if (!string.IsNullOrEmpty(findNamevalue))
-            {
-                sb1.Append(" and StuName like  '%" + findNamevalue + "%'");
+            {                
+                sb1.Append("and  StuName like  '%" + findNamevalue + "%'");
                 sb2.Append(" and StudentName like  '%" + findNamevalue + "%'");
             }
             if (!string.IsNullOrEmpty(findPhonevalue))
@@ -154,7 +154,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 sb1.Append(" and Stuphone = '" + findPhonevalue + "'");
                 sb2.Append(" and Phone = '" + findPhonevalue + "'");
             }
-            if (findInformationvalue != "Value" && !string.IsNullOrEmpty(findInformationvalue))
+            if (findInformationvalue != "0" && !string.IsNullOrEmpty(findInformationvalue))
             {
                 sb1.Append(" and stuinfomation = '" + findInformationvalue + "'");
                 sb2.Append(" and source = '" + findInformationvalue + "'");
@@ -164,7 +164,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 sb1.Append(" and empName = '" + findBeanManvalue + "'");
                 sb2.Append(" and SalePerson = '" + findBeanManvalue + "'");
             }
-            if (findAreavalue != "请选择" && !string.IsNullOrEmpty(findAreavalue))
+            if (findAreavalue != "0" && !string.IsNullOrEmpty(findAreavalue))
             {
                 sb1.Append(" and RegionName = '" + findAreavalue + "'");
                 sb2.Append ( " and Area = '" + findAreavalue + "'");
@@ -210,7 +210,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             #endregion
                 
              
-                List<ExportStudentBeanData> list= s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.Id).ToList();
+                 list= s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.Id).ToList();
 
                 var data = list.Skip((page - 1) * limit).Take(limit).ToList();
 
