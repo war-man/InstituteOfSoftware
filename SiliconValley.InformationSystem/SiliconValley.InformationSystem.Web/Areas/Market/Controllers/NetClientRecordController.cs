@@ -244,23 +244,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View(nview);
         }
         [HttpPost]
-        public ActionResult EditCallbackInfo(NetClientRecord ncr,string callbackdata)
+        public ActionResult EditCallbackInfo(NetClientRecord ncr)
         {
 
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
-            int fid=Convert.ToInt32(Request.Form["Id"]);
-            var datas = Request.Form["callbackdata"];
-            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
-            string eid = UserName.EmpNumber;
-            NetClientRecord n = new NetClientRecord();
+
             try
             {
-                n.EmpId = eid;
-                n.NetClientDate = DateTime.Now;
+                var n = ncrmanage.GetEntity(ncr.Id);
+                n.CallBackCase = ncr.CallBackCase;
+                n.MarketTeaId = ncr.MarketTeaId;
                 ncrmanage.Update(n);
                 AjaxResultxx = ncrmanage.Success();
+                if (AjaxResultxx.Success) {
+                    var ncrlist = ncrmanage.GetList().Where(s => s.SPRId == n.SPRId).ToList();
+                    foreach (var item in ncrlist)
+                    {
+                        item.MarketTeaId = n.MarketTeaId;
+                        ncrmanage.Update(item);
+                    }
+                    AjaxResultxx = ncrmanage.Success();
+                }
             
             }
             catch (Exception ex)
@@ -270,6 +276,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult EditCallbackInfos(int id,string markettea)
+        {
+
+            NetClientRecordManage ncrmanage = new NetClientRecordManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var ncrlist = ncrmanage.GetList().Where(s => s.SPRId == ncrmanage.GetEntity(id).SPRId).ToList();
+                foreach (var item in ncrlist)
+                {
+                    item.MarketTeaId = int.Parse(markettea);
+                    ncrmanage.Update(item);
+                }
+                AjaxResultxx = ncrmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = ncrmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

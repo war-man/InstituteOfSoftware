@@ -140,7 +140,6 @@
                                 <div class="layui-row layui-form-item">
                                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                                         <input type="hidden" id="F_Id" name="F_Id" value="@list[0].Id" />
-                                        <input type="hidden" id="EmpId" name="EmpId" value="@list[0].EmpId" />
                                         <label class="layui-form-label">回访人:</label>
                                         <div class="layui-input-block">
                                             <input class="layui-input" id="Empname" name="Empname" disabled="disabled" value="@list[0].Empname" />
@@ -177,7 +176,7 @@
                                 <div class="layui-form-item">
                                     <div class="layui-input-block">
                                         <button class="layui-btn " lay-submit="" lay-filter="demo" style="margin-left:300px;">立即提交</button>
-                                        <button class="layui-btn " id="btnclose1">关闭</button>
+                                        <button class="layui-btn btnclose">关闭</button>
                                     </div>
                                 </div>
 
@@ -196,10 +195,10 @@
                 }
             </div>
         </div>
-        <div class="layui-form-item" >
+        <div class="layui-form-item" id="formbtn1" style="display:none;" >
             <div class="layui-input-block">
-                <button class="layui-btn " lay-submit="" lay-filter="demo" style="margin-left:300px;">立即提交</button>
-                <button class="layui-btn " id="btnclose1">关闭</button>
+                <button class="layui-btn " lay-submit="" id="subbtn" style="margin-left:300px;">立即提交</button>
+                <button class="layui-btn btnclose">关闭</button>
             </div>
         </div>
 
@@ -212,11 +211,10 @@
         });
         function loadnetinfo() {
             var id = $("#Id").val();
+             var count =@ViewBag.Number;
             $.get("/Market/NetClientRecord/GetCallbackInfoById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
-                    var count =@ViewBag.Number;
-                    console.log("跟踪数量：" + count);
                     if (count>0) {
                         data.Empname = $("#Empname").val();
                         data.NetClientDate = changeDateTimeFormat($("#NetClientDate").val());
@@ -228,15 +226,16 @@
                 });
             });
 
+            if (count <= 0) {
+                $("#formbtn1").attr("style","block");
+            }
         }
 
         //返回选择的"市场对接老师"对象
         function GetEmpData(Itemnames) {
-            $("#MarketTeaId").val(Itemnames.empid);
+            $("#MarketTeaId").val(Itemnames.ID);
             $("#Channelemp").val(Itemnames.empname);
-            console.log("返回的：" + Itemnames.empid + "," + Itemnames.empname);
-            console.log("市场老师编号：" + $("#MarketTeaId").val());
-            console.log("市场老师名称：" + $("#Channelemp").val());
+
 
         }
 
@@ -269,13 +268,11 @@
                 console.log("下标："+data.index); //得到当前Tab的所在下标
                 console.log(data.elem); //得到当前的Tab大容器
             });
-
+           
             //添加提交
             form.on('submit(demo)', function (data) {
-               
-                console.log("改变的情况：" + $("#CallBackCase").val());
-                data.field.callbackdata = JSON.stringify(CallBackList());
-                console.log("添加的回访数据：" + data.field.callbackdata);
+                data.field.Id = $("#F_Id").val();
+                data.field.MarketTeaId = $("#MarketTeaId").val();
                 $.post("/Market/NetClientRecord/EditCallbackInfo", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
@@ -291,9 +288,27 @@
                 return false;
             });
 
+            $("#subbtn").click(function () {
+                var id= $("#Id").val(); 
+                var markettea = $("#MarketTeaId").val();
+                console.log("市场变：" + markettea);
+                $.post("/Market/NetClientRecord/EditCallbackInfos", { id: id, markettea: markettea }, function (data) {
+                    if (data.Success) {
+                        layer.alert("编辑成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layui.table.reload('mynetinfo');
+                            parent.layer.close(index);
+
+                        });
+                    } else {
+                        layer.alert("编辑失败!");
+                    }
+                });
+            });
+
 
             //关闭添加页面
-            $("#btnclose1").click(function () {
+            $(".btnclose").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
             });
@@ -331,22 +346,7 @@
             });
         });
 
-        //循环回访数据，将编辑后的数据存在数组中
-        function CallBackList() {
-            var arr = new Array();
-            $(".layui-tab-title").each(function () {
-                $(this).find('li').each(function () {
-                    console.log($(this).attr("id"));
-
-                    var obj = { "F_Id": $("#F_Id").val(), "CallBackCase": $("#CallBackCase").val() };
-                    console.log(obj);
-                    arr.push(obj);
-                });
-            });
-            console.log("arr:"+arr);
-            return arr;
-        }
-
+       
         //时间格式转换
         function changeDateTimeFormat(cellval) {
             if (cellval != null) {
