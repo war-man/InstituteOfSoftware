@@ -12,10 +12,11 @@
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+
     <style>
 
 
-
+       
 
         table {
             /*border: 1px solid #808080;*/
@@ -26,10 +27,7 @@
                 height: 30px;
             }
 
-        .titletr td{
-            /*border: 1px solid #808080;*/
-            text-align: center;
-        }
+    
         /*.bordes td {
             border: 1px solid #808080;
         }
@@ -45,67 +43,65 @@
             height:100px;
          
         }
+        table{
+            font-size:10pt;
+        }
+        /*table tr,table td,table th ,table{
+            border: 1px solid red;
+        }*/
+        /*#shouju {
+            background-image: url(/Areas/Finance/images/shouju.jpg)
+        }*/
     </style>
 </head>
 <body>
-
-
-
-    <table id="text" cellspacing="0" style="width:790px;margin-left:20px;margin-top:40px;">
-        <thead >
-            <tr style="height:80px;" @*style="border:1px solid #ffffff;"*@>
-                @*<td colspan="7" style="font-size:19pt;">
-                    <div style="width:30%;height:100px;float:left;">
-                        <div id="guigu">
-                            <img src="~/Areas/Teachingquality/images/guigu.png" />
-                        </div>
-                    </div><div style="float:left;line-height:50px;font-size:24pt;">湖南硅谷高科软件学员收据单</div>
-                </td>*@
-                <td  colspan="7" ></td>
-                <td colspan="1" style="text-align:left;">
-                    @*<div>NO:<label style="color:red;font-size:13pt;">@ViewBag.Invoicenumber</label></div>*@ 
-                    <div><label id="AddDate">2019-08-09</label></div>
-                </td>
+ 
+    <div id="shouju" style="position:absolute;">
+        <img src="~/Areas/Finance/images/shouju.jpg" style="width:672px;z-index:0;margin-top:-5px;margin-left:41px;" />
+    </div>
+    <div style="z-index:999;position:absolute;top:93px;left:10px;height:200px;" id="text">
+        <div style="position:absolute;left:540px;top:16px;">2020-06-23</div>
+        <table cellpadding="1" style="width:790px;">
+            <tr>
+                <td></td>
             </tr>
-            <tr class="titletr" style="height:80px;" >
-                @*<td class="wid">学号</td>
-                <td id="StudentNumber"></td>*@
-                @*<td class="wid">姓名</td>*@
-                <td class="wit" colspan="2" id="Name"></td>
+            @*<tr>
+                    <td colspan="7" style="width:530px;"></td>
+                    <td colspan="1" style="text-align:inherit;">2020-06-23</td>
+                </tr>*@
 
-                @*<td class="wit">班级</td>*@
-                <td class="wid" colspan="1" style="width:200px;" id="classa"></td>
-                @*<td class="wit">阶段</td>*@
-                <td class="wid" colspan="3" style="width:200px;"  id="GrandName"></td>
-                @*<td style="width:130px;">身份证号</td>*@
-                <td id="identitydocument"style="width:400px;" colspan="5"></td>
+            <tr>
+                <td style="width:80px;"></td>
+                <th id="Name" style="width:113px;"></th>
+                <td style="width:35px;"></td>
+                <th id="classa" style="text-align:inherit;width:90px;">1710NA</th>
+                <td style="width:50px;"></td>
+                <th id="GrandName" style="text-align:inherit;width:145px;">S1</th>
+
+                <th id="identitydocument" colspan="2" style="text-align:inherit;width:220px;">431124200103303850</th>
             </tr>
-          
-        </thead>
+            <tr>
+                <td colspan="7" style="width:530px;"></td>
+                <td colspan="1" style="text-align:inherit;"></td>
+            </tr>
+            <tbody id="xiangmu" style="height:70px;"></tbody>
 
-        <tbody style="height:100px;">
-           
-            <tr style="text-align:center;@*border-top:1px solid #808080;border-left:#ffffff;*@">
-                <td colspan="5">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label id="DaXie"></label>
-                </td>
-                <td colspan="2">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </td>
-                <td colspan="1" id="pricent" style="text-align:left;"></td>
+            <tbody id="xuezai" style="height:70px;">  </tbody>
+            <tr>
+                <td colspan="7" style="text-align:center;" id="DaXie">合计金额（大写）：</td>
+                <td colspan="1" style="text-align:inherit;width:230px;" id="pricent">2000</td>
             </tr>
 
+        </table>
+    </div>
 
-        </tbody>
 
-    </table>
-    <div style="text-align:center;margin-top:30px;">
+
+    <div style="text-align:center;position:relative;top:471px;">
         <button class="layui-btn" id="btn">打印</button>
     </div>
-  
+
+
 
 </body>
 </html>
@@ -140,10 +136,12 @@
         }
         if (Receiptdata[i].Rategory == "阶段费用缴纳" || Receiptdata[i].Rategory == "学费" || Receiptdata[i].Rategory == "食宿费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
-            $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+            $("#xiangmu").append($('<tr> <td colspan="4" style="text-align:center;">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
+           // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         } else if (Receiptdata[i].Rategory == "自考本科费用" || Receiptdata[i].Rategory=="其它") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
-            $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+            $("#xiangmu").append($('<tr style="height:55px;"> <td colspan="4" style="text-align:center;">' + Receiptdata[i].Rategory + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
+           // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         }
         if (Receiptdata[i].Rategory == "学杂费") {
             count++;
@@ -151,8 +149,10 @@
             Amountofmoneys = Amountofmoneys + parseInt(Receiptdata[i].Amountofmoney);
             if (count ==3) {
                 count = 0;
-                //  console.log(Amountofmoney)
-                $("#text tbody").prepend($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
+             
+                $("#xuezai").append($('<tr> <td colspan="4" style="text-align:center;">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoneys + '.00</td></tr>'));
+
+                //$("#text tbody").prepend($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
                 ostitemsName = "";
                 Amountofmoneys = 0;
             }
@@ -164,7 +164,13 @@
     $("#DaXie").text(convertCurrency(pricent));
 
     if (count < 3 && count != 0) {
-        $("#text tbody").before($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
+        $("#xuezai").append($('<tr> <td colspan="4" style="text-align:center;"><div>' + ostitemsName.substring(0, ostitemsName.length - 1) + '</div></td> <td colspan="4" style="text-align:inherit;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoneys + '.00</td></tr>'));
+ 
+    //    $("#text tbody").before($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
+    }
+    if (count==0) {
+        $("#xuezai").append($('<tr  style="height:60px;"> <td colspan="4" style="text-align:center;"></td> <td colspan="4" style="text-align:inherit;"></td></tr>'));
+
     }
     //if (Receiptdata.length > 1 && Receiptdata.length<4) {
     //    $("#text tbody").before($('<tr style="text-align:center;height: 30px;"></tr>'));
@@ -185,15 +191,21 @@
 <script src="~/Areas/Teachingquality/js/Print.js"></script>
 <script>
     document.getElementById('btn').onclick = function () {
-
+    
         Print('#text', {
-            onStart: function () {
-                console.log('onStart', new Date())
-            },
-            onEnd: function () {
-                console.log('onEnd', new Date())
-            }
+            //onStart: function () {
+            //    var RegWsh = new ActiveXObject("WScript.Shell")
+            //    hkey_key = "header"
+            //    RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "")
+            //    hkey_key = "footer"
+            //    RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "") 
+            //},
+            //onEnd: function () {
+            //    console.log('onEnd', new Date())
+            //}
         })
 
     }
+  
+
 </script>
