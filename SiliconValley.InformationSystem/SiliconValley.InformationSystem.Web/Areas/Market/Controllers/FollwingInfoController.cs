@@ -469,6 +469,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //第一次获取数据
         public ActionResult OneTableData(int limit ,int page)
         {
+            ConsultTeacher = new ConsultTeacherManeger();
             //获取当前上传的操作人
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
             int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
