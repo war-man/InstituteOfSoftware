@@ -77,6 +77,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult ChoiceQuestionIndex()
         {
             SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+
             ViewBag.Major = specialtyBusiness.GetSpecialties();
             return View();
 
@@ -297,20 +298,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// </summary>
         /// <param name="majorid">专业</param>
         /// <returns></returns>
-        public ActionResult CourseData(int majorid)
+        public ActionResult CourseData(int grandid)
         {
             CourseBusiness courseBusiness = new CourseBusiness();
 
             List<Curriculum> curricullist = new List<Curriculum>();
 
-           var list = courseBusiness.GetCurriculas().Where(d => d.MajorID == majorid);
+           var list = courseBusiness.GetCurriculas().Where(d => d.Grand_Id == grandid);
 
             if (list != null)
             {
                 curricullist.AddRange(list);
             }
-
-
             // 转化类型
 
             List<CourseView> resultlist = new List<CourseView>();
@@ -338,6 +337,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
         }
 
+        public ActionResult CourseDataBYGrind(int majorid)
+        {
+            CourseBusiness courseBusiness = new CourseBusiness();
+
+            List<Curriculum> curricullist = new List<Curriculum>();
+
+            var list = courseBusiness.GetCurriculas().Where(d => d.MajorID == majorid);
+
+            if (list != null)
+            {
+                curricullist.AddRange(list);
+            }
+            // 转化类型
+
+            List<CourseView> resultlist = new List<CourseView>();
+
+            foreach (var item in curricullist)
+            {
+                try
+                {
+                    var tempobj = courseBusiness.ToCourseView(item);
+
+                    if (tempobj != null)
+                    {
+                        resultlist.Add(tempobj);
+                    }
+                }
+                catch (Exception)
+                {
+
+
+                }
+
+            }
+
+            return Json(resultlist, JsonRequestBehavior.AllowGet);
+
+        }
         /// <summary>
         /// 添加选择题题
         /// </summary>

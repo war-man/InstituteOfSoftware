@@ -303,11 +303,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             }
 
-
             detailView.detailitem = templist1;
-
-            
-  
 
             return detailView;
 

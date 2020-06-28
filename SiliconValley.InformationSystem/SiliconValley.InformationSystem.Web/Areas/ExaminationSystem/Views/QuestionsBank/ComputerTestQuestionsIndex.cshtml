@@ -119,7 +119,7 @@
                 var value = data.value;  //select选中的值
                 console.log("选中值" + value);
                 $.ajax({
-                    url: "/ExaminationSystem/QuestionsBank/CourseData",
+                    url: "/ExaminationSystem/QuestionsBank/CourseDataBYGrind",
                     data: { majorid: value },
                     dataType: "json",
                     success: function (resultData) {
