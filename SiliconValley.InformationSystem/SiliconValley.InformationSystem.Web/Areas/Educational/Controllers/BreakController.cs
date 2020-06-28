@@ -8,16 +8,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
-
-    public static class MyEntity{
-        public static readonly BreakManeger Break_Entity = new BreakManeger();
-     }
+    
     public class BreakController : Controller
     {
+        public BreakManeger Break_Entity = new BreakManeger();
         // GET: /Educational/Break/AddorEditView
         public ActionResult BreakIndexView()
         {
-            ViewBag.classshche = MyEntity.Break_Entity.GetClassSchedules();
+            //加载阶段
+            List<SelectListItem> g_list = Break_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() ,Selected=false}).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.grandlist = g_list.OrderBy(g=>g.Value).ToList();
             return View();
         }
         /// <summary>
@@ -31,7 +32,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             try
             {
                 string Name = Request.QueryString["classname"];
-                List<Break> break_list = MyEntity.Break_Entity.GetList().Where(b=>b.IsDelete==false).ToList();
+                List<Break> break_list = Break_Entity.GetList().Where(b=>b.IsDelete==false).ToList();
                 if (!string.IsNullOrEmpty(Name) && Name!="选择班级" && Name!="无")
                 {                    
                     break_list = break_list.Where(b => b.ClassSchedule_Id == Name).ToList();
@@ -62,7 +63,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                     Rmark=b.Rmark,
                     IsDelete =b.IsDelete,
                     ClassName= BreakManeger.Classroom_Entity.GetSingData(b.ClassRoomID.ToString(),true).ClassroomName,
-                    E_Name= MyEntity.Break_Entity.GetEmploySingData(b.EmployeesInfo_Id,true).EmpName,
+                    E_Name= Break_Entity.GetEmploySingData(b.EmployeesInfo_Id,true).EmpName,
                     DataEnumName=BreakManeger.BaseDataEnum_Entity.GetSingData(b.BaseDataEnum_Id.ToString(),true).Name
                 }).ToList();
                 var datajson = new
@@ -85,8 +86,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         public ActionResult AddorEditView(int? Id)
         {
             //获取阶段
-            ViewBag.classSchedules= MyEntity.Break_Entity.GetClassSchedules().Select(c => new SelectListItem { Text = c.ClassNumber, Value = c.ClassNumber }).ToList();
-            ViewBag.classRooms = MyEntity.Break_Entity.GetClassRoomData().Select(c => new SelectListItem { Text = c.ClassroomName, Value = c.Id.ToString() }).ToList();
+            ViewBag.classSchedules= Break_Entity.GetClassSchedules().Select(c => new SelectListItem { Text = c.ClassNumber, Value = c.ClassNumber }).ToList();
+            ViewBag.classRooms = Break_Entity.GetClassRoomData().Select(c => new SelectListItem { Text = c.ClassroomName, Value = c.Id.ToString() }).ToList();
             BaseDataEnum find_data= BreakManeger.BaseDataEnum_Entity.GetSingData("巡班时间段", false);
             ViewBag.dataenum = BreakManeger.BaseDataEnum_Entity.GetChildData(find_data.Id).Select(b=>new SelectListItem { Text = b.Name, Value = b.Id.ToString() }).ToList();
             if (Id==null)
@@ -97,7 +98,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             else
             {
                 //编辑
-               Break find_b= MyEntity.Break_Entity.GetEntity(Id);                 
+               Break find_b= Break_Entity.GetEntity(Id);                 
                     return View(find_b);                            
             }
             
@@ -109,7 +110,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             {
                 if (b.Id > 0)
                 {
-                    Break fin_b = MyEntity.Break_Entity.GetEntity(b.Id);                    
+                    Break fin_b =Break_Entity.GetEntity(b.Id);                    
                     //编辑
                     
                     fin_b.ClassSchedule_Id = b.ClassSchedule_Id;
@@ -120,7 +121,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                     fin_b.PlayGame = b.PlayGame;
                     fin_b.BaseDataEnum_Id = b.BaseDataEnum_Id;
                     fin_b.Rmark = b.Rmark;
-                    MyEntity.Break_Entity.Update(fin_b);
+                    Break_Entity.Update(fin_b);
                 }
                 else
                 {
@@ -128,7 +129,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                     b.RecodeDate = DateTime.Now;
                     b.IsDelete = false;
                     b.EmployeesInfo_Id = "201908160008";//判断登陆的人员
-                    MyEntity.Break_Entity.Insert(b);
+                    Break_Entity.Insert(b);
                 }
 
                 return Json("ok", JsonRequestBehavior.AllowGet);
@@ -146,10 +147,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
         public ActionResult Deletefunction(int Id)
         {
-            Break fin_b = MyEntity.Break_Entity.GetEntity(Id);
+            Break fin_b = Break_Entity.GetEntity(Id);
              //删除
                 fin_b.IsDelete = true;
-                MyEntity.Break_Entity.Update(fin_b);
+               Break_Entity.Update(fin_b);
                 return Json("ok", JsonRequestBehavior.AllowGet);            
         }
     }
