@@ -14,6 +14,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
     using System.IO;
     using System.Text;
     using Newtonsoft.Json;
+    using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
     using SiliconValley.InformationSystem.Business.StudentBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 
@@ -298,37 +299,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 var answerSheet = candidateInfo.Paper;
 
                 List<object> objlist = new List<object>();
+
                 if (answerSheet == null)
                 {
                     var obj = new
                     {
-
                         question = "",
                         questionTitle = "",
                         candidinfo = candidateInfo,
                         isEnd = ""
-
-
                     };
 
                     objlist.Add(obj);
                 }
                 else
                 {
+                    CloudstorageBusiness Bos = new CloudstorageBusiness();
+
+                    var client = Bos.BosClient();
 
                     //Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + stuDirName + "AnswerSheet.txt");
 
-                    FileStream fileStream = new FileStream(answerSheet, FileMode.Open, FileAccess.Read);
+                    //FileStream fileStream = new FileStream(answerSheet, FileMode.Open, FileAccess.Read);
+
+                    var filedata = client.GetObject("xinxihua", answerSheet);
 
 
                     //解答题答卷
-                    string SheetStr = fileStream.ReadToString(Encoding.UTF8);
-
+                    string SheetStr = filedata.ObjectContent.ReadToString(Encoding.UTF8);
 
                     var list = JsonConvert.DeserializeObject<List<AnswerSheetHelp>>(SheetStr);
-
-
-
 
                     //判断是否为最后一个 
                     var IsEnd = index == candidinfolist.Count() ? true : false;
@@ -346,17 +346,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                             questionTitle = question,
                             candidinfo = candidateInfo,
                             isEnd = IsEnd
-
-
                         };
 
                         objlist.Add(obj);
 
                     }
                 }
-
-
-
                 result.ErrorCode = 200;
                 result.Msg = "成功";
                 result.Data = objlist;
@@ -388,8 +383,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         
         public ActionResult DownloadComputerSheet(string kaohao, int examid)
         {
+            CloudstorageBusiness Bos = new CloudstorageBusiness();
 
-           var candidateinfo = db_exam.AllCandidateInfo(examid).Where(d=>d.CandidateNumber == kaohao).FirstOrDefault();
+            var client = Bos.BosClient();
+
+            var candidateinfo = db_exam.AllCandidateInfo(examid).Where(d=>d.CandidateNumber == kaohao).FirstOrDefault();
 
             //获取答卷路径
 
@@ -400,13 +398,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             var computerPath = candidateinfo.ComputerPaper.Split(',')[1];
 
-            //var filename = Path.GetFileName(computerPath.SaveURL);
+            //FileStream fileStream = new FileStream(computerPath, FileMode.Open);
 
-            //var path = Server.MapPath("/uploadXLSXfile/ComputerTestQuestionsWord/" + filename);
+            var filedata = client.GetObject("xinxihua", computerPath);
 
-            FileStream fileStream = new FileStream(computerPath, FileMode.Open);
-
-            return File(fileStream, "application/octet-stream", Server.UrlEncode("机试题"));
+            return File(filedata.ObjectContent, "application/octet-stream", Server.UrlEncode("机试题"));
 
         }
 

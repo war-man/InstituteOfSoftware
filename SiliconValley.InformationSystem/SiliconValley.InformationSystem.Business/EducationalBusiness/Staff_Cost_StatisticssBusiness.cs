@@ -20,6 +20,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
     using NPOI.HSSF.UserModel;
     using NPOI.SS.UserModel;
+    using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
     using System.IO;
     using System.Net;
 
@@ -1043,15 +1044,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             });
 
-            string pathName = System.Web.HttpContext.Current.Server.MapPath("/Areas/Educational/CostHistoryFiles/" + filename + ".xls");
+            //string pathName = System.Web.HttpContext.Current.Server.MapPath("/Areas/Educational/CostHistoryFiles/" + filename + ".xls");
 
-            FileStream stream = new FileStream(pathName, FileMode.Create, FileAccess.ReadWrite);
+            //stream = new FileStream(pathName, FileMode.Create, FileAccess.ReadWrite);
 
-            workbook.Write(stream);
+            CloudstorageBusiness Bos = new CloudstorageBusiness();
 
-            stream.Close();
+            var client = Bos.BosClient();
 
-            stream.Dispose();
+            var byteary = workbook.GetBytes();
+
+            client.PutObject("xinxihua", $"/CostHistoryFiles/{filename}.xls", byteary);
 
             workbook.Close();
 
@@ -1685,15 +1688,19 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 count++;
             }
 
-            string pathName = System.Web.HttpContext.Current.Server.MapPath("/Areas/Educational/CostHistoryFiles/" + fileName+".xls");
+            //string pathName = System.Web.HttpContext.Current.Server.MapPath("/Areas/Educational/CostHistoryFiles/" + fileName+".xls");
 
-            FileStream stream = new FileStream(pathName, FileMode.Create,FileAccess.ReadWrite);
+            string pathName = $"/CostHistoryFiles/{fileName}.xls";
 
-            workbook.Write(stream);
+            //FileStream stream = new FileStream(pathName, FileMode.Create,FileAccess.ReadWrite);
 
-            stream.Close();
+            CloudstorageBusiness Bos = new CloudstorageBusiness();
 
-            stream.Dispose();
+            var client = Bos.BosClient();
+
+            var byteData = workbook.GetBytes();
+
+            client.PutObject("xinxihua", pathName, byteData);
 
             workbook.Close();
 

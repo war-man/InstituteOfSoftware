@@ -43,6 +43,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// <returns></returns>
         public ActionResult table00(int page, int limit, string classno)
         {
+            
             dbproClassScheduleViewBusiness = new ProClassScheduleViewBusiness();
             dbprosutdent_Dbproheadmaster = new dbprosutdent_dbproheadmaster();
             dbacc = new AccdationinformationBusiness();
@@ -68,6 +69,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                     }
                 }
             }
+            
             var data = query0.OrderByDescending(a => a.ClassNumber).Skip((page - 1) * limit).Take(limit).ToList();
             var returnObj = new
             {

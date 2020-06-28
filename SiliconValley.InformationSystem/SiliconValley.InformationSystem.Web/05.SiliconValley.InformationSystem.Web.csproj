@@ -53,8 +53,9 @@
     <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.1.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="BceSdkDotNet">
-      <HintPath>..\SiliconValley.InformationSystem.Business\CloudstorageBusiness\bce-dotnet-sdk-1.0.4\BceSdkDotNet.dll</HintPath>
+    <Reference Include="BceSdkDotNet, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\bce-dotnet-sdk-1.0.4\BceSdkDotNet.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -3630,14 +3631,6 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SignalRChat_Common\SignalRChat_Common.csproj">
-      <Project>{d305a3ec-96ad-415e-998b-789097686c08}</Project>
-      <Name>SignalRChat_Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SignalRChat_Model\SignalRChat_Model.csproj">
-      <Project>{469f9301-044c-443f-9cbd-9f63ad9be807}</Project>
-      <Name>SignalRChat_Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Business\04.SiliconValley.InformationSystem.Business.csproj">
       <Project>{572473ad-730a-4e3b-9ae5-078d96dacdac}</Project>
       <Name>04.SiliconValley.InformationSystem.Business</Name>
