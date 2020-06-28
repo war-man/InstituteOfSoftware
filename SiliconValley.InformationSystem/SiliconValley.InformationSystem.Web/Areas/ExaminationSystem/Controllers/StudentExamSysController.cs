@@ -8,10 +8,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
-
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controllers
 {
+    using BaiduBce.Services.Bos.Model;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.StudentBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
@@ -280,25 +282,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     candidateInfo.ComputerPaper = computer.ID.ToString() + ",";
 
                     db_exam.UpdateCandidateInfo(candidateInfo);
-                }
-
-                
-               
-
+                }           
             }
+
+
+            CloudstorageBusiness Bos = new CloudstorageBusiness();
+
+            var client = Bos.BosClient();
 
             var ar = candidateInfo.ComputerPaper.Split(',');
 
            var com = db_exam.AllComputerTestQuestion(IsNeedProposition : false).Where(d => d.ID ==int.Parse( ar[0])).FirstOrDefault();
 
-
             var filename = Path.GetFileName(com.SaveURL);
 
-            var path = Server.MapPath("/uploadXLSXfile/ComputerTestQuestionsWord/" + filename);
+            //var path = Server.MapPath("/uploadXLSXfile/ComputerTestQuestionsWord/" + filename);
 
-            FileStream fileStream = new FileStream(path, FileMode.Open);
+            var fileData = client.GetObject("xinxihua", $"/ExaminationSystem/ComputerTestQuestionsWord/{filename}");
 
-            return File(fileStream, "application/octet-stream", Server.UrlEncode(filename));
+            //FileStream fileStream = new FileStream(path, FileMode.Open);
+
+            return File(fileData.ObjectContent, "application/octet-stream", Server.UrlEncode(filename));
             
         }
         /// <summary>
@@ -393,22 +397,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             try
             {
+
+                CloudstorageBusiness Bos = new CloudstorageBusiness();
+
+                var client = Bos.BosClient();
+
                 var studentNumber = SessionHelper.Session["studentnumber"].ToString();
                 // 1.将解答题答案存入文件  2 将机试题文件放入AnswerSheet文件夹 3.修改数据库值（选择题分数，解答题答案路径，机试题路径）4.记录选择题分数
 
                 //1 将解答题答案存入文件 首先新建学生答卷文件夹
                 //名称规则 学号加上考试ID
-                string direName = studentNumber + examid;
-                DirectoryInfo directoryInfo = new DirectoryInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName));
-                directoryInfo.Create();
+
+                string direName = $"/ExaminationSystem/AnswerSheet/{studentNumber + examid}/";
+
+                //DirectoryInfo directoryInfo = new DirectoryInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName));
+                //directoryInfo.Create();
 
                 //写文件
                 string answerfilename = "AnswerSheet.txt";
-                FileInfo fileinfo = new FileInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + answerfilename));
-                var stream1 = fileinfo.CreateText();
-                stream1.Write(AnswerCommit);
-                stream1.Flush();
-                stream1.Close();
+                //FileInfo fileinfo = new FileInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + answerfilename));
+                //var stream1 = fileinfo.CreateText();
+                //stream1.Write(AnswerCommit);
+                //stream1.Flush();
+                //stream1.Close();
+
+                PutObjectResponse putObjectResponseFromString = client.PutObject("xinxihua",$"{direName}{answerfilename}", AnswerCommit);
 
                 //2 将机试题保存到文件夹 
                 string computerfielnaem = "computerfielnaem";
@@ -420,15 +433,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 {
                     //获取文件拓展名称 
                     var exait = Path.GetExtension(computerfile.FileName);
-                    computerUrl = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + computerfielnaem + exait);
-                    computerfile.SaveAs(computerUrl);
-
+                    //computerUrl = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + computerfielnaem + exait);
+                    computerUrl = $"{direName}{computerfielnaem + exait}";
+                    //computerfile.SaveAs(computerUrl);
+                    Bos.Savefile("xinxihua", direName, computerfielnaem + exait, computerfile.InputStream);
                 }
 
                 //3.修改数据库值（选择题分数，解答题答案路径，机试题路径）
                 db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
                 var Candidateinfo = db_exam.AllCandidateInfo(examid).Where(d => d.Examination == examid && d.StudentID == studentNumber).FirstOrDefault();
-                Candidateinfo.Paper = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + answerfilename);
+                //Candidateinfo.Paper = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + answerfilename);
+                Candidateinfo.Paper = $"{direName}{answerfilename}";
 
                 //获取需要替换的字符串路径
                 var old = Candidateinfo.ComputerPaper.Substring(Candidateinfo.ComputerPaper.IndexOf(',') + 1);
@@ -439,8 +454,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 else
 
                 {
-                    Candidateinfo.ComputerPaper = Candidateinfo.ComputerPaper.Replace(old, computerUrl);
-                   
+                    Candidateinfo.ComputerPaper = Candidateinfo.ComputerPaper.Replace(old, computerUrl);    
                 }
                 db_exam.UpdateCandidateInfo(Candidateinfo);
 

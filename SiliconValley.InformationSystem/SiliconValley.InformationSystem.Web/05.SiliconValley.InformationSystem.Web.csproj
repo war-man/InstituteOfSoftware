@@ -53,8 +53,9 @@
     <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.1.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="BceSdkDotNet">
-      <HintPath>..\SiliconValley.InformationSystem.Business\bin\Debug\bce-dotnet-sdk-1.0.4\BceSdkDotNet.dll</HintPath>
+    <Reference Include="BceSdkDotNet, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\bce-dotnet-sdk-1.0.4\BceSdkDotNet.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -474,7 +475,6 @@
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\plugins\upload\trumbowyg.upload.php" />
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\trumbowyg.js" />
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\trumbowyg.min.js" />
-    <Content Include="Areas\Finance\images\shouju.jpg" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
@@ -482,6 +482,14 @@
     <Content Include="Areas\Teachingquality\ClassImages\1.jpg" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
     <Content Include="Areas\Teachingquality\ClassImages\ClassImages.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051991032300041back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997080200010back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.png" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051991032300041back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051991032300041just.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997080200010just.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997111700040just.jpg" />
     <Content Include="Areas\Teachingquality\images\db618f149fc242299c9ebac0576ca2a1_th.jpg" />
     <Content Include="Areas\Teachingquality\images\guigu.png" />
     <Content Include="Areas\Teachingquality\images\审批.png" />
@@ -1002,6 +1010,7 @@
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
+    <Content Include="Areas\Market\Views\NetClientRecord\EditView.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\MarketChairIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\ThisIsImageDataView.cshtml" />
@@ -1848,7 +1857,6 @@
     <Content Include="Areas\Teachingquality\Views\Stuportfolio\Traineeinterview.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\RefunditemsDate.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\text2.cshtml" />
-    <Content Include="Areas\Finance\Views\Pricedetails\Drivingschoolpayment.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3623,14 +3631,6 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SignalRChat_Common\SignalRChat_Common.csproj">
-      <Project>{d305a3ec-96ad-415e-998b-789097686c08}</Project>
-      <Name>SignalRChat_Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SignalRChat_Model\SignalRChat_Model.csproj">
-      <Project>{469f9301-044c-443f-9cbd-9f63ad9be807}</Project>
-      <Name>SignalRChat_Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Business\04.SiliconValley.InformationSystem.Business.csproj">
       <Project>{572473ad-730a-4e3b-9ae5-078d96dacdac}</Project>
       <Name>04.SiliconValley.InformationSystem.Business</Name>
