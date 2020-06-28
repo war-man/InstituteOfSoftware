@@ -202,6 +202,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
                     seclass.id = item.id.ToString();
                     listtree.Add(seclass);
                 }
+                else if (item.Name == "驾校费")
+                {
+                    TreeClass seclass = new TreeClass();
+                    seclass.title = item.Name;
+                    seclass.id = item.id.ToString();
+                    listtree.Add(seclass);
+                }
             }
             TreeClass saea = new TreeClass();
             saea.title = "阶段费用缴纳";
@@ -587,6 +594,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return View();
 
+        }
+        /// <summary>
+        /// 驾校费用缴纳
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Drivingschoolpayment(string id)
+        {
+     
+            //学号
+            ViewBag.Stuid = id;
+            // ViewBag.Costitemsid
+            int Typeid = int.Parse(Request.QueryString["Typeid"]);
+            //明目类型id
+            ViewBag.Typeid = Typeid;
+            //名目名称
+            ViewBag.Costitemsid = enrollmentBusinesse.Costlist(id, Typeid).Select(a => new SelectListItem { Text = a.Name, Value = a.id.ToString() }).ToList();
+          
+         
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Drivingschoolpayment(Payview payview)
+        {
+            return Json(dbtext.Drivingschoolpayment(payview), JsonRequestBehavior.AllowGet);
         }
     } 
 }
