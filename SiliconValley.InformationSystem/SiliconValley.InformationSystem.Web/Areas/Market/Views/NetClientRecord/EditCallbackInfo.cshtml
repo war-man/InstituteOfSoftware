@@ -263,12 +263,6 @@
                 elem: '#NetClientDate',
             });
 
-            element.on('tab(test)', function (data) {
-                console.log(this); //当前Tab标题所在的原始DOM元素
-                console.log("下标："+data.index); //得到当前Tab的所在下标
-                console.log(data.elem); //得到当前的Tab大容器
-            });
-           
             //添加提交
             form.on('submit(demo)', function (data) {
                 data.field.Id = $("#F_Id").val();
