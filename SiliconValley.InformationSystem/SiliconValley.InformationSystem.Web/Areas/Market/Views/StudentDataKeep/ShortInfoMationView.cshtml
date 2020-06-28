@@ -25,20 +25,29 @@
         <form class="layui-form">
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">接收员工:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="name" id="name" disabled="disabled"/>
+                        <i class="layui-icon layui-icon-search" id="iconbtn" onclick="iconbtn();" style="font-size: 25px;cursor:pointer; color:lightseagreen;position:absolute;left:80%;top:20%;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <label class="layui-form-label">电话号码:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="layui-input" name="phone" id="phone"/>
+                        <input type="text" class="layui-input" name="phone" id="phone" />
                     </div>
-                </div>               
+                </div>
             </div>
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <label class="layui-form-label">发送内容:</label>
                     <div class="layui-input-block">
-                         <textarea class="layui-textarea" name="rank" id="rank"></textarea>
+                        <textarea class="layui-textarea" name="rank" id="rank"></textarea>
                     </div>
                 </div>
-                
+
             </div>
             <div class="layui-row layui-form-item">
                 <div style="text-align:center">
@@ -51,9 +60,27 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
+       
+        //"市场对接老师"选择
+        function iconbtn() {
+            layer.open({
+                type: 2
+                , area: ["500px", "400px"]
+                , title: "选择员工"
+                , content: '/Market/StudentDataKeep/SelectReceiveEmp'
+                , anim: 2
+            });
+        }
+
+        function BeanValue(getvalue) {
+            $("#name").val(getvalue.name);
+            $("#phone").val(getvalue.phone);
+        }
         layui.use(['form', 'layer'], function () {
             var form = layui.form;
             var layer = layui.layer;
+
+          
 
             form.on('submit(true)', function (data) {
                 $.ajax({
@@ -62,6 +89,8 @@
                     type:'POST',
                     success: function (suc) {
                         layer.msg(suc);
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index);
                     }
                 });
                 
