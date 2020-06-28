@@ -25,8 +25,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult NetIndex()
         {
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var elist = emanage.GetList();
-            ViewBag.recorder = new SelectList(elist, "EmployeeId", "EmpName");
+            //获取区域
+            SelectListItem newselectitem = new SelectListItem() ;
+            var r_list = EmployandCounTeacherCoom.Studentrecond.GetEffectiveRegionAll(true).Select(r => new SelectListItem { Text = r.RegionName, Value = r.RegionName }).ToList();
+            r_list.Add(newselectitem);
+            ViewBag.are = r_list;
 
             return View();
         }
@@ -42,49 +45,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             List<NetClientRecordView> ncrlist = new List<NetClientRecordView>();
             var list = ncrmanage.GetList().Where(s=>string.IsNullOrEmpty(Convert.ToString(s.NetClientDate))).ToList();
-            if (!string.IsNullOrEmpty(AppCondition))
-            {
-                string[] str = AppCondition.Split(',');
-                string name = str[0];
-                string InformationSource = str[1];
-                string registrant = str[2];
-                string IsFaceConsult = str[3];
-                string IsDel = str[4];
-                string start_time = str[5];
-                string end_time = str[6];
-                //list = list.Where(e => e.StuName.Contains(name)).ToList();
-                //list = list.Where(e => e.InformationSource.Contains(InformationSource)).ToList();
-                //if (!string.IsNullOrEmpty(registrant))
-                //{
-                //    list = list.Where(e =>e.EmployeeId==registrant).ToList();
-                //}
-                //if (!string.IsNullOrEmpty(IsFaceConsult))
-                //{
-                //    list = list.Where(e =>e.IsFaceConsult==bool.Parse(IsFaceConsult)).ToList();
-                //}
-                if (!string.IsNullOrEmpty(IsDel))
-                {
-                    list = list.Where(e => e.IsDel == bool.Parse(IsDel)).ToList();
-                }
-                if (!string.IsNullOrEmpty(start_time))
-                {
-                    DateTime stime = Convert.ToDateTime(start_time + " 00:00:00.000");
-                    list = list.Where(a => a.NetClientDate >= stime).ToList();
-                }
-                if (!string.IsNullOrEmpty(end_time))
-                {
-                    DateTime etime = Convert.ToDateTime(end_time + " 23:59:59.999");
-                    list = list.Where(a => a.NetClientDate <= etime).ToList();
-                }
-            }
-            var mylist = list.OrderBy(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
-            foreach (var item in mylist)
+            foreach (var item in list)
             {
                 #region 获取属性值 
                 var ncrview = ncrmanage.GetNcrviewById(item.Id);
                 ncrlist.Add(ncrview);
                 #endregion
             }
+            if (!string.IsNullOrEmpty(AppCondition))
+            {
+                string[] str = AppCondition.Split(',');
+                string name = str[0];
+                string stusex = str[1];
+                string recordemp = str[2];
+                string IsFaceConsult = str[3];
+                string findAreavalue = str[4];
+                string graduschool = str[5];
+                string status = str[6];
+                ncrlist = ncrlist.Where(e => e.StuName.Contains(name)).ToList();
+                if (!string.IsNullOrEmpty(stusex))
+                {
+                    ncrlist = ncrlist.Where(e => e.StuSex == stusex).ToList();
+                }
+                ncrlist = ncrlist.Where(e => e.SprEmp.Contains(recordemp)).ToList();
+               
+                if (!string.IsNullOrEmpty(IsFaceConsult))
+                {
+                    ncrlist = ncrlist.Where(e => e.IsFaceConsult ==IsFaceConsult).ToList();
+                }
+                if (!string.IsNullOrEmpty(findAreavalue))
+                {
+                    ncrlist = ncrlist.Where(e => e.RegionName == findAreavalue).ToList();
+                }
+                ncrlist = ncrlist.Where(e => e.StuName.Contains(graduschool)).ToList();
+                if (!string.IsNullOrEmpty(status))
+                {
+                    ncrlist = ncrlist.Where(e => e.StuStatus == status).ToList();
+                }
+            }
+            var mylist = ncrlist.OrderBy(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
+           
             var newobj = new
             {
                 code = 0,

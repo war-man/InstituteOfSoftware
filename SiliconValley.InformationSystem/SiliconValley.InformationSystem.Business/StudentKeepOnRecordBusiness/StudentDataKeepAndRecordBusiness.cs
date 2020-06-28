@@ -571,7 +571,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-23' ";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where    CreateDate>='2020-06-24' ";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
 

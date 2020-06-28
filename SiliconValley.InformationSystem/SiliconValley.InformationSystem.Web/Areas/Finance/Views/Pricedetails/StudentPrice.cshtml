@@ -255,7 +255,7 @@
         });
         //监听提交
         form.on('submit(demo1)', function (data) {
-         //   window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 830, 600);
+         //  window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 900, 600);
             var db = data.field;
 
             var obj = {};
@@ -279,7 +279,7 @@
             ajaxprice("/Finance/Pricedetails/StudentPrices", dbase, function () {
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);//关闭当前页  
-                window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 830, 600);
+                window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1,800, 600);
             });
         
          //  ajaxUniom("/Finance/Pricedetails/StudentPrices", dbase);

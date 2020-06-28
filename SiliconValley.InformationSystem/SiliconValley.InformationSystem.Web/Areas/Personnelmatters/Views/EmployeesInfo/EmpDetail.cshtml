@@ -34,10 +34,6 @@
         }
 
         .linu {
-            width: 200px;
-        }
-
-        .AreaStyle {
             height: 120px;
         }
     </style>
@@ -278,14 +274,14 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">招聘来源:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.InvitedSource, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
+                            @Html.TextAreaFor(a => a.InvitedSource, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">材料:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
+                            @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
 
@@ -296,7 +292,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
+                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
 

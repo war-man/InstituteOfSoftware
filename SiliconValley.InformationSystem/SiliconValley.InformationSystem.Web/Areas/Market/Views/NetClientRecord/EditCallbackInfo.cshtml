@@ -108,40 +108,34 @@
                 </div>
 
             </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn " lay-submit="" lay-filter="demo1" style="margin-left:300px;">立即提交</button>
-                    <button class="layui-btn " id="btnclose1">关闭</button>
-                </div>
-            </div>
 
         </form>
-            <div class="layui-tab" lay-filter="test">
-                <ul class="layui-tab-title">
-                    @{
-                        List<NetClientRecordView> list = (ViewBag.ncrlist) as List<NetClientRecordView>;
-                        int i = 1;
-                        if (list.Count > 0)
+        <div class="layui-tab" lay-filter="test">
+            <ul class="layui-tab-title">
+                @{
+                    List<NetClientRecordView> list = (ViewBag.ncrlist) as List<NetClientRecordView>;
+                    int i = 1;
+                    if (list.Count > 0)
+                    {
+                        foreach (var item in list)
                         {
-                            foreach (var item in list)
-                            {
 
-                                <li id=@item.Id name="@item.Id" class="layui-this">第<span>@i</span>次跟踪</li>
+                            <li id=@item.Id name="@item.Id" class="layui-this">第<span>@i</span>次跟踪</li>
 
-                                i++;
-                            }
-                        }
-                        else
-                        {
-                            <li class="layui-this">系统温馨提示</li>
+                            i++;
                         }
                     }
-                </ul>
-                <div class="layui-tab-content">
-                    @{
-                        if (list.Count > 0)
-                        {
-                            <form class="layui-form" id="myform" lay-filter="myform">
+                    else
+                    {
+                        <li class="layui-this">系统温馨提示</li>
+                    }
+                }
+            </ul>
+            <div class="layui-tab-content">
+                @{
+                    if (list.Count > 0)
+                    {
+                        <form class="layui-form" id="myform" lay-filter="myform">
                             <div class="layui-tab-item layui-show">
                                 <div class="layui-row layui-form-item">
                                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -180,22 +174,36 @@
                                     </div>
                                 </div>
 
-                            </div>
-                            </form>
-                        }
-                        else
-                        {
-                            <div class="layui-tab-item layui-show">
-                                <h3>
-                                    该学生还没有跟踪信息哟!!!
-                                </h3>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn " lay-submit="" lay-filter="demo" style="margin-left:300px;">立即提交</button>
+                                        <button class="layui-btn " id="btnclose1">关闭</button>
+                                    </div>
+                                </div>
 
-           
+                            </div>
+                     
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="layui-tab-item layui-show">
+                            <h3>
+                                该学生还没有跟踪信息哟!!!
+                            </h3>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="layui-form-item" >
+            <div class="layui-input-block">
+                <button class="layui-btn " lay-submit="" lay-filter="demo" style="margin-left:300px;">立即提交</button>
+                <button class="layui-btn " id="btnclose1">关闭</button>
+            </div>
+        </div>
+
+
     </div>
 
     <script>
@@ -263,7 +271,7 @@
             });
 
             //添加提交
-            form.on('submit(demo1)', function (data) {
+            form.on('submit(demo)', function (data) {
                
                 console.log("改变的情况：" + $("#CallBackCase").val());
                 data.field.callbackdata = JSON.stringify(CallBackList());

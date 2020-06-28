@@ -55,5 +55,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
             return Classroom_Entity.GetList().Where(c => c.IsDelete == false).ToList();
         }
+
+        /// <summary>
+        /// 获取所有阶段集合
+        /// </summary>
+        /// <returns></returns>
+        public List<Grand> GetEffectiveData()
+        {
+            List<Grand> grands = Reconcile_Com.Grand_Entity.GetList().Where(g => g.IsDelete == false).ToList();
+            return grands;
+        }
     }
 }

@@ -180,9 +180,10 @@
 
             for (var i = 0; i < data.length; i++) {
                 var a1 = data[i].split('.');
+               
                 if (a1.length > 1) {
                   
-                    $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;"class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div>  <div style="position:absolute;margin-top:0%;margin-left:3%;"><input type="checkbox" value=' + data[i] + ' class="checkid" /></div></div>'));
+                    $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;"class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div>  <div style="position:absolute;margin-top:0%;margin-left:3%;"><input  type="checkbox"  class="checkid" /></div></div>'));
 
                 } else {
                     $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div>' + data[i] + '</div></div>'));
@@ -244,7 +245,7 @@
             switch (obj.event) {
                 case 'getCheckData':
                     var data = checkStatus.data;
-
+                  
                     for (var i = 0; i < data.length; i++) {
                         download(data[i].Filename, data[i].Filepath);
 
@@ -334,11 +335,12 @@
             $.post("/Courseware/Coursewaremaking/CourDate?str=/" + $("#lab1").text(), function (data) {
                 for (var i = 0; i < data.length; i++) {
                     var a1 = data[i].split('.');
+                    
                 //    var titileName = data[i].replace(/\s*/g, '').length > 16 ? data[i].replace(/\s*/g, '').substring(0, 6) + "<br/>" + data[i].replace(/\s*/g, '').substring(6, data[i].replace(/\s*/g, '').length - 8) + "<br/>" + data[i].replace(/\s*/g, '').substring(data[i].replace(/\s*/g, '').length-8, data[i].replace(/\s*/g, '').length) : data[i].replace(/\s*/g, '');
                  //   console.log(titileName);
                     if (a1.length > 1) {
                         //    $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;" class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div></div>'));
-                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;"class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div>  <div style="position:absolute;margin-top:0%;margin-left:3%;"><input type="checkbox" value=' + data[i] + ' class="checkid" /></div></div>'));
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;"class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div>  <div style="position:absolute;margin-top:0%;margin-left:3%;"><input type="checkbox" class="checkid" /></div></div>'));
 
                         //$("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div></div>'));
                     } else {
@@ -409,13 +411,13 @@
     //下载多个文件
     function download(name, href) {
         console.log(name, href);
-        window.location.href = "/Courseware/Coursewaremaking/Filedownload?URL=" + href + "&filename=" + name;
-        //var a = document.createElement("a"), //创建a标签
-        //    e = document.createEvent("MouseEvents"); //创建鼠标事件对象
-        //e.initEvent("click", false, false); //初始化事件对象
-        //a.href = href; //设置下载地址
-        //a.download = name; //设置下载文件名
-        //a.dispatchEvent(e); //给指定的元素，执行事件click事件
+      //  window.location.href = "/Courseware/Coursewaremaking/Filedownload?URL=" + href + "&filename=" + name;
+        var a = document.createElement("a"), //创建a标签
+            e = document.createEvent("MouseEvents"); //创建鼠标事件对象
+        e.initEvent("click", false, false); //初始化事件对象
+        a.href = href + name; //设置下载地址
+        a.download = name; //设置下载文件名
+        a.dispatchEvent(e); //给指定的元素，执行事件click事件
     }
 
     var count = 0;
@@ -435,8 +437,10 @@
                 for (var i = 0; i < checkId.length; i++) {
                     var evt = document.createEvent('HTMLEvents')//创建事件
                     evt.initEvent('click', false, false)//初始化事件，绑定点击事件，不冒泡，不阻止浏览器默认行为
-                    download($(checkId[i]).val(), "/Areas/Courseware/" + $("#lab1").text() + $(checkId[i]).val());
-                    files[i] = $(checkId[i]).val();
+                    console.log($($($(checkId[i]).parents("div")[1]).children()[2]).text());
+                  
+                    download($($($(checkId[i]).parents("div")[1]).children()[2]).text(), $("#lab1").text());
+                    files[i] = $($($(checkId[i]).parents("div")[1]).children()[2]).text();
                 }
                 //  var url = "/Courseware/Coursewaremaking/FiledownloadPro" + $("#lab1").text();
                 $("#Batch").text("");

@@ -53,8 +53,8 @@
     <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.1.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="BceSdkDotNet, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BceSdkDotNet.1.0.1.0\lib\net35\BceSdkDotNet.dll</HintPath>
+    <Reference Include="BceSdkDotNet">
+      <HintPath>..\SiliconValley.InformationSystem.Business\bin\Debug\bce-dotnet-sdk-1.0.4\BceSdkDotNet.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -65,6 +65,9 @@
     </Reference>
     <Reference Include="EntityFramework6.Npgsql">
       <HintPath>..\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
@@ -471,6 +474,7 @@
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\plugins\upload\trumbowyg.upload.php" />
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\trumbowyg.js" />
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\trumbowyg.min.js" />
+    <Content Include="Areas\Finance\images\shouju.jpg" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
@@ -478,14 +482,6 @@
     <Content Include="Areas\Teachingquality\ClassImages\1.jpg" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
     <Content Include="Areas\Teachingquality\ClassImages\ClassImages.jpg" />
-    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051991032300041back.jpg" />
-    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997080200010back.jpg" />
-    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.jpg" />
-    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.png" />
-    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051991032300041back.jpg" />
-    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051991032300041just.jpg" />
-    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997080200010just.jpg" />
-    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997111700040just.jpg" />
     <Content Include="Areas\Teachingquality\images\db618f149fc242299c9ebac0576ca2a1_th.jpg" />
     <Content Include="Areas\Teachingquality\images\guigu.png" />
     <Content Include="Areas\Teachingquality\images\审批.png" />
@@ -1006,7 +1002,6 @@
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
-    <Content Include="Areas\Market\Views\NetClientRecord\EditView.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\MarketChairIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\ThisIsImageDataView.cshtml" />
