@@ -249,7 +249,6 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                     fins.Party = olds.Party;
                     fins.Region_id = olds.Region_id;
                     fins.Reak = olds.Reak;
-                    fins.ConsultTeacher = olds.ConsultTeacher;
                     this.Update(fins);
                     
                     //redisCache.RemoveCache("StudentKeepList");
