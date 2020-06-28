@@ -2,20 +2,16 @@
 using BaiduBce.Auth;
 using BaiduBce.Services.Bos;
 using BaiduBce.Services.Bos.Model;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
 {
     /// <summary>
     /// 百度云存储对象业务类
     /// </summary>
-   public class CloudstorageBusiness
+    public class CloudstorageBusiness
     {
 
         const string accessKeyId = "a43996ac0c6d40c69d3ebb47127909e9"; // 用户的Access Key ID
@@ -23,10 +19,10 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         const string endpoint = "http://bj.bcebos.com";
         // 初始化一个BosClient
         BceClientConfiguration config = new BceClientConfiguration();
-      
+
         public List<BucketSummary> ListBuckets(BosClient client)
         {
-           
+
             // 获取用户的Bucket列表
             List<BucketSummary> buckets = client.ListBuckets().Buckets;
 
@@ -50,9 +46,9 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         /// <param name="bucketName">项目名称</param>
         /// <param name="Prefix">文件夹名称</param>
         /// <returns></returns>
-        public List<BosObjectSummary> Listfiles(string bucketName,string Prefix)
+        public List<BosObjectSummary> Listfiles(string bucketName, string Prefix)
         {
-           var client= this.BosClient();
+            var client = this.BosClient();
 
             // 获取用户的Bucket列表
             List<BucketSummary> buckets = client.ListBuckets().Buckets;
@@ -67,7 +63,7 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
             // List Objects
             ListObjectsResponse listObjectsResponse = client.ListObjects(listObjectsRequest);
 
-          return listObjectsResponse.Contents;
+            return listObjectsResponse.Contents;
         }
 
         /// <summary>
@@ -78,15 +74,15 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         /// <param name="ImageName">图片名称</param>
         ///   /// <param name="expirationInSeconds">url有效时长</param>
         /// <returns></returns>
-        public string ImagesFine(string bucketName,string Prefix,string ImageName,int expirationInSeconds)
+        public string ImagesFine(string bucketName, string Prefix, string ImageName, int expirationInSeconds)
         {
             try
             {
                 var client = this.BosClient();
-                 GetObjectRequest getObjectRequest = new GetObjectRequest() { BucketName = bucketName, Key = Prefix + "/" + ImageName };
+                GetObjectRequest getObjectRequest = new GetObjectRequest() { BucketName = bucketName, Key = Prefix + "/" + ImageName };
                 Uri url = client.GeneratePresignedUrl(bucketName, Prefix + "/" + ImageName, expirationInSeconds);
 
-               
+
                 return url.AbsoluteUri;
             }
             catch (Exception ex)
@@ -102,13 +98,13 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         /// <param name="objectKey">文件名</param>
         /// <param name="file">文件流</param>
         /// <returns></returns>
-        public bool PutObject( String bucketName,string Prefix, String objectKey, Stream file)
+        public bool PutObject(String bucketName, string Prefix, String objectKey, Stream file)
         {
             var client = this.BosClient();
             try
             {
                 // 以数据流形式上传Object
-                PutObjectResponse putObjectResponseFromInputStream = client.PutObject(bucketName,Prefix+ "/"+objectKey, file);
+                PutObjectResponse putObjectResponseFromInputStream = client.PutObject(bucketName, Prefix + "/" + objectKey, file);
                 return true;
             }
             catch (Exception ex)
@@ -116,7 +112,7 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
                 return false;
                 throw;
             }
-  
+
 
             //// 以二进制串上传Object
             //PutObjectResponse putObjectResponseFromByte = client.PutObject(bucketName, objectKey, Encoding.Default.GetBytes("sampledata"));
@@ -151,12 +147,12 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
             //获取文件夹
             foreach (var item in listObjectsResponse.CommonPrefixes)
             {
-                strname.Add(Path.GetFileName(item.Prefix.Substring(0, item.Prefix.Length-1)));
+                strname.Add(Path.GetFileName(item.Prefix.Substring(0, item.Prefix.Length - 1)));
             }
 
             foreach (var item in listObjectsResponse.Contents)
             {
-                if (item.Size>0)
+                if (item.Size > 0)
                 {
                     strname.Add(Path.GetFileName(item.Key));
                 }
@@ -173,7 +169,7 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         /// <param name="objectKey">文件名称</param>
         /// <param name="inputStream">文件流</param>
         /// <returns></returns>
-        public int Savefile(String bucketName, string Prefix,string objectKey,Stream inputStream)
+        public int Savefile(String bucketName, string Prefix, string objectKey, Stream inputStream)
         {
             var client = this.BosClient();
             try
@@ -187,7 +183,7 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
                 return 0;
                 throw;
             }
-           
+
 
         }
         /// <summary>
@@ -197,16 +193,16 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         /// <param name="Prefix">路径</param>
         /// <param name="filename">文件名称</param>
         /// <returns></returns>
-        public Stream DownloadFile(string bucketName,string Prefix, string filename)
+        public Stream DownloadFile(string bucketName, string Prefix, string filename)
         {
             var client = this.BosClient();
             // 新建GetObjectRequest
-            GetObjectRequest getObjectRequest = new GetObjectRequest() { BucketName = bucketName, Key = Prefix+ filename };
+            GetObjectRequest getObjectRequest = new GetObjectRequest() { BucketName = bucketName, Key = Prefix + filename };
 
             // 下载Object到文件
-            BosObject bosObject = client.GetObject(bucketName, Prefix+ filename);
+            BosObject bosObject = client.GetObject(bucketName, Prefix + filename);
 
-            
+
             return bosObject.ObjectContent;
 
             //ObjectMetadata objectMetadata = client.GetObject(getObjectRequest, new FileInfo("D:\\iazai"));
@@ -218,7 +214,7 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         /// <param name="client"></param>
         /// <param name="bucketName">项目名称</param>
         /// <param name="objectKey">路径+文件</param>
-        public bool DeleteObject( string bucketName, string objectKey)
+        public bool DeleteObject(string bucketName, string objectKey)
         {
             try
             {
@@ -233,7 +229,7 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
                 throw;
                 return false;
             }
-          
+
         }
     }
 }
