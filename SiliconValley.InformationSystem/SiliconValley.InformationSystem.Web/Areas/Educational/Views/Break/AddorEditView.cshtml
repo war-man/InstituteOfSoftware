@@ -138,24 +138,7 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">校 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区:</label>
-                        <div id="class_addDiv" class="layui-input-block">
-                            @Html.DropDownList("schoolAddress", ViewBag.Schooladdress as List<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }, { "lay-filter", "schoolAddress" } })
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="layui-form-label">教 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 室:</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownListFor(b => b.ClassRoomID, ViewBag.classRooms as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input linu" } })
-                        </div>
-                        @Html.HiddenFor(b => b.Id)
-                    </div>
-
-                </div>
+                </div>              
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">

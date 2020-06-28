@@ -25,7 +25,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         ConsultTeacherManeger ConsultTeacher;
         // GET: /Market/FollwingInfo/GetTableData
         
-        static int f_id = 0;
 
         public List<SelectListItem> GetMarketGrand()
         {
@@ -43,7 +42,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ConsultTeacher = new ConsultTeacherManeger();            
             //获取当前上传的操作人
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
-            f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()==null?0: ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
+            int  f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()==null?0: ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             return View();
         }
         /// <summary>
@@ -53,7 +52,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult GetImageData()
         {
             ConsultTeacher = new ConsultTeacherManeger();
-
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+            int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             //判断是哪个咨询师
             if (f_id!=0)
             {
@@ -69,6 +70,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         public ActionResult GetMonData(int MonthName,string Status)
         {
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+            int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
             if (f_id!=0)
             {
@@ -104,6 +108,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<ExportStudentBeanData> stu_list = CM_Entity.GetStudentPutRecored(id,true);
             List<ExportStudentBeanData> find_list = new List<ExportStudentBeanData>();
             List<Consult> find_consult = new List<Consult>();
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+            int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             if (f_id!=0)
             {                
                 foreach (ExportStudentBeanData item2 in stu_list)
@@ -320,6 +327,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult GetTableData(int limit,int page)
         {
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+            int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             List<Consult> find_consult= CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();
 
             StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -429,7 +439,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //获取当前上传的操作人
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
 
-            f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
+            int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
 
             //获取市场类型
             ViewBag.marketlist = GetMarketGrand();
@@ -459,6 +469,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //第一次获取数据
         public ActionResult OneTableData(int limit ,int page)
         {
+            //获取当前上传的操作人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+            int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             List<Consult> find_consult = CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();//获取属于该咨询师分的量
             
             List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();//装载属于该咨询师的学生备案数据
