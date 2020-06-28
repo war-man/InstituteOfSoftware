@@ -1849,6 +1849,7 @@
     <Content Include="Areas\Finance\Views\Pricedetails\RefunditemsDate.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\text2.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Drivingschoolpayment.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\SelectReceiveEmp.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

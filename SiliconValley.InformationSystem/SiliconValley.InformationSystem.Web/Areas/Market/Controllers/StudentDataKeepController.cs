@@ -1427,7 +1427,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             return View();
         }
-       
+        public ActionResult SelectReceiveEmp() {
+            return View();
+        }
+
         public ActionResult ShortInfomationFuntion()
         {
             string phone= Request.Form["phone"];
