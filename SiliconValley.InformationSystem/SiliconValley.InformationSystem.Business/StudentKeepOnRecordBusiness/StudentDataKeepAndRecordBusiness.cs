@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
+ 
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -45,6 +46,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         public  HeiHuManeger heiHu = new HeiHuManeger();//用于查询黑户数据
  
         public NetClientRecordManage NetClient_Entity = new NetClientRecordManage();//用于添加网咨回访数据
+
+        public ChannelAreaBusiness Channerl_Entity = new ChannelAreaBusiness();//用户获取区域市场负责人
 
         /// <summary>
         /// 文件操作业务类

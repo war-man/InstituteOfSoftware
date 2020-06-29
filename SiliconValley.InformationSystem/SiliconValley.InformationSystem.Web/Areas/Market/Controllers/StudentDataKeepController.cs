@@ -1423,13 +1423,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
 
         #region 短信发送
-        public ActionResult ShortInfoMationView()
+        public ActionResult ShortInfoMationView(int id)
         {
+            // 获取属于这个区域的市场老师             
+            List<SelectListItem> list = s_Entity.Channerl_Entity.GetAreaEmplist(id).Select(l=>new SelectListItem() { Text=l.EmpName,Value=l.Phone}).ToList();
+            ViewBag.list = list;
             return View();
         }
-        public ActionResult SelectReceiveEmp() {
-            return View();
-        }
+        //获取员工数据显示给网络部人员使用
+        //public ActionResult SelectReceiveEmp()
+        //{
+        //    // 获取属于这个市场老师
+        //    int aid = Convert.ToInt32(SessionHelper.Session["areaid"]);
+        //    List<EmployeesInfo> list = s_Entity.Channerl_Entity.GetAreaEmplist(aid);
+        //    return View();
+        //}
 
         public ActionResult ShortInfomationFuntion()
         {

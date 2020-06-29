@@ -250,7 +250,7 @@
             var S_intosysMan = $("#S_intosysMan").val();
 
             if (findNamevalue.length <= 0 && findPhonevalue.length <= 0 && findInformationvalue == "0" && findStartvalue.length <= 0 && findEndvalue.length <= 0 && findAreavalue == "0" && findBeanManvalue.length <= 0 && S_consultTeacher == "0" && S_status == "0" && S_intosysMan.length <= 0 && S_party.length<=0) {
-                return;
+                table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
             } else {
                 table.reload('tabletest1', {
                     url: '/Market/StudentDataKeep/GetTableData'

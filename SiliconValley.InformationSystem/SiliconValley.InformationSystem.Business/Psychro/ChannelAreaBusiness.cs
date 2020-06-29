@@ -294,10 +294,24 @@ namespace SiliconValley.InformationSystem.Business.Psychro
 
             List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
 
-            list.ForEach(d=>
-            {
-                var chanelObj = dbchannel.GetChannelByID(d.ChannelStaffID);
+            //list.ForEach(d=>
+            //{
+            //    var chanelObj = dbchannel.GetChannelByID(d.ChannelStaffID);
 
+            //    if (chanelObj != null)
+            //    {
+            //        var emp = dbemp.GetInfoByEmpID(chanelObj.EmployeesInfomation_Id);
+
+            //        if (emp != null)
+            //        {
+            //            resultlist.Add(emp);
+            //        }
+            //    }
+            //});
+
+            foreach (var item in list)
+            {
+                var chanelObj = dbchannel.GetChannelByID(item.ChannelStaffID);
                 if (chanelObj != null)
                 {
                     var emp = dbemp.GetInfoByEmpID(chanelObj.EmployeesInfomation_Id);
@@ -307,7 +321,7 @@ namespace SiliconValley.InformationSystem.Business.Psychro
                         resultlist.Add(emp);
                     }
                 }
-            });
+            }
 
             return resultlist;
         }

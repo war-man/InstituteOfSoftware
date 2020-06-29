@@ -27,8 +27,7 @@
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <label class="layui-form-label">接收员工:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="layui-input" name="name" id="name" disabled="disabled"/>
-                        <i class="layui-icon layui-icon-search" id="iconbtn" onclick="iconbtn();" style="font-size: 25px;cursor:pointer; color:lightseagreen;position:absolute;left:80%;top:20%;"></i>
+                        @Html.DropDownList("empname", ViewBag.list as IEnumerable<SelectListItem>,new Dictionary<string, object>() { { "lay-filter", "empselect" } })
                     </div>
                 </div>
             </div>
@@ -36,7 +35,7 @@
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <label class="layui-form-label">电话号码:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="layui-input" name="phone" id="phone" />
+                        <input type="text" class="layui-input" name="phone" id="phone" disabled="disabled"/>
                     </div>
                 </div>
             </div>
@@ -51,7 +50,7 @@
             </div>
             <div class="layui-row layui-form-item">
                 <div style="text-align:center">
-                    <button type="button" class="layui-btn" lay-submit="" lay-filter="true">确定发送</button>
+                    <button type="button" class="layui-btn" lay-submit="" lay-filter="true">确定</button>
                     <button type="button" class="layui-btn" onclick="Flase()">取消关闭</button>
                 </div>
             </div>
@@ -62,20 +61,20 @@
     <script>
        
         //"市场对接老师"选择
-        function iconbtn() {
-            layer.open({
-                type: 2
-                , area: ["500px", "400px"]
-                , title: "选择员工"
-                , content: '/Market/StudentDataKeep/SelectReceiveEmp'
-                , anim: 2
-            });
-        }
+        //function iconbtn() {
+        //    layer.open({
+        //        type: 2
+        //        , area: ["500px", "400px"]
+        //        , title: "选择员工"
+        //        , content: '/Market/StudentDataKeep/SelectReceiveEmp'
+        //        , anim: 2
+        //    });
+        //}
 
-        function BeanValue(getvalue) {
-            $("#name").val(getvalue.name);
-            $("#phone").val(getvalue.phone);
-        }
+        //function BeanValue(getvalue) {
+        //    $("#name").val(getvalue.name);
+        //    $("#phone").val(getvalue.phone);
+        //}
         layui.use(['form', 'layer'], function () {
             var form = layui.form;
             var layer = layui.layer;
@@ -83,19 +82,33 @@
           
 
             form.on('submit(true)', function (data) {
-                $.ajax({
-                    url: '/Market/StudentDataKeep/ShortInfomationFuntion',
-                    data: data.field,
-                    type:'POST',
-                    success: function (suc) {
-                        layer.msg(suc);
-                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                        parent.layer.close(index);
-                    }
-                });
+                var pone = $("#phone").val();
+                var read = $("#rank").val();
+                if (pone.length <= 0 || read.length <= 0) {
+                    layer.msg('电话号码或提示消息不能为空！', { icon: 2 });
+                } else {
+                    window.parent.ShortValue(pone, read);
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+                
+                //$.ajax({
+                //    url: '/Market/StudentDataKeep/ShortInfomationFuntion',
+                //    data: data.field,
+                //    type:'POST',
+                //    success: function (suc) {
+                //        layer.msg(suc);
+                //        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                //        parent.layer.close(index);
+                //    }
+                //});
                 
                 return false;  
             });
+
+            form.on('select(empselect)', function (data) {
+                $("#phone").val(data.value);
+            });      
         });
         function Flase() {
             layui.use('layer', function () {
