@@ -295,6 +295,8 @@ namespace SiliconValley.InformationSystem.Business.Psychro
             List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
 
             dbchannel = new ChannelStaffBusiness();
+
+            dbemp = new EmployeesInfoManage();
             list.ForEach(d =>
             {
                 var chanelObj = dbchannel.GetChannelByID(d.ChannelStaffID);
@@ -309,7 +311,6 @@ namespace SiliconValley.InformationSystem.Business.Psychro
                     }
                 }
             });
-
 
             return resultlist;
         }
