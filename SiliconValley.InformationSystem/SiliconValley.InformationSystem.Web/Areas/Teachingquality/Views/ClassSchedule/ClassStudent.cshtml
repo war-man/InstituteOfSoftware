@@ -778,9 +778,10 @@
             });
         }
         //照片变更
-        $("#Addimg").click(function () {
+        $("#IDcardphoto").click(function () {
             if ($(".color").length == 1) {
                 var x = $($($(".color")[0]).children()[0]).text();
+                console.log(x);
                 IDcardphoto(x)
              
             } else {

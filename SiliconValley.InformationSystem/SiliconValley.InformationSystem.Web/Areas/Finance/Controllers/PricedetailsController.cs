@@ -270,28 +270,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             }
             else
             {
+                //班级业务类
+                ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
                 var stu = stuDataKeepAndRecordBusiness.GetAll().Where(a => a.Id ==int.Parse( personlist[0].StudenID)).FirstOrDefault();
+               var ClassID = Preentryfeebusenn.GetList().Where(a => a.FinanceModelid == int.Parse(personlist[0].StudenID) || a.identitydocument == personlist[0].Remarks).OrderByDescending(a => a.id).FirstOrDefault().ClassID;
 
-                ViewBag.student = new
+               var GrandName = classScheduleBusiness.GetClassGrand(ClassID, 2);
+                var student = new
                 {
                     Name = stu.StuName,
-                    identitydocument = personlist[1].Remarks,
-                    classa = "无",
-                    GrandName = "无"
+                    identitydocument = personlist[0].Remarks,
+                    classa = classScheduleBusiness.GetEntity(ClassID).ClassNumber,
+                    GrandName = GrandName
 
                 };
+                List<object> objlist = new List<object>();
+                
                 var obj = new
                 {
 
                     personlist[0].Amountofmoney,
                     ostitemsName = "预入费",
-                    GrandName = "",
+                    GrandName = GrandName,
                     Rategory = "预入费",
                     Remarks = "",
-                    personlist[1].AddDate
+                    personlist[0].AddDate
                 };
-             
-                ViewBag.Receiptdata = JsonConvert.SerializeObject(obj);
+                objlist.Add(obj);
+             ViewBag.student= JsonConvert.SerializeObject(student);
+                ViewBag.Receiptdata = JsonConvert.SerializeObject(objlist);
             }
            
             //ViewBag.Remarks = personlist.FirstOrDefault().Remarks;

@@ -118,5 +118,18 @@
 
 
     });
-
+    function StudentShow(url, mytitle, mycloseBtn, width, hegin) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 2,
+                content: url
+                , area: [width + 'px', hegin + 'px'],
+                title: mytitle
+                , shade: 0.3
+                , anim: 1
+                , closeBtn: mycloseBtn
+            });
+        });
+    }
 </script>
