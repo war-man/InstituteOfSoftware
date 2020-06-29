@@ -294,6 +294,7 @@ namespace SiliconValley.InformationSystem.Business.Psychro
 
             List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
 
+            dbchannel = new ChannelStaffBusiness();
             //list.ForEach(d=>
             //{
             //    var chanelObj = dbchannel.GetChannelByID(d.ChannelStaffID);
