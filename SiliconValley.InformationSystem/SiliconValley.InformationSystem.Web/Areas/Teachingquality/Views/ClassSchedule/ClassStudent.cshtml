@@ -223,6 +223,9 @@
             <div>
                 <button type="button" id="Basicinformation" class="layui-btn layui-btn-fluid mybut">基本资料</button>
             </div>
+              <div>
+                <button type="button" id="IDcardphoto" class="layui-btn layui-btn-fluid mybut">身份证照片</button>
+            </div>
             <div>
                 <button type="button" id="InsuranceAdd" class="layui-btn layui-btn-fluid mybut">学员保险</button>
             </div>
@@ -761,6 +764,30 @@
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         }
+
+        //添加学员照片
+        function IDcardphoto(ids) {
+            layer.open({
+                title: "添加学员身份证照",
+                type: 2,
+                area: ['600px', '500px']
+                , content: "/Teachingquality/StudentInformation/IDcardphoto?studentid=" + ids
+
+                , anim: 1,
+                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+        }
+        //照片变更
+        $("#Addimg").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                IDcardphoto(x)
+             
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+
+        });
         //照片变更
         $("#Addimg").click(function () {
             if ($(".color").length == 1) {

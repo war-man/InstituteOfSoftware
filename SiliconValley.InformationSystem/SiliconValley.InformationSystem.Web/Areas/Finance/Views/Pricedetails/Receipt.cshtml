@@ -57,7 +57,7 @@
 <body>
  
     <div id="shouju" style="position:absolute;">
-        <img src="~/Areas/Finance/images/shouju.jpg" style="width:672px;z-index:0;margin-top:-5px;margin-left:41px;" />
+        <img src="~/Areas/Finance/images/shouju.jpg" style="width:672px;z-index:0;margin-top:-22px;margin-left:41px;" />
     </div>
     <div style="z-index:999;position:absolute;top:74px;left:10px;height:200px;" id="text">
         <div style="position:absolute;left:540px;top:16px;">2020-06-23</div>
@@ -115,7 +115,7 @@
     var studen = JSON.parse('@Html.Raw(ViewBag.student)');
     $("#GrandName").text(studen.GrandName);
     $("#Name").text(studen.Name);
-    $("#StudentNumber").text(studen.StudentNumber);
+ 
     $("#classa").text(studen.classa);
     $("#identitydocument").text(studen.identitydocument);
     var Receiptdata = JSON.parse('@Html.Raw(ViewBag.Receiptdata)');
@@ -136,7 +136,7 @@
         }
         if (Receiptdata[i].Rategory == "阶段费用缴纳" || Receiptdata[i].Rategory == "学费" || Receiptdata[i].Rategory == "食宿费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
-            $("#xiangmu").append($('<tr> <td colspan="4" style="text-align:center;">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
+            $("#xiangmu").append($('<tr> <td colspan="4" style="text-align:center;">' + Receiptdata[i].GrandName+"阶段" + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
             // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         } else if (Receiptdata[i].Rategory == "自考本科费用" || Receiptdata[i].Rategory == "其它" || Receiptdata[i].Rategory == "驾校费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";

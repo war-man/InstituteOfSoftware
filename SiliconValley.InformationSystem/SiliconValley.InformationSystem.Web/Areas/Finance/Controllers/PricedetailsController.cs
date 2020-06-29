@@ -241,57 +241,59 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             //学员费用
             BaseBusiness<Payview> studentfee = new BaseBusiness<Payview>();
             var personlist = SessionHelper.Session["person"] as List<Payview>;
-            var Amonet = dbtext.PreentryfeeFinet(personlist[0].StudenID);
-            if (Amonet>0)
+     
+            if (personlist[0].Costitemsid>0)
             {
-                foreach (var item in personlist)
+                var Amonet = dbtext.PreentryfeeFinet(personlist[0].StudenID);
+                if (Amonet > 0)
                 {
-                    var costit = costitemsBusiness.GetEntity(item.Costitemsid);
-                    if (costit.Rategory==8)
+                    foreach (var item in personlist)
                     {
-                        item.Amountofmoney = item.Amountofmoney - Amonet;
+                        var costit = costitemsBusiness.GetEntity(item.Costitemsid);
+                        if (costit.Rategory == 8)
+                        {
+                            item.Amountofmoney = item.Amountofmoney - Amonet;
+                        }
                     }
                 }
-            }
-            string Invoicenumber = "";
-            int counts = studentfee.GetList().Count();
-            if (counts<10)
-            {
-                Invoicenumber = "000000" + counts;
-            }
-            else if (counts<100)
-            {
-                Invoicenumber = "00000" + counts;
-            }
-            else if (counts<1000)
-            {
-                Invoicenumber = "0000" + counts;
-            }
-            else if (counts<10000)
-            {
-                Invoicenumber = "000" + counts;
-            }
-            else if (counts<100000)
-            {
-                Invoicenumber = "00" + counts;
-            }
-            else if (counts<1000000)
-            {
-                Invoicenumber = "0" + counts;
+                string Invoicenumber = "";
+
+                ViewBag.Invoicenumber = Invoicenumber;
+                // 引入序列化
+                //JavaScriptSerializer serializer = new JavaScriptSerializer();
+                // string person = Request.QueryString["person"];
+                //序列化
+                // var  personlist = serializer.Deserialize<List<StudentFeeRecord>>(person);
+
+                ViewBag.student = JsonConvert.SerializeObject(dbtext.StudentFind(personlist.FirstOrDefault().StudenID));
+                ViewBag.Receiptdata = JsonConvert.SerializeObject(dbtext.Receiptdata(personlist));
             }
             else
             {
-                Invoicenumber = counts.ToString();
-            }
-            ViewBag.Invoicenumber = Invoicenumber;
-            // 引入序列化
-            //JavaScriptSerializer serializer = new JavaScriptSerializer();
-            // string person = Request.QueryString["person"];
-            //序列化
-            // var  personlist = serializer.Deserialize<List<StudentFeeRecord>>(person);
+                var stu = stuDataKeepAndRecordBusiness.GetAll().Where(a => a.Id ==int.Parse( personlist[0].StudenID)).FirstOrDefault();
 
-            ViewBag.student = JsonConvert.SerializeObject(dbtext.StudentFind(personlist.FirstOrDefault().StudenID));
-            ViewBag.Receiptdata = JsonConvert.SerializeObject(dbtext.Receiptdata(personlist));
+                ViewBag.student = new
+                {
+                    Name = stu.StuName,
+                    identitydocument = personlist[1].Remarks,
+                    classa = "无",
+                    GrandName = "无"
+
+                };
+                var obj = new
+                {
+
+                    personlist[0].Amountofmoney,
+                    ostitemsName = "预入费",
+                    GrandName = "",
+                    Rategory = "预入费",
+                    Remarks = "",
+                    personlist[1].AddDate
+                };
+             
+                ViewBag.Receiptdata = JsonConvert.SerializeObject(obj);
+            }
+           
             //ViewBag.Remarks = personlist.FirstOrDefault().Remarks;
             return View();
         }
@@ -430,7 +432,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             return Json(dbtext.Tuitionentry(id, whether, OddNumbers), JsonRequestBehavior.AllowGet);
         }
 
-        StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
+        StudentDataKeepAndRecordBusiness stuDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
         /// <summary>
         /// 缴纳预入费页面
         /// </summary>
@@ -448,7 +450,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         /// <returns></returns>
         public ActionResult PrepaymentsDate(int page, int limit,string Name)
         {
-           var costlist= studentDataKeepAndRecordBusiness.GetAll();
+           var costlist= stuDataKeepAndRecordBusiness.GetAll();
             if (!string.IsNullOrEmpty(Name))
             {
                 costlist = costlist.Where(a => a.StuName.Contains(Name)).ToList();
@@ -467,7 +469,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 
         public ActionResult Paytheadvancefee(int id)
         {
-        ViewBag.ExportStudentBeanData = studentDataKeepAndRecordBusiness.GetAll().Where(a => a.Id == id).FirstOrDefault();
+        ViewBag.ExportStudentBeanData = stuDataKeepAndRecordBusiness.GetAll().Where(a => a.Id == id).FirstOrDefault();
             return View();
         }
         /// <summary>
@@ -509,7 +511,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             //班级业务类
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
             var x = Preentryfeebusenn.GetEntity(id);
-            ViewBag.ExportStudentBeanData = studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a => a.Id == x.keeponrecordid).FirstOrDefault();
+            ViewBag.ExportStudentBeanData = stuDataKeepAndRecordBusiness.GetSudentDataAll().Where(a => a.Id == x.keeponrecordid).FirstOrDefault();
             ViewBag.obj = x;
             ViewBag.ClassNumber = classScheduleBusiness.GetEntity(x.ClassID).ClassNumber;
             return View();
