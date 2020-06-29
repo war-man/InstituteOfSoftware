@@ -26,6 +26,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             {
                 InstructorList it = new InstructorList();
                 it.EmployeeNumber = empid;
+                it.IsDel = false;
                 this.Insert(it);
                 result = true;
                 BusHelper.WriteSysLog("添加教官成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
