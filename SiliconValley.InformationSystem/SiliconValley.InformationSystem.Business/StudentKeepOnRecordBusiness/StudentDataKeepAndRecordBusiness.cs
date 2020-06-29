@@ -867,10 +867,21 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <param name="stuName"></param>
         /// <param name="phone"></param>
         /// <returns></returns>
-        public StudentPutOnRecord StudentOrreideData_OnRecord(string stuName, string phone)
+        public StudentPutOnRecord StudentOrreideData_OnRecord(string stuName, string phone,DateTime date)
         {
-            stuName = stuName.Trim();
-            List<StudentPutOnRecord> listall = this.GetListBySql<StudentPutOnRecord>("select * from studentPutOnRecord where StuName='" + stuName + "'and StuPhone='" + phone + "' ");
+            StringBuilder sb = new StringBuilder();
+            string yy = date.Year + "-" + date.Month + "-" + date.Day;
+            sb.Append("select top 1 * from studentPutOnRecord where StuName='" + stuName + "' and BeanDate='" +yy+"'");
+         
+         
+            if (phone !=null)
+            {
+                sb.Append("' and StuPhone='"+phone+"'");
+            }
+             sb.Append(" order by  Id desc");
+
+            string bb = sb.ToString();
+            List <StudentPutOnRecord> listall = this.GetListBySql<StudentPutOnRecord>(sb.ToString());
 
             return listall.Count > 0 ? listall[0] : null;
         }

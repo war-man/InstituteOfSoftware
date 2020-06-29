@@ -107,7 +107,12 @@
             });
 
             form.on('select(empselect)', function (data) {
-                $("#phone").val(data.value);
+                if (data.value == "0") {
+                    $("#phone").val("");
+                } else {
+                    $("#phone").val(data.value);
+                }
+                 
             });      
         });
         function Flase() {

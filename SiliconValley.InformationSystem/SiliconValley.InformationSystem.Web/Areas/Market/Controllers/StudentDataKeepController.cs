@@ -172,6 +172,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             if (findStatus != "0" && !string.IsNullOrEmpty(findStatus))
             {
                 sb1.Append(" and StatusName = '" + findStatus + "'");
+                sb2.Append(" and  MarketState like '已报名%'");
             }
             if (!string.IsNullOrEmpty(findPary))
             {
@@ -241,6 +242,84 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
 
+        //添加备案数据
+        public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
+        {
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            s_Entity.Stustate_Entity = new StuStateManeger();
+            AjaxResult a;
+            try
+            {
+                //判断是否有姓名相同的备案数据                
+                if (s_Entity.StudentOrride(news.StuName, news.StuPhone))
+                {
+                    news.StuDateTime = DateTime.Now;
+                    news.BeanDate = DateTime.Now;
+                    news.IsDelete = false;
+                    news.StuEntering = s_Entity.Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName;
+                    news.StuStatus_Id = 1013;
+
+                    if (news.ConsultTeacher == "0")
+                    {
+                        news.ConsultTeacher = null;
+                    }
+                    a = s_Entity.Add_data(news);
+                    if (a.Success == true)
+                    {
+                        //判断是否是网咨，如果是网咨则不需要发短信
+                        StuInfomationType find_type = s_Entity.StuInfomationType_Entity.SerchSingleData("网络", false);
+                        if (news.StuInfomationType_Id != find_type.Id)
+                        {
+                            //通知备案人备案成功
+                            //string phone = s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
+                            //string phone = "13204961361";//根据备案人查询电话号码
+                            //string smsText = "备案提示:" + news.StuName + "学生在" + DateTime.Now + "已备案成功";
+                            //string t = PhoneMsgHelper.SendMsg(phone, smsText);
+                        }
+                        else
+                        {
+                            //如果是网咨，则添加到王咨回访表中
+                            StudentPutOnRecord find_stu = s_Entity.StudentOrreideData_OnRecord(news.StuName, news.StuPhone,news.StuDateTime);
+                            bool sm = s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
+                            string phoen = Request.Form["ShorPhone"];
+                            string reak = Request.Form["ShorReacke"];
+
+                            string t = PhoneMsgHelper.SendMsg(phoen, reak);
+
+                        }
+
+                        //判断是否指派了咨询师  
+
+                        if (news.ConsultTeacher != null)
+                        {
+                            ExportStudentBeanData find = s_Entity.StudentOrrideData(news.StuName, news.StuPhone);
+                            Consult new_c = new Consult();
+                            new_c.TeacherName = EmployandCounTeacherCoom.getallCountTeacher(false).Where(s => s.empname == news.ConsultTeacher).FirstOrDefault().consultercherid;//Convert.ToInt32(news.ConsultId);
+                            new_c.StuName = Convert.ToInt32(find.Id);
+                            new_c.IsDelete = false;
+                            new_c.ComDate = DateTime.Now;
+                            a.Success = EmployandCounTeacherCoom.AddConsult(new_c);
+                        }
+
+                         
+                    }
+                }
+                else
+                {
+                    a = new AjaxResult();
+                    a.Success = false;
+                    a.Msg = "该学生已备案";
+                }
+                return Json(a);
+            }
+            catch (Exception ex)
+            {
+                //将错误填写到日志中     
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
         //将所有员工显示给用户选择
         public ActionResult ShowEmployeInfomation()
         {
@@ -294,77 +373,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         }
 
-        //添加备案数据
-        public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
-        {
-            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
-            s_Entity.Stustate_Entity = new StuStateManeger();
-            AjaxResult a;
-            try
-            {
-                //判断是否有姓名相同的备案数据                
-                if (s_Entity.StudentOrride(news.StuName, news.StuPhone))
-                {
-                    news.StuDateTime = DateTime.Now;
-                    news.BeanDate = DateTime.Now;
-                    news.IsDelete = false;
-                    news.StuEntering = s_Entity.Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName;                   
-                    news.StuStatus_Id = 1013;
-                                 
-                    if (news.ConsultTeacher == "0")
-                    {
-                        news.ConsultTeacher = null;
-                    }
-                    a = s_Entity.Add_data(news);
-                    if (a.Success == true)
-                    {
-                        //判断是否是网咨，如果是网咨则不需要发短信
-                        StuInfomationType find_type= s_Entity.StuInfomationType_Entity.SerchSingleData("网络", false);
-                        if (news.StuInfomationType_Id != find_type.Id)
-                        {
-                            //通知备案人备案成功
-                            //string phone = s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
-                            //string phone = "13204961361";//根据备案人查询电话号码
-                            //string smsText = "备案提示:" + news.StuName + "学生在" + DateTime.Now + "已备案成功";
-                            //string t = PhoneMsgHelper.SendMsg(phone, smsText);
-                        }
-                        else
-                        {
-                            //如果是网咨，则添加到王咨回访表中
-                            StudentPutOnRecord find_stu= s_Entity.StudentOrreideData_OnRecord(news.StuName, news.StuPhone);
-                            bool sm= s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
-
-                        }
-                         
-                        //判断是否指派了咨询师  
-
-                        if (news.ConsultTeacher != null)
-                        {
-                            ExportStudentBeanData find = s_Entity.StudentOrrideData(news.StuName,news.StuPhone);
-                            Consult new_c = new Consult();
-                            new_c.TeacherName = EmployandCounTeacherCoom.getallCountTeacher(false).Where(s => s.empname == news.ConsultTeacher).FirstOrDefault().consultercherid;//Convert.ToInt32(news.ConsultId);
-                            new_c.StuName = Convert.ToInt32(find.Id);
-                            new_c.IsDelete = false;
-                            new_c.ComDate = DateTime.Now;
-                            a.Success = EmployandCounTeacherCoom.AddConsult(new_c);
-                        }
-                    }
-                }
-                else
-                {
-                    a = new AjaxResult();
-                    a.Success = false;
-                    a.Msg = "该学生已备案";
-                }
-                return Json(a);
-            }
-            catch (Exception ex)
-            {
-                //将错误填写到日志中     
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-                return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
-            }
-        }
+        
 
         //查看是否有重复的学员信息名称
         public ActionResult FindStudent(string id)
@@ -798,7 +807,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     listnew= listnew.Where(l => l.StuInfomationType_Id == find.Id).ToList();
                     foreach (StudentPutOnRecord item in listnew)
                     {
-                        StudentPutOnRecord m= s_Entity.StudentOrreideData_OnRecord(item.StuName, item.StuPhone);
+                        StudentPutOnRecord m= s_Entity.StudentOrreideData_OnRecord(item.StuName, item.StuPhone,item.BeanDate);
                         if (m!=null)
                         {
                             list_W.Add(m);
@@ -1425,20 +1434,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #region 短信发送
         public ActionResult ShortInfoMationView(int id)
         {
-            // 获取属于这个区域的市场老师             
-            List<SelectListItem> list = s_Entity.Channerl_Entity.GetAreaEmplist(id).Select(l=>new SelectListItem() { Text=l.EmpName,Value=l.Phone}).ToList();
-            ViewBag.list = list;
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem() { Text="--请选择--",Value="0" ,Selected=true});
+              // 获取属于这个区域的市场老师             
+              list.AddRange( s_Entity.Channerl_Entity.GetAreaEmplist(id).Select(l=>new SelectListItem() { Text=l.EmpName,Value=l.Phone,Selected=false}).ToList());
+              ViewBag.list = list;
             return View();
         }
-        //获取员工数据显示给网络部人员使用
-        //public ActionResult SelectReceiveEmp()
-        //{
-        //    // 获取属于这个市场老师
-        //    int aid = Convert.ToInt32(SessionHelper.Session["areaid"]);
-        //    List<EmployeesInfo> list = s_Entity.Channerl_Entity.GetAreaEmplist(aid);
-        //    return View();
-        //}
-
+       
         public ActionResult ShortInfomationFuntion()
         {
             string phone= Request.Form["phone"];
