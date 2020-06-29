@@ -349,6 +349,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         #endregion
 
+        #region 批量导出
+        public ActionResult BatchExportEmps() {
+            return View();
+        }
+        #endregion
+
         #region 部门及岗位相关业务
         //部门及岗位管理页面显示
         [HttpGet]

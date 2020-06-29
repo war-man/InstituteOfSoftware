@@ -111,6 +111,7 @@
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-sm" lay-event="AddEmps"><i class="layui-icon layui-icon-addition"></i>添加员工</button>
                     <button class="layui-btn layui-btn-sm" lay-event="BatchImport"><i class="layui-icon layui-icon-upload-drag"></i>excel批量导入</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="BatchExport"><i class="layui-icon layui-icon-upload-drag"></i>excel批量导出</button>
                     <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation"><i class="layui-icon layui-icon-app"></i>部门及岗位管理</button>
 
                 </div>
@@ -216,7 +217,10 @@
                         AddEmployee();
                         break;
                     case 'BatchImport':
-                        BatchImportEmps();
+                        BatchImportEmps(); 
+                        break;
+                    case 'BatchExport':
+                        BatchExportEmps();
                         break;
                     case 'DeptAndPositionOperation':
                         DeptAndPositionOperation();
@@ -490,6 +494,22 @@
                     , area: ["800px", "500px"]
                     , title: "批量导入员工"
                     , content: '/Personnelmatters/EmployeesInfo/BatchImportEmps'
+                    , anim: 2
+                });
+
+            })
+        }
+
+        //批量导出的方法
+        function BatchExportEmps() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+
+                layer.open({
+                    type: 2
+                    , area: ["800px", "500px"]
+                    , title: "批量导出员工"
+                    , content: '/Personnelmatters/EmployeesInfo/BatchExportEmps'
                     , anim: 2
                 });
 
