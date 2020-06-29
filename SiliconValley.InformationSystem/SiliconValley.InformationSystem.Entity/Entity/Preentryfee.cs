@@ -44,5 +44,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// 是否禁用
         /// </summary>
         public bool IsDit { get; set; }
+        /// <summary>
+        /// 经办人
+        /// </summary>
+        public int? FinanceModelid { get; set; }
     }
 }

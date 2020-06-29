@@ -1173,12 +1173,35 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         /// <returns></returns>
         public object PaytheadvancefeeAdd(Preentryfee preentryfee)
         {
-           AjaxResult retus = null;
+            //当前登陆人
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var fine = finacemo.GetList().Where(a => a.Financialstaff == user.EmpNumber).FirstOrDefault();
+            AjaxResult retus = null;
             try
             {
+              
                 preentryfee.AddDate = DateTime.Now;
                 preentryfee.IsDit = false;
+                preentryfee.FinanceModelid = fine.id;
                 Preentryfeebusenn.Insert(preentryfee);
+
+             
+               
+
+                  List<Payview> liststudents = new List<Payview>();
+                Payview studentFee = new Payview();
+         
+
+                studentFee.StudenID = preentryfee.keeponrecordid.ToString();
+                studentFee.Amountofmoney = preentryfee.Amountofmoney;
+                studentFee.AddDate = DateTime.Now;
+                studentFee.Remarks = preentryfee.identitydocument;
+                studentFee.IsDelete = false;
+                studentFee.Costitemsid = 0;
+                studentFee.FinanceModelid = fine.id;
+               
+                liststudents.Add(studentFee);
+                SessionHelper.Session["person"] = liststudents;
                 retus = new SuccessResult();
                 retus.Success = true;
                 retus.Msg = "缴费成功";

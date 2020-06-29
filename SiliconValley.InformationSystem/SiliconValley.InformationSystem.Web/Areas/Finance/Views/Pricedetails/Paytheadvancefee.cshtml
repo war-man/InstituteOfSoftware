@@ -140,7 +140,13 @@
             var datas = data.field;
           
             if ($("#Lists").val() != "") {
-                ajaxpost("/Finance/Pricedetails/PaytheadvancefeeAdd", datas);
+
+                ajaxprice("/Finance/Pricedetails/PaytheadvancefeeAdd", datas, function () {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);//关闭当前页  
+                    window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 900, 600);
+                });
+              
             }
         });
         //正在执行中

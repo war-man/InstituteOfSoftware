@@ -111,12 +111,7 @@
                 var filename = word.name;
                 var index = filename.lastIndexOf(".");
                 var suffix = filename.substr(index + 1);
-                if (suffix != "jpg") {
-                    layer.alert('请选择照片，当前只支持jpg格式!', { icon: 0 });
-                    //  $("#errorlabel").show();
-                }
-                else {
-
+                if (suffix == "jpg" || suffix == "jpg.png") {
                     var fd = new FormData();
 
                     fd.append('Image', word);
@@ -149,6 +144,11 @@
 
                         }
                     })
+                    //  $("#errorlabel").show();
+                }
+                else {
+                    layer.alert('请选择照片，当前只支持jpg格式!', { icon: 0 });
+                 
                 }
             } else {
                 layer.alert('请选择您要使用的照片!', { icon: 0 });
