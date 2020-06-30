@@ -37,7 +37,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.selectconsult = EmployandCounTeacherCoom.getallCountTeacher(false);
 
             //获取市场部的所有员工
-            List<SelectListItem> list= EmployandCounTeacherCoom.Studentrecond.Enplo_Entity.GetEmpsByDeptid(1005).Select(p=>new SelectListItem() { Text=p.EmpName,Value=p.EmpName}).ToList();
+            List<SelectListItem> list= EmployandCounTeacherCoom.Studentrecond.Enplo_Entity.GetEmpsByDeptid(3).Select(p=>new SelectListItem() { Text=p.EmpName,Value=p.EmpName}).ToList();
             ViewBag.empmarket = list;
 
             //获取区域
@@ -87,7 +87,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     s= c_entiey.MyUpdate(find).Success;
                 }                               
             }
-
+            
             if (s)
             {
                 old.StudentName = news.StudentName;

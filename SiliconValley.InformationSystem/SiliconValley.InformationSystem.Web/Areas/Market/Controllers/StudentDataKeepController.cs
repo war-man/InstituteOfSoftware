@@ -447,7 +447,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                  
             }
-            else if (IdCorad != 0 && IdCorad != 4)
+            else if (IdCorad == 3 || IdCorad == 2)
             {
                 a.Success = false;
                 a.Msg = "抱歉，这条备案数据你没有权限修改！！";
@@ -461,19 +461,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 if (fins.Name.Contains("网络"))
                 {
-                    try
-                    {
+                     
                         StudentPutOnRecord find_stu = s_Entity.StudentOrreideData_OnRecord(find.StuName, find.StuPhone, find.StuDateTime);
-                        bool sm = s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
-                    }
-                    catch (Exception ex)
-                    {
-
-                        string mm = ex.Message;
-                    }
-
-                   
-                    
+                        bool s=  s_Entity.NetClient_Entity.IsExsitSprStu(find_stu.Id);
+                        if (!s)
+                        {
+                            bool sm = s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
+                        }
+                        
+                                                          
                 }
             }
             a = s_Entity.Update_data(olds);    
