@@ -43,6 +43,7 @@
         <form class="layui-form" action="" lay-filter="formtest">
             <div class="layui-container">
                 <input id="Id" name="Id" type="hidden" value="@ViewBag.Id" />
+                <input id="grade" name="grade" type="hidden" value="@ViewBag.grade" />
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">姓名:</label>
@@ -125,10 +126,13 @@
         });
         function loadnetinfo() {
             var id = $("#Id").val();
-            console.log(id);
             $.get("/Market/NetClientRecord/GetCallbackInfoById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
+                    var grade = $("#grade").val();
+                    if (grade != "" || grade != null || grade != undefined) {
+                        data.Grade = grade;
+                    }
                     form.val("formtest", data);
 
                 });
@@ -140,7 +144,7 @@
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
-    
+
             //添加提交
             form.on('submit(demo1)', function (data) {
                 $.post("/Market/NetClientRecord/AddNetConsultStuinfo", data.field, function (data) {
