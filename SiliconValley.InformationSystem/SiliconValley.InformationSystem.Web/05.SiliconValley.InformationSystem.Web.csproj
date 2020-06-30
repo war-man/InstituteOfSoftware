@@ -331,6 +331,7 @@
     <Compile Include="Areas\Teachingquality\Studentportfolio\StuportfolioController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
+    <Compile Include="Areas\Teaching\Controllers\ExamController.cs" />
     <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
     <Compile Include="Areas\Teaching\Controllers\ProjectController.cs" />
     <Compile Include="Areas\Teaching\Controllers\RecordOfConversationController.cs" />

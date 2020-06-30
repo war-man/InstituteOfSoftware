@@ -285,10 +285,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                     result.Msg = "失败";
                 }
 
-
-              
-
-
                 Base_UserBusiness.WriteSysLog("成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
             catch (Exception ex)
