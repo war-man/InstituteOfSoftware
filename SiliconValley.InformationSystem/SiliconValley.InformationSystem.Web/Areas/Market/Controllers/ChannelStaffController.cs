@@ -102,15 +102,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 indexView.Phone = empinfo.Phone;
                 indexView.PositiveDate = empinfo.PositiveDate;
                 indexView.Remark = empinfo.Remark;
-                //拿主任列表
-                var zhuren = dbempinfo.GetChannelStaffZhuren();
+               
 
                 bool iszhuren = false;
-                foreach (var foritem in zhuren)
+
+                var tempobj = dbempinfo.GetPositionByEmpid(item.EmployeesInfomation_Id);
+
+                if (tempobj != null)
                 {
-                    if (foritem.EmployeeId == item.EmployeesInfomation_Id)
+                    if (tempobj.PositionName == "市场主任")
+                    {
                         iszhuren = true;
+                    }
                 }
+
                 //现在
                 var channelarea = dbemparea.GetAreasingByChannelID(item.ID);
                 if (channelarea.Count != 0)
