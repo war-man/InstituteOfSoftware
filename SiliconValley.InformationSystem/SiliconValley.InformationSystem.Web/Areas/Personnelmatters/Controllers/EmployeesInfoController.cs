@@ -141,6 +141,61 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 根据员工编号获取对应员工
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult GetempById(string id)
+        {
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            EmpTransactionManage etm = new EmpTransactionManage();
+            var e = emanage.GetEntity(id);
+            var etmobj = etm.GetDelEmp(e.EmployeeId);
+            var empobj = new
+            {
+                #region 获取属性值 
+                e.EmployeeId,
+                e.DDAppId,
+                e.EmpName,
+                e.PositionId,
+                dname = emanage.GetDept((int)e.PositionId).DeptName,
+                pname = emanage.GetPosition((int)e.PositionId).PositionName,
+                deptid = emanage.GetDept((int)e.PositionId).DeptId,
+                e.Sex,
+                e.Age,
+                e.Nation,
+                e.Phone,
+                e.IdCardNum,
+                e.ContractStartTime,
+                e.ContractEndTime,
+                e.EntryTime,
+                e.Birthdate,
+                e.Birthday,
+                e.PositiveDate,
+                e.UrgentPhone,
+                e.DomicileAddress,
+                e.Address,
+                e.Education,
+                e.MaritalStatus,
+                e.IdCardIndate,
+                e.PoliticsStatus,
+                e.InvitedSource,
+                e.ProbationSalary,
+                e.Salary,
+                e.SSStartMonth,
+                e.BCNum,
+                e.Material,
+                e.Remark,
+                e.IsDel,
+                e.Image,
+                e.RecruitSource,
+                deltime = etmobj == null ? null : etmobj.TransactionTime,//离职时间
+                delreason = etmobj == null ? null : etmobj.Reason//离职原因
+                #endregion
+            };
+            return Json(empobj, JsonRequestBehavior.AllowGet);
+        }
 
         #region 离职员工相关
         /// <summary>
@@ -748,61 +803,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View(emp);
         }
 
-        /// <summary>
-        /// 根据员工编号获取对应员工
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult GetempById(string id)
-        {
-            EmployeesInfoManage emanage = new EmployeesInfoManage();
-            EmpTransactionManage etm = new EmpTransactionManage();
-            var e = emanage.GetEntity(id);
-            var etmobj = etm.GetDelEmp(e.EmployeeId);
-            var empobj = new
-            {
-                #region 获取属性值 
-                e.EmployeeId,
-                e.DDAppId,
-                e.EmpName,
-                e.PositionId,
-                dname = emanage.GetDept((int)e.PositionId).DeptName,
-                pname = emanage.GetPosition((int)e.PositionId).PositionName,
-                deptid = emanage.GetDept((int)e.PositionId).DeptId,
-                e.Sex,
-                e.Age,
-                e.Nation,
-                e.Phone,
-                e.IdCardNum,
-                e.ContractStartTime,
-                e.ContractEndTime,
-                e.EntryTime,
-                e.Birthdate,
-                e.Birthday,
-                e.PositiveDate,
-                e.UrgentPhone,
-                e.DomicileAddress,
-                e.Address,
-                e.Education,
-                e.MaritalStatus,
-                e.IdCardIndate,
-                e.PoliticsStatus,
-                e.InvitedSource,
-                e.ProbationSalary,
-                e.Salary,
-                e.SSStartMonth,
-                e.BCNum,
-                e.Material,
-                e.Remark,
-                e.IsDel,
-                e.Image,
-                e.RecruitSource,
-                deltime = etmobj == null ? null : etmobj.TransactionTime,//离职时间
-                delreason = etmobj == null ? null : etmobj.Reason//离职原因
-                #endregion
-            };
-            return Json(empobj, JsonRequestBehavior.AllowGet);
-        }
+       
 
         /// <summary>
         /// 编辑员工信息
