@@ -324,6 +324,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\HeadteacherController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\MessagenotificationController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentTransactionController.cs" />
@@ -1858,6 +1859,8 @@
     <Content Include="Areas\Finance\Views\Pricedetails\RefunditemsDate.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\text2.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\BatchExportEmps.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Messagenotification\NoticeDate.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Messagenotification\Release.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3582,6 +3585,7 @@
     <Folder Include="Areas\Educational\Views\ShppingDetail\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
+    <Folder Include="Areas\flow\Controllers\" />
     <Folder Include="Areas\Logistics\Controllers\" />
     <Folder Include="Areas\Logistics\Models\" />
     <Folder Include="Areas\Logistics\Views\Shared\" />
