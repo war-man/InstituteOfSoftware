@@ -429,8 +429,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             BaseBusiness<Position> PobaseBusiness = new BaseBusiness<Position>();
 
-            var ind = PobaseBusiness.GetList().Where(d => d.IsDel == false).Where(d => d.DeptId == 2).ToList().OrderBy(d => d.Pid).ToList();
-
+            var ind = PobaseBusiness.GetList().Where(d => d.IsDel == false).Where(d => d.DeptId == 5).ToList().OrderBy(d => d.Pid).ToList();
 
             List<EmployeesInfo> result = new List<EmployeesInfo>();
 
