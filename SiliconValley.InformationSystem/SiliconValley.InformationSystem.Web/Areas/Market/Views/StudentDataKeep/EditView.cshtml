@@ -140,12 +140,20 @@
                             @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>)
                         </div>
                     </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">市场类型:</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownList("market", ViewBag.typemarket as IEnumerable<SelectListItem>,new Dictionary<string, object>() { })
-                        </div>
-                    </div>
+                    @{
+                        bool Is = ViewBag.UserId;
+
+                        if (Is == false)
+                        {
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                <label class="layui-form-label">市场类型:</label>
+                                <div class="layui-input-block">
+                                    @Html.DropDownList("market", ViewBag.typemarket as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                                </div>
+                            </div>
+                        }
+                    }
+
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">

@@ -404,6 +404,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //创建一个编辑页面
         public ActionResult EditView(string id)
         {
+            //判断当前登陆人是否是网络部人员，如果是那就不要显示市场类型
+            ViewBag.UserId = false;
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            int IdCorad = s_Entity.GetPostion(UserName.EmpNumber);
+            if (IdCorad==3 || IdCorad==2 || IdCorad==-1)
+            {
+                ViewBag.UserId = true;
+            }
             s_Entity.Stustate_Entity = new StuStateManeger();
             s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
             ViewBag.id = id;
@@ -429,9 +437,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             int IdCorad = s_Entity.GetPostion(UserName.EmpNumber);
             AjaxResult a = new AjaxResult();
             StuInfomationType fins= s_Entity.StuInfomationType_Entity.GetEntity(olds.StuInfomationType_Id);
-            if(fins.Name.Contains("网络"))
+            if(!fins.Name.Contains("网络"))
             {
-                if (IdCorad != 3 && IdCorad != 2)
+                if (IdCorad == 3 && IdCorad == 2)
                 {
                     a.Success = false;
                     a.Msg = "抱歉，这条备案数据你没有权限修改！！";
@@ -439,13 +447,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                  
             }
-            else if(IdCorad != 0 && IdCorad != 4)
+            else if (IdCorad != 0 && IdCorad != 4)
             {
                 a.Success = false;
                 a.Msg = "抱歉，这条备案数据你没有权限修改！！";
                 return Json(a, JsonRequestBehavior.AllowGet);
             }
-              a = s_Entity.Update_data(olds);    
+
+            //判断是否将其他来源改为网络，如果是将该信息添加到网咨跟踪表中
+            StudentPutOnRecord find= s_Entity.whereStudentId(olds.Id);
+            StuInfomationType fins2 = s_Entity.StuInfomationType_Entity.GetEntity(find.StuInfomationType_Id);
+            if (!fins2.Name.Contains("网络"))
+            {
+                if (fins.Name.Contains("网络"))
+                {
+                    try
+                    {
+                        StudentPutOnRecord find_stu = s_Entity.StudentOrreideData_OnRecord(find.StuName, find.StuPhone, find.StuDateTime);
+                        bool sm = s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        string mm = ex.Message;
+                    }
+
+                   
+                    
+                }
+            }
+            a = s_Entity.Update_data(olds);    
             string marketvalue= Request.Form["market"];
             if (!string.IsNullOrEmpty(marketvalue) && marketvalue!="0")
             {

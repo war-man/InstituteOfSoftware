@@ -876,7 +876,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
          
             if (phone !=null)
             {
-                sb.Append("' and StuPhone='"+phone+"'");
+                sb.Append(" and StuPhone='"+phone+"'");
             }
              sb.Append(" order by  Id desc");
 
