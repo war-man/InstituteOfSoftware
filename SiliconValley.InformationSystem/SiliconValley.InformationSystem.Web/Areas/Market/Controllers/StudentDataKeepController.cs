@@ -131,95 +131,113 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             StringBuilder sb2 = new StringBuilder();
             sb1.Append("select * from StudentBeanView where 1=1 ");
             sb2.Append("select * from Sch_MarketView where 1=1 ");
- 
-            #region 模糊查询
-            string findNamevalue = Request.QueryString["findNamevalue"].Trim();//姓名
-            string findPhonevalue = Request.QueryString["findPhonevalue"].Trim();//电话
-            string findInformationvalue = Request.QueryString["findInformationvalue"];//信息来源
-            string findStartvalue = Request.QueryString["findStartvalue"];//录入开始时间
-            string findEndvalue = Request.QueryString["findEndvalue"].Trim();//录入结束时间
-            string findBeanManvalue = Request.QueryString["findBeanManvalue"].Trim();//备案人
-            string findAreavalue = Request.QueryString["findAreavalue"];//区域
-            string findTeacher = Request.QueryString["S_consultTeacher"];//咨询师
-            string findStatus = Request.QueryString["S_status"];//备案状态
-            string findPary = Request.QueryString["S_party"].Trim();//关系人
-            string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
-            string markety = Request.QueryString["marketype"];//市场类型
-            if (!string.IsNullOrEmpty(findNamevalue))
-            {                
-                sb1.Append("and  StuName like  '%" + findNamevalue + "%'");
-                sb2.Append(" and StudentName like  '%" + findNamevalue + "%'");
-            }
-            if (!string.IsNullOrEmpty(findPhonevalue))
+            string findName = Request.QueryString["findName"];
+            string findPhone = Request.QueryString["findPhone"];
+            if (findName.Length>0 || findPhone.Length>0)
             {
-                sb1.Append(" and Stuphone = '" + findPhonevalue + "'");
-                sb2.Append(" and Phone = '" + findPhonevalue + "'");
-            }
-            if (findInformationvalue != "0" && !string.IsNullOrEmpty(findInformationvalue))
-            {
-                sb1.Append(" and stuinfomation = '" + findInformationvalue + "'");
-                sb2.Append(" and source = '" + findInformationvalue + "'");
-            }
-            if (!string.IsNullOrEmpty(findBeanManvalue))
-            {
-                sb1.Append(" and empName = '" + findBeanManvalue + "'");
-                sb2.Append(" and SalePerson = '" + findBeanManvalue + "'");
-            }
-            if (findAreavalue != "0" && !string.IsNullOrEmpty(findAreavalue))
-            {
-                sb1.Append(" and RegionName = '" + findAreavalue + "'");
-                sb2.Append ( " and Area = '" + findAreavalue + "'");
-            }
-            if (findStatus != "0" && !string.IsNullOrEmpty(findStatus))
-            {
-                sb1.Append(" and StatusName = '" + findStatus + "'");
-                sb2.Append(" and  MarketState like '已报名%'");
-            }
-            if (!string.IsNullOrEmpty(findPary))
-            {
-                sb1.Append(" and Party = '" + findPary + "'");
-                sb2.Append(" and RelatedPerson = '" + findPary + "'");
-            }
-            if (!string.IsNullOrEmpty(findCreateMan))
-            {
-                sb1.Append(" and StuEntering = '" + findCreateMan + "'");
-                sb2.Append(" and CreateUserName = '" + findCreateMan + "'");
-            }
+                if (findName.Length > 0)
+                {
+                    sb1.Append("and  StuName like  '%" + findName + "%'");
+                    sb2.Append(" and StudentName like  '%" + findName + "%'");
+                }
 
-            if (!string.IsNullOrEmpty(findStartvalue))
-            {
-                sb1.Append(" and BeanDate >= '" + findStartvalue + "'");
-                sb2.Append(" and CreateDate >= '" + findStartvalue + "'");
+                if (findPhone.Length > 0)
+                {
+                    sb1.Append(" and Stuphone = '" + findPhone + "'");
+                    sb2.Append(" and Phone = '" + findPhone + "'");
+                }
+
+
             }
-
-            if (!string.IsNullOrEmpty(findTeacher) && findTeacher!="0")
+            else
             {
-                sb1.Append(" and ConsultTeacher = '" + findTeacher + "'");
-                sb2.Append(" and Inquiry = '" + findTeacher + "'");
+                #region 模糊查询
+                string findNamevalue = Request.QueryString["findNamevalue"].Trim();//姓名
+                string findPhonevalue = Request.QueryString["findPhonevalue"].Trim();//电话
+                string findInformationvalue = Request.QueryString["findInformationvalue"];//信息来源
+                string findStartvalue = Request.QueryString["findStartvalue"];//录入开始时间
+                string findEndvalue = Request.QueryString["findEndvalue"];//录入结束时间
+                string findBeanManvalue = Request.QueryString["findBeanManvalue"].Trim();//备案人
+                string findAreavalue = Request.QueryString["findAreavalue"];//区域
+                string findTeacher = Request.QueryString["S_consultTeacher"];//咨询师
+                string findStatus = Request.QueryString["S_status"];//备案状态
+                string findPary = Request.QueryString["S_party"].Trim();//关系人
+                string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
+                string markety = Request.QueryString["marketype"];//市场类型
+                if (!string.IsNullOrEmpty(findNamevalue))
+                {
+                    sb1.Append("and  StuName like  '%" + findNamevalue + "%'");
+                    sb2.Append(" and StudentName like  '%" + findNamevalue + "%'");
+                }
+                if (!string.IsNullOrEmpty(findPhonevalue))
+                {
+                    sb1.Append(" and Stuphone = '" + findPhonevalue + "'");
+                    sb2.Append(" and Phone = '" + findPhonevalue + "'");
+                }
+                if (findInformationvalue != "0" && !string.IsNullOrEmpty(findInformationvalue))
+                {
+                    sb1.Append(" and stuinfomation = '" + findInformationvalue + "'");
+                    sb2.Append(" and source = '" + findInformationvalue + "'");
+                }
+                if (!string.IsNullOrEmpty(findBeanManvalue))
+                {
+                    sb1.Append(" and empName = '" + findBeanManvalue + "'");
+                    sb2.Append(" and SalePerson = '" + findBeanManvalue + "'");
+                }
+                if (findAreavalue != "0" && !string.IsNullOrEmpty(findAreavalue))
+                {
+                    sb1.Append(" and RegionName = '" + findAreavalue + "'");
+                    sb2.Append(" and Area = '" + findAreavalue + "'");
+                }
+                if (findStatus != "0" && !string.IsNullOrEmpty(findStatus))
+                {
+                    sb1.Append(" and StatusName = '" + findStatus + "'");
+                    sb2.Append(" and  MarketState like '已报名%'");
+                }
+                if (!string.IsNullOrEmpty(findPary))
+                {
+                    sb1.Append(" and Party = '" + findPary + "'");
+                    sb2.Append(" and RelatedPerson = '" + findPary + "'");
+                }
+                if (!string.IsNullOrEmpty(findCreateMan))
+                {
+                    sb1.Append(" and StuEntering = '" + findCreateMan + "'");
+                    sb2.Append(" and CreateUserName = '" + findCreateMan + "'");
+                }
+
+                if (!string.IsNullOrEmpty(findStartvalue))
+                {
+                    sb1.Append(" and BeanDate >= '" + findStartvalue + "'");
+                    sb2.Append(" and CreateDate >= '" + findStartvalue + "'");
+                }
+
+                if (!string.IsNullOrEmpty(findTeacher) && findTeacher != "0")
+                {
+                    sb1.Append(" and ConsultTeacher = '" + findTeacher + "'");
+                    sb2.Append(" and Inquiry = '" + findTeacher + "'");
+                }
+
+                if (!string.IsNullOrEmpty(findEndvalue))
+                {
+                    sb1.Append(" and BeanDate <= '" + findEndvalue + "'");
+                    sb2.Append(" and CreateDate <= '" + findEndvalue + "'");
+                }
+
+                if (markety != "0" && !string.IsNullOrEmpty(markety))
+                {
+                    sb1.Append(" and MarketType = '" + markety + "'");
+                    sb2.Append(" and MarketState = '" + markety + "'");
+                }
+                #endregion               
+
             }
+            list = s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.Id).ToList();
 
-            if (!string.IsNullOrEmpty(findEndvalue))
-            {
-                sb1.Append(" and BeanDate <= '" + findEndvalue + "'");
-                sb2.Append(" and CreateDate <= '" + findEndvalue + "'");
-            }
+            var data = list.Skip((page - 1) * limit).Take(limit).ToList();
 
-            if (markety!="0" && !string.IsNullOrEmpty(markety))
-            {
-                sb1.Append(" and MarketType = '" + markety + "'");
-                sb2.Append(" and MarketState = '" + markety + "'");
-            }
-            #endregion
-                
-             
-                 list= s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.Id).ToList();
+            var josndata = new { code = 0, count = list.Count, data = data };
 
-                var data = list.Skip((page - 1) * limit).Take(limit).ToList();
-
-                var josndata = new { code = 0, count = list.Count, data = data };
-
-                return Json(josndata, JsonRequestBehavior.AllowGet);
-             
+            return Json(josndata, JsonRequestBehavior.AllowGet);
         }
 
         //这是一个添加数据的页面
@@ -467,9 +485,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         if (!s)
                         {
                             bool sm = s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
-                        }
-                        
-                                                          
+                        }                                                                                 
                 }
             }
             a = s_Entity.Update_data(olds);    
