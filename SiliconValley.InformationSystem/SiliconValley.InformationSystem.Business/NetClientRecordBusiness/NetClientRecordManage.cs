@@ -130,5 +130,23 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
             }
             return ncrviewlist;
         }
+
+       /// <summary>
+       /// 判断某备案学生是否是网络部备案备过的，且有跟踪数据
+       /// </summary>
+       /// <param name="sprid"></param>
+       /// <returns></returns>
+        public bool IsExsitSprStu(int sprid) {
+            bool result = false;
+            var ncrlist = this.GetList().Where(s => s.SPRId == sprid).ToList();
+            if (ncrlist.Count > 0)
+            {
+                result = true;//表示该学生已被网络部备案过
+            }
+            else {
+                result = false;
+            }
+            return result;
+        }
     }
 }

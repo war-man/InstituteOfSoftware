@@ -141,6 +141,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
+
+        #region 离职员工相关
         /// <summary>
         /// 获取离职员工信息
         /// </summary>
@@ -203,6 +205,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 离职员工详细信息
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public ActionResult LeftEmpDetail(string id)
+        {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var emp = empmanage.GetEntity(id);
+            return View(emp);
+        }
+
+        #endregion
 
         #region 添加员工相关action
 
@@ -719,6 +735,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         #endregion
 
+
         /// <summary>
         /// 员工信息详情页面
         /// </summary>
@@ -905,19 +922,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// 离职员工详细信息
-        /// </summary>
-        /// <param name="empid"></param>
-        /// <returns></returns>
-        public ActionResult LeftEmpDetail(string id)
-        {
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var emp = empmanage.GetEntity(id);
-            return View(emp);
-        }
-
-
+        #region 时间提醒    
         /// <summary>
         /// 生日提醒
         /// </summary>
@@ -1028,7 +1033,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return ContractendingEmp;
         }
-
+        #endregion
 
         // 图片上传
         public string ImageUpload()

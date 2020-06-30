@@ -100,8 +100,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             NetClientRecordManage nmanage = new NetClientRecordManage();
             var ncr = nmanage.GetEntity(id);
-            ViewBag.Number = nmanage.GetList().Where(s => s.SPRId == ncr.SPRId).ToList().Count() - 1;
+            var nlist = nmanage.GetList().Where(s => s.SPRId == ncr.SPRId).ToList();
+            ViewBag.Number = nlist.Count() - 1;
             ViewBag.Id = id;
+            ViewBag.grade = nlist.LastOrDefault().Grade;
             return View();
         }
         [HttpPost]
@@ -122,9 +124,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ncrnew.IsDel = oldncr.IsDel;
                 ncrnew.Grade = ncr.Grade;
                 ncrnew.CallBackCase = ncr.CallBackCase;
+                var ncrlist = nmanage.GetList().Where(s => s.SPRId == ncrnew.SPRId).ToList();
+                if (ncrlist.Count>0) {
+                    ncrnew.MarketTeaId = ncrlist.LastOrDefault().MarketTeaId;
+                }
                 nmanage.Insert(ncrnew);
                 AjaxResultxx = nmanage.Success();
-            //    BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加了一条回访学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                //    BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加了一条回访学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
                
             }
             catch (Exception ex)
