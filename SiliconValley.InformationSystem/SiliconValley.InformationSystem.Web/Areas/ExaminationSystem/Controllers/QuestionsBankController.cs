@@ -243,7 +243,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult ChoiceQuestionTableData(int limit, int page)
         {
 
-            List<MultipleChoiceQuestion> multipleChoicelist = db_choiceQuestion.AllChoiceQuestionData();
+            List<MultipleChoiceQuestion> multipleChoicelist = db_choiceQuestion.AllChoiceQuestionData().OrderByDescending(d=>d.CreateTime).ToList();
 
             List<MultipleChoiceQuestion> skiplist = multipleChoicelist.Skip((page - 1) * limit).Take(limit).ToList();
 
@@ -575,7 +575,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// <returns></returns>
         public ActionResult AnswerQuestionTableData(int limit, int page)
         {
-            List<AnswerQuestionBank> list = db_answerQuestion.AllAnswerQuestion();
+            List<AnswerQuestionBank> list = db_answerQuestion.AllAnswerQuestion().OrderByDescending(d=>d.PropositionDate).ToList();
 
             List<AnswerQuestionBank> skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
 
@@ -797,7 +797,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// <returns></returns>
         public ActionResult ComputerTestQuestionTableData(int page, int limit)
         {
-            List<MachTestQuesBank> list = db_computerTestQuestion.AllComputerTestQuestion();
+            List<MachTestQuesBank> list = db_computerTestQuestion.AllComputerTestQuestion().OrderByDescending(d=>d.CreateDate).ToList();
 
             List<MachTestQuesBank> skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
 

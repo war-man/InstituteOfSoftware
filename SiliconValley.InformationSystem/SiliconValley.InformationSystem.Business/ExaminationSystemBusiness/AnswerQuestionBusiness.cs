@@ -302,10 +302,14 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 }
 
                 // 获取 参考答案
-                string answer = sheet.GetRow(beginRowindex + 8).Cells[0].StringCellValue;
+
+                var answerCell = sheet.GetRow(beginRowindex + 8).Cells[0];
+                string answer = answerCell == null ? "":answerCell.StringCellValue;
                 result.ReferenceAnswer = answer;
 
-                string remark = sheet.GetRow(beginRowindex + 15).Cells[0].StringCellValue;
+                var remarkCell = sheet.GetRow(beginRowindex + 15).Cells[0];
+
+                string remark = remarkCell==null? "": remarkCell.StringCellValue;
                 result.Remark = remark;
 
             }

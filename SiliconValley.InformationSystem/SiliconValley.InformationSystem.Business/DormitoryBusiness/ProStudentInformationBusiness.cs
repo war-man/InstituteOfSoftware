@@ -23,7 +23,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <returns></returns>
         public List<StudentInformation> GetStudentInSchoolData() {
-          return  this.GetIQueryable().Where(a => a.IsDelete == false&&a.State==null).ToList();
+            
+          return  this.GetListBySql<StudentInformation>("select * from StudentInformation where IsDelete=0 and State is NULL").ToList();
         }
 
         /// <summary>
