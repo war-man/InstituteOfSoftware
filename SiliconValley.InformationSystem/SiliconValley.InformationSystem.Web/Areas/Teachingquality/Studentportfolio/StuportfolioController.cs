@@ -37,9 +37,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
         }
         //身份证照片
         [HttpGet]
-        public ActionResult IDcardphoto()
+        public ActionResult IDcardphoto(string id)
         {
-            var student = studentInformation.GetEntity(StudentID);
+            var student = studentInformation.GetEntity(id);
             student.Identitybackimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identitybackimg", student.Identitybackimg, 5);
             student.Identityjustimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identityjustimg", student.Identityjustimg, 5);
             return View(student);

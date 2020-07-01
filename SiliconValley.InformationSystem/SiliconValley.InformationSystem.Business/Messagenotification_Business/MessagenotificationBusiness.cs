@@ -49,7 +49,7 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
                 messagenotification.Title = Title;
                 messagenotification.PublisherEmployeeId = user.EmpNumber;
                 this.Insert(messagenotification);
-                var id = this.GetList().Where(a => a.Addtime == messagenotification.Addtime).FirstOrDefault().id;
+                var id = this.GetList().Where(a => a.Addtime.ToUniversalTime().ToString() == messagenotification.Addtime.ToUniversalTime().ToString()).FirstOrDefault().id;
                 List<MessagenoEmployeesInfo> MessagenoEmployeesInfolist = new List<MessagenoEmployeesInfo>();
                 if (NotifierEmployeeId.Length > 0)
                 {
