@@ -225,6 +225,7 @@
     <Compile Include="Logger\LoggerFactory.cs" />
     <Compile Include="Logger\RDBMSLogger.cs" />
     <Compile Include="MarketChair_Business\MarketChairManeger.cs" />
+    <Compile Include="Messagenotification_Business\MessagenotificationBusiness.cs" />
     <Compile Include="NetClientRecordBusiness\NetClientRecordManage.cs" />
     <Compile Include="NewExcel\ExcelHelper.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />

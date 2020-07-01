@@ -226,7 +226,7 @@
                     List<SelectListItem> list2 = ViewBag.empmarket as List<SelectListItem>;
                     foreach (SelectListItem item in list2)
                     {
-                        <input type="radio" name="marketName" id="marketName" value="@item.Value" title="@item.Value">
+                        <input type="radio" name="marketPerName" id="marketPerName" value="@item.Value" title="@item.Value">
                     }
                 }
             </div>
@@ -307,38 +307,63 @@
             //给咨询师赋值
             form.on('submit(truebtn)', function (data) {
                 var mm = $('input[name="consultTeacherid"]:checked')[0];
-                $("#Inquiry")[0].value = $(mm).attr("title");
-                $("#TeacherId")[0].value = mm.value;
-                layer.close(ms);   
+                if ($(mm).attr("title") == undefined) {
+                    layer.msg("请选择咨询师");
+                } else {
+                    $("#Inquiry")[0].value = $(mm).attr("title");
+                    $("#TeacherId")[0].value = mm.value;
+                    layer.close(ms);   
+                }
+                 
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
             //给市场类型赋值
             form.on('submit(truebtn2)', function (data) {
                 var mm = $('input[name="marketName"]:checked')[0];
-                $("#MarketType")[0].value = $(mm).val();
-                layer.close(ms);
+                if ($(mm).val() == undefined) {
+                    layer.msg("请选择市场类型");
+                } else {
+                    $("#MarketType")[0].value = $(mm).val();
+                    layer.close(ms);
+                }
+                 
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
             //给市场人员赋值
             form.on('submit(truebtn3)', function (data) {
-                var mm = $('input[name="marketName"]:checked')[0];
-                $("#SalePerson")[0].value = $(mm).val();
-                layer.close(ms);
+                var mm = $('input[name="marketPerName"]:checked')[0];
+                if ($(mm).val() == undefined) {
+                    layer.msg("请选择市场人员");
+                } else {
+                    $("#SalePerson")[0].value = $(mm).val();
+                    layer.close(ms);
+                }
+                 
                 return false;  
             });
             //给区域赋值
             form.on('submit(truebtn4)', function (data) {
                 var mm = $('input[name="Reginvalue"]:checked')[0];
-                $("#regin")[0].value = $(mm).val();
-                layer.close(ms);
+                if ($(mm).val() == undefined) {
+                    layer.msg("请选择区域");
+                } else {
+                    $("#regin")[0].value = $(mm).val();
+                    layer.close(ms);
+                }
+                
                 return false;
             });
 
             //给信息来源赋值
             form.on('submit(truebtn5)', function (data) {
                 var mm = $('input[name="Infomationvalue"]:checked')[0];
-                $("#Source")[0].value = $(mm).val();
-                layer.close(ms);
+                if ($(mm).val() == undefined) {
+                    layer.msg("请选择信息来源");
+                } else {
+                    $("#Source")[0].value = $(mm).val();
+                    layer.close(ms);
+                }
+                
                 return false;
             });
         });

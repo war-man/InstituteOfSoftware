@@ -524,17 +524,24 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <returns></returns>
         public bool ChangeStudentState(int id)
         {
-            StudentPutOnRecord find_s = this.GetEntity(id);
-            if (find_s != null)
+            if (id>=54118)
             {
-                AjaxResult a = Statu_Entity.GetStu("已报名");
-                if (a.Success == true)
+                StudentPutOnRecord find_s = this.GetEntity(id);
+                if (find_s != null)
                 {
-                    StuStatus find_statu = a.Data as StuStatus;
-                    find_s.StuStatus_Id = find_statu.Id;
-                    find_s.StatusTime = DateTime.Now;
-                    this.Update(find_s);
-                    return true;
+                    AjaxResult a = Statu_Entity.GetStu("已报名");
+                    if (a.Success == true)
+                    {
+                        StuStatus find_statu = a.Data as StuStatus;
+                        find_s.StuStatus_Id = find_statu.Id;
+                        find_s.StatusTime = DateTime.Now;
+                        this.Update(find_s);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -543,8 +550,19 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
             else
             {
-                return false;
+                Sch_Market find_s = s_entity.GetEntity(id);
+                if (find_s!=null)
+                {
+                    find_s.MarketState = "已报名";
+
+                   return s_entity.MyUpdate(find_s).Success;
+                }
+                else
+                {
+                    return false;
+                }
             }
+             
         }
         #endregion
 

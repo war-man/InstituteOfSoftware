@@ -21,6 +21,7 @@
             bottom: 0;
             overflow-y: auto;
             overflow-x: hidden;
+            
         }
     </style>
     <!-- Bootstrap Styles-->
@@ -147,13 +148,13 @@
                                     </script>
                                 </li>
                                 <li class="dropdown note">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope-o"></i> <span class="badge">3</span></a>
+                                    <a href="#" id="Notice" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope-o"></i> <span class="badge">3</span></a>
 
 
-                                    <ul class="dropdown-menu two first">
+                                    <ul class="dropdown-menu two first" id="neiro">
                                         <li>
-                                            <div class="notification_header">
-                                                <h3>You have 3 new messages  </h3>
+                                            <div class="notification_header" >
+                                                <h3 style="color:#ff6a00;">未读信息  </h3>
                                             </div>
                                         </li>
                                         <li>
@@ -308,7 +309,12 @@
                     </div>
                     <!--//menu-right-->
                     <div class="clearfix"></div>
+                   
+                    <script src="~/Tree/js/protovis-d3.2.js"></script>
+                    <script src="~/Tree/js/vix.js"></script>
+               
                 </div>
+             
                 <!-- //header-ends -->
                 <div class="outter-wp" style="overflow:hidden;">
 
@@ -533,6 +539,19 @@
             
         }
     }
+    var neiros = 0;
+    $("#Notice").click(function () {
+        neiros++;
+        if (neiros == 1) {
+            $("#neiro").css("display", "block");
+        } else if (neiros == 2) {
+            neiros = 0;
+            $("#neiro").css("display", "none");
+        }
+       
+    });
+    //加载发布通知
+    $.post("DateList", function (data) {
 
-   
+    })
 </script>
