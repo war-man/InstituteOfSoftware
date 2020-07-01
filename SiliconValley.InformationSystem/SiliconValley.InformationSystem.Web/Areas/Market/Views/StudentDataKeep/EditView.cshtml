@@ -171,7 +171,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">上门日期:</label>
                         <div class="layui-input-block">
-                            <input name="StuVisit" id="StuVisit" lay-verify="StuDateTime|IsVisit|content" placeholder="YY-MM-DD" class="layui-input linu"/>
+                            <input name="StuVisit" id="StuVisit" lay-verify="StuDateTime|IsVisit" placeholder="YY-MM-DD" class="layui-input linu"/>
                         </div>
                     </div>
                 </div>
@@ -325,11 +325,19 @@
                                 parent.layer.close(index); //再执行关闭   
                                
                             });
-                        }else {
-                            layer.msg('系统错误，请重试！！', {
-                                icon: 2,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            });
+                        } else {
+                            if (successdata.Msg != null) {
+                                layer.msg(successdata.Msg, {
+                                    icon: 2,
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                });
+                            } else {
+                                layer.msg('系统错误，请重试！！', {
+                                    icon: 2,
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                });
+                            }
+                             
                         }
 
                     }
