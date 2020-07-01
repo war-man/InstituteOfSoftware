@@ -905,5 +905,16 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             return result;
 
         }
+
+        /// <summary>
+        /// 获取某员工的异动详情
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public List<EmpTransaction> GetEmpEtrdetails(string empid) {
+            EmpTransactionManage etrmanage = new EmpTransactionManage();
+            var etrlist = etrmanage.GetList().Where(s => s.EmployeeId == empid).ToList();
+            return etrlist;
+        }
     }
 }
