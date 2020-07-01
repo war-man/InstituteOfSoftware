@@ -128,7 +128,7 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         /// </summary>
         /// <param name="channelStaffID"></param>
         /// <returns></returns>
-        public List<ChannelArea> GetAreaByChannelID(int channelStaffID)
+        public List<ChannelArea> GetAreaByChannelID(int channelStaffID)         
         {
             return this.GetChannelAreas().Where(a => a.ChannelStaffID == channelStaffID).ToList();
         }
@@ -281,6 +281,38 @@ namespace SiliconValley.InformationSystem.Business.Psychro
             }
             return result;
 
+        }
+
+        /// <summary>
+        /// 获取区域人员
+        /// </summary>
+        /// <param name="areaId">区域编号</param>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetAreaEmplist(int areaId)
+        {
+            var list =  this.GetChannelAreas().Where(d => d.RegionID == areaId).ToList();
+
+            List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
+
+            dbchannel = new ChannelStaffBusiness();
+
+            dbemp = new EmployeesInfoManage();
+            list.ForEach(d =>
+            {
+                var chanelObj = dbchannel.GetChannelByID(d.ChannelStaffID);
+
+                if (chanelObj != null)
+                {
+                    var emp = dbemp.GetInfoByEmpID(chanelObj.EmployeesInfomation_Id);
+
+                    if (emp != null)
+                    {
+                        resultlist.Add(emp);
+                    }
+                }
+            });
+
+            return resultlist;
         }
     }
 }

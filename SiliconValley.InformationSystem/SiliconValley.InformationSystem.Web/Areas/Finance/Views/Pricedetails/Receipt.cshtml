@@ -16,7 +16,7 @@
     <style>
 
 
-       
+
 
         table {
             /*border: 1px solid #808080;*/
@@ -27,24 +27,25 @@
                 height: 30px;
             }
 
-    
+
         /*.bordes td {
             border: 1px solid #808080;
         }
         .motityle td {
             border: 1px solid #ffffff;
         }*/
-        .wit{
-            width:10%;
+        .wit {
+            width: 10%;
         }
+
         #guigu {
-            margin-top:-20px;
-            width:100px;
-            height:100px;
-         
+            margin-top: -20px;
+            width: 100px;
+            height: 100px;
         }
-        table{
-            font-size:10pt;
+
+        table {
+            font-size: 10pt;
         }
         /*table tr,table td,table th ,table{
             border: 1px solid red;
@@ -55,12 +56,12 @@
     </style>
 </head>
 <body>
- 
+
     <div id="shouju" style="position:absolute;">
-        <img src="~/Areas/Finance/images/shouju.jpg" style="width:672px;z-index:0;margin-top:-5px;margin-left:41px;" />
+        <img src="~/Areas/Finance/images/shouju.jpg" style="width:672px;z-index:0;margin-top:-22px;margin-left:41px;" />
     </div>
-    <div style="z-index:999;position:absolute;top:93px;left:10px;height:200px;" id="text">
-        <div style="position:absolute;left:540px;top:16px;">2020-06-23</div>
+    <div style="z-index:999;position:absolute;top:76px;left:10px;height:200px;" id="text">
+        <div id="AddDate" style="position:absolute;left:540px;top:16px;">2020-06-23</div>
         <table cellpadding="1" style="width:790px;">
             <tr>
                 <td></td>
@@ -87,12 +88,16 @@
             <tbody id="xiangmu" style="height:70px;"></tbody>
 
             <tbody id="xuezai" style="height:70px;">  </tbody>
-            <tr>
-                <td colspan="7" style="text-align:center;" id="DaXie">合计金额（大写）：</td>
-                <td colspan="1" style="text-align:inherit;width:230px;" id="pricent">2000</td>
-            </tr>
+            @*<tr>
+                    <td colspan="7" style="text-align:center;" id="DaXie">合计金额（大写）：</td>
+                    <td colspan="1" style="text-align:inherit;width:230px;" id="pricent">2000</td>
+                </tr>*@
 
         </table>
+        <div id="" style="width:80px;position:absolute;top:284px;left:316px;"> <input type="text" style="border:1px;" lay-verify="required" class="layui-input" /></div>
+
+        <div id="DaXie" style="position:absolute;left:182px;"></div>
+        <div id="pricent" style="position:absolute;left:524px;"></div>
     </div>
 
 
@@ -113,9 +118,10 @@
        // window.parent.closeSelf();
 
     var studen = JSON.parse('@Html.Raw(ViewBag.student)');
+    console.log(studen);
     $("#GrandName").text(studen.GrandName);
     $("#Name").text(studen.Name);
-    $("#StudentNumber").text(studen.StudentNumber);
+
     $("#classa").text(studen.classa);
     $("#identitydocument").text(studen.identitydocument);
     var Receiptdata = JSON.parse('@Html.Raw(ViewBag.Receiptdata)');
@@ -124,11 +130,12 @@
     var ostitemsName = "";
     var Amountofmoneys = 0;
     var pricent = 0;
+    console.log("aaa");
     for (var i = 0; i < Receiptdata.length; i++) {
-        console.log(Receiptdata[i]);
+
         pricent = pricent + parseInt(Receiptdata[i].Amountofmoney);
-        console.log(Receiptdata[i]);
-        if (i==0) {
+
+        if (i == 0) {
             //AddDate
             $("#Remarks").text(Receiptdata[i].Remarks);
             var date = new Date(Receiptdata[i].AddDate);
@@ -136,12 +143,17 @@
         }
         if (Receiptdata[i].Rategory == "阶段费用缴纳" || Receiptdata[i].Rategory == "学费" || Receiptdata[i].Rategory == "食宿费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
-            $("#xiangmu").append($('<tr> <td colspan="4" style="text-align:center;">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
-           // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
-        } else if (Receiptdata[i].Rategory == "自考本科费用" || Receiptdata[i].Rategory=="其它") {
+            $("#xiangmu").append($('<tr> <td colspan="4" style="text-align:center;">' + Receiptdata[i].GrandName+"阶段" + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
+            // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+        } else if (Receiptdata[i].Rategory == "自考本科费用" || Receiptdata[i].Rategory == "其它" || Receiptdata[i].Rategory == "驾校费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
             $("#xiangmu").append($('<tr style="height:55px;"> <td colspan="4" style="text-align:center;">' + Receiptdata[i].Rategory + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
-           // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+            // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+        } else if (Receiptdata[i].Rategory == "预入费") {
+            console.log("其")
+            var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
+            $("#xiangmu").append($('<tr style="height:55px;"> <td colspan="4" style="text-align:center;">' + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
+            // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         }
         if (Receiptdata[i].Rategory == "学杂费") {
             count++;
@@ -149,7 +161,7 @@
             Amountofmoneys = Amountofmoneys + parseInt(Receiptdata[i].Amountofmoney);
             if (count ==3) {
                 count = 0;
-             
+
                 $("#xuezai").append($('<tr> <td colspan="4" style="text-align:center;">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoneys + '.00</td></tr>'));
 
                 //$("#text tbody").prepend($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
@@ -159,13 +171,13 @@
         }
 
     }
-    
+
     $("#pricent").text(toMoney(pricent));
     $("#DaXie").text(convertCurrency(pricent));
 
     if (count < 3 && count != 0) {
         $("#xuezai").append($('<tr> <td colspan="4" style="text-align:center;"><div>' + ostitemsName.substring(0, ostitemsName.length - 1) + '</div></td> <td colspan="4" style="text-align:inherit;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoneys + '.00</td></tr>'));
- 
+
     //    $("#text tbody").before($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
     }
     if (count==0) {
@@ -184,21 +196,21 @@
     //} else if (Receiptdata.length > 7 && Receiptdata.length < 10) {
     //    console.log("aaaa");
     //    $("#text tbody").before($('<tr style="text-align:center;height: 30px;"></tr>'));
-      
+
     //}
 </script>
 
 <script src="~/Areas/Teachingquality/js/Print.js"></script>
 <script>
     document.getElementById('btn').onclick = function () {
-    
+
         Print('#text', {
             //onStart: function () {
             //    var RegWsh = new ActiveXObject("WScript.Shell")
             //    hkey_key = "header"
             //    RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "")
             //    hkey_key = "footer"
-            //    RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "") 
+            //    RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "")
             //},
             //onEnd: function () {
             //    console.log('onEnd', new Date())
@@ -206,6 +218,6 @@
         })
 
     }
-  
+
 
 </script>

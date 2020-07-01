@@ -353,7 +353,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                 HeadmasterBusiness hm = new HeadmasterBusiness();
                 result = hm.AddHeadmaster(emp.EmployeeId);
             }//给两个教质部员工表添加除教官外的员工
-            if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官"))
+            if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官") || dname.Equals("教导大队"))
             {
                 InstructorListBusiness itmanage = new InstructorListBusiness();
                 result = itmanage.AddInstructorList(emp.EmployeeId);

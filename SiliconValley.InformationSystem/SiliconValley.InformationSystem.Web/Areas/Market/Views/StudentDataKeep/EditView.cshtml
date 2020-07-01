@@ -129,7 +129,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="LableCss1">信息来源:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.StuInfomationType_Id, ViewBag.infomation as IEnumerable<SelectListItem>)
+                            @Html.DropDownListFor(s => s.StuInfomationType_Id, ViewBag.infomation as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "Infoselect" } })
                         </div>
                     </div>
                 </div>
@@ -140,13 +140,22 @@
                             @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>)
                         </div>
                     </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">市场类型:</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownList("market", ViewBag.typemarket as IEnumerable<SelectListItem>,new Dictionary<string, object>() { })
-                        </div>
-                    </div>
+                    @{
+                        bool Is = ViewBag.UserId;
+
+                        if (Is == false)
+                        {
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                <label class="layui-form-label">市场类型:</label>
+                                <div class="layui-input-block">
+                                    @Html.DropDownList("market", ViewBag.typemarket as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                                </div>
+                            </div>
+                        }
+                    }
+
                 </div>
+                <input type="hidden" name="hava" id="hava" value="@Is"/>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">是否上门:</label>
@@ -321,6 +330,14 @@
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
+
+            //提示网络部人员
+            form.on('select(Infoselect)', function (data) {
+                var mm = $("#hava").val();
+                if (mm == "true") {
+                    layer.msg('系统温馨提示:当将信息来源修改成其它来源则不能修改');
+                }
+            }); 
         });
         function IsDisable(values) {
             if (values == "false") {

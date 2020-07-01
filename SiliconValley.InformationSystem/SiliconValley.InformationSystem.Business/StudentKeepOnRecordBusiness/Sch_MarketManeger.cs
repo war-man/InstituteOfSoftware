@@ -69,5 +69,19 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
             return a;
         }
+
+        /// <summary>
+        /// 根据姓名、电话号码获取备案数据
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Phone"></param>
+        /// <returns></returns>
+        public Sch_Market Find(string Name,string Phone)
+        {
+           List<Sch_Market> list= this.GetListBySql<Sch_Market>("select top 1 * from Sch_Market where StudentName = '" + Name + "' and Phone = '" + Phone + "'");
+
+            return list.Count > 0 ? list[0] : null;
+        }
+
     }
 }

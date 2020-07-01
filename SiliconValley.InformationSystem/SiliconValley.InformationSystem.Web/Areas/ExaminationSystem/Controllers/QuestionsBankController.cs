@@ -8,6 +8,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 {
    
     using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
@@ -76,6 +77,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult ChoiceQuestionIndex()
         {
             SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+
             ViewBag.Major = specialtyBusiness.GetSpecialties();
             return View();
 
@@ -296,20 +298,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// </summary>
         /// <param name="majorid">专业</param>
         /// <returns></returns>
-        public ActionResult CourseData(int majorid)
+        public ActionResult CourseData(int grandid)
         {
             CourseBusiness courseBusiness = new CourseBusiness();
 
             List<Curriculum> curricullist = new List<Curriculum>();
 
-           var list = courseBusiness.GetCurriculas().Where(d => d.MajorID == majorid);
+           var list = courseBusiness.GetCurriculas().Where(d => d.Grand_Id == grandid);
 
             if (list != null)
             {
                 curricullist.AddRange(list);
             }
-
-
             // 转化类型
 
             List<CourseView> resultlist = new List<CourseView>();
@@ -337,6 +337,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
         }
 
+        public ActionResult CourseDataBYGrind(int majorid)
+        {
+            CourseBusiness courseBusiness = new CourseBusiness();
+
+            List<Curriculum> curricullist = new List<Curriculum>();
+
+            var list = courseBusiness.GetCurriculas().Where(d => d.MajorID == majorid);
+
+            if (list != null)
+            {
+                curricullist.AddRange(list);
+            }
+            // 转化类型
+
+            List<CourseView> resultlist = new List<CourseView>();
+
+            foreach (var item in curricullist)
+            {
+                try
+                {
+                    var tempobj = courseBusiness.ToCourseView(item);
+
+                    if (tempobj != null)
+                    {
+                        resultlist.Add(tempobj);
+                    }
+                }
+                catch (Exception)
+                {
+
+
+                }
+
+            }
+
+            return Json(resultlist, JsonRequestBehavior.AllowGet);
+
+        }
         /// <summary>
         /// 添加选择题题
         /// </summary>
@@ -828,9 +866,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             try
             {
+                CloudstorageBusiness Bos = new CloudstorageBusiness();
+
+                var client = Bos.BosClient();
 
                 //判断是否重名
-               var isExit = db_computerTestQuestion.AllComputerTestQuestion().Where(d => d.Title == machTestQuesBank.Title).FirstOrDefault();
+                var isExit = db_computerTestQuestion.AllComputerTestQuestion().Where(d => d.Title == machTestQuesBank.Title).FirstOrDefault();
 
                 if (isExit != null)
                 {
@@ -850,7 +891,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 string newfilename = Utc + Extension;
 
-                string path = Server.MapPath("~/uploadXLSXfile/ComputerTestQuestionsWord/" + newfilename);
+                //string path = Server.MapPath("~/uploadXLSXfile/ComputerTestQuestionsWord/" + newfilename);
+
+                string path = $"/ExaminationSystem/ComputerTestQuestionsWord/{newfilename}";
 
                 machTestQuesBank.CreateDate = DateTime.Now;
                 machTestQuesBank.IsUsing = true;
@@ -863,7 +906,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 db_computerTestQuestion.Insert(machTestQuesBank);
 
-                word.SaveAs(path);
+                //word.SaveAs(path);
+
+                client.PutObject("xinxihua", path, word.InputStream);
 
                 result.ErrorCode = 200;
 
@@ -903,15 +948,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             ViewBag.ComputerTestQuestionIds = ids;
 
-
             //读取文件
             byte[] s = System.IO.File.ReadAllBytes(obj.SaveURL);
 
             ViewBag.ids = ids;
-
-            
-
-            
 
             return View(result);
 
@@ -961,15 +1001,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult Dowle(int id)
         {
 
-           var obj = db_computerTestQuestion.AllComputerTestQuestion().Where(d => d.ID == id).FirstOrDefault();
+            CloudstorageBusiness Bos = new CloudstorageBusiness();
+
+            var client = Bos.BosClient();
+
+            var obj = db_computerTestQuestion.AllComputerTestQuestion().Where(d => d.ID == id).FirstOrDefault();
 
            var filename = Path.GetFileName(obj.SaveURL);
 
-            var path = Server.MapPath("/uploadXLSXfile/ComputerTestQuestionsWord/"+filename);
+            //var path = Server.MapPath("/uploadXLSXfile/ComputerTestQuestionsWord/"+filename);
 
-            FileStream fileStream = new FileStream(path, FileMode.Open);
+            var path = "/ExaminationSystem/ComputerTestQuestionsWord/" + filename;
 
-            return File(fileStream, "application/octet-stream",Server.UrlEncode(filename));
+            var fliedata = client.GetObject("xinxihua", path);
+
+            //FileStream fileStream = new FileStream(path, FileMode.Open);
+
+            return File(fliedata.ObjectContent, "application/octet-stream",Server.UrlEncode(filename));
 
 
         }

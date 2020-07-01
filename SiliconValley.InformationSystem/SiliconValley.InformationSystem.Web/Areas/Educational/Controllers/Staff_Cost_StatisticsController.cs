@@ -14,6 +14,7 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System.IO;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
@@ -210,6 +211,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 db_staf_Cost.SaveStaff_CostData(detaillist, result, Detailfilename);
                 //保存到文件 
                 string filename = DateTime.Parse(date).Year + "-" + DateTime.Parse(date).Month+"费用统计表";
+
                 db_staf_Cost.SaveToExcel(result, filename);
 
                 resultObj.ErrorCode = 200;
@@ -236,14 +238,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// <returns></returns>
         public ActionResult DownloadCostStatics(string date= null, string Dfilename = null)
         {
+            CloudstorageBusiness Bos = new CloudstorageBusiness();
+
+            var client = Bos.BosClient();
+
             string filename = Dfilename == null? DateTime.Parse(date).Year + "-" + DateTime.Parse(date).Month + "费用统计表.xls" : Dfilename;
 
-            string pathName = "/Areas/Educational/CostHistoryFiles/" + filename;
+            string pathName = "/CostHistoryFiles/" + filename;
 
             //开始下载
-            FileStream stream = new FileStream(Server.MapPath(pathName), FileMode.Open, FileAccess.Read);
+            //FileStream stream = new FileStream(Server.MapPath(pathName), FileMode.Open, FileAccess.Read);
+            var filedata = client.GetObject("xinxihua", pathName);
 
-            return File(stream, "xls", filename);
+            return File(filedata.ObjectContent, "xls", filename);
 
 
         }
@@ -289,7 +296,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-
         /// <summary>
         /// 历史纪录
         /// </summary>
@@ -302,25 +308,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         public ActionResult HistoryCostFileData(int page, int limit)
         {
 
-            List<FileInfo> list = db_staf_Cost.HistoryCostFileData().OrderBy(d=>d.LastWriteTime).ToList();
+            //List<FileInfo> list = db_staf_Cost.HistoryCostFileData().OrderBy(d=>d.LastWriteTime).ToList();
 
-            List<FileInfo> skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
+            //List<FileInfo> skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
+
+            CloudstorageBusiness Bos = new CloudstorageBusiness();
+
+            var client = Bos.BosClient();
+
+            var list = client.ListObjects("xinxihua", "CostHistoryFiles").Contents.OrderByDescending(d=>d.LastModified).ToList();
+
+            var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
 
             List<object> dataObj = new List<object>();
 
             foreach (var item in skiplist)
             {
-                var tempobj = new
+                var filename = Path.GetFileName(item.Key);
+
+                if (!string.IsNullOrEmpty(filename))
                 {
+                    var tempobj = new
+                    {
 
-                    filename = item.Name,
-                    lastupdatetime = item.LastWriteTime
-                    
-                };
+                        filename = filename,
+                        lastupdatetime = item.LastModified
 
-                dataObj.Add(tempobj);
+                    };
+                    dataObj.Add(tempobj);
+                }
             }
-
 
             var obj = new {
 
@@ -328,14 +345,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 msg ="",
                 count = list.Count,
                 data = dataObj
-
-
             };
 
             return Json(obj, JsonRequestBehavior.AllowGet);
 
         }
-
-
     }
 }

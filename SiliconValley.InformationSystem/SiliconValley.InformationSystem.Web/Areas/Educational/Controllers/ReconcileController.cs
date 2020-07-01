@@ -21,9 +21,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     public class ReconcileController : BaseMvcController
     {
         // GET: /Educational/Reconcile/GetMarjioTeacher
-        static readonly ReconcileManeger Reconcile_Entity = new ReconcileManeger();
-        private EmployeesInfoManage dbemployeesInfo;
-        private TeacherClassBusiness TeacherClass_Entity;
+        readonly ReconcileManeger Reconcile_Entity = new ReconcileManeger();
+        
 
         #region 大批量课表安排
         /// <summary>
@@ -993,12 +992,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// <returns></returns>
         public ActionResult GetTecherAll(int id)
         {
-            dbemployeesInfo = new EmployeesInfoManage();
+ 
             List<TeacherData> tlist = new List<TeacherData>();
             List<Teacher> teachers = Reconcile_Com.Teacher_Entity.GetTeachers();
             foreach (Teacher item in teachers)
             {
-                EmployeesInfo find_e = dbemployeesInfo.GetEntity(item.EmployeeId);
+                EmployeesInfo find_e = Reconcile_Entity.dbemployeesInfo.GetEntity(item.EmployeeId);
 
 
                 if (find_e != null)
@@ -1018,8 +1017,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
             }
             //获取该班级的专业老师
-            TeacherClass_Entity = new TeacherClassBusiness();
-            ClassTeacher find_ct = TeacherClass_Entity.GetList().Where(t => t.ClassNumber == id && t.IsDel == false).FirstOrDefault();
+            
+            ClassTeacher find_ct = Reconcile_Entity.TeacherClass_Entity.GetList().Where(t => t.ClassNumber == id && t.IsDel == false).FirstOrDefault();
             int teacher_id = find_ct == null ? 0 : Convert.ToInt32(find_ct.TeacherID);
             var data = new { t_id = teacher_id, list_teacher = tlist };
             return Json(data, JsonRequestBehavior.AllowGet);

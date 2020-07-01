@@ -1,0 +1,145 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.StudentFeeRecord
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Drivingschoolpayment</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .mysql {
+            margin-top: 13px;
+        }
+
+        .textar {
+            width: 80%;
+            height: 80px;
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form" action="" id="form">
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+                @Html.HiddenFor(a => a.Costitemsid)
+                <input style="display:none" id="Typeid" type="text" value="@ViewBag.Typeid" />
+                <div class="layui-row layui-form-item" style="margin-left:60px;">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-inline">
+                            <input value="@ViewBag.Stuid" name="StudenID" id="StudenID" type="text" style="border:0px;" readonly="readonly" class="layui-input Stuid" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">驾校类型</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("Costitemsid", ViewBag.Costitemsid as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Costitemsid" } })
+                        </div>
+                    </div>
+
+
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">费用</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" }, { "readonly", "readonly" }, { "class", "layui-input " } })
+
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+
+                            @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+
+        //监听阶段下拉框
+        form.on('select(Costitemsid)', function (data) {
+            if (data.value != "") {
+                var Costitemsid = $("#Costitemsid").val();
+                var dbase = {
+                    Costitemsid: data.value
+                };
+
+                Otherexpenses(dbase, function (ds) {
+                    $("#Amountofmoney").val(ds);
+
+                });
+
+
+            } else {
+                $("#Amountofmoney").val("");
+            }
+        });
+        //正则
+        form.verify({
+            Amountofmoney: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/(^[1-9]([0-9]{0,4})(\.[0-9]{1,2})$)|(^[1-9]([0-9]{0,4})$)|(^[0-9]\.[0-9]{1,2}$)/.test(value)) {
+                    return '请输入正确的价格';
+                }
+            },
+            Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '名称不能输入空格';
+                } else {
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '名称不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '名称首尾不能出现下划线\'_\'';
+                    }
+                    if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                        return '名称只能由中文或字母组成';
+                    }
+
+                }
+
+            }
+        })
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var db = data.field;
+            ajaxprice("/Finance/Pricedetails/Drivingschoolpayment", db, function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);//关闭当前页
+                window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 900, 600);
+            });
+
+        });
+    });
+</script>

@@ -10,7 +10,7 @@
     //整数金额时后面跟的字符
     var cnInteger = '整';
     //整型完以后的单位
-    var cnIntLast = '院';
+    var cnIntLast = '元';
     //最大处理的数字
     var maxNum = 999999999999999.9999;
     //金额整数部分
@@ -97,9 +97,9 @@ function toMoney(num) {
         num = num.toLocaleString();//转成金额显示模式
         //判断是否有小数
         if (num.indexOf(".") == -1) {
-            num = "￥" + num + ".00";
+            num = " " + num + ".00";
         } else {
-            num = num.split(".")[1].length < 2 ? "￥" + num + "0" : "￥" + num;
+            num = num.split(".")[1].length < 2 ? " " + num + "0" : " " + num;
         }
         return num;//返回的是字符串23,245.12保留2位小数
     } else {

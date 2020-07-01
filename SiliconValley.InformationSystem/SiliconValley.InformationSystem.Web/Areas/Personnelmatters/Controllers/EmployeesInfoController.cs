@@ -142,6 +142,63 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
         /// <summary>
+        /// 根据员工编号获取对应员工
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult GetempById(string id)
+        {
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            EmpTransactionManage etm = new EmpTransactionManage();
+            var e = emanage.GetEntity(id);
+            var etmobj = etm.GetDelEmp(e.EmployeeId);
+            var empobj = new
+            {
+                #region 获取属性值 
+                e.EmployeeId,
+                e.DDAppId,
+                e.EmpName,
+                e.PositionId,
+                dname = emanage.GetDept((int)e.PositionId).DeptName,
+                pname = emanage.GetPosition((int)e.PositionId).PositionName,
+                deptid = emanage.GetDept((int)e.PositionId).DeptId,
+                e.Sex,
+                e.Age,
+                e.Nation,
+                e.Phone,
+                e.IdCardNum,
+                e.ContractStartTime,
+                e.ContractEndTime,
+                e.EntryTime,
+                e.Birthdate,
+                e.Birthday,
+                e.PositiveDate,
+                e.UrgentPhone,
+                e.DomicileAddress,
+                e.Address,
+                e.Education,
+                e.MaritalStatus,
+                e.IdCardIndate,
+                e.PoliticsStatus,
+                e.InvitedSource,
+                e.ProbationSalary,
+                e.Salary,
+                e.SSStartMonth,
+                e.BCNum,
+                e.Material,
+                e.Remark,
+                e.IsDel,
+                e.Image,
+                e.RecruitSource,
+                deltime = etmobj == null ? null : etmobj.TransactionTime,//离职时间
+                delreason = etmobj == null ? null : etmobj.Reason//离职原因
+                #endregion
+            };
+            return Json(empobj, JsonRequestBehavior.AllowGet);
+        }
+
+        #region 离职员工相关
+        /// <summary>
         /// 获取离职员工信息
         /// </summary>
         /// <param name="page"></param>
@@ -203,6 +260,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 离职员工详细信息
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public ActionResult LeftEmpDetail(string id)
+        {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var emp = empmanage.GetEntity(id);
+            return View(emp);
+        }
+
+        #endregion
 
         #region 添加员工相关action
 
@@ -346,6 +417,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             string rr = Server.MapPath("/uploadXLSXfile/Template/EmpInfoTemplate.xls");  //获取下载文件的路径         
             FileStream stream = new FileStream(rr, FileMode.Open);
             return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
+        }
+        #endregion
+
+        #region 批量导出
+        public ActionResult BatchExportEmps() {
+            return View();
         }
         #endregion
 
@@ -713,6 +790,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         #endregion
 
+
         /// <summary>
         /// 员工信息详情页面
         /// </summary>
@@ -725,61 +803,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View(emp);
         }
 
-        /// <summary>
-        /// 根据员工编号获取对应员工
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult GetempById(string id)
-        {
-            EmployeesInfoManage emanage = new EmployeesInfoManage();
-            EmpTransactionManage etm = new EmpTransactionManage();
-            var e = emanage.GetEntity(id);
-            var etmobj = etm.GetDelEmp(e.EmployeeId);
-            var empobj = new
-            {
-                #region 获取属性值 
-                e.EmployeeId,
-                e.DDAppId,
-                e.EmpName,
-                e.PositionId,
-                dname = emanage.GetDept((int)e.PositionId).DeptName,
-                pname = emanage.GetPosition((int)e.PositionId).PositionName,
-                deptid = emanage.GetDept((int)e.PositionId).DeptId,
-                e.Sex,
-                e.Age,
-                e.Nation,
-                e.Phone,
-                e.IdCardNum,
-                e.ContractStartTime,
-                e.ContractEndTime,
-                e.EntryTime,
-                e.Birthdate,
-                e.Birthday,
-                e.PositiveDate,
-                e.UrgentPhone,
-                e.DomicileAddress,
-                e.Address,
-                e.Education,
-                e.MaritalStatus,
-                e.IdCardIndate,
-                e.PoliticsStatus,
-                e.InvitedSource,
-                e.ProbationSalary,
-                e.Salary,
-                e.SSStartMonth,
-                e.BCNum,
-                e.Material,
-                e.Remark,
-                e.IsDel,
-                e.Image,
-                e.RecruitSource,
-                deltime = etmobj == null ? null : etmobj.TransactionTime,//离职时间
-                delreason = etmobj == null ? null : etmobj.Reason//离职原因
-                #endregion
-            };
-            return Json(empobj, JsonRequestBehavior.AllowGet);
-        }
+       
 
         /// <summary>
         /// 编辑员工信息
@@ -899,19 +923,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// 离职员工详细信息
-        /// </summary>
-        /// <param name="empid"></param>
-        /// <returns></returns>
-        public ActionResult LeftEmpDetail(string id)
-        {
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var emp = empmanage.GetEntity(id);
-            return View(emp);
-        }
-
-
+        #region 时间提醒    
         /// <summary>
         /// 生日提醒
         /// </summary>
@@ -1022,7 +1034,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return ContractendingEmp;
         }
-
+        #endregion
 
         // 图片上传
         public string ImageUpload()

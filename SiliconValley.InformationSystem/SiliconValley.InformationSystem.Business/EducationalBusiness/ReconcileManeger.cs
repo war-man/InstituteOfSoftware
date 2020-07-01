@@ -14,6 +14,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;//教官业务类
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
@@ -21,7 +23,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
     {
         public static readonly EvningSelfStudyManeger EvningSelfStudy_Entity = new EvningSelfStudyManeger();
 
-
+        public EmployeesInfoManage dbemployeesInfo = new EmployeesInfoManage();
+        public TeacherClassBusiness TeacherClass_Entity = new TeacherClassBusiness();
         /// <summary>
         /// 通过sql语句获取所有数据
         /// </summary>
@@ -398,6 +401,38 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return list;
         }
+     
+        /// <summary>
+        /// 获取所有教官
+        /// </summary>
+        /// <param name="s">true--获取所有教官，false--获取未离职的教官</param>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetAlljiaoguan(bool s)
+        {
+            InstructorListBusiness instructor = new InstructorListBusiness();
+            List<InstructorList> list = instructor.GetList();
+            List<EmployeesInfo> emolist = new List<EmployeesInfo>();
+            foreach (InstructorList item in list)
+            {
+                if (s)
+                {
+                    //获取所有教官
+                    emolist.Add(dbemployeesInfo.GetEntity(item.EmployeeNumber));
+                }
+                else
+                {
+                    //获取未离职教官
+                    if (item.IsDel==false)
+                    {
+                        emolist.Add(dbemployeesInfo.GetEntity(item.EmployeeNumber));
+                    }
+                }
+
+            }
+
+            return emolist;
+        }
+
         /// <summary>
         /// 获取教官
         /// </summary>
@@ -406,24 +441,24 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<EmployeesInfo> GetSir(DateTime time, string timename)
         {
-            DepartmentManage department = new DepartmentManage();
-            BaseBusiness<Position> position = new BaseBusiness<Position>();
-            List<EmployeesInfo> employees = Reconcile_Com.Employees_Entity.GetList().Where(e => e.IsDel == false).ToList();
-            List<EmployeesInfo> em = new List<EmployeesInfo>();
-            List<EmployeesInfo> em2 = new List<EmployeesInfo>();
+            //DepartmentManage department = new DepartmentManage();
+            //BaseBusiness<Position> position = new BaseBusiness<Position>();
+            List<EmployeesInfo> employees = GetAlljiaoguan(false); /*Reconcile_Com.Employees_Entity.GetList().Where(e => e.IsDel == false).ToList();*/
+            //List<EmployeesInfo> em = new List<EmployeesInfo>();
+             List<EmployeesInfo> em2 = new List<EmployeesInfo>();//获取空闲的教官
 
             //S1，S2教官
-            Department find_d1 = department.GetList().Where(d => d.DeptName == "s1、s2教质部").FirstOrDefault();
-            Position p1 = position.GetList().Where(p => p.PositionName == "教官" && p.DeptId == find_d1.DeptId).FirstOrDefault();
-            em.AddRange(employees.Where(c => c.PositionId == p1.Pid).ToList());
+            //Department find_d1 = department.GetList().Where(d => d.DeptName == "s1、s2教质部").FirstOrDefault();
+            //Position p1 = position.GetList().Where(p => p.PositionName == "教官" && p.DeptId == find_d1.DeptId).FirstOrDefault();
+            //em.AddRange(employees.Where(c => c.PositionId == p1.Pid).ToList());
 
-            //S3,S4教官
-            Department find_d2 = department.GetList().Where(d => d.DeptName == "s3教质部").FirstOrDefault();
-            Position p2 = position.GetList().Where(p => p.PositionName == "教官" && p.DeptId == find_d2.DeptId).FirstOrDefault();
-            em.AddRange(employees.Where(c => c.PositionId == p2.Pid).ToList());
+            ////S3,S4教官
+            //Department find_d2 = department.GetList().Where(d => d.DeptName == "s3教质部").FirstOrDefault();
+            //Position p2 = position.GetList().Where(p => p.PositionName == "教官" && p.DeptId == find_d2.DeptId).FirstOrDefault();
+            //em.AddRange(employees.Where(c => c.PositionId == p2.Pid).ToList());
 
             //判断教官是否在这个时间段有课
-            foreach (EmployeesInfo ee in em)
+            foreach (EmployeesInfo ee in employees)
             {
                 bool s = IsHaveClass(ee.EmployeeId, timename, time);
                 if (s == false)

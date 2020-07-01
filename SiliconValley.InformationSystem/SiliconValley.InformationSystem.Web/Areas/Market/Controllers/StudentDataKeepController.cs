@@ -47,6 +47,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         // GET: /Market/StudentDataKeep/FllowView
 
         #region 创建实体
+
         //创建一个用于操作数据的备案实体
         private StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
 
@@ -76,10 +77,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
             //获取信息来源的所有数据
             List<SelectListItem> se = s_Entity.StuInfomationType_Entity.GetList().Select(s => new SelectListItem { Text = s.Name, Value = s.Name }).ToList();
-            se.Add(new SelectListItem() { Text = "请选择", Selected = true, Value = "Value" });
+            se.Add(new SelectListItem() { Text = "请选择", Selected = true, Value = "0" });
             ViewBag.infomation = se;
             //获取区域所有信息
-            SelectListItem newselectitem = new SelectListItem() { Text = "请选择", Value = "请选择", Selected = true };
+            SelectListItem newselectitem = new SelectListItem() { Text = "请选择", Value = "0", Selected = true };
             var r_list = s_Entity.GetEffectiveRegionAll(true).Select(r => new SelectListItem { Text = r.RegionName, Value = r.RegionName }).ToList();
             r_list.Add(newselectitem);
             ViewBag.are = r_list;
@@ -125,99 +126,118 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         
         public ActionResult GetTableData(int limit, int page)
         {
+            List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();
             StringBuilder sb1 = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
             sb1.Append("select * from StudentBeanView where 1=1 ");
             sb2.Append("select * from Sch_MarketView where 1=1 ");
-            //string str1 = "select * from StudentBeanView where 1=1 ";
-            //string str2 = "select * from Sch_MarketView where 1=1 ";
-            #region 模糊查询
-            string findNamevalue = Request.QueryString["findNamevalue"].Trim();//姓名
-            string findPhonevalue = Request.QueryString["findPhonevalue"].Trim();//电话
-            string findInformationvalue = Request.QueryString["findInformationvalue"];//信息来源
-            string findStartvalue = Request.QueryString["findStartvalue"];//录入开始时间
-            string findEndvalue = Request.QueryString["findEndvalue"].Trim();//录入结束时间
-            string findBeanManvalue = Request.QueryString["findBeanManvalue"].Trim();//备案人
-            string findAreavalue = Request.QueryString["findAreavalue"];//区域
-            string findTeacher = Request.QueryString["S_consultTeacher"];//咨询师
-            string findStatus = Request.QueryString["S_status"];//备案状态
-            string findPary = Request.QueryString["S_party"].Trim();//关系人
-            string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
-            string markety = Request.QueryString["marketype"];//市场类型
-            if (!string.IsNullOrEmpty(findNamevalue))
+            string findName = Request.QueryString["findName"];
+            string findPhone = Request.QueryString["findPhone"];
+            if (findName.Length>0 || findPhone.Length>0)
             {
-                sb1.Append(" and StuName like  '%" + findNamevalue + "%'");
-                sb2.Append(" and StudentName like  '%" + findNamevalue + "%'");
-            }
-            if (!string.IsNullOrEmpty(findPhonevalue))
-            {
-                sb1.Append(" and Stuphone = '" + findPhonevalue + "'");
-                sb2.Append(" and Phone = '" + findPhonevalue + "'");
-            }
-            if (findInformationvalue != "Value" && !string.IsNullOrEmpty(findInformationvalue))
-            {
-                sb1.Append(" and stuinfomation = '" + findInformationvalue + "'");
-                sb2.Append(" and source = '" + findInformationvalue + "'");
-            }
-            if (!string.IsNullOrEmpty(findBeanManvalue))
-            {
-                sb1.Append(" and empName = '" + findBeanManvalue + "'");
-                sb2.Append(" and SalePerson = '" + findBeanManvalue + "'");
-            }
-            if (findAreavalue != "请选择" && !string.IsNullOrEmpty(findAreavalue))
-            {
-                sb1.Append(" and RegionName = '" + findAreavalue + "'");
-                sb2.Append ( " and Area = '" + findAreavalue + "'");
-            }
-            if (findStatus != "0" && !string.IsNullOrEmpty(findStatus))
-            {
-                sb1.Append(" and StatusName = '" + findStatus + "'");
-            }
-            if (!string.IsNullOrEmpty(findPary))
-            {
-                sb1.Append(" and Party = '" + findPary + "'");
-                sb2.Append(" and RelatedPerson = '" + findPary + "'");
-            }
-            if (!string.IsNullOrEmpty(findCreateMan))
-            {
-                sb1.Append(" and StuEntering = '" + findCreateMan + "'");
-                sb2.Append(" and CreateUserName = '" + findCreateMan + "'");
-            }
+                if (findName.Length > 0)
+                {
+                    sb1.Append("and  StuName like  '%" + findName + "%'");
+                    sb2.Append(" and StudentName like  '%" + findName + "%'");
+                }
 
-            if (!string.IsNullOrEmpty(findStartvalue))
-            {
-                sb1.Append(" and BeanDate >= '" + findStartvalue + "'");
-                sb2.Append(" and CreateDate >= '" + findStartvalue + "'");
+                if (findPhone.Length > 0)
+                {
+                    sb1.Append(" and Stuphone = '" + findPhone + "'");
+                    sb2.Append(" and Phone = '" + findPhone + "'");
+                }
+
+
             }
-
-            if (!string.IsNullOrEmpty(findTeacher) && findTeacher!="0")
+            else
             {
-                sb1.Append(" and ConsultTeacher = '" + findTeacher + "'");
-                sb2.Append(" and Inquiry = '" + findTeacher + "'");
+                #region 模糊查询
+                string findNamevalue = Request.QueryString["findNamevalue"].Trim();//姓名
+                string findPhonevalue = Request.QueryString["findPhonevalue"].Trim();//电话
+                string findInformationvalue = Request.QueryString["findInformationvalue"];//信息来源
+                string findStartvalue = Request.QueryString["findStartvalue"];//录入开始时间
+                string findEndvalue = Request.QueryString["findEndvalue"];//录入结束时间
+                string findBeanManvalue = Request.QueryString["findBeanManvalue"].Trim();//备案人
+                string findAreavalue = Request.QueryString["findAreavalue"];//区域
+                string findTeacher = Request.QueryString["S_consultTeacher"];//咨询师
+                string findStatus = Request.QueryString["S_status"];//备案状态
+                string findPary = Request.QueryString["S_party"].Trim();//关系人
+                string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
+                string markety = Request.QueryString["marketype"];//市场类型
+                if (!string.IsNullOrEmpty(findNamevalue))
+                {
+                    sb1.Append("and  StuName like  '%" + findNamevalue + "%'");
+                    sb2.Append(" and StudentName like  '%" + findNamevalue + "%'");
+                }
+                if (!string.IsNullOrEmpty(findPhonevalue))
+                {
+                    sb1.Append(" and Stuphone = '" + findPhonevalue + "'");
+                    sb2.Append(" and Phone = '" + findPhonevalue + "'");
+                }
+                if (findInformationvalue != "0" && !string.IsNullOrEmpty(findInformationvalue))
+                {
+                    sb1.Append(" and stuinfomation = '" + findInformationvalue + "'");
+                    sb2.Append(" and source = '" + findInformationvalue + "'");
+                }
+                if (!string.IsNullOrEmpty(findBeanManvalue))
+                {
+                    sb1.Append(" and empName = '" + findBeanManvalue + "'");
+                    sb2.Append(" and SalePerson = '" + findBeanManvalue + "'");
+                }
+                if (findAreavalue != "0" && !string.IsNullOrEmpty(findAreavalue))
+                {
+                    sb1.Append(" and RegionName = '" + findAreavalue + "'");
+                    sb2.Append(" and Area = '" + findAreavalue + "'");
+                }
+                if (findStatus != "0" && !string.IsNullOrEmpty(findStatus))
+                {
+                    sb1.Append(" and StatusName = '" + findStatus + "'");
+                    sb2.Append(" and  MarketState like '已报名%'");
+                }
+                if (!string.IsNullOrEmpty(findPary))
+                {
+                    sb1.Append(" and Party = '" + findPary + "'");
+                    sb2.Append(" and RelatedPerson = '" + findPary + "'");
+                }
+                if (!string.IsNullOrEmpty(findCreateMan))
+                {
+                    sb1.Append(" and StuEntering = '" + findCreateMan + "'");
+                    sb2.Append(" and CreateUserName = '" + findCreateMan + "'");
+                }
+
+                if (!string.IsNullOrEmpty(findStartvalue))
+                {
+                    sb1.Append(" and BeanDate >= '" + findStartvalue + "'");
+                    sb2.Append(" and CreateDate >= '" + findStartvalue + "'");
+                }
+
+                if (!string.IsNullOrEmpty(findTeacher) && findTeacher != "0")
+                {
+                    sb1.Append(" and ConsultTeacher = '" + findTeacher + "'");
+                    sb2.Append(" and Inquiry = '" + findTeacher + "'");
+                }
+
+                if (!string.IsNullOrEmpty(findEndvalue))
+                {
+                    sb1.Append(" and BeanDate <= '" + findEndvalue + "'");
+                    sb2.Append(" and CreateDate <= '" + findEndvalue + "'");
+                }
+
+                if (markety != "0" && !string.IsNullOrEmpty(markety))
+                {
+                    sb1.Append(" and MarketType = '" + markety + "'");
+                    sb2.Append(" and MarketState = '" + markety + "'");
+                }
+                #endregion               
+
             }
+            list = s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.Id).ToList();
 
-            if (!string.IsNullOrEmpty(findEndvalue))
-            {
-                sb1.Append(" and BeanDate <= '" + findEndvalue + "'");
-                sb2.Append(" and CreateDate <= '" + findEndvalue + "'");
-            }
+            var data = list.Skip((page - 1) * limit).Take(limit).ToList();
 
-            if (markety!="0" && !string.IsNullOrEmpty(markety))
-            {
-                sb1.Append(" and MarketType = '" + markety + "'");
-                sb2.Append(" and MarketState = '" + markety + "'");
-            }
-            #endregion
-                
-             
-                List<ExportStudentBeanData> list= s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.Id).ToList();
+            var josndata = new { code = 0, count = list.Count, data = data };
 
-                var data = list.Skip((page - 1) * limit).Take(limit).ToList();
-
-                var josndata = new { code = 0, count = list.Count, data = data };
-
-                return Json(josndata, JsonRequestBehavior.AllowGet);
-             
+            return Json(josndata, JsonRequestBehavior.AllowGet);
         }
 
         //这是一个添加数据的页面
@@ -239,6 +259,84 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             infoTeacher.AddRange(EmployandCounTeacherCoom.getallCountTeacher(false).Select(d => new SelectListItem() { Text = d.empname, Value = d.empname }).ToList());
             ViewBag.ConsultTeacher = infoTeacher;
             return View();
+        }
+
+        //添加备案数据
+        public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
+        {
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            s_Entity.Stustate_Entity = new StuStateManeger();
+            AjaxResult a;
+            try
+            {
+                //判断是否有姓名相同的备案数据                
+                if (s_Entity.StudentOrride(news.StuName, news.StuPhone))
+                {
+                    news.StuDateTime = DateTime.Now;
+                    news.BeanDate = DateTime.Now;
+                    news.IsDelete = false;
+                    news.StuEntering = s_Entity.Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName;
+                    news.StuStatus_Id = 1013;
+
+                    if (news.ConsultTeacher == "0")
+                    {
+                        news.ConsultTeacher = null;
+                    }
+                    a = s_Entity.Add_data(news);
+                    if (a.Success == true)
+                    {
+                        //判断是否是网咨，如果是网咨则不需要发短信
+                        StuInfomationType find_type = s_Entity.StuInfomationType_Entity.SerchSingleData("网络", false);
+                        if (news.StuInfomationType_Id != find_type.Id)
+                        {
+                            //通知备案人备案成功
+                            //string phone = s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
+                            //string phone = "13204961361";//根据备案人查询电话号码
+                            //string smsText = "备案提示:" + news.StuName + "学生在" + DateTime.Now + "已备案成功";
+                            //string t = PhoneMsgHelper.SendMsg(phone, smsText);
+                        }
+                        else
+                        {
+                            //如果是网咨，则添加到王咨回访表中
+                            StudentPutOnRecord find_stu = s_Entity.StudentOrreideData_OnRecord(news.StuName, news.StuPhone,news.StuDateTime);
+                            bool sm = s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
+                            string phoen = Request.Form["ShorPhone"];
+                            string reak = Request.Form["ShorReacke"];
+
+                            string t = PhoneMsgHelper.SendMsg(phoen, reak);
+
+                        }
+
+                        //判断是否指派了咨询师  
+
+                        if (news.ConsultTeacher != null)
+                        {
+                            ExportStudentBeanData find = s_Entity.StudentOrrideData(news.StuName, news.StuPhone);
+                            Consult new_c = new Consult();
+                            new_c.TeacherName = EmployandCounTeacherCoom.getallCountTeacher(false).Where(s => s.empname == news.ConsultTeacher).FirstOrDefault().consultercherid;//Convert.ToInt32(news.ConsultId);
+                            new_c.StuName = Convert.ToInt32(find.Id);
+                            new_c.IsDelete = false;
+                            new_c.ComDate = DateTime.Now;
+                            a.Success = EmployandCounTeacherCoom.AddConsult(new_c);
+                        }
+
+                         
+                    }
+                }
+                else
+                {
+                    a = new AjaxResult();
+                    a.Success = false;
+                    a.Msg = "该学生已备案";
+                }
+                return Json(a);
+            }
+            catch (Exception ex)
+            {
+                //将错误填写到日志中     
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
+            }
         }
 
         //将所有员工显示给用户选择
@@ -294,77 +392,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         }
 
-        //添加备案数据
-        public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
-        {
-            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
-            s_Entity.Stustate_Entity = new StuStateManeger();
-            AjaxResult a;
-            try
-            {
-                //判断是否有姓名相同的备案数据                
-                if (s_Entity.StudentOrride(news.StuName, news.StuPhone))
-                {
-                    news.StuDateTime = DateTime.Now;
-                    news.BeanDate = DateTime.Now;
-                    news.IsDelete = false;
-                    news.StuEntering = s_Entity.Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName;                   
-                    news.StuStatus_Id = 1013;
-                                 
-                    if (news.ConsultTeacher == "0")
-                    {
-                        news.ConsultTeacher = null;
-                    }
-                    a = s_Entity.Add_data(news);
-                    if (a.Success == true)
-                    {
-                        //判断是否是网咨，如果是网咨则不需要发短信
-                        StuInfomationType find_type= s_Entity.StuInfomationType_Entity.SerchSingleData("网络", false);
-                        if (news.StuInfomationType_Id != find_type.Id)
-                        {
-                            //通知备案人备案成功
-                            //string phone = s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
-                            //string phone = "13204961361";//根据备案人查询电话号码
-                            //string smsText = "备案提示:" + news.StuName + "学生在" + DateTime.Now + "已备案成功";
-                            //string t = PhoneMsgHelper.SendMsg(phone, smsText);
-                        }
-                        else
-                        {
-                            //如果是网咨，则添加到王咨回访表中
-                            StudentPutOnRecord find_stu= s_Entity.StudentOrreideData_OnRecord(news.StuName, news.StuPhone);
-                            bool sm= s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
-
-                        }
-                         
-                        //判断是否指派了咨询师  
-
-                        if (news.ConsultTeacher != null)
-                        {
-                            ExportStudentBeanData find = s_Entity.StudentOrrideData(news.StuName,news.StuPhone);
-                            Consult new_c = new Consult();
-                            new_c.TeacherName = EmployandCounTeacherCoom.getallCountTeacher(false).Where(s => s.empname == news.ConsultTeacher).FirstOrDefault().consultercherid;//Convert.ToInt32(news.ConsultId);
-                            new_c.StuName = Convert.ToInt32(find.Id);
-                            new_c.IsDelete = false;
-                            new_c.ComDate = DateTime.Now;
-                            a.Success = EmployandCounTeacherCoom.AddConsult(new_c);
-                        }
-                    }
-                }
-                else
-                {
-                    a = new AjaxResult();
-                    a.Success = false;
-                    a.Msg = "该学生已备案";
-                }
-                return Json(a);
-            }
-            catch (Exception ex)
-            {
-                //将错误填写到日志中     
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-                return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
-            }
-        }
+        
 
         //查看是否有重复的学员信息名称
         public ActionResult FindStudent(string id)
@@ -394,6 +422,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //创建一个编辑页面
         public ActionResult EditView(string id)
         {
+            //判断当前登陆人是否是网络部人员，如果是那就不要显示市场类型
+            ViewBag.UserId = false;
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            int IdCorad = s_Entity.GetPostion(UserName.EmpNumber);
+            if (IdCorad==3 || IdCorad==2 || IdCorad==-1)
+            {
+                ViewBag.UserId = true;
+            }
             s_Entity.Stustate_Entity = new StuStateManeger();
             s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
             ViewBag.id = id;
@@ -419,9 +455,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             int IdCorad = s_Entity.GetPostion(UserName.EmpNumber);
             AjaxResult a = new AjaxResult();
             StuInfomationType fins= s_Entity.StuInfomationType_Entity.GetEntity(olds.StuInfomationType_Id);
-            if(fins.Name.Contains("网络"))
+            if(!fins.Name.Contains("网络"))
             {
-                if (IdCorad != 3 && IdCorad != 2)
+                if (IdCorad == 3 && IdCorad == 2)
                 {
                     a.Success = false;
                     a.Msg = "抱歉，这条备案数据你没有权限修改！！";
@@ -429,13 +465,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                  
             }
-            else if(IdCorad != 0 && IdCorad != 4)
+            else if (IdCorad == 3 || IdCorad == 2)
             {
                 a.Success = false;
                 a.Msg = "抱歉，这条备案数据你没有权限修改！！";
                 return Json(a, JsonRequestBehavior.AllowGet);
             }
-              a = s_Entity.Update_data(olds);    
+
+            //判断是否将其他来源改为网络，如果是将该信息添加到网咨跟踪表中
+            StudentPutOnRecord find= s_Entity.whereStudentId(olds.Id);
+            StuInfomationType fins2 = s_Entity.StuInfomationType_Entity.GetEntity(find.StuInfomationType_Id);
+            if (!fins2.Name.Contains("网络"))
+            {
+                if (fins.Name.Contains("网络"))
+                {
+                     
+                        StudentPutOnRecord find_stu = s_Entity.StudentOrreideData_OnRecord(find.StuName, find.StuPhone, find.StuDateTime);
+                        bool s=  s_Entity.NetClient_Entity.IsExsitSprStu(find_stu.Id);
+                        if (!s)
+                        {
+                            bool sm = s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
+                        }                                                                                 
+                }
+            }
+            a = s_Entity.Update_data(olds);    
             string marketvalue= Request.Form["market"];
             if (!string.IsNullOrEmpty(marketvalue) && marketvalue!="0")
             {
@@ -798,7 +851,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     listnew= listnew.Where(l => l.StuInfomationType_Id == find.Id).ToList();
                     foreach (StudentPutOnRecord item in listnew)
                     {
-                        StudentPutOnRecord m= s_Entity.StudentOrreideData_OnRecord(item.StuName, item.StuPhone);
+                        StudentPutOnRecord m= s_Entity.StudentOrreideData_OnRecord(item.StuName, item.StuPhone,item.BeanDate);
                         if (m!=null)
                         {
                             list_W.Add(m);
@@ -1423,8 +1476,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
 
         #region 短信发送
-        public ActionResult ShortInfoMationView()
+        public ActionResult ShortInfoMationView(int id)
         {
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem() { Text="--请选择--",Value="0" ,Selected=true});
+              // 获取属于这个区域的市场老师             
+              list.AddRange( s_Entity.Channerl_Entity.GetAreaEmplist(id).Select(l=>new SelectListItem() { Text=l.EmpName,Value=l.Phone,Selected=false}).ToList());
+              ViewBag.list = list;
             return View();
         }
        

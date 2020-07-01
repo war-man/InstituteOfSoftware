@@ -100,8 +100,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             NetClientRecordManage nmanage = new NetClientRecordManage();
             var ncr = nmanage.GetEntity(id);
-            ViewBag.Number = nmanage.GetList().Where(s => s.SPRId == ncr.SPRId).ToList().Count() - 1;
+            var nlist = nmanage.GetList().Where(s => s.SPRId == ncr.SPRId).ToList();
+            ViewBag.Number = nlist.Count() - 1;
             ViewBag.Id = id;
+            ViewBag.grade = nlist.LastOrDefault().Grade;
             return View();
         }
         [HttpPost]
@@ -122,9 +124,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ncrnew.IsDel = oldncr.IsDel;
                 ncrnew.Grade = ncr.Grade;
                 ncrnew.CallBackCase = ncr.CallBackCase;
+                var ncrlist = nmanage.GetList().Where(s => s.SPRId == ncrnew.SPRId).ToList();
+                if (ncrlist.Count>0) {
+                    ncrnew.MarketTeaId = ncrlist.LastOrDefault().MarketTeaId;
+                }
                 nmanage.Insert(ncrnew);
                 AjaxResultxx = nmanage.Success();
-            //    BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加了一条回访学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                //    BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加了一条回访学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
                
             }
             catch (Exception ex)
@@ -244,23 +250,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View(nview);
         }
         [HttpPost]
-        public ActionResult EditCallbackInfo(NetClientRecord ncr,string callbackdata)
+        public ActionResult EditCallbackInfo(NetClientRecord ncr)
         {
 
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
-            int fid=Convert.ToInt32(Request.Form["Id"]);
-            var datas = Request.Form["callbackdata"];
-            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
-            string eid = UserName.EmpNumber;
-            NetClientRecord n = new NetClientRecord();
+
             try
             {
-                n.EmpId = eid;
-                n.NetClientDate = DateTime.Now;
+                var n = ncrmanage.GetEntity(ncr.Id);
+                n.CallBackCase = ncr.CallBackCase;
+                n.MarketTeaId = ncr.MarketTeaId;
                 ncrmanage.Update(n);
                 AjaxResultxx = ncrmanage.Success();
+                if (AjaxResultxx.Success) {
+                    var ncrlist = ncrmanage.GetList().Where(s => s.SPRId == n.SPRId).ToList();
+                    foreach (var item in ncrlist)
+                    {
+                        item.MarketTeaId = n.MarketTeaId;
+                        ncrmanage.Update(item);
+                    }
+                    AjaxResultxx = ncrmanage.Success();
+                }
             
             }
             catch (Exception ex)
@@ -270,6 +282,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult EditCallbackInfos(int id,string markettea)
+        {
+
+            NetClientRecordManage ncrmanage = new NetClientRecordManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var ncrlist = ncrmanage.GetList().Where(s => s.SPRId == ncrmanage.GetEntity(id).SPRId).ToList();
+                foreach (var item in ncrlist)
+                {
+                    item.MarketTeaId = int.Parse(markettea);
+                    ncrmanage.Update(item);
+                }
+                AjaxResultxx = ncrmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = ncrmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

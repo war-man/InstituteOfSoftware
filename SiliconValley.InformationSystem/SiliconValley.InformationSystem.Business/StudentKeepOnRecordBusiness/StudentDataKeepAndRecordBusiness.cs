@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
+ 
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -45,6 +46,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         public  HeiHuManeger heiHu = new HeiHuManeger();//用于查询黑户数据
  
         public NetClientRecordManage NetClient_Entity = new NetClientRecordManage();//用于添加网咨回访数据
+
+        public ChannelAreaBusiness Channerl_Entity = new ChannelAreaBusiness();//用户获取区域市场负责人
 
         /// <summary>
         /// 文件操作业务类
@@ -521,17 +524,24 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <returns></returns>
         public bool ChangeStudentState(int id)
         {
-            StudentPutOnRecord find_s = this.GetEntity(id);
-            if (find_s != null)
+            if (id>=54118)
             {
-                AjaxResult a = Statu_Entity.GetStu("已报名");
-                if (a.Success == true)
+                StudentPutOnRecord find_s = this.GetEntity(id);
+                if (find_s != null)
                 {
-                    StuStatus find_statu = a.Data as StuStatus;
-                    find_s.StuStatus_Id = find_statu.Id;
-                    find_s.StatusTime = DateTime.Now;
-                    this.Update(find_s);
-                    return true;
+                    AjaxResult a = Statu_Entity.GetStu("已报名");
+                    if (a.Success == true)
+                    {
+                        StuStatus find_statu = a.Data as StuStatus;
+                        find_s.StuStatus_Id = find_statu.Id;
+                        find_s.StatusTime = DateTime.Now;
+                        this.Update(find_s);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -540,8 +550,19 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
             else
             {
-                return false;
+                Sch_Market find_s = s_entity.GetEntity(id);
+                if (find_s!=null)
+                {
+                    find_s.MarketState = "已报名";
+
+                   return s_entity.MyUpdate(find_s).Success;
+                }
+                else
+                {
+                    return false;
+                }
             }
+             
         }
         #endregion
 
@@ -864,10 +885,21 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <param name="stuName"></param>
         /// <param name="phone"></param>
         /// <returns></returns>
-        public StudentPutOnRecord StudentOrreideData_OnRecord(string stuName, string phone)
+        public StudentPutOnRecord StudentOrreideData_OnRecord(string stuName, string phone,DateTime date)
         {
-            stuName = stuName.Trim();
-            List<StudentPutOnRecord> listall = this.GetListBySql<StudentPutOnRecord>("select * from studentPutOnRecord where StuName='" + stuName + "'and StuPhone='" + phone + "' ");
+            StringBuilder sb = new StringBuilder();
+            string yy = date.Year + "-" + date.Month + "-" + date.Day;
+            sb.Append("select top 1 * from studentPutOnRecord where StuName='" + stuName + "' and BeanDate='" +yy+"'");
+         
+         
+            if (phone !=null)
+            {
+                sb.Append(" and StuPhone='"+phone+"'");
+            }
+             sb.Append(" order by  Id desc");
+
+            string bb = sb.ToString();
+            List <StudentPutOnRecord> listall = this.GetListBySql<StudentPutOnRecord>(sb.ToString());
 
             return listall.Count > 0 ? listall[0] : null;
         }

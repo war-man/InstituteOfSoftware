@@ -208,6 +208,8 @@
     <Compile Include="Entity\MaterialPriceList.cs" />
     <Compile Include="Entity\Members.cs" />
     <Compile Include="Entity\MeritsCheck.cs" />
+    <Compile Include="Entity\MessagenoEmployeesInfo.cs" />
+    <Compile Include="Entity\Messagenotification.cs" />
     <Compile Include="Entity\MonthlySalaryRecord.cs" />
     <Compile Include="Entity\Montpowermission.cs" />
     <Compile Include="Entity\MoveType.cs" />
@@ -398,6 +400,7 @@
     <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
+    <Compile Include="ViewEntity\MessagenotificationView.cs" />
     <Compile Include="ViewEntity\NetClientRecordView.cs" />
     <Compile Include="ViewEntity\PutStudentDataView.cs" />
     <Compile Include="ViewEntity\Refunditemsview.cs" />

@@ -184,8 +184,9 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 studentFee.FinanceModelid = fine.id;
                 studentFee.IsDelete = false;
                 studentFee.AddDate = DateTime.Now;
-                this.Studentpayment(studentFee.StudenID, fine.id, 1);
                 listFeeRecord.Add(studentFee);
+                this.Studentpayment(studentFee.StudenID, fine.id, 1);
+                
                 SessionHelper.Session["person"] = listFeeRecord;
                
               
@@ -206,6 +207,51 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }
             return retus;
 
+        }
+
+        public object Drivingschoolpayment(Payview studentFeez)
+        {
+       
+
+            //当前登陆人
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var fine = finacemo.GetList().Where(a => a.Financialstaff == user.EmpNumber).FirstOrDefault();
+            AjaxResult retus = null;
+            try
+            {
+                List<Payview> liststudents = new List<Payview>();
+                Payview studentFee = new Payview();
+                studentFee.StudenID = studentFeez.StudenID;
+                studentFee.Amountofmoney = studentFeez.Amountofmoney;
+                studentFee.AddDate = DateTime.Now;
+                studentFee.Remarks = studentFeez. Remarks;
+                studentFee.IsDelete = false;
+                studentFee.Costitemsid = studentFeez.Costitemsid;
+                studentFee.FinanceModelid = fine.id;
+                PayviewBusiness.Insert(studentFee);
+                liststudents.Add(studentFee);
+                this.Studentpayment(studentFee.StudenID, fine.id, 1);
+
+               
+                SessionHelper.Session["person"] = liststudents;
+
+
+        
+                retus = new SuccessResult();
+                retus.Success = true;
+                retus.Msg = "录入费用成功";
+                BusHelper.WriteSysLog("添加费用费用数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            return retus;
         }
         /// <summary>
         /// 没有阶段的费用明目在这获取费用
@@ -943,9 +989,11 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 var pay = PayviewPaymentverBusiness.GetList().Where(z => z.Paymentver == item.id).ToList();
                 foreach (var item1 in pay)
                 {
+                  
                     var x = PayviewBusiness.GetEntity(item1.Payviewid);
-                    costitemViews.name = studentInformationBusiness.GetEntity(x.StudenID).Name;
-                    costitemViews.IDnumber= studentInformationBusiness.GetEntity(x.StudenID).identitydocument;
+                    var student = studentInformationBusiness.GetEntity(x.StudenID);
+                    costitemViews.name = student.Name;
+                    costitemViews.IDnumber= student.identitydocument;
                     costitemViews.studentid = x.StudenID;
                     costitemViews.Amountofmoney= costitemViews.Amountofmoney+ (decimal)x.Amountofmoney;
                     costitemViews.AddDate =(DateTime) x.AddDate;
@@ -1125,12 +1173,35 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         /// <returns></returns>
         public object PaytheadvancefeeAdd(Preentryfee preentryfee)
         {
-           AjaxResult retus = null;
+            //当前登陆人
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var fine = finacemo.GetList().Where(a => a.Financialstaff == user.EmpNumber).FirstOrDefault();
+            AjaxResult retus = null;
             try
             {
+              
                 preentryfee.AddDate = DateTime.Now;
                 preentryfee.IsDit = false;
+                preentryfee.FinanceModelid = fine.id;
                 Preentryfeebusenn.Insert(preentryfee);
+
+             
+               
+
+                  List<Payview> liststudents = new List<Payview>();
+                Payview studentFee = new Payview();
+         
+
+                studentFee.StudenID = preentryfee.keeponrecordid.ToString();
+                studentFee.Amountofmoney = preentryfee.Amountofmoney;
+                studentFee.AddDate = DateTime.Now;
+                studentFee.Remarks = preentryfee.identitydocument;
+                studentFee.IsDelete = false;
+                studentFee.Costitemsid = 0;
+                studentFee.FinanceModelid = fine.id;
+               
+                liststudents.Add(studentFee);
+                SessionHelper.Session["person"] = liststudents;
                 retus = new SuccessResult();
                 retus.Success = true;
                 retus.Msg = "缴费成功";

@@ -112,7 +112,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1 needTextColor">信息来源:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.StuInfomationType_Id, ViewBag.infomation as IEnumerable<SelectListItem>)
+                            @Html.DropDownListFor(s => s.StuInfomationType_Id, ViewBag.infomation as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "infoselect"} })
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">所在区域:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>)
+                            @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "areaselect" } })
                         </div>
                     </div>
                    
@@ -222,6 +222,9 @@
                 <div class="layui-row layui-form-item">
                     
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <input name="ShorPhone" id="ShorPhone" type="hidden" />
+                        <input name="ShorReacke" id="ShorReacke" type="hidden" />
+
                         <label class="layui-form-label">其他说明:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(s => s.Reak, new Dictionary<string, object>() { { "placeholder", "备注" }, { "class", "layui-input TextAreCss1" } })
@@ -239,6 +242,15 @@
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/layui/layui.js"></script>
 <script>
+    //给网络短信属性赋值
+    function ShortValue(phone, reak) {
+        $("#ShorPhone").val(phone);
+        $("#ShorReacke").val(reak);
+
+        console.log($("#ShorPhone").val() + "---" + $("#ShorReacke").val());
+    }
+    //给网络显示短信提示变量
+    var net = 0;
     //给备案人赋值
     function BeanValue(Setvalues) {
         $("#e_Name")[0].value = Setvalues.name//(Setvalues.name);
@@ -357,31 +369,7 @@
                     }
 
                 }
-            }
-            //, MyIdCard: function (value) {
-            //    var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-            //    if (value.length>0) {
-            //        if (!regIdNo.test(value)) {
-            //            return "身份证错误！";
-            //        } 
-            //    }
-                 
-            //}
-            //, content: function (value) {
-            //    var newsdate = new Date();
-            //    var olddate = new Date(value);
-            //    var s = newsdate - olddate;
-            //    if (s < 0) {
-            //        return "时间选择错误，请重新选择";
-            //    }
-            //},contents: function (value) {
-            //    var newsdate = new Date();
-            //    var olddate = new Date(value);
-            //    var s = newsdate - olddate;
-            //    if (s <= 0) {
-            //        return "时间选择错误，请重新选择";
-            //    }
-            //}
+            }             
         });
 
         //提交数据
@@ -413,6 +401,33 @@
             });            
             return false;  
         });
+
+        //获取信息来源
+        form.on('select(infoselect)', function (data) { 
+            $(data.elem).children().each(function (innumber, ele) {
+                if ($(ele).val() == data.value) {
+                    if ($(ele)[0].innerText == "网络") {
+                        net = data.value;
+                    }
+                }
+            })  
+        });      
+
+        //获取选择的区域
+        form.on('select(areaselect)', function (data) {
+            if (net != 0 && data.value!="0") {
+                //根据选择的区域获取负责的市场老师
+                layer.open({
+                    type: 2
+                    , content: '/Market/StudentDataKeep/ShortInfoMationView/' + data.value
+                    , area: ['550px', '450px']
+                    , title: '短信发送页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            }
+        });      
     });
 </script>
 

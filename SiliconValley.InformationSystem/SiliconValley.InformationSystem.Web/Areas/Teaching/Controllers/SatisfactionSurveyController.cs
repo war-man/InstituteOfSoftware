@@ -858,7 +858,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
             //如果是教质部
-            if (dep.DeptId == 1)
+            if (dep.DeptName.Contains("教质部"))
             {
 
                 var headmaster = db_headmaster.GetList().Where(d => d.informatiees_Id == emp.EmployeeId).FirstOrDefault();
@@ -881,7 +881,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             //如果是教学部
 
-            if (dep.DeptId == 2)
+            if (dep.DeptName.Contains("教学部"))
             {
 
                 //获取班级

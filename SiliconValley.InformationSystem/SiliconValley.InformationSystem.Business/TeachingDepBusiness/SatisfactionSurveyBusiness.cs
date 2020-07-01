@@ -303,11 +303,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             }
 
-
             detailView.detailitem = templist1;
-
-            
-  
 
             return detailView;
 
@@ -351,15 +347,13 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             var dep = empmanage.GetDept(emp.PositionId);
 
-            if (dep.DeptId == 1)
+            if (dep.DeptName.Contains("教质部"))
             {
                 //教质部
                 resultlist = SurveyHistoryData(empid, classnumber, date);
-
-
             }
 
-            if (dep.DeptId == 2)
+            if (dep.DeptName.Contains("教学部"))
             {
                 //教学部
                 resultlist = SurveyHistoryData(empid, (int)Curriculum, classnumber);

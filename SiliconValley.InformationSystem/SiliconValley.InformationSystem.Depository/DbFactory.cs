@@ -77,7 +77,7 @@ namespace SiliconValley.InformationSystem.Depository
             }
             else
                 _dbType = dbType.Value;
-
+             
             return _dbType;
         }
 

@@ -72,7 +72,7 @@
             $.ajax({
                 url: '/Market/StudentDataKeep/GetTableData',
                 type: 'GET',
-                data: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'limit': 20, 'page': 1 },
+                data: { 'findName': findNamevalue, 'findPhone': findPhonevalue, 'limit': 20, 'page': 1 },
                 success: function (Sucdata) {
                     table.render({
                         elem: '#tabletest1'

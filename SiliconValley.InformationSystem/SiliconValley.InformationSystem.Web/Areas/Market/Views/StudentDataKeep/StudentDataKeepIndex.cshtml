@@ -79,7 +79,7 @@
     <input type="hidden" id="rr" value="@r" />
     <div class="layui-colla-item">
         <h2 class="layui-colla-title">数据查询</h2>
-        <div class="layui-colla-content">
+        <div class="layui-colla-content layui-show">
             <form class="layui-form" id="form_serch" lay-filter="form_serch">
                 <div class="layui-row">
                     <div class="layui-col-sm2">
@@ -102,9 +102,7 @@
                         <label class="spanCss2">信息来源:</label>
                         <div class="divCss1">
                             @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
-
                         </div>
-
                     </div>
                     <div class="layui-col-sm2">
                         <label class="spanCss2">所在区域:</label>
@@ -114,7 +112,6 @@
                     </div>
                 </div>
                 <div class="layui-row divCss2">
-
                     <div class="layui-col-sm2">
                         <label class="spanCss2">开始时间:</label>
                         <input name="findStartvalue" id="findStartvalue" class="inputCss1" />
@@ -252,10 +249,15 @@
             var S_party = $("#S_party").val();
             var S_intosysMan = $("#S_intosysMan").val();
 
-            table.reload('tabletest1', {
-                url: '/Market/StudentDataKeep/GetTableData'
-                , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue, "S_consultTeacher": S_consultTeacher, "S_status": S_status, "S_party": S_party, "S_intosysMan": S_intosysMan } //设定异步数据接口的额外参数
-            });
+            if (findNamevalue.length <= 0 && findPhonevalue.length <= 0 && findInformationvalue == "0" && findStartvalue.length <= 0 && findEndvalue.length <= 0 && findAreavalue == "0" && findBeanManvalue.length <= 0 && S_consultTeacher == "0" && S_status == "0" && S_intosysMan.length <= 0 && S_party.length<=0) {
+                table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
+            } else {
+                table.reload('tabletest1', {
+                    url: '/Market/StudentDataKeep/GetTableData'
+                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue, "S_consultTeacher": S_consultTeacher, "S_status": S_status, "S_party": S_party, "S_intosysMan": S_intosysMan } //设定异步数据接口的额外参数
+                });
+            }
+            
         });
     };
     $(function () {

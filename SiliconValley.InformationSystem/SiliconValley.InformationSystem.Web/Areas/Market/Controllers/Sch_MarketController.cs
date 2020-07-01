@@ -9,6 +9,7 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.Consult_Business;
+using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -16,6 +17,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     {
         // GET: /Market/Sch_Market/UpdateFunction
         Sch_MarketManeger s_entity = new Sch_MarketManeger();
+        public NetClientRecordManage NetClient_Entity = new NetClientRecordManage();
         /// <summary>
         /// 数据详情页面
         /// </summary>
@@ -37,7 +39,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.selectconsult = EmployandCounTeacherCoom.getallCountTeacher(false);
 
             //获取市场部的所有员工
-            List<SelectListItem> list= EmployandCounTeacherCoom.Studentrecond.Enplo_Entity.GetEmpsByDeptid(1005).Select(p=>new SelectListItem() { Text=p.EmpName,Value=p.EmpName}).ToList();
+            List<SelectListItem> list= EmployandCounTeacherCoom.Studentrecond.Enplo_Entity.GetEmpsByDeptid(3).Select(p=>new SelectListItem() { Text=p.EmpName,Value=p.EmpName}).ToList();
             ViewBag.empmarket = list;
 
             //获取区域
@@ -87,7 +89,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     s= c_entiey.MyUpdate(find).Success;
                 }                               
             }
-
+            //如果是将信息来源改为网络，就将该数据添加到网络咨询这边
+            if (old.Source != "网络")
+            {
+                if (news.Source == "网络")
+                {
+                    Sch_Market ff = s_entity.Find(old.StudentName, old.Phone);
+                    bool mm = NetClient_Entity.IsExsitSprStu(ff.Id);
+                    if (!mm)
+                    {
+                        bool sm = NetClient_Entity.AddNCRData(ff.Id);
+                    }
+                }
+            }
             if (s)
             {
                 old.StudentName = news.StudentName;
@@ -106,8 +120,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 old.Age = news.Age;
                 old.MarketState = news.MarketState;
                 old.MarketType = news.MarketType;
-
-                a = s_entity.MyUpdate(old);
+                a = s_entity.MyUpdate(old);                
             }
             else
             {
