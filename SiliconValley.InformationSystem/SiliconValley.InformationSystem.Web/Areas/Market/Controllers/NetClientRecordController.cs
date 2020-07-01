@@ -67,8 +67,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     ncrlist = ncrlist.Where(e => e.StuSex == stusex).ToList();
                 }
-                ncrlist = ncrlist.Where(e => e.SprEmp.Contains(recordemp)).ToList();
-               
+                if (!string.IsNullOrEmpty(recordemp)) {
+                    ncrlist = ncrlist.Where(e => e.SprEmp.Contains(recordemp)).ToList();
+                }
                 if (!string.IsNullOrEmpty(IsFaceConsult))
                 {
                     ncrlist = ncrlist.Where(e => e.IsFaceConsult ==IsFaceConsult).ToList();
@@ -77,7 +78,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     ncrlist = ncrlist.Where(e => e.RegionName == findAreavalue).ToList();
                 }
-                ncrlist = ncrlist.Where(e => e.StuName.Contains(graduschool)).ToList();
+                if (!string.IsNullOrEmpty(graduschool)) {
+                    ncrlist = ncrlist.Where(e => e.StuName.Contains(graduschool)).ToList();
+                }
                 if (!string.IsNullOrEmpty(status))
                 {
                     ncrlist = ncrlist.Where(e => e.StuStatus == status).ToList();

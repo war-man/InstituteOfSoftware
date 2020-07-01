@@ -120,6 +120,7 @@
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">员工详情</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="ETRdetail">员工异动详情</a>
             </script>
             <button class="layui-btn layui-btn-warm" style="display:none;" id="contractEndbtn" >合同到期人员</button>
 
@@ -250,6 +251,31 @@
                         , anim: 4
                         , skin: 'demo-class'
                     });
+                }
+                else if (obj.event === 'ETRdetail') {
+                    $.ajax({
+                        type: "get",
+                        dataType: "json",
+                        url: "/Personnelmatters/EmployeesInfo/GetETRCount/?id=" + data.EmployeeId,
+                       // data: data.EmployeeId,
+                        success: function (data) {
+                            if (data<=0) {
+                                layer.tips("该员工没有任何异动情况！");
+                                //layui.table.reload('myEmpInfo');
+                            } else {
+                                layer.open({
+                                    type: 2,
+                                    content: '/Personnelmatters/EmployeesInfo/GetEmpETRDetail/?id=' + data.EmployeeId
+                                    , area: ['1200px', '730px'],
+                                    title: '员工详细信息'
+                                    , shade: 0.8
+                                    , anim: 4
+                                    , skin: 'demo-class'
+                                });
+                            }
+                        }
+                    });
+            
                 }
                 else if (obj.event === 'date') {  //监听单元格日期编辑事件
                     var field = $(this).data('field');

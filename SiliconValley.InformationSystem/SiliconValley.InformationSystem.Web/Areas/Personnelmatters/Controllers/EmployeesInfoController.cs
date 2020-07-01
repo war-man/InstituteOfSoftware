@@ -20,6 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
+    using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
     using System.Text;
     using System.IO;
     using System.Globalization;
@@ -293,6 +294,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult AddEmpInfo(EmployeesInfo emp)
         {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
+           
             var AjaxResultxx = new AjaxResult();
          
             try
@@ -803,7 +805,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View(emp);
         }
 
-       
+        public ActionResult GetETRCount(string id) {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var count = empmanage.GetEmpEtrdetails(id).Count();
+            return Json(count,JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 获取该员工的异动情况
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult GetEmpETRDetail(string id) {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var etrlist = empmanage.GetEmpEtrdetails(id);
+            return Json(etrlist,JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// 编辑员工信息
@@ -1039,17 +1055,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         // 图片上传
         public string ImageUpload()
         {
-            StringBuilder ProName = new StringBuilder();
+            CloudstorageBusiness db_Bos = new CloudstorageBusiness();
+            var client = db_Bos.BosClient();
+
+             StringBuilder ProName = new StringBuilder();
             HttpPostedFileBase file = Request.Files["Image"];
             string fname = file.FileName; //获取上传文件名称（包含扩展名）
             string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
             string name = Path.GetExtension(fname);//获取扩展名
-            string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/EmpImage/";//获取当前程序集下面的uploads文件夹中的文件夹目录
-            string completefilePath = DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
-            ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
-            file.SaveAs(ProName.ToString());//上传文件   
+            string pfilename = "EmpImage";
+            client.PutObject("xinxihua", pfilename, file.InputStream);
+            
+            //string completefilePath = DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+            //ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+            //file.SaveAs(ProName.ToString());//上传文件   
 
-            return completefilePath;
+            return pfilename;
         }
 
 
