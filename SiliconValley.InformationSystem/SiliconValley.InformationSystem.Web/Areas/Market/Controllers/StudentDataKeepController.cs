@@ -1494,6 +1494,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
 
 
+
         #region 短信发送
         public ActionResult ShortInfoMationView(int id)
         {
@@ -1517,6 +1518,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
          
 
+
+
         #region 报名、预录
         public ActionResult Sign_up()
         {
@@ -1537,6 +1540,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #endregion
+
+         
 
 
         #region 获取跟踪详情
