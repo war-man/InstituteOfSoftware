@@ -17,9 +17,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         [Key]
         public int id { get; set; }
         /// <summary>
-        /// 标题
+        /// 到期日期
         /// </summary>
-        public string Title { get; set; }
+        public DateTime? Duedate { get; set; }
         /// <summary>
         /// 内容
         /// </summary>

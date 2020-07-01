@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
+    [CheckLogin]
     public class MessagenotificationController : Controller
     {
         // GET: Teachingquality/Messagenotification
@@ -31,10 +32,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return View();
         }
-
-        public ActionResult AddMessagenoti(string Title, string Conten, string NotifierEmployeeId)
+        [ValidateInput(false)]
+        public ActionResult AddMessagenoti(string Duedate, string Conten, string NotifierEmployeeId)
         {
-            return Json(dbtext.AddMessagenoti(Title, Conten, NotifierEmployeeId), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.AddMessagenoti(Duedate, Conten, NotifierEmployeeId), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DateList()
+        {
+            return Json(dbtext.DateList(), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 修改读取状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Messageread(int id)
+        {
+            return Json(dbtext.Messageread(id), JsonRequestBehavior.AllowGet);
         }
     }
 }

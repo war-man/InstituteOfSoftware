@@ -410,10 +410,71 @@
 </html>
 
 <script type="text/javascript">
+    //时间转换方法
+    function TimeChange(newtime) {
+        if (newtime == null)
+            return "";
+        var date = new Date(parseInt(newtime.slice(6)));
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        if (month < 10) {
+            month = "0" + (parseInt(month) + 1);
+        }
+        var day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        var result = year + '-' + month + '-' + day;
+        return result;
+    }
+    function xiaoxi() {
+        $.post("/Teachingquality/Messagenotification/DateList", function (date) {
+            for (var i = 0; i < date.length; i++) {
+             
+                  layui.use(['layer'], function () {
+                      var layer = layui.layer;
+                      var index= layer.open({
+                        type: 1
+                        , title: '消息通知'
+                        , offset: 't' //
+                        , Number: 1
+                          , closeBtn: 0
+                          , id: date[i].id
+                        
+                          , content: '<div style="padding:10px;">'+ date[i].Content + '</div><div style="text-align:end;">' + TimeChange(date[i].Addtime) + ' &nbsp;<div>'
+                        , btn: '已读'
+                        , btnAlign: 'c' //按钮居中
+                        , shade: 0 //不显示遮罩
+                        , time: 30000
+                          , yes: function () {
+                              $.post("/Teachingquality/Messagenotification/Messageread/" + this.id, function (da) {
+
+                              })
+                            
+                            layer.close(index);
+                        }
+                    });
+
+                });
+
+            }
+
+        })
+
+    }
+    xiaoxi();
+    setInterval(function () {
+        xiaoxi();
+
+    }, 30000);
+
+  
     layui.use(['table', 'layer', 'tree', 'form'], function () {
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
+
+        
         empdate();
         $("#EmpClass").click(function () {
             layer.open({
@@ -422,7 +483,8 @@
                 area: ['500px', '550px']
                 , content: "/Personnelmatters/EmployeesInfo/EditEmpAttr/" + $("#EmployeeId").text()
                 , end: function () { empdate();}
-                , anim: 1,
+                , anim: 1
+              
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         })

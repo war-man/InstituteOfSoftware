@@ -12,32 +12,43 @@
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <script src="ueditor.config.js"></script>
 </head>
 <body>
     <div>
         <form class="layui-form" action="" lay-filter="example">
-            <div class="layui-container">
-                <fieldset style="margin-top:5px;">
+            <div class="layui-carousel-left">
+                <fieldset>
 
-                    <legend>班级信息</legend>
+                    <legend>发布信息</legend>
 
 
                     <div class="layui-row layui-form-item">
 
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
-                            <label class="layui-form-label">标题</label>
+
+
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <label class="layui-form-label">过期日期</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="Title" lay-verify="required" placeholder="请输入标题" class="layui-input" />
-                               
+
+                                <input type="text" name="Duedate" id="Duedate1" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                             </div>
 
                         </div>
-
-                     
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
-                            <label class="layui-form-label">内容</label>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <label class="layui-form-label">通知人员</label>
                             <div class="layui-input-inline">
-                                @Html.TextArea("Conten", new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请填写班级名称" }, { "class", "layui-input" } })
+                            </div>
+
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <label class="layui-form-label">内容</label>
+                            <div class="layui-input-block">
+                                <!-- 加载编辑器的容器 -->
+                                <script id="Conten" style="height:160px;" name="Conten" lay-verify="required" type="text/plain">
+
+                                </script>
+                                @*@Html.TextArea("Conten", new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请填写班级名称" }, { "class", "layui-input" } })*@
                             </div>
                         </div>
 
@@ -59,19 +70,71 @@
     </div>
 </body>
 </html>
+<!-- 配置文件 -->
+
+<script src="~/Areas/Teachingquality/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+
+<script src="~/Areas/Teachingquality/js/ueditor/ueditor.all.js"></script>
+
+<script src="~/Areas/Obtainemployment/Scripts/Drawing.js"></script>
 <script>
-    layui.use(['table', 'layer', 'tree', 'form'], function () {
+
+    var ue = UE.getEditor('Conten');
+    layui.use(['table', 'layer', 'laydate', 'form'], function () {
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
+        var laydate = layui.laydate;
+     
         //监听提交
         form.on('submit(demo1)', function (data) {
-          
+
             var datas = data.field;
             console.log(datas);
             $.post("/Teachingquality/Messagenotification/AddMessagenoti", datas, function (da) {
-                console.log(da);
+                var cout = da.Success == true ? 1 : 2;
+                layer.msg(da.msg, {
+                    icon: cout,
+                    shade: 0.8
+                });
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+              
+             
             })
         });
+      
+    });
+</script>
+<script>
+    layui.use(['table', 'layer', 'laydate', 'form'], function () {
+
+        //月份小于10的前面加个0
+        function MoDay(a) {
+            if (a < 10) {
+                return "0" + a;
+            }
+            return a;
+        }
+        var laydate = layui.laydate;
+        ////系统时间
+
+        var curDate = new Date();
+        var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
+        // 时间选择器初始化 开始时间
+        laydate.render({
+            elem: '#Duedate1',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+
+                var startDate = new Date(value).getTime();
+
+                if (startDate < curDate.getTime()) {
+                    layer.msg('结束时间不能小于当前时间');
+                    $('#Duedate1').val(curYearMonthrDay);
+                }
+            }
+        })
     });
 </script>
