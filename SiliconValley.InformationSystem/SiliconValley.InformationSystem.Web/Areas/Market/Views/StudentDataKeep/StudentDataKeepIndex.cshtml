@@ -284,6 +284,11 @@
             my_searchBtn();
         });
 
+        //定时刷新页面
+        window.setInterval(function () {
+            LoadTable2();
+        }, 10000)
+        
     });
     //数据导出页面
     function ExcelExport() {
@@ -841,6 +846,9 @@
     function Query() {
         LoadTable2();
     }
+
+
+
 </script>
 
 
