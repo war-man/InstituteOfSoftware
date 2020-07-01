@@ -357,5 +357,15 @@
                 table.reload('follwing_form', { url: '/Market/FollwingInfo/OneTableData'  });
             });
         }
+
+        //3秒刷新数据
+        $(function () {
+            window.setInterval(function () {
+                layer.msg('系统自动刷新数据，请稍等.......', function () {
+                    table.reload('follwing_form', { url: '/Market/FollwingInfo/OneTableData' });
+                });
+            }, 180000);
+        });
+
     </script>
 

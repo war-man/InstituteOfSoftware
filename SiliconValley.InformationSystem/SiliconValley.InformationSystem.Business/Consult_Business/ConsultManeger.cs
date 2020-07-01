@@ -567,6 +567,18 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
                     find.TeacherName = TeacherId;
                     countdata.Add(find);
                 }
+                else
+                {
+                    //添加数据
+                    Consult c = new Consult();
+                    c.ComDate = DateTime.Now;
+                    c.IsDelete = false;
+                    c.MarketType = null;
+                    c.StuName = id;
+                    c.TeacherName = TeacherId;
+
+                    this.Insert(c);
+                }
             }
             AjaxResult a = new AjaxResult();
             try
@@ -679,7 +691,6 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             return finds_list;
         }
 
-        
         #endregion
 
         public void OneUpdate()
@@ -706,5 +717,12 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             
         }
 
+
+        public int Count(int TEAID)
+        {
+            List<Consult> find = this.GetListBySql<Consult>("select * from Consult where TeacherName=" + TEAID);
+
+            return find.Count;
+        }
     }
 }

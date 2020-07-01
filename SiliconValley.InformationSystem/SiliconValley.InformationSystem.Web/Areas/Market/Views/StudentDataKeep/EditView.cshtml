@@ -137,13 +137,13 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">所在区域:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>)
+                            @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "areselect" } })
                         </div>
                     </div>
                     @{
-                        bool Is = ViewBag.UserId;
+                        int Is = ViewBag.UserId;
 
-                        if (Is == false)
+                        if (Is == 22)
                         {
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">市场类型:</label>
@@ -155,7 +155,7 @@
                     }
 
                 </div>
-                <input type="hidden" name="hava" id="hava" value="@Is"/>
+                
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">是否上门:</label>
@@ -198,7 +198,9 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
                         <div class="layui-input-block">
-                            <textarea name="Reak" id="Reak" class="layui-input TextAreCss1"> </textarea>                          
+                            <textarea name="Reak" id="Reak" class="layui-input TextAreCss1"> </textarea>
+                            <input name="ShorPhone" id="ShorPhone" type="hidden" />
+                            <input name="ShorReacke" id="ShorReacke" type="hidden" />
                         </div>
                     </div>
                 </div>
@@ -211,11 +213,14 @@
                 </div>
             </div>
             <input name="have" id="have" type="hidden" value="no"/>
+            <input name="yu" id="yu" type="hidden" value="@ViewBag.UserId"/>
         </form>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
+        var bla = 2;//网络编号
+       
         //转换时间的方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -309,18 +314,19 @@
                     success: function (successdata) {
                         layer.close(formindex);
                         if (successdata.Success == true) {
-                            layer.msg(successdata.Msg, {
+                            layer.msg('操作成功', {
                                 icon: 1,
                                 time: 2000,
                                 shade:0.8
                             }, function () {
+                                
                                 window.parent.LoadTable2();
                                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                                 parent.layer.close(index); //再执行关闭   
                                
                             });
                         }else {
-                            layer.msg(successdata.Msg, {
+                            layer.msg('系统错误，请重试！！', {
                                 icon: 2,
                                 time: 2000 //2秒关闭（如果不配置，默认是3秒）
                             });
@@ -333,11 +339,30 @@
 
             //提示网络部人员
             form.on('select(Infoselect)', function (data) {
-                var mm = $("#hava").val();
-                if (mm == "true") {
-                    layer.msg('系统温馨提示:当将信息来源修改成其它来源则不能修改');
+                var mm = $("#yu")[0].value;
+                if (mm == "33") {
+                    layer.msg('系统温馨提示:当将信息来源修改成其它来源则不能修改备案数据');
                 }
+
+                bla = data.value;
             }); 
+
+            form.on('select(areselect)', function (data) {
+                var mm = $("#yu")[0].value;
+                if (mm == "33" && bla == 2) {
+                    //弹出短信提示框
+                    //根据选择的区域获取负责的市场老师
+                    layer.open({
+                        type: 2
+                        , content: '/Market/StudentDataKeep/ShortInfoMationView/' + data.value
+                        , area: ['550px', '450px']
+                        , title: '短信发送页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            })
         });
         function IsDisable(values) {
             if (values == "false") {
@@ -409,6 +434,11 @@
                     , skin: 'demo-class'
                 });
             });
+        }
+
+        function ShortValue(pone, read) {
+            $("#ShorPhone").val(pone);
+            $("#ShorReacke").val(read);
         }
     </script>
 </body>

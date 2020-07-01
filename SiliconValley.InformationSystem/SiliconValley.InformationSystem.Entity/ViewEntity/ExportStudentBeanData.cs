@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary> 
         /// 备案编号
         /// </summary>
-        public int? Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// 学生姓名
         /// </summary>

@@ -48,10 +48,18 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// 备案老师
         /// </summary>
        public string EmployeesInfo_Id { get; set; }
+
+        /// <summary>
+        /// 关联人
+        /// </summary>
+        public string Party { get; set; }
+
+        public string QQ { get; set; }
+
         /// <summary>
         /// 说明
         /// </summary>
-       public string Reak { get; set; }
+        public string Reak { get; set; }
 
         bool IEqualityComparer<MyExcelClass>.Equals(MyExcelClass x, MyExcelClass y)
         {

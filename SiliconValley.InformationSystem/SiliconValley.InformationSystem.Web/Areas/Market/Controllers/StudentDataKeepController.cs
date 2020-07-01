@@ -133,7 +133,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             sb2.Append("select * from Sch_MarketView where 1=1 ");
             string findName = Request.QueryString["findName"];
             string findPhone = Request.QueryString["findPhone"];
-            if (findName.Length>0 || findPhone.Length>0)
+            if (!string.IsNullOrEmpty(findName) || !string.IsNullOrEmpty(findPhone))
             {
                 if (findName.Length > 0)
                 {
@@ -300,11 +300,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             //如果是网咨，则添加到王咨回访表中
                             StudentPutOnRecord find_stu = s_Entity.StudentOrreideData_OnRecord(news.StuName, news.StuPhone,news.StuDateTime);
                             bool sm = s_Entity.NetClient_Entity.AddNCRData(find_stu.Id);
+
                             string phoen = Request.Form["ShorPhone"];
                             string reak = Request.Form["ShorReacke"];
-
-                            string t = PhoneMsgHelper.SendMsg(phoen, reak);
-
+                            if (!string.IsNullOrEmpty(phoen) && !string.IsNullOrEmpty(reak) && a.Success == true)
+                            {
+                                string t = PhoneMsgHelper.SendMsg(phoen, reak);
+                            }
+                                                             
                         }
 
                         //判断是否指派了咨询师  
@@ -423,12 +426,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult EditView(string id)
         {
             //判断当前登陆人是否是网络部人员，如果是那就不要显示市场类型
-            ViewBag.UserId = false;
+            ViewBag.UserId = 22;
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
             int IdCorad = s_Entity.GetPostion(UserName.EmpNumber);
             if (IdCorad==3 || IdCorad==2 || IdCorad==-1)
             {
-                ViewBag.UserId = true;
+                ViewBag.UserId = 33;
             }
             s_Entity.Stustate_Entity = new StuStateManeger();
             s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
@@ -457,7 +460,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             StuInfomationType fins= s_Entity.StuInfomationType_Entity.GetEntity(olds.StuInfomationType_Id);
             if(!fins.Name.Contains("网络"))
             {
-                if (IdCorad == 3 && IdCorad == 2)
+                if (IdCorad == 3 || IdCorad == 2)
                 {
                     a.Success = false;
                     a.Msg = "抱歉，这条备案数据你没有权限修改！！";
@@ -465,7 +468,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                  
             }
-            else if (IdCorad == 3 || IdCorad == 2)
+            else if (IdCorad == 3 && IdCorad == 2)
             {
                 a.Success = false;
                 a.Msg = "抱歉，这条备案数据你没有权限修改！！";
@@ -490,6 +493,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             a = s_Entity.Update_data(olds);    
             string marketvalue= Request.Form["market"];
+
+            string phoen = Request.Form["ShorPhone"];
+            string reak = Request.Form["ShorReacke"];
+
+            if (!string.IsNullOrEmpty(phoen) && !string.IsNullOrEmpty(reak) && a.Success==true)
+            {
+                string msg=   PhoneMsgHelper.SendMsg(phoen, reak);
+            }
+
+            string t = PhoneMsgHelper.SendMsg(phoen, reak);
+
             if (!string.IsNullOrEmpty(marketvalue) && marketvalue!="0")
             {
                 //判断是否有分量
@@ -738,7 +752,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
             System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
             List<MyExcelClass> new_listStudent = new List<MyExcelClass>();
-            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
+            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "关联人" && t.Rows[0][10].ToString() == "QQ" && t.Rows[0][11].ToString() == "备注")
             {
                 //直接设为Excel实体
                 for (int i = 1; i < (t.Rows.Count); i++)
@@ -753,7 +767,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     create_s.StuInfomationType_Id = t.Rows[i][6].ToString();//信息来源
                     create_s.StuEducational = t.Rows[i][7].ToString();
                     create_s.EmployeesInfo_Id = t.Rows[i][8].ToString();//备案人
-                    create_s.Reak = t.Rows[i][9].ToString();//备注
+                    create_s.Party = t.Rows[i][9].ToString();
+                    create_s.QQ = t.Rows[i][10].ToString();
+                    create_s.Reak = t.Rows[i][11].ToString();//备注
                     new_listStudent.Add(create_s);
                 }
                 DeleteFile();
@@ -832,11 +848,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         s.StuEducational = item1.StuEducational;
                         s.StuEntering = s_Entity.Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName;
                         StuInfomationType find_sinfomation = s_Entity.StuInfomationType_Entity.SerchSingleData(item1.StuInfomationType_Id, false);
-                        if (find_sinfomation != null) { s.StuInfomationType_Id = find_sinfomation.Id; }
+                        if (find_sinfomation != null) { s.StuInfomationType_Id = find_sinfomation.Id; } else { s.StuInfomationType_Id = 1; };
                         s.StuIsGoto = false;
                         s.StuPhone = item1.StuPhone;
                         s.StuSchoolName = item1.StuSchoolName;
                         s.StuStatus_Id = 1013;
+                        s.StuQQ = item1.QQ;
+                        s.Party = item1.Party;
                         listnew.Add(s);
                     }
                     
@@ -1276,7 +1294,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #region 远程数据导入       
         public ActionResult InlocalServer()
         {
-            s_Entity.InServer();
+            //s_Entity.InServer();
+            s_Entity.FF();
             return null;
         }
         #endregion
@@ -1486,15 +1505,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
        
-        public ActionResult ShortInfomationFuntion()
-        {
-            string phone= Request.Form["phone"];
-            string rand = Request.Form["rank"];
+        //public ActionResult ShortInfomationFuntion()
+        //{
+        //    string phone= Request.Form["phone"];
+        //    string rand = Request.Form["rank"];
 
-            string t = PhoneMsgHelper.SendMsg(phone, rand);
+        //    string t = PhoneMsgHelper.SendMsg(phone, rand);
 
-            return Json(t, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(t, JsonRequestBehavior.AllowGet);
+        //}
         #endregion
          
 

@@ -35,7 +35,7 @@
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <label class="layui-form-label">电话号码:</label>
                     <div class="layui-input-block">
-                        <input type="text" class="layui-input" name="phone" id="phone" disabled="disabled"/>
+                        <input type="text" class="layui-input" name="phone" id="phone" lay-verify="required|myUrgentPhone"/>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,18 @@
             var form = layui.form;
             var layer = layui.layer;
 
-          
+            form.verify({
+                myUrgentPhone: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^1[3456789]\d{9}$/;
+                        if (!v.test(value)) {
+                            return '号码格式输入错误';
+                        }
+                    }
+                }
+            });
 
             form.on('submit(true)', function (data) {
                 var pone = $("#phone").val();

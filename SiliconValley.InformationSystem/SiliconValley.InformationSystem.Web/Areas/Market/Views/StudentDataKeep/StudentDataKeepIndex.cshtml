@@ -61,12 +61,7 @@
                 @*<button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>*@
                 <button class="layui-btn layui-btn-sm" onclick="InSchoolStudentData()"> <i class="layui-icon">&#xe714;</i> 查看在校学生信息</button>
 
-            }
-
-            if (r == 2)
-            {
-                <button class="layui-btn layui-btn-sm" onclick="shortMessage()"> <i class="layui-icon">&#xe681;</i>发送短信</button>
-            }
+            }           
         }
     </div>
 </script>
@@ -284,10 +279,12 @@
             my_searchBtn();
         });
 
-        //定时刷新页面
+        //定时刷新页面3分钟
         window.setInterval(function () {
-            LoadTable2();
-        }, 10000)
+            layer.msg('系统自动刷新数据，请稍等.......', function () {
+                LoadTable2();
+            });
+        }, 180000);
         
     });
     //数据导出页面

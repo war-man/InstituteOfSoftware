@@ -9,6 +9,8 @@
     "StuInfomationType_Id": "信息来源",
     "StuEducational": "学历",
     "EmployeesInfo_Id": "备案人",
+    "Party": "关联人",
+    "QQ": "QQ",
     "Reak": "备注"
   }
 

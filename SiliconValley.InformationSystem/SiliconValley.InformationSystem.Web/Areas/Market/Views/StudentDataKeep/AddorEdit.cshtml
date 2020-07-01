@@ -247,7 +247,7 @@
         $("#ShorPhone").val(phone);
         $("#ShorReacke").val(reak);
 
-        console.log($("#ShorPhone").val() + "---" + $("#ShorReacke").val());
+        //console.log($("#ShorPhone").val() + "---" + $("#ShorReacke").val());
     }
     //给网络显示短信提示变量
     var net = 0;
@@ -415,7 +415,8 @@
 
         //获取选择的区域
         form.on('select(areaselect)', function (data) {
-            if (net != 0 && data.value!="0") {
+           
+            if (net != 0 && data.value!="区域外") {
                 //根据选择的区域获取负责的市场老师
                 layer.open({
                     type: 2

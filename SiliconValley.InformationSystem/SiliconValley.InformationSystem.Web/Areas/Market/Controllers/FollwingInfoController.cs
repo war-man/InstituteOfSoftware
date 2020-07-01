@@ -329,16 +329,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             //获取当前上传的操作人
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+            ConsultTeacher = new ConsultTeacherManeger();
             int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             List<Consult> find_consult= CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();
 
-            StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
-
-            List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();
-            foreach (Consult item in find_consult)
-            {
-                list.Add(s_Entity.whereStudentId(item.StuName.ToString()));
-            }
+     
+            string sql1 = @"select s.Id,s.StuName,s.StuSex,s.StuBirthy,s.Stuphone,s.StuSchoolName,s.StuEducational,s.StuAddress,s.StuWeiXin, s.StuQQ,stusttype.Name as 'stuinfomation',stas.StatusName,s.StuisGoto,s.StuVisit,e.empName,s.Party,s.BeanDate,s.StuEntering ,s.StatusTime,reg.RegionName,s.ConsultTeacher,s.Reak,con.MarketType from studentPutOnRecord as s left join EmployeesInfo as e on s.EmployeesInfo_Id = e.EmployeeId left join StuInfomationType as stusttype on stusttype.Id = s.StuInfomationType_Id
+             left join StuStatus as stas on stas.Id = s.StuStatus_Id left join Region as reg on reg.ID = s.Region_id left join Consult as con on con.StuName = s.Id where con.TeacherName = " + f_id + "";
+            string sql2 = @" select M.Id,M.StudentName,m.Sex,m.Phone,m.Education,m.CreateUserName,m.CreateDate,m.QQ,m.School,m.Inquiry,
+ m.source,m.Area,m.SalePerson,m.RelatedPerson,m.MarketState,M.sex as 'Info',M.sex as 'Remark'
+ from Consult as C left join  Sch_MarketView as M on M.Id = C.StuName where c.TeacherName = " + f_id + " and m.Id is not null";
+            List<ExportStudentBeanData> list = EmployandCounTeacherCoom.Studentrecond.Serch(sql1, sql2);//装载属于该咨询师的学生备案数据
 
             string Name = Request.QueryString["findNamevalue"].Trim();
             string Phone = Request.QueryString["findPhonevalue"].Trim();
@@ -400,7 +401,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             if ( statis.Length!=0 && statis!="0")
             {
-                list = list.Where(l => l.StatusName == statis).ToList();
+                list = list.Where(l => l.StatusName.Contains(statis)).ToList();
             }
             var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).Select(l => new {
                 Id = l.Id,
@@ -470,17 +471,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult OneTableData(int limit ,int page)
         {
             ConsultTeacher = new ConsultTeacherManeger();
-            //获取当前上传的操作人
-            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+ 
+             //获取当前上传的操作人
+             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
             int f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault() == null ? 0 : ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
+ 
             List<Consult> find_consult = CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();//获取属于该咨询师分的量
+            string sql1 =@"select s.Id,s.StuName,s.StuSex,s.StuBirthy,s.Stuphone,s.StuSchoolName,s.StuEducational,s.StuAddress,s.StuWeiXin, s.StuQQ,stusttype.Name as 'stuinfomation',stas.StatusName,s.StuisGoto,s.StuVisit,e.empName,s.Party,s.BeanDate,s.StuEntering ,s.StatusTime,reg.RegionName,s.ConsultTeacher,s.Reak,con.MarketType from studentPutOnRecord as s left join EmployeesInfo as e on s.EmployeesInfo_Id = e.EmployeeId left join StuInfomationType as stusttype on stusttype.Id = s.StuInfomationType_Id
+             left join StuStatus as stas on stas.Id = s.StuStatus_Id left join Region as reg on reg.ID = s.Region_id left join Consult as con on con.StuName = s.Id where con.TeacherName = "+f_id+"";
+            string sql2 = @" select M.Id,M.StudentName,m.Sex,m.Phone,m.Education,m.CreateUserName,m.CreateDate,m.QQ,m.School,m.Inquiry,
+ m.source,m.Area,m.SalePerson,m.RelatedPerson,m.MarketState,M.sex as 'Info',M.sex as 'Remark'
+ from Consult as C left join  Sch_MarketView as M on M.Id = C.StuName where c.TeacherName = " + f_id+ " and m.Id is not null";
+            List<ExportStudentBeanData> list = EmployandCounTeacherCoom.Studentrecond.Serch(sql1, sql2);//装载属于该咨询师的学生备案数据
             
-            List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();//装载属于该咨询师的学生备案数据
-            foreach (Consult item in find_consult)
-            {
-                list.Add(EmployandCounTeacherCoom.Studentrecond.whereStudentId(item.StuName.ToString()));
-            }
-
             var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).Select(l => new {
                 Id = l.Id,
                 StuName = l.StuName,
@@ -505,7 +508,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ConsultTeacher = l.ConsultTeacher,
                 CountBeanDate = CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
             }).ToList();
-            var data = new { data = mydata, count = list.Count, code = 0, msg = "" };
+            var data = new { data = mydata, count = CM_Entity.Count(f_id), code = 0, msg = "" };
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
