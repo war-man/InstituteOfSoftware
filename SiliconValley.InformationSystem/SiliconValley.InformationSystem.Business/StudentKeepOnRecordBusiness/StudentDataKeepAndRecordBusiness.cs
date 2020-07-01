@@ -25,7 +25,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
     public class StudentDataKeepAndRecordBusiness : BaseBusiness<StudentPutOnRecord>
     {
-        StuStateManeger Statu_Entity;
+        StuStateManeger Statu_Entity = new StuStateManeger();
         SchoolYearPlanBusiness Syb_Entity = new SchoolYearPlanBusiness();
         RedisCache redisCache;
         //创建一个用于查询数据的员工信息实体

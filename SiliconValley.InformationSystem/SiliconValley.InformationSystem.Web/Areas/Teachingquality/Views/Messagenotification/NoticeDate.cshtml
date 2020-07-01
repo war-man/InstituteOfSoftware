@@ -53,8 +53,13 @@
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     { type: 'radio' }
-                    , { field: 'Title', title: '标题', sort: true }
-                    , { field: 'Content', title: '内容 ' }
+                   
+                 , {
+                     field: 'Conten', title: '内容', templet: function (c) {
+                         return c.Conten;
+                        }
+                    }
+                    , { field: 'Duedate', title: '到期日期 ' }
                     , { field: 'PublisherName', title: '发布人 ' }
                     , { field: 'Addtime', title: '发布日期 ' }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
@@ -72,7 +77,7 @@
                 layer.open({
                     title: name,
                     type: 2,
-                    area: ['600px', '550px']
+                    area: ['700px', '600px']
                     , content: "/Teachingquality/Messagenotification/Release"
                     , end: function () { table.reload('idTest');  }
                     , anim: 1,

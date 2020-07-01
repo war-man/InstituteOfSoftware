@@ -26,9 +26,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public string Content { get; set; }
         /// <summary>
-        /// 标题
+        /// 到期日期
         /// </summary>
-        public string Title { get; set; }
+        public DateTime? Duedate { get; set; }
         /// <summary>
         /// 通知人姓名
         /// </summary>
