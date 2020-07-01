@@ -284,6 +284,11 @@
             my_searchBtn();
         });
 
+        //定时刷新页面
+        window.setInterval(function () {
+            LoadTable2();
+        }, 10000)
+        
     });
     //数据导出页面
     function ExcelExport() {
@@ -454,8 +459,7 @@
                         title: '导入Excle文件'
                         , shade: 0.8
                         , anim: 4
-                        , skin: 'demo-class'
-                        , closeBtn: 0
+                        , skin: 'demo-class'                        
                     });
                     break;
             };
@@ -842,6 +846,9 @@
     function Query() {
         LoadTable2();
     }
+
+
+
 </script>
 
 
