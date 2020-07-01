@@ -21,15 +21,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return View();
         }
-        MessagenotificationBusiness messagenotificationBusiness = new MessagenotificationBusiness();
+        MessagenotificationBusiness dbtext = new MessagenotificationBusiness();
         public ActionResult Date(int page, int limit)
         {
-            return Json(messagenotificationBusiness.Date(page, limit), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.Date(page, limit), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Release()
         {
             return View();
+        }
+
+        public ActionResult AddMessagenoti(string Title, string Conten, string NotifierEmployeeId)
+        {
+            return Json(dbtext.AddMessagenoti(Title, Conten, NotifierEmployeeId), JsonRequestBehavior.AllowGet);
         }
     }
 }

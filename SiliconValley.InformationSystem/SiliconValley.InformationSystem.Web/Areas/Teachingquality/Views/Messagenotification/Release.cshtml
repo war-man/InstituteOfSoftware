@@ -14,7 +14,64 @@
     <script src="~/Scripts/layui/layui.js"></script>
 </head>
 <body>
-    <div> 
+    <div>
+        <form class="layui-form" action="" lay-filter="example">
+            <div class="layui-container">
+                <fieldset style="margin-top:5px;">
+
+                    <legend>班级信息</legend>
+
+
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="Title" lay-verify="required" placeholder="请输入标题" class="layui-input" />
+                               
+                            </div>
+
+                        </div>
+
+                     
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                            <label class="layui-form-label">内容</label>
+                            <div class="layui-input-inline">
+                                @Html.TextArea("Conten", new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请填写班级名称" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </fieldset>
+
+                <div class="layui-row layui-form-item" style="margin-top:40px;">
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </body>
 </html>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+          
+            var datas = data.field;
+            console.log(datas);
+            $.post("/Teachingquality/Messagenotification/AddMessagenoti", datas, function (da) {
+                console.log(da);
+            })
+        });
+    });
+</script>
