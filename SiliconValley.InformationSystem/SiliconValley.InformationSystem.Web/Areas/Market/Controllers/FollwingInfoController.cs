@@ -401,6 +401,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             if ( statis.Length!=0 && statis!="0")
             {
+                list = list.Where(l => l.StatusName!=null).ToList();
                 list = list.Where(l => l.StatusName.Contains(statis)).ToList();
             }
             var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).Select(l => new {
