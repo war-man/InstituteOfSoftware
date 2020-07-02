@@ -215,6 +215,12 @@
             }
         }
 
+        function escapeStringHTML(str) {
+            str = str.replace(/&lt;/g, '<');
+            str = str.replace(/&gt;/g, '>');
+            return str;
+        }
+
         var answerquestion = new Array();
 
        

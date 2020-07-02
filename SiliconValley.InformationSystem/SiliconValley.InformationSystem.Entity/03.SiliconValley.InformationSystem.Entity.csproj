@@ -111,6 +111,7 @@
     <Compile Include="Entity\ClassStudyGroup.cs" />
     <Compile Include="Entity\ClassTeacher.cs" />
     <Compile Include="Entity\ClassTeacherKeep.cs" />
+    <Compile Include="Entity\Client.cs" />
     <Compile Include="Entity\Consult.cs" />
     <Compile Include="Entity\ConsultTeacher.cs" />
     <Compile Include="Entity\ConversationRecord.cs" />

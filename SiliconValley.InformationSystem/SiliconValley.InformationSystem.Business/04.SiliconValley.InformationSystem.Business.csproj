@@ -101,6 +101,7 @@
     <Compile Include="Base_SysManage\Base_UserBusiness.cs" />
     <Compile Include="Base_SysManage\Base_UserMapRoeBusiness.cs" />
     <Compile Include="Base_SysManage\OtherPermissionBusiness.cs" />
+    <Compile Include="Base_SysManage\ReqClientBusiness.cs" />
     <Compile Include="BiddingRecordBusiness\BiddingRecordManage.cs" />
     <Compile Include="Channel\ChannelStaffBusiness.cs" />
     <Compile Include="Base_SysManage\CheckSignBusiness.cs" />

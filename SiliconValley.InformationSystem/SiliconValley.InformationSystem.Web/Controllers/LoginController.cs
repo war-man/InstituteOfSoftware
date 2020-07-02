@@ -16,6 +16,8 @@ using SiliconValley.InformationSystem.Web.Common;
 using System.Drawing;
 using System.IO;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Web.App_Start.IPHander;
+
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
     //  /Login/LoginIndex
@@ -27,10 +29,12 @@ namespace SiliconValley.InformationSystem.Web.Controllers
         EmployeesInfoManage empmanage = new EmployeesInfoManage();
         // GET: Login
         //登录页面
+        [IPDisablePolicyFilter]
         public ActionResult LoginIndex()
         {
             return View();
         }
+        [IPDisablePolicyFilter]
         //登录方法
         public ActionResult LoginFunction(Base_User u, string loginType, string mobile, string smsCaptcha, string code)
         {
@@ -148,11 +152,12 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             return Json(er, JsonRequestBehavior.AllowGet);
         }
 
+        [IPDisablePolicyFilter]
         public ActionResult SLogin()
         {
             return View();
         }
-
+        [IPDisablePolicyFilter]
         public ActionResult LoginAction(string username, string password)
         {
             //20052000082300013

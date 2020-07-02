@@ -167,8 +167,14 @@
     <script src="~/Areas/ExaminationSystem/js/jiami.js"></script>
     <script>
 
+        if (!document.HTMLDOMtoString) {
+            document.HTMLDOMtoString = function (HTMLDOM) {
+                const div = document.createElement("div")
+                div.appendChild(HTMLDOM)
+                return div.innerHTML
+            }
+        }
         var formData = new FormData();  //点击提交时将要提交的数据
-
 
         ///清空表单数据   暂弃用
         function clearformData(formData, arr_key) {
@@ -178,12 +184,8 @@
                 console.log(arr_key[i]);
                 formData.set(arr_key[i], "");
                 console.log(".............");
-
-
             }
-
         }
-
         var TotalScores = 40;
         var questionCount = 0;
 
@@ -226,40 +228,43 @@
                             var itemscores = 0;
                             for (var j = 0; j < RESULT.Data.scores.length; j++) {
 
-
                                 if (RESULT.Data.scores[j].level == RESULT.Data.data[i].Level.LevelID) {
                                     itemscores = RESULT.Data.scores[j].scores;
                                 }
-
-
                             }
 
+                            var a = $("<label></label>");
+                            a.text(RESULT.Data.data[i].OptionA);
+
+                            var b = $("<label></label>");
+                            b.text(RESULT.Data.data[i].OptionB);
+
+                            var c = $("<label></label>");
+                            c.text(RESULT.Data.data[i].OptionC);
+
+                            var d = $("<label></label>");
+                            d.text(RESULT.Data.data[i].OptionD);
+
+                            var title = $("<label></label>");
+                            title.text(RESULT.Data.data[i].Title);
 
 
-                            var htmldate = html({ questionid: RESULT.Data.data[i].Id, index: i + 1, question: RESULT.Data.data[i].Title, A: RESULT.Data.data[i].OptionA, B: RESULT.Data.data[i].OptionB, C: RESULT.Data.data[i].OptionC, D: RESULT.Data.data[i].OptionD, score: itemscores });
+                            var htmldate = html({ questionid: RESULT.Data.data[i].Id, index: i + 1, question: document.HTMLDOMtoString(title[0]), A: document.HTMLDOMtoString(a[0]), B: document.HTMLDOMtoString(b[0]), C: document.HTMLDOMtoString(c[0]), D: document.HTMLDOMtoString(d[0]), score: itemscores });
                             $("#choicequestion").append(htmldate);
 
                         }
-
                         form.render();
 
                         //渲染分数
-
                         layer.close(index);
-
-
                     }
                     else {
-
-
                         layer.msg('服务器错误。。', { icon: 2 }, function () {
                             layer.close(index);
                         });
                     }
-
                 });
-            }
-            
+            }     
             function loadAnswerQuestionData() {
                 var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒 
                 $.post('/ExaminationSystem/StudentExamSys/answerQuestionData', { examid: examid }, function (RESULT) {
@@ -391,8 +396,7 @@
                     }
 
                 });
-            }
-            
+            } 
             loadChoiceQuestionData();
             loadAnswerQuestionData();
 

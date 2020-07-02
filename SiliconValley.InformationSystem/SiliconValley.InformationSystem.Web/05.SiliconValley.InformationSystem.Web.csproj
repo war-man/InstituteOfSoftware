@@ -206,6 +206,7 @@
     <Compile Include="App_Start\03Extentions\Extention.UrlHelper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IPHander\IPDisablePolicyFilter.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\BaseSysManage\BaseSysManageAreaRegistration.cs" />
     <Compile Include="Areas\BaseSysManage\Controllers\Base_PermissionController.cs" />
@@ -541,6 +542,7 @@
     <Content Include="Areas\Teaching\Scripts\protect.js" />
     <Content Include="Areas\Teaching\Scripts\StudentHomeWork.js" />
     <Content Include="Areas\Teaching\Scripts\Tdrag.js" />
+    <Content Include="ClientRequestInfo.txt" />
     <Content Include="Config\Cost.xml" />
     <Content Include="Config\ExamCourseconfig.xml" />
     <Content Include="Config\questionLevelConfig.xml" />
@@ -911,6 +913,7 @@
     <Content Include="Images\3382.jpg" />
     <Content Include="Images\562108.jpg" />
     <Content Include="Images\58c84f57.jpg" />
+    <Content Include="IPIntercept.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
