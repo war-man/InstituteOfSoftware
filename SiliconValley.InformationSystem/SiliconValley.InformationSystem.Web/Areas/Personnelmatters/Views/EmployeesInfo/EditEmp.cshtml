@@ -386,7 +386,7 @@
                         }
 
                         if (data.Image != null) {
-                            $("#showImage")[0].src = "../../../uploadXLSXfile/EmpImage/" + data.Image;
+                            $("#showImage")[0].src =data.Image;
 
                         }
                         form.val("formtest", data);
@@ -541,12 +541,9 @@
        
             //添加提交
             form.on('submit(demo1)', function (data) {
-                if (data.field.month == "" && data.field.day == "") {
-                    data.field.Birthday = null;
-                } else {
+                if (data.field.month != "" && data.field.day != "") {
                     data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
                 }
-             
                 console.log(data.field.MyImage);
                 var fd = new FormData();
                 var myimg = document.querySelector("#MyImage").files[0];

@@ -299,7 +299,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">图片:</label>
                         <div class="layui-input-block">
-                            <div style="border:1px solid #808080;width:420px;height:200px;">
+                            <div style="border:0px solid #808080;width:420px;height:200px;">
                                 <img id="Image" style="width:420px;height:200px;" />
                             </div>
                         </div>
@@ -334,7 +334,7 @@
                     data.IdCardIndate = GetYMD(data.IdCardIndate); 
                     data.SSStartMonth = GetYearAndMonth(data.SSStartMonth); 
                     if (data.Image != null) {
-                        $("#Image")[0].src = "../../../uploadXLSXfile/EmpImage/" + data.Image;
+                        $("#Image")[0].src = data.Image;
                     }
                     console.log("图片："+$("#Image")[0].src);
                     form.val("formtest", data);
