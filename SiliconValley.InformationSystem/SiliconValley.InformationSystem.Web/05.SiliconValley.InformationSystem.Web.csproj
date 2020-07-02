@@ -206,6 +206,7 @@
     <Compile Include="App_Start\03Extentions\Extention.UrlHelper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IPHander\IPDisablePolicyFilter.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\BaseSysManage\BaseSysManageAreaRegistration.cs" />
     <Compile Include="Areas\BaseSysManage\Controllers\Base_PermissionController.cs" />
@@ -541,6 +542,7 @@
     <Content Include="Areas\Teaching\Scripts\protect.js" />
     <Content Include="Areas\Teaching\Scripts\StudentHomeWork.js" />
     <Content Include="Areas\Teaching\Scripts\Tdrag.js" />
+    <Content Include="ClientRequestInfo.txt" />
     <Content Include="Config\Cost.xml" />
     <Content Include="Config\ExamCourseconfig.xml" />
     <Content Include="Config\questionLevelConfig.xml" />
@@ -911,6 +913,7 @@
     <Content Include="Images\3382.jpg" />
     <Content Include="Images\562108.jpg" />
     <Content Include="Images\58c84f57.jpg" />
+    <Content Include="IPIntercept.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -1530,18 +1533,7 @@
     <Content Include="Tree\js\underscore-min.js" />
     <Content Include="Tree\js\vix.js" />
     <Content Include="Tree\js\vroom.js" />
-    <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120033027.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120033610.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120110928.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191122050300.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191127043148.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191211102732.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\bir4.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\birth3.gif" />
-    <Content Include="uploadXLSXfile\EmpImage\default.jpg" />
+    <Content Include="uploadXLSXfile\EmpImage\guigu.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA肖战.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1908NA舒克.png" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\2002NA陈海石.png" />
@@ -1861,6 +1853,7 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\BatchExportEmps.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Messagenotification\NoticeDate.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Messagenotification\Release.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\GetEmpETRDetail.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

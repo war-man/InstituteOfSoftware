@@ -1263,19 +1263,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
         public ActionResult text6()
         {
-            CloudstorageBusiness cloudstorage_Business = new CloudstorageBusiness();
-           var z= cloudstorage_Business.Listfiles("xinxihua", "StudentImage");
-           var client = cloudstorage_Business.BosClient();
+            // CloudstorageBusiness cloudstorage_Business = new CloudstorageBusiness();
+            //var z= cloudstorage_Business.Listfiles("xinxihua", "StudentImage");
+            //var client = cloudstorage_Business.BosClient();
 
-            var list = client.ListObjects("xinxihua", "Stu");
+            // var list = client.ListObjects("xinxihua", "Stu");
 
-            var imageStream = client.GetObject("xinxihua", "StudentImage/19042000091400212.jpg");
-            // 获取ObjectMeta
-            ObjectMetadata meta = imageStream.ObjectMetadata;
+            // var imageStream = client.GetObject("xinxihua", "StudentImage/19042000091400212.jpg");
+            // // 获取ObjectMeta
+            // ObjectMetadata meta = imageStream.ObjectMetadata;
 
-            // 获取Object的输入流
-            Stream objectContent = imageStream.ObjectContent;
-            var img = Image.FromStream(objectContent);
+            // // 获取Object的输入流
+            // Stream objectContent = imageStream.ObjectContent;
+            // var img = Image.FromStream(objectContent);
+            // return null;
+           var x= dbtext.GetList().Where(a => a.InsitDate < Convert.ToDateTime("2020-01-01")).ToList().OrderByDescending(a => a.StudentNumber).ToList();
             return null;
            
         }

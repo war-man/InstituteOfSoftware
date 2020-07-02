@@ -23,13 +23,13 @@
     <legend>条件查询</legend>
     <form class="layui-form" action="" lay-filter="formtest">
         <div class="layui-row layui-form-item">
-            <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
-                <label class="layui-form-label">姓名：</label>
-                <div class="layui-input-inline">
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label">&nbsp;姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:</label>
+                <div class="layui-input-inline" style="margin-left:20px;">
                     <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                 <label class="layui-form-label" style="width:100px;">所属部门:</label>
                 <div class="layui-input-inline">
                     <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
@@ -38,7 +38,7 @@
 
                 </div>
             </div>
-            <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                 <label class="layui-form-label" style="width:100px;">所属岗位:</label>
                 <div class="layui-input-inline">
                     <select name="PositionId" id="PositionId" lay-search="" style="width:130px;">
@@ -47,17 +47,33 @@
                 </div>
             </div>
 
-            <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
-                <label class="layui-form-label" style="margin-left:-20px;width:120px;">异动类型:</label>
-                <div class="layui-input-inline">
-                    <select name="Type" id="Type">
-                    </select>
-                </div>
-            </div>
-            <button class="layui-btn " type="button" style="margin-left:50px;" id="Conditionselect"><i class="layui-icon layui-icon-search"></i>查询</button>
         </div>
 
         <div class="layui-row layui-form-item">
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="margin-left:-20px;width:120px;">异动类型:</label>
+                <div class="layui-input-inline">
+                    <select name="Type" id="Type"></select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width:120px;margin-left:-10px;">异动时间：</label>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="margin-left:-20px;">从：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="start_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="margin-left:-50px;">
+                    <label class="layui-form-label">至：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="end_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <button class="layui-btn " type="button" id="Conditionselect" style="margin-left:125px;"><i class="layui-icon layui-icon-search"></i>查询</button>
+            </div>
 
         </div>
 
@@ -70,6 +86,8 @@
 
 @section script{
     <script>
+
+       
         layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -154,24 +172,51 @@
                 var ename = $("#EmpName").val();//员工姓名
                 var deptname = $("#deptid").val();//员工所属部门
                 var pname = $("#PositionId").val();//员工所属岗位
-
                 var Type = $("#Type").val();//异动类型
-
+                var start_time = $("#start_time").val();//起始时间
+                var end_time = $("#end_time").val();//终止时间
                 layui.use(['table'], function () {
                     var table = layui.table;
                     table.reload('myETR', {
                         page: {
                             curr: 1 //重新从第 1 页开始
                         }, where: {
-                            AppCondition: ename + "," + deptname + "," + pname + "," + Type
+                            AppCondition: ename + "," + deptname + "," + pname + "," + Type+"," + start_time + "," + end_time
                         }
                     });
                 });
 
-
-
             });
 
+            //日期
+            var startTime = laydate.render({
+                elem: '#start_time',
+                done: function (value, date) {
+                    console.log(value);
+                    console.log(date);
+                    endTime.config.min = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });
+            var endTime = laydate.render({
+                elem: '#end_time',
+                done: function (value, date) {
+                    startTime.config.max = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });
 
         });
 
