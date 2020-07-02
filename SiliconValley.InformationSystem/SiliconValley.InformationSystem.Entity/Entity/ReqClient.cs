@@ -9,16 +9,11 @@ using System.Threading.Tasks;
 namespace SiliconValley.InformationSystem.Entity.Entity
 {
     [Table("Client")]
-    public class Client
+    public class ReqClient
     {
-
-        public Client()
-        {
-            Guid_Key = Guid.NewGuid().ToString();
-        }
-        
+     
         [Key]
-        public string Guid_Key { get; }
+        public string GuidKey { get; set; }
 
         public string IPAddress { get; set; }
 

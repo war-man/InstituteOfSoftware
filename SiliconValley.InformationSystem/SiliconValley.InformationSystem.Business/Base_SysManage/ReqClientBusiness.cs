@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.Base_SysManage
 {
-    public class ReqClientBusiness: BaseBusiness<Client>
+    public class ReqClientBusiness: BaseBusiness<ReqClient>
     {
     }
 }

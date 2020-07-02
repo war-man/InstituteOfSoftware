@@ -35,7 +35,8 @@ namespace SiliconValley.InformationSystem.Web.App_Start.IPHander
 
             var OSVersion = this.GetOSVersion();
 
-            Client client = new Client();
+            ReqClient client = new ReqClient();
+            client.GuidKey = Guid.NewGuid().ToString();
             client.BrowseVersion = BrowseVersion;
             client.IPAddress = IPAddress;
             client.OSVersion = OSVersion;
@@ -209,7 +210,7 @@ namespace SiliconValley.InformationSystem.Web.App_Start.IPHander
         /// 将请求记录写入文件
         /// </summary>
         /// <param name="client"></param>
-        public void SaveToJsonFile(Client client)
+        public void SaveToJsonFile(ReqClient client)
         {
             string fp = "/ClientRequestInfo.txt";
 
@@ -234,7 +235,7 @@ namespace SiliconValley.InformationSystem.Web.App_Start.IPHander
         /// 将请求记录存入数据库
         /// </summary>
         /// <param name="client"></param>
-        public void SaveToDB(Client client)
+        public void SaveToDB(ReqClient client)
         {
 
             ReqClientBusiness db_reqClient = new ReqClientBusiness();
@@ -277,7 +278,7 @@ namespace SiliconValley.InformationSystem.Web.App_Start.IPHander
         /// <summary>
         /// IP拦截策略
         /// </summary>
-        public void IPInterceptStrategy(Client client)
+        public void IPInterceptStrategy(ReqClient client)
         {
             int second = int.Parse( ConfigurationManager.AppSettings["RequestTimeSpan"].ToString());
 
@@ -285,11 +286,11 @@ namespace SiliconValley.InformationSystem.Web.App_Start.IPHander
 
             var begInTime = client.RequestTime.AddSeconds(-second);
 
-            string sql = $"select count(*) as count from Client where RequestTime BETWEEN '{begInTime}' AND '{client.RequestTime}'";
+            string sql = $"select * from Client where RequestTime BETWEEN '{begInTime}' AND '{client.RequestTime}'";
 
             ReqClientBusiness db_reqClient = new ReqClientBusiness();
 
-            var list = db_reqClient.GetListBySql<Client>(sql);
+            var list = db_reqClient.GetListBySql<ReqClient>(sql);
 
             int count = list.Count;
 
