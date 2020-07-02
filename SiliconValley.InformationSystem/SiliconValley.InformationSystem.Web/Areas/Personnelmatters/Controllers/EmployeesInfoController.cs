@@ -818,6 +818,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult GetEmpETRDetail(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var etrlist = empmanage.GetEmpEtrdetails(id);
+            ViewBag.ETRlist = etrlist;
             return Json(etrlist,JsonRequestBehavior.AllowGet);
         }
 

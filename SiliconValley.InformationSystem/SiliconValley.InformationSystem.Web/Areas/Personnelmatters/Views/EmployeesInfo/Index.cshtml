@@ -260,14 +260,14 @@
                        // data: data.EmployeeId,
                         success: function (data) {
                             if (data<=0) {
-                                layer.tips("该员工没有任何异动情况！");
+                                layer.msg("该员工没有任何异动情况！");
                                 //layui.table.reload('myEmpInfo');
                             } else {
                                 layer.open({
                                     type: 2,
                                     content: '/Personnelmatters/EmployeesInfo/GetEmpETRDetail/?id=' + data.EmployeeId
-                                    , area: ['1200px', '730px'],
-                                    title: '员工详细信息'
+                                    , area: ['800px', '600px'],
+                                    title: '员工异动详细信息'
                                     , shade: 0.8
                                     , anim: 4
                                     , skin: 'demo-class'
