@@ -2,7 +2,8 @@
 @{
     Layout = null;
 }
-
+@model SiliconValley.InformationSystem.Entity.MyEntity.EmpTransaction
+@using SiliconValley.InformationSystem.Entity.MyEntity;
 <!DOCTYPE html>
 
 <html>
@@ -11,7 +12,11 @@
     <title>GetEmpETRDetail</title>
 </head>
 <body>
-    <div> 
+    <div>
+        @{
+            List<EmpTransaction> etrlist = ViewBag.ETRlist as List<EmpTransaction>;
+
+        }
     </div>
 </body>
 </html>

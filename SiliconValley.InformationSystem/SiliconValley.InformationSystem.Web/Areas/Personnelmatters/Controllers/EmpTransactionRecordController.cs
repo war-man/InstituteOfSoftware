@@ -42,7 +42,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 string deptname = str[1];
                 string pname = str[2];
                 string Type = str[3];
-               
+                string start_time = str[4];
+                string end_time = str[5];
                 list = list.Where(e => emanage.GetInfoByEmpID(e.EmployeeId).EmpName.Contains(ename)).ToList();
                 if (!string.IsNullOrEmpty(deptname))
                 {
@@ -55,6 +56,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 if (!string.IsNullOrEmpty(Type))
                 {
                     list = list.Where(e => e.TransactionType==int.Parse(Type)).ToList();
+                }
+                if (!string.IsNullOrEmpty(start_time))
+                {
+                    DateTime stime = Convert.ToDateTime(start_time + " 00:00:00.000");
+                    list = list.Where(a => a.TransactionTime >= stime).ToList();
+                }
+                if (!string.IsNullOrEmpty(end_time))
+                {
+                    DateTime etime = Convert.ToDateTime(end_time + " 23:59:59.999");
+                    list = list.Where(a => a.TransactionTime <= etime).ToList();
                 }
             }
             var mylist = list.OrderByDescending(e => e.TransactionId).Skip((page - 1) * limit).Take(limit).ToList();
@@ -476,6 +487,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         {
                             emp.Salary = etr.PresentSalary;
                         }
+                        emp.PositionId = (int)etr.PresentPosition;
                         empmanage.Update(emp);
                         rc.RemoveCache("InRedisEmpInfoData");
                         ajaxresult = empmanage.Success();
@@ -519,6 +531,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         {
                             emp.Salary = etr.PresentSalary;
                         }
+                        emp.PositionId = (int)etr.PresentPosition;
                         empmanage.Update(emp);
                         rc.RemoveCache("InRedisEmpInfoData");
                         ajaxresult = empmanage.Success();
