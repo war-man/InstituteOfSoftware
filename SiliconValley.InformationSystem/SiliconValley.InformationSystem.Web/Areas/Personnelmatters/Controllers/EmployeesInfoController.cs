@@ -27,6 +27,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
     public class EmployeesInfoController : Controller
     {
+        CloudstorageBusiness db_Bos = new CloudstorageBusiness();
         RedisCache rc;
         // GET: Personnelmatters/EmployeesInfo
         public ActionResult Index()
@@ -189,7 +190,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.Material,
                 e.Remark,
                 e.IsDel,
-                e.Image,
+                Image= db_Bos.ImagesFine("xinxihua","EmpImage",e.Image,4),
                 e.RecruitSource,
                 deltime = etmobj == null ? null : etmobj.TransactionTime,//离职时间
                 delreason = etmobj == null ? null : etmobj.Reason//离职原因
@@ -311,11 +312,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 emp.IsDel = false;
                 if (emp.Image != "undefined")
                 {
-                    emp.Image = ImageUpload();
+                    emp.Image = ImageUpload(emp.EmployeeId);
                 }
                 else
                 {
-                    emp.Image = null;
+                    emp.Image = "guigu.jpg";
                 }
                 if (emp.ProbationSalary == null)
                 {
@@ -852,13 +853,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
 
                 emp.IsDel = emp2.IsDel;
+
                 if (emp.Image != "undefined")
                 {
-                    emp.Image = ImageUpload();
+                    emp.Image = ImageUpload(emp.EmployeeId);
                 }
                 else
                 {
-                    emp.Image = emp2.Image;
+                    emp.Image = "guigu.jpg";
                 }
 
                 empmanage.Update(emp);
@@ -1054,24 +1056,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         #endregion
 
         // 图片上传
-        public string ImageUpload()
+        public string ImageUpload(string id)
         {
-            CloudstorageBusiness db_Bos = new CloudstorageBusiness();
             var client = db_Bos.BosClient();
-
              StringBuilder ProName = new StringBuilder();
             HttpPostedFileBase file = Request.Files["Image"];
             string fname = file.FileName; //获取上传文件名称（包含扩展名）
             string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
             string name = Path.GetExtension(fname);//获取扩展名
+            string completefilePath = id + name;//将上传的文件名称转变为当前项目名称
             string pfilename = "EmpImage";
-            client.PutObject("xinxihua", pfilename, file.InputStream);
-            
-            //string completefilePath = DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+            db_Bos.PutObject("xinxihua", pfilename, completefilePath, file.InputStream);
+
             //ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
             //file.SaveAs(ProName.ToString());//上传文件   
 
-            return pfilename;
+            return completefilePath;
         }
 
 
@@ -1099,7 +1099,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 var emp2 = empmanage.GetInfoByEmpID(emp.EmployeeId);
                 if (emp.Image != "undefined")
                 {
-                    emp.Image = ImageUpload();
+                    emp.Image = ImageUpload(EmployeeId);
                     emp2.Image = emp.Image;
                 }
                 emp2.Phone = emp.Phone;
