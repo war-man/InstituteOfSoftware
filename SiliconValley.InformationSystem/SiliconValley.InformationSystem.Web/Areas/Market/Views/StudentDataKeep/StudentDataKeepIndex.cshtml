@@ -147,7 +147,7 @@
                     <div class="layui-col-sm12">
                         <div style="text-align:right">
                             <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:108px"><i class="layui-icon">&#xe615;</i> 查询</button>
-                            <button type="button" class="layui-btn" style="margin-right:45px;width:108px" onclick="LoadTable()"><i class="layui-icon">&#xe63d;</i> 重新加载</button>
+                            <button type="button" class="layui-btn" style="margin-right:45px;width:108px" onclick="LoadTable()"><i class="layui-icon">&#xe666;</i> 重新加载</button>
                         </div>
 
                     </div>
@@ -181,23 +181,27 @@
 <script>
     var date = "";
     //转换时间的方法
-    function TimeChange(newtime) {
-        if (newtime == null)
-            return "";
-        var date = new Date(parseInt(newtime.slice(6)));
-        var year = date.getFullYear();
-        var month = date.getMonth();
-        if ((month + 1) < 10) {
-            month = "0" + Number(month + 1);
+    //转换时间的方法
+    function changeDateTimeFormat(cellval) {
+        if (cellval != null) {
+            var date;
+            if (cellval.indexOf("/Date(") >= 0) {
+                date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+            }
+            else {
+                date = new Date(cellval);
+            }
+
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
         } else {
-            month = Number(month + 1);
+            return "";
         }
-        var day = date.getDate();
-        if (day < 10) {
-            day = "0" + day;
-        }
-        var result = year + '-' + month + '-' + day;
-        return result;
     }
     //table重载的方法
     function LoadTable() {
@@ -255,10 +259,11 @@
             
         });
     };
+
     $(function () {
         //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
         $(document).keydown(function (event) {
-            if (event.keyCode === 90 && event.ctrlKey === true) {
+            if (event.keyCode === 9) {
                 layui.use('layer', function () {
                     var layer = layui.layer;
                     layer.open({
@@ -287,6 +292,7 @@
         }, 180000);
         
     });
+
     //数据导出页面
     function ExcelExport() {
         layui.use('layer', function () {
@@ -409,7 +415,7 @@
                 , { field: 'StatusName', title: '学生状态', width: 80 }
                 , { field: 'MarketType', title: '市场类型', width: 80 }
                 , { field: 'StuEntering', title: '录入人员', width: 100 }
-                , { field: 'BeanDate', title: '备案日期', width: 120, templet: function (res) { return TimeChange(res.BeanDate); } }
+                , { field: 'StuDateTime', title: '备案日期', width: 180, templet: function (res) { return changeDateTimeFormat(res.StuDateTime); } }
                 , {
                     fixed: 'right', title: '操作', width: 250, templet: function (res) {
                         if (res.ConsultTeacher == null || res.ConsultTeacher.length <= 0) {
