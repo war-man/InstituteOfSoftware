@@ -29,18 +29,18 @@ namespace SiliconValley.InformationSystem.Web.App_Start.IPHander
             //对IP进行记录  ip地址 时间 
 
             //获取当前时间
-            var NowDateTime = DateTime.Now;
+           
+            string NowDateTimeStr = $"{DateTime.Now.Year}/{DateTime.Now.Month}/{DateTime.Now.Day} {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
+
 
             var BrowseVersion = this.GetBrowseVersion();
-
             var OSVersion = this.GetOSVersion();
-
             ReqClient client = new ReqClient();
             client.GuidKey = Guid.NewGuid().ToString();
             client.BrowseVersion = BrowseVersion;
             client.IPAddress = IPAddress;
             client.OSVersion = OSVersion;
-            client.RequestTime = NowDateTime;
+            client.RequestTime =DateTime.Parse(NowDateTimeStr);
             //存入文件 
             SaveToJsonFile(client);
 
