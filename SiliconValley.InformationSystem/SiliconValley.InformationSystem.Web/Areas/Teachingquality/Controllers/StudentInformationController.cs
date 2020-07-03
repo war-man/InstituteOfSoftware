@@ -25,6 +25,7 @@ using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 using BaiduBce;
 using BaiduBce.Auth;
 using BaiduBce.Services.Bos.Model;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
@@ -659,9 +660,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //阶段
             GrandBusiness Grandcontext = new GrandBusiness();
 
+            //班级学员业务类
+            BaseBusiness<ScheduleForTraineesview> ScheduleForTraineesviewBusiness = new BaseBusiness<ScheduleForTraineesview>();
 
-
-            var MyClass = classschedu.ClassList();
+            var MyClass = classschedu.GetListBySql<ClassSchedule>("select *from ClassSchedule").ToList();
 
 
             if (!string.IsNullOrEmpty(Stage_id))
@@ -694,8 +696,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 ClassNumber = a.ClassNumber,
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 Major_Id = a.Major_Id == null ? "暂无专业" : Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
-                stuclasss = Stuclass.GetList().Where(c => c.ID_ClassName == a.id && c.CurrentClass == true).Count()//班级人数
-            }).OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+                stuclasss = ScheduleForTraineesviewBusiness.GetListBySql<ScheduleForTraineesview>("select * from ScheduleForTraineesview where Classid=" + a.id).Count()//班级人数
+            }).OrderByDescending(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
             var data = new
             {
                 code = "",
