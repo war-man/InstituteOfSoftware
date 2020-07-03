@@ -72,6 +72,58 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 
         }
 
+        public ActionResult SearchUninhabitedList(string studentName, string studentNumber, int limit, int page)
+        {
+            dbconversion = new ConversionToViewBusiness();
+            dbaccstu = new dbacc_dbstu();
+            List<StudentInformation> filterData = new List<StudentInformation>();
+
+            List<StudentInformation> data = new List<StudentInformation>();
+
+            var list = dbaccstu.GetUninhabitedData();
+
+            if (list != null) data.AddRange(list);
+
+
+            if (string.IsNullOrEmpty(studentName) && !string.IsNullOrEmpty(studentNumber))
+            {
+                //根据编号筛选
+                var tempobj = data.Where(d => d.StudentNumber == studentNumber).FirstOrDefault();
+
+                if (tempobj != null) filterData.Add(tempobj);
+
+            }
+
+            if (!string.IsNullOrEmpty(studentName) && string.IsNullOrEmpty(studentNumber))
+            {
+                var tempobjlist = data.Where(d => d.Name.Contains(studentName)).ToList();
+
+                if (tempobjlist != null) filterData.AddRange(tempobjlist);
+            }
+
+            if (string.IsNullOrEmpty(studentName) && string.IsNullOrEmpty(studentNumber))
+            {
+                filterData.AddRange(data);
+            }
+            //进行分页
+            List<StudentInformation> pagedata = filterData.Skip((page - 1) * limit).Take(limit).ToList();
+
+            //进行 视图转换
+
+            var data2 = dbconversion.StudentInformationToProStudentView(pagedata, false);
+            var returnObj = new
+            {
+                code = 0,
+                msg = "",
+                count = filterData.Count(),
+                data = data2
+            };
+            return Json(returnObj, JsonRequestBehavior.AllowGet);
+
+
+
+        }
+
         /// <summary>
         /// 添加居住信息
         /// </summary>

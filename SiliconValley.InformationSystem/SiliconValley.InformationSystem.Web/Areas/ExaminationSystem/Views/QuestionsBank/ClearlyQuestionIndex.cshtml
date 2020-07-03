@@ -202,10 +202,9 @@
                 , {
                     field: 'Title', width: 300, title: '题目', templet: function (res) {
 
-                        var label = $("<label></label>");
-                        label.text(res.Title);
+                        var result = escapeHTMLString(res.Title);
 
-                        return document.HTMLDOMtoString(label[0]);
+                        return result;
 
                     }
                 }
@@ -222,7 +221,7 @@
                         
 
                         var result = escapeHTMLString(res.ReferenceAnswer);
-                        console.log(result);
+                        
                         return result;
 
                     }
