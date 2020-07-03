@@ -226,7 +226,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 if (markety != "0" && !string.IsNullOrEmpty(markety))
                 {
                     sb1.Append(" and MarketType = '" + markety + "'");
-                    sb2.Append(" and MarketState = '" + markety + "'");
+                    sb2.Append(" and MarketState like '" + markety + "%'");
                 }
                 #endregion               
 
@@ -243,10 +243,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个添加数据的页面
         public ActionResult AddorEdit(string id)
         {
-             
-            s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
-            //获取信息来源的所有数据
-            ViewBag.infomation = s_Entity.StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+           
+            //判断登录人员是否是网络部
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            int getid= s_Entity.GetPostion(UserName.EmpNumber);
+            if (getid ==3 || getid==2)
+            {
+                ViewBag.infomation = s_Entity.StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString(),Selected=s.Name.Contains("网络")?true:false }).ToList();
+            }
+            else
+            {
+                ViewBag.infomation = s_Entity.StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            }
+           
             
             //获取所有区域
             SelectListItem s2 = new SelectListItem() { Text = "区域外", Value = "区域外" ,Selected=true};
@@ -265,12 +274,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
         {
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
-            s_Entity.Stustate_Entity = new StuStateManeger();
+       
             AjaxResult a;
             try
             {
                 //判断是否有姓名相同的备案数据                
-                if (s_Entity.StudentOrride(news.StuName, news.StuPhone))
+                if (s_Entity.StudentOrrideData(news.StuName, news.StuPhone) == null)
                 {
                     news.StuDateTime = DateTime.Now;
                     news.BeanDate = DateTime.Now;
@@ -290,10 +299,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         if (news.StuInfomationType_Id != find_type.Id)
                         {
                             //通知备案人备案成功
-                            //string phone = s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
-                            //string phone = "13204961361";//根据备案人查询电话号码
-                            //string smsText = "备案提示:" + news.StuName + "学生在" + DateTime.Now + "已备案成功";
-                            //string t = PhoneMsgHelper.SendMsg(phone, smsText);
+                            if (news.EmployeesInfo_Id!=null)
+                            {
+                                string phone = s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
+                          
+                                string smsText = "硅谷信息平台学生备案提示:" + news.StuName + "学生在" + DateTime.Now + "已备案成功,录入人:" + news.StuEntering;
+                                string t = PhoneMsgHelper.SendMsg(phone, smsText);
+                            }
+                             
                         }
                         else
                         {
@@ -316,7 +329,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         {
                             ExportStudentBeanData find = s_Entity.StudentOrrideData(news.StuName, news.StuPhone);
                             Consult new_c = new Consult();
-                            new_c.TeacherName = EmployandCounTeacherCoom.getallCountTeacher(false).Where(s => s.empname == news.ConsultTeacher).FirstOrDefault().consultercherid;//Convert.ToInt32(news.ConsultId);
+                            new_c.TeacherName = EmployandCounTeacherCoom.getallCountTeacher(false).Where(s => s.empname == news.ConsultTeacher).FirstOrDefault().consultercherid; 
                             new_c.StuName = Convert.ToInt32(find.Id);
                             new_c.IsDelete = false;
                             new_c.ComDate = DateTime.Now;
@@ -345,8 +358,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //将所有员工显示给用户选择
         public ActionResult ShowEmployeInfomation()
         {
-            s_Entity.Department_Entity = new DepartmentManage();
-            s_Entity.Position_Entity = new PositionManage();
+  
             List<EmployeesInfo> list_Enploy = s_Entity.GetEffectiveEmpAll(true);//获取所有在职员工
             List<TreeClass> list_Tree = s_Entity.Department_Entity.GetList().Select(d => new TreeClass() { id = d.DeptId.ToString(), title = d.DeptName, children = new List<TreeClass>(), disable = false, @checked = false, spread = false }).ToList();
             List<Position> list_Position = s_Entity.Position_Entity.GetList().Where(s => s.IsDel == false).ToList();//获取所有岗位有用的数据
@@ -433,8 +445,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 ViewBag.UserId = 33;
             }
-            s_Entity.Stustate_Entity = new StuStateManeger();
-            s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
+ 
+ 
             ViewBag.id = id;
             //获取信息来源的所有数据
             ViewBag.infomation =s_Entity.StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
@@ -593,10 +605,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //数据详情查看页面 2020年之后的数据详情页面
         public ActionResult LookDetailsView(string id)
         {
-            s_Entity.Stustate_Entity = new StuStateManeger();
-            s_Entity.Stustate_Entity = new StuStateManeger();
-            s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
-            //int s_id = Convert.ToInt32(id);
+ 
             ExportStudentBeanData find = s_Entity.findId(id);
             //region_Entity = new RegionManeges();
             ViewBag.id = id;
@@ -614,9 +623,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //显示有疑似的数据
         public ActionResult StudentSomeData(string id)
         {
-            s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
-            s_Entity.region_Entity = new RegionManeges();
-            s_Entity.Stustate_Entity = new StuStateManeger();
+ 
+ 
+ 
             List<ExportStudentBeanData> list = s_Entity.StudentOrride(id);
             var data = list.Select(s => new StudentData
             {
@@ -701,7 +710,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //获取已备案中的相似数据
         public List<MyExcelClass> SercherStudent(List<MyExcelClass> ex)
         {
-            //List<StudentPutOnRecord> s_list = s_Entity.GetAllStudentKeepData();
+ 
             List<MyExcelClass> list = new List<MyExcelClass>();
             foreach (MyExcelClass item1 in ex)
             {
@@ -787,21 +796,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public List<MyExcelClass> Repeatedly(bool IsRepea)
         {
             List<MyExcelClass> ExcelList = SessionHelper.Session["ExcelData"] as List<MyExcelClass>;//获取Excle文件数据     
-            //List<StudentPutOnRecord> All_list = s_Entity.GetAllStudentKeepData();//获取备案数据
+            
             List<MyExcelClass> result = new List<MyExcelClass>();
- 
+
             foreach (MyExcelClass a2 in ExcelList)
             {
-                bool s = s_Entity.StudentOrride(a2.StuName, a2.StuPhone);
-                if (!s)
+                if (s_Entity.StudentOrrideData(a2.StuName, a2.StuPhone) != null)
                 {
                     result.Add(a2);
                 }
             }
- 
             if (IsRepea)
             {
-                //获取冲突的数据
+                //获取冲突的数据                
                 return result;
             }
             else
@@ -809,7 +816,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 //获取没有冲突的数据                
                 for (int i = 0; i < result.Count; i++)
                 {
-                    // ExcelList.Remove(result[i]);
+                     
                     ExcelList.RemoveAll(e => e.StuName == result[i].StuName);
                 }
                 return ExcelList;
@@ -821,9 +828,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public bool AddExcelToServer(List<MyExcelClass> list)
         {
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
-            s_Entity.region_Entity = new RegionManeges();
-            s_Entity.StuInfomationType_Entity = new StuInfomationTypeManeger();
-            s_Entity.Stustate_Entity = new StuStateManeger();
+ 
             AjaxResult add_result = new AjaxResult();
             try
             {
@@ -1294,8 +1299,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #region 远程数据导入       
         public ActionResult InlocalServer()
         {
-            //s_Entity.InServer();
-            s_Entity.FF();
+            //s_Entity.UpdateAre();
+            //s_Entity.FF();
             return null;
         }
         #endregion
@@ -1494,7 +1499,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
 
 
-
         #region 短信发送
         public ActionResult ShortInfoMationView(int id)
         {
@@ -1518,8 +1522,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
          
 
-
-
         #region 报名、预录
         public ActionResult Sign_up()
         {
@@ -1540,8 +1542,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #endregion
-
-         
+        
 
 
         #region 获取跟踪详情

@@ -125,5 +125,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 市场类型
         /// </summary>
         public string MarketType { get; set; }
+
+        /// <summary>
+        /// 详细电话
+        /// </summary>
+        public DateTime StuDateTime { get; set; }
     }
 }

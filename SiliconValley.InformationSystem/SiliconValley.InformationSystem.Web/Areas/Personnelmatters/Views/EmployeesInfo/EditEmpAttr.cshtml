@@ -111,7 +111,7 @@
                     layui.use(['layer', 'form', 'table'], function () {
                         var form = layui.form;
                         if (data.Image != null) {
-                            $("#showImage")[0].src = "../../../uploadXLSXfile/EmpImage/" + data.Image;
+                            $("#showImage")[0].src = data.Image;
                         }
                         form.val("formtest", data);
                     });

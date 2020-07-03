@@ -95,6 +95,7 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         /// 上传图片，以文件流的方式
         /// </summary>
         /// <param name="bucketName">项目名称</param>
+        /// <param name="Prefix">文件路径</param>
         /// <param name="objectKey">文件名</param>
         /// <param name="file">文件流</param>
         /// <returns></returns>
