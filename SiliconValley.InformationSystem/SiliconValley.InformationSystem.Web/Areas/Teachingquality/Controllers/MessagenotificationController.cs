@@ -38,9 +38,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return Json(dbtext.AddMessagenoti(Duedate, Conten, NotifierEmployeeId), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult DateList()
+        public ActionResult DateList(string Xi)
         {
-            return Json(dbtext.DateList(), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.DateList(Xi), JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 修改读取状态
@@ -50,6 +50,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult Messageread(int id)
         {
             return Json(dbtext.Messageread(id), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 获取单条提示信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult FinetMessag(int id)
+        {
+            return Json(dbtext.FinetMessag(id),JsonRequestBehavior.AllowGet);
         }
     }
 }

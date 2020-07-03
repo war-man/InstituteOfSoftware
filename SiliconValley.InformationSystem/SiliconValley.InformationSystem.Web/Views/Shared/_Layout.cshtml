@@ -148,55 +148,21 @@
                                     </script>
                                 </li>
                                 <li class="dropdown note">
-                                    <a href="#" id="Notice" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope-o"></i> <span class="badge">3</span></a>
+                                    <a href="#" id="Notice" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope-o"></i> <span class="badge" id="counts"></span></a>
 
 
                                     <ul class="dropdown-menu two first" id="neiro">
                                         <li>
                                             <div class="notification_header" >
-                                                <h3 style="color:#ff6a00;">未读信息  </h3>
+                                                <h3 style="color:#ff6a00;">系统通知  </h3>
                                             </div>
                                         </li>
-                                        <li>
-                                            <a href="#">
-                                                <div class="user_img"><img src="images/1.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a>
-                                        </li>
-                                        <li class="odd">
-                                            <a href="#">
-                                                <div class="user_img"><img src="images/in.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor sit amet </p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <div class="user_img"><img src="images/in1.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor sit amet </p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="notification_bottom">
-                                                <a href="#">See all messages</a>
-                                            </div>
-                                        </li>
+                                       
                                     </ul>
                                 </li>
 
                                 <li class="dropdown note">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell-o"></i> <span class="badge">5</span></a>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell-o"></i> <span class="badge"></span></a>
 
                                     <ul class="dropdown-menu two">
                                         <li>
@@ -242,7 +208,7 @@
                                     </ul>
                                 </li>
                                 <li class="dropdown note">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-tasks"></i> <span class="badge blue1">9</span></a>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-tasks"></i> <span class="badge blue1"></span></a>
                                     <ul class="dropdown-menu two">
                                         <li>
                                             <div class="notification_header">
@@ -427,45 +393,81 @@
         var result = year + '-' + month + '-' + day;
         return result;
     }
+
+    function text(html) {
+        var dd = html.replace(/<[^>]+>/g, "");//截取html标签
+        var dds = dd.replace(/&nbsp;/ig, "");//截取空格等特殊标签          
+        return dds.substring(0, 12) + "...";//截取200个字符
+        
+    }
+
+  
+    var counta = 0;
     function xiaoxi() {
         $.post("/Teachingquality/Messagenotification/DateList", function (date) {
-            for (var i = 0; i < date.length; i++) {
-             
-                  layui.use(['layer'], function () {
-                      var layer = layui.layer;
-                      var index= layer.open({
-                        type: 1
-                        , title: '消息通知'
-                        , offset: 't' //
-                        , Number: 1
-                          , closeBtn: 0
-                          , id: date[i].id
-                        
-                          , content: '<div style="padding:10px;">'+ date[i].Content + '</div><div style="text-align:end;">' + TimeChange(date[i].Addtime) + ' &nbsp;<div>'
-                        , btn: '已读'
-                        , btnAlign: 'c' //按钮居中
-                        , shade: 0 //不显示遮罩
-                        , time: 30000
-                          , yes: function () {
-                              $.post("/Teachingquality/Messagenotification/Messageread/" + this.id, function (da) {
+            if (date.length > counta) {
+                counta = date.length;
+                if (date.length > 0) {
+                    $("#counts").text(date.length);
+                }
+                for (var i = 0; i < date.length; i++) {
 
-                              })
-                            
-                            layer.close(index);
-                        }
+                    layui.use(['layer'], function () {
+                        var layer = layui.layer;
+                        var index = layer.open({
+                            type: 1
+                            , title: '消息通知'
+                            , offset: 't' //
+                            , anim: 1
+                            , Number: 1
+                            , closeBtn: 0
+                            , id: date[i].id
+
+                            , content: '<div style="padding:10px;">' + date[i].Content + '</div><div style="text-align:end;">' + TimeChange(date[i].Addtime) + ' &nbsp;<div>'
+                            , btn: '已读'
+                            , btnAlign: 'c' //按钮居中
+                            , shade: 0 //不显示遮罩
+                            , time: 10000
+                            , yes: function () {
+                                $.post("/Teachingquality/Messagenotification/Messageread/" + this.id, function (da) {
+                                    xinxilan();
+                                })
+
+                                layer.close(index);
+                            }
+                        });
+
                     });
 
-                });
-
+                }
             }
+         
 
         })
 
     }
+    function xinxilan() {
+        var xz = {
+            Xi: '1'
+        };
+        $(".ti").remove();
+        $.post("/Teachingquality/Messagenotification/DateList", xz, function (date) {
+          
+            for (var i = 0; i < date.length; i++) {
+                if (date[i].Readornot == true) {
+                    $("#neiro").append($('<li class="ti" va=' + date[i].id + '><a href="#"><div class="notification_desc"> <p>' + text(date[i].Content) + ' </p> <p><span>' + TimeChange(date[i].Addtime) + '</span><text style="color:forestgreen;margin-left:82px;">已读</text></p></div>  <div class="clearfix"></div></a></li>'));
+                } else {
+                    $("#neiro").append($('<li class="ti" va=' + date[i].id + '><a href="#"><div class="notification_desc"> <p>' + text(date[i].Content) + ' </p> <p><span>' + TimeChange(date[i].Addtime) + '</span><text style="color:yellow;margin-left:82px;">未读</text></p></div>  <div class="clearfix"></div></a></li>'));
+                }
+            }
+
+        });
+    }
     xiaoxi();
+    xinxilan();
     setInterval(function () {
         xiaoxi();
-
+        xinxilan();
     }, 30000);
 
   
@@ -474,7 +476,45 @@
         var layer = layui.layer;
         var form = layui.form;
 
-        
+        //点击消息事件
+        $("body").on("click", ".ti", function () {
+            neiros = 0;
+            ; $("#neiro").css("display", "none");
+            layer.closeAll();
+            $.post("/Teachingquality/Messagenotification/FinetMessag/" + $(this).attr("va"), function (date) {
+
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    var index = layer.open({
+                        type: 1
+                        , title: '消息通知'
+                        , offset: 't' //
+                        , anim: 1
+                        , Number: 1
+                        , closeBtn: 0
+                        , id: date.id
+
+                        , content: '<div style="padding:10px;">' + date.Content + '</div><div style="text-align:end;">' + TimeChange(date.Addtime) + ' &nbsp;<div>'
+                        , btn: '已读'
+                        , btnAlign: 'c' //按钮居中
+                        , shade: 0 //不显示遮罩
+                        , time: 30000
+                        , yes: function () {
+                            $.post("/Teachingquality/Messagenotification/Messageread/" + this.id, function (da) {
+                                $("#counts").text(parseInt($("#counts").text())-1);  
+                                xinxilan();
+                            })
+
+                            layer.close(index);
+                        }
+                    });
+
+                });
+
+
+
+            })
+        });
         empdate();
         $("#EmpClass").click(function () {
             layer.open({
@@ -612,8 +652,5 @@
         }
        
     });
-    //加载发布通知
-    $.post("DateList", function (data) {
 
-    })
 </script>
