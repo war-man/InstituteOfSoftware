@@ -127,7 +127,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string MarketType { get; set; }
 
         /// <summary>
-        /// 详细电话
+        /// 详细备案时间
         /// </summary>
         public DateTime StuDateTime { get; set; }
     }
