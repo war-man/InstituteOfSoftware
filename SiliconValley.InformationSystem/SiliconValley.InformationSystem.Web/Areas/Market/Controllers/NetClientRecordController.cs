@@ -86,7 +86,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     ncrlist = ncrlist.Where(e => e.StuStatus == status).ToList();
                 }
             }
-            var mylist = ncrlist.OrderBy(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            ncrlist = ncrlist.OrderBy(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
            
             var newobj = new
             {
