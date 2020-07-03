@@ -41,7 +41,21 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">课程</label>
                     <div class="layui-input-inline">
-                        <button type="button" class="layui-btn layui-btn-primary">@Model.Course.CourseName</button>
+                        <button type="button" class="layui-btn layui-btn-primary">
+
+                            @{ 
+                                string name = "升学题";
+                                if (Model.Course != null)
+                                {
+                                    name = Model.Course.CourseName;
+                                }
+                               
+
+                            }
+                            
+                            @name
+
+                        </button>
                     </div>
                 </div>
             </div>

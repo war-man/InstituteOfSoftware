@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
     /// <summary>
     /// 发布通知业务类
     /// </summary>
-   public class MessagenotificationBusiness:BaseBusiness<Messagenotification>
+    public class MessagenotificationBusiness : BaseBusiness<Messagenotification>
     {
         //员工表
         EmployeesInfoManage infoBusiness = new EmployeesInfoManage();
@@ -29,25 +29,36 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
         /// 获取当前登陆人需要显示的信息
         /// </summary>
         /// <returns></returns>
-        public List<MessagenotificationView> DateList()
+        public List<MessagenotificationView> DateList(string Xi)
         {
             List<MessagenotificationView> messagenotificationViews = new List<MessagenotificationView>();
-         var x=  MessagenotificationViewBusiness.GetList().Where(a => a.NotifierEmployeeId == user.EmpNumber && a.Readornot == false).ToList();
-            foreach (var item in x)
+            var x = MessagenotificationViewBusiness.GetList().Where(a => a.NotifierEmployeeId == user.EmpNumber).ToList();
+            if (!string.IsNullOrEmpty(Xi))
             {
-                if (item.Duedate!=null)
+                x = x.OrderByDescending(a => a.Addtime).ToList();
+                messagenotificationViews.AddRange(x);
+            }
+            else
+            {
+                x = x.Where(a => a.Readornot == false).ToList();
+                foreach (var item in x)
                 {
-                    if (item.Duedate>DateTime.Now)
+                    if (item.Duedate != null)
+                    {
+                        if (item.Duedate > DateTime.Now)
+                        {
+                            messagenotificationViews.Add(item);
+                        }
+
+                    }
+                    else
                     {
                         messagenotificationViews.Add(item);
                     }
-
-                }
-                else
-                {
-                    messagenotificationViews.Add(item);
                 }
             }
+
+
             return messagenotificationViews;
         }
         /// <summary>
@@ -57,18 +68,18 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
         /// <param name="Conten">内容</param>
         /// <param name="NotifierEmployeeId">通知人（为null则通知全部员工，否则字符串拼接）</param>
         /// <returns></returns>
-        public object AddMessagenoti(string Duedate, string Conten,string NotifierEmployeeId)
+        public object AddMessagenoti(string Duedate, string Conten, string NotifierEmployeeId)
         {
             AjaxResult retus = null;
             try
             {
-           
+
                 retus = new SuccessResult();
                 retus.Success = true;
                 Messagenotification messagenotification = new Messagenotification();
                 messagenotification.Content = Conten;
                 messagenotification.Addtime = DateTime.Now;
-               
+
                 if (!string.IsNullOrEmpty(Duedate))
                 {
                     messagenotification.Duedate = Convert.ToDateTime(Duedate);
@@ -77,7 +88,7 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
                 this.Insert(messagenotification);
                 var id = this.GetList().Where(a => a.Addtime.ToUniversalTime().ToString() == messagenotification.Addtime.ToUniversalTime().ToString()).FirstOrDefault().id;
                 List<MessagenoEmployeesInfo> MessagenoEmployeesInfolist = new List<MessagenoEmployeesInfo>();
-                if (NotifierEmployeeId!=null)
+                if (NotifierEmployeeId != null)
                 {
                     var NotifierEmployeeIds = NotifierEmployeeId.Length - 1;
 
@@ -122,7 +133,7 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
 
         public object Date(int page, int limit)
         {
-         var list=   MessagenotificationViewBusiness.GetList().Select(a=>new { a.id,a.PublisherName,a.Duedate,a.Content,a.Addtime}).ToList();
+            var list = MessagenotificationViewBusiness.GetList().Select(a => new { a.id, a.PublisherName, a.Duedate, a.Content, a.Addtime }).ToList();
             var dataList = list.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new
@@ -157,6 +168,16 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             return retus;
+        }
+        /// <summary>
+        /// 获取单条提示信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MessagenotificationView FinetMessag(int id)
+        {
+
+            return MessagenotificationViewBusiness.GetEntity(id);
         }
     }
 }

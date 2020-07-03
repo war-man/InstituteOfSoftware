@@ -285,6 +285,22 @@
         var Examid; //考试ID
         var ExamRoom; // 考是（教室ID）StuExamNumberStuExamNumber
         var IsEndSheet = false; //是否为最后一个答卷
+
+        function escapeHTMLString(str) {
+            str = str.replace(/</g, '&lt;');
+            str = str.replace(/>/g, '&gt;');
+
+            return str;
+        }
+
+        if (!document.HTMLDOMtoString) {
+            document.HTMLDOMtoString = function (HTMLDOM) {
+                const div = document.createElement("div");
+                div.appendChild(HTMLDOM);
+                return div.innerHTML;
+            }
+        }
+
         layui.use(['layer'], function () {
 
             var layer = layui.layer;
@@ -507,15 +523,18 @@
 
                         }
                     }
-
-                   
-                    
+  
                     for (var i = 0; i < result.Data.length; i++) {
 
                         if (result.Data[0].question != "") {
                             var layerthtml = _.template($("#moban2").html());
 
-                            var layerdata = layerthtml({ index: i + 1, question: result.Data[i].questionTitle.Title, scores: result.Data[i].question.questionScores, answer: result.Data[i].question.answer });
+                              var label = $("<div></div>");
+
+                              label.text(result.Data[i].questionTitle.Title);
+
+                            var layerdata = layerthtml({ index: i + 1, question: document.HTMLDOMtoString(label[0]), scores: result.Data[i].question.questionScores, answer: result.Data[i].question.answer });
+
                             $("#itemlist").append(layerdata);
                         } 
 
@@ -525,10 +544,7 @@
 
                         }
 
-
-                      
                     }
-
                     var button = $('<a id="download" class="layui-btn layui-btn-fluid layui-btn-primary"></a>');
 
                     //首先发送请求 查看是否有机试题
