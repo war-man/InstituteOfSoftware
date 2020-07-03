@@ -45,6 +45,10 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
        public string StuEducational { get; set; }
         /// <summary>
+        /// 咨询师
+        /// </summary>
+       public string ConsultTeacher { get; set; }
+        /// <summary>
         /// 备案老师
         /// </summary>
        public string EmployeesInfo_Id { get; set; }
