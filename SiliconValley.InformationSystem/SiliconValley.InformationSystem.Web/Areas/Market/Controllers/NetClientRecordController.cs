@@ -44,7 +44,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             List<NetClientRecordView> ncrlist = new List<NetClientRecordView>();
-            var list = ncrmanage.GetList().Where(s=>string.IsNullOrEmpty(Convert.ToString(s.NetClientDate))).ToList();
+            var list = ncrmanage.GetList().Where(s=>string.IsNullOrEmpty(Convert.ToString(s.NetClientDate))).OrderByDescending(n=>n.Id).ToList();
             foreach (var item in list)
             {
                 #region 获取属性值 

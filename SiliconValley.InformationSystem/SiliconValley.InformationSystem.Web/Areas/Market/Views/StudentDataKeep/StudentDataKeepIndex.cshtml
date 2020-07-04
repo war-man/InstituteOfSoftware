@@ -181,27 +181,19 @@
 <script>
     var date = "";
     //转换时间的方法
-    //转换时间的方法
-    function changeDateTimeFormat(cellval) {
-        if (cellval != null) {
-            var date;
-            if (cellval.indexOf("/Date(") >= 0) {
-                date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-            }
-            else {
-                date = new Date(cellval);
-            }
-
-            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-            var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-            var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-            var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
-            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
-        } else {
-            return "";
-        }
+    //转换时间的方法包含时分秒
+    function formatTen(num) {
+        return num > 9 ? (num + "") : ("0" + num);
+    }
+    function formatDate(dates) {
+        var date = new Date(parseInt(dates.slice(6)));
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        return year + "-" + formatTen(month) + "-" + formatTen(day) + " " + formatTen(hour) + ":" + formatTen(minute) + ":" + formatTen(second);
     }
     //table重载的方法
     function LoadTable() {
@@ -261,36 +253,29 @@
     };
 
     $(function () {
-        //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
-        $(document).keydown(function (event) {
-            if (event.keyCode === 9) {
-                layui.use('layer', function () {
-                    var layer = layui.layer;
-                    layer.open({
-                        type: 2,
-                        content: '/Market/StudentDataKeep/AddorEdit'
-                        , area: ['950px', '710px'],
-                        title: '添加备案信息'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                });
-            }
-        });
+        //这是一个键盘按下事件 ,如果按下Ctrl+Alt就会弹出添加页面
+        //$(document).keydown(function (event) {           
+        //    if (event.keyCode === 86 && event.keyCode===17) {
+        //        layui.use('layer', function () {
+        //            var layer = layui.layer;
+        //            layer.open({
+        //                type: 2,
+        //                content: '/Market/StudentDataKeep/AddorEdit'
+        //                , area: ['950px', '710px'],
+        //                title: '添加备案信息'
+        //                , shade: 0.8
+        //                , anim: 4
+        //                , skin: 'demo-class'
+        //            });
+        //        });
+        //    }
+        //});
 
         //这是一个模糊查询的方法
         $("#searchBtn").click(function () {
             my_searchBtn();
         });
-
-        //定时刷新页面3分钟
-        window.setInterval(function () {
-            layer.msg('系统自动刷新数据，请稍等.......', function () {
-                LoadTable2();
-            });
-        }, 180000);
-        
+         
     });
 
     //数据导出页面
@@ -394,49 +379,79 @@
                 date = value;
             }
         });
-
-        table.render({
-            elem: '#tabletest1'
-            , url: '/Market/StudentDataKeep/TableData'
-            , toolbar: '#toolbarDemo1'
-            , cols: [[
-                { type: 'checkbox' }
-                , { field: 'StuName', title: '姓名', width: 80 }
-                , { field: 'StuSex', title: '性别', width: 60 }
-                , { field: 'Stuphone', title: '联系电话', width: 140 }
-                , { field: 'StuQQ', title: 'QQ', width: 80 }
-                , { field: 'StuSchoolName', title: '学校', width: 80 }
-                , { field: 'RegionName', title: '区域', width: 80 }
-                , { field: 'stuinfomation', title: '信息来源', width: 80 }
-                , { field: 'ConsultTeacher', title: '咨询师', width: 80 }
-                , { field: 'empName', title: '备案人', width: 80 }
-                , { field: 'StuEducational', title: '学历', width: 80 }
-                , { field: 'Party', title: '关联人', width: 100 }
-                , { field: 'StatusName', title: '学生状态', width: 80 }
-                , { field: 'MarketType', title: '市场类型', width: 80 }
-                , { field: 'StuEntering', title: '录入人员', width: 100 }
-                , { field: 'StuDateTime', title: '备案日期', width: 180, templet: function (res) { return changeDateTimeFormat(res.StuDateTime); } }
-                , {
-                    fixed: 'right', title: '操作', width: 250, templet: function (res) {
-                        if (res.ConsultTeacher == null || res.ConsultTeacher.length <= 0) {
-                            var my_r = $("#rr").val();
-                            if (my_r == "2" || my_r == "3") {
-                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
-                            } else {
-
-                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a ><a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>';
-                            }
-
-                        } else {
-                            return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
+        var my_r = $("#rr").val();
+        if (my_r == "2" || my_r == "3") {
+            //给网络部看的数据
+            table.render({
+                elem: '#tabletest1'
+                , url: '/Market/StudentDataKeep/TableData'
+                , toolbar: '#toolbarDemo1'
+                , cols: [[
+                    { type: 'checkbox' }
+                    , { field: 'StuName', title: '姓名', width: 100 }
+                    , { field: 'StuSex', title: '性别', width: 60 }
+                    , { field: 'Stuphone', title: '联系电话', width: 140 }
+                    , { field: 'StuQQ', title: 'QQ', width: 60 }
+                    , { field: 'StuSchoolName', title: '学校', width: 80 }
+                    , { field: 'RegionName', title: '区域', width: 100 }
+                    , { field: 'stuinfomation', title: '信息来源', width: 80 }
+                    , { field: 'ConsultTeacher', title: '咨询师', width: 80 }
+                    , { field: 'empName', title: '备案人', width: 80 }
+                    , { field: 'StuEducational', title: '学历', width: 80 }
+                    , { field: 'Party', title: '关联人', width: 100 }
+                    , { field: 'StatusName', title: '学生状态', width: 80 }
+                    , { field: 'StuEntering', title: '录入人员', width: 100 }
+                    , { field: 'StuDateTime', title: '备案日期', sort: true, width: 220, templet: function (res) { return formatDate(res.StuDateTime); } }
+                    , {
+                        fixed: 'right', title: '操作', width: 180, templet: function (res) {                                  
+                            return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';                                                             
                         }
                     }
-                }
-            ]]
-            , page: true
-            , limits: [18, 40, 50, 60, 80, 100]
-            , limit: 18
-        });
+                ]]
+                , page: true
+                , limits: [18, 40, 50, 60, 80, 100]
+                , limit: 18
+            });
+        } else {
+            //给咨询部看的数据
+            table.render({
+                elem: '#tabletest1'
+                , url: '/Market/StudentDataKeep/TableData'
+                , toolbar: '#toolbarDemo1'
+                , cols: [[
+                    { type: 'checkbox' }
+                    , { field: 'StuName', title: '姓名', width: 80 }
+                    , { field: 'StuSex', title: '性别', width: 60 }
+                    , { field: 'Stuphone', title: '联系电话', width: 140 }
+                    , { field: 'StuQQ', title: 'QQ', width: 60 }
+                    , { field: 'StuSchoolName', title: '学校', width: 80 }
+                    , { field: 'RegionName', title: '区域', width: 80 }
+                    , { field: 'stuinfomation', title: '信息来源', width: 80 }
+                    , { field: 'ConsultTeacher', title: '咨询师', width: 80 }
+                    , { field: 'empName', title: '备案人', width: 80 }
+                    , { field: 'StuEducational', title: '学历', width: 80 }
+                    , { field: 'Party', title: '关联人', width: 100 }
+                    , { field: 'StatusName', title: '学生状态', width: 80 }
+                    , { field: 'MarketType', title: '市场类型', width: 60 }
+                    , { field: 'StuEntering', title: '录入人员', width: 100 }
+                    , { field: 'StuDateTime', title: '备案日期', width: 180, templet: function (res) { return formatDate(res.StuDateTime); } }
+                    , {
+                        fixed: 'right', title: '操作', width: 250, templet: function (res) {
+                            if (res.ConsultTeacher == null || res.ConsultTeacher.length <= 0) {                             
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a ><a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>';
+                                
+                            } else {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
+                            }
+                        }
+                    }
+                ]]
+                , page: true
+                , limits: [18, 40, 50, 60, 80, 100]
+                , limit: 18
+            });
+        }
+        
 
         //头工具栏事件
         table.on('toolbar(tabletest1)', function (obj) {
@@ -849,8 +864,6 @@
     function Query() {
         LoadTable2();
     }
-
-
 
 </script>
 

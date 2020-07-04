@@ -177,17 +177,17 @@
                         <label class="LableCss1">是否上门:</label>
                         <div class="layui-input-block">
                             <div class="layui-col-sm7">
-                                <input id="visitone" type="radio" name="StuIsGoto" value="true" title="是" checked="checked" lay-filter="radio1">
+                                <input id="visitone" type="radio" name="StuIsGoto" value="true" title="是"  lay-filter="radio1">
                             </div>
                             <div class="layui-col-sm3">
-                                <input id="visitwo" type="radio" name="StuIsGoto" value="false" title="否" lay-filter="radio1">
+                                <input id="visitwo" type="radio" name="StuIsGoto" value="false" title="否" lay-filter="radio1" checked="checked">
                             </div>                           
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="LableCss1">上门日期:</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(s => s.StuVisit, new Dictionary<string, object>() { { "lay-verify", "StuDateTime|IsVisit" }, { "placeholder", "YY-MM-DD" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(s => s.StuVisit, new Dictionary<string, object>() { { "lay-verify", "StuDateTime|IsVisit" }, { "placeholder", "YY-MM-DD" }, { "class", "layui-input linu" },{ "disabled", "disabled" } })
                             </div>
                     </div>
                 </div>
@@ -361,9 +361,10 @@
         //自定义验证规则
         form.verify({
             IsVisit: function (value) {
+                var isttur = $('input[name="StuIsGoto"]:checked').val();               
                 var reg = /^ *$/;  //这里^和*之间有一个空格
                 var Is = reg.test(value);
-                if (ityy != "false") {
+                if (ityy != "false" && isttur=="true") {
                     if (Is == true) {
                         return "上门日期不能为空";
                     }
@@ -386,7 +387,7 @@
                             icon: 1,
                             time: 2000,
                             shade: 0.8
-                        }, function () {
+                        }, function (index) {
                             window.parent.LoadTable2();
                             var Myindex = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layer.close(Myindex); //再执行关闭                                            

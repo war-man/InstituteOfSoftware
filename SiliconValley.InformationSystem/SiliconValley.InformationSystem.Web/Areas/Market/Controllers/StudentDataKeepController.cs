@@ -115,7 +115,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult TableData(int limit, int page)
         {
-            List<ExportStudentBeanData> list = s_Entity.GetSudentDataAll().OrderByDescending(s => s.Id).ToList();
+            List<ExportStudentBeanData> list = s_Entity.GetSudentDataAll().OrderByDescending(s => s.StuDateTime).ToList();
 
             var data = list.Skip((page - 1) * limit).Take(limit).ToList();
 
@@ -231,7 +231,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 #endregion               
 
             }
-            list = s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.Id).ToList();
+            list = s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.StuDateTime).ToList();
 
             var data = list.Skip((page - 1) * limit).Take(limit).ToList();
 
@@ -728,6 +728,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     m.StuAddress = find.StuAddress;
                     m.Reak = find.Reak;
                     m.EmployeesInfo_Id = find.empName;
+                    m.QQ = find.StuQQ;
+                    m.ConsultTeacher = find.ConsultTeacher;
                     if (list.Where(s => s.StuName == m.StuName && s.StuPhone == m.StuPhone).FirstOrDefault() == null)
                     {
                         list.Add(m);
@@ -761,7 +763,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
             System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
             List<MyExcelClass> new_listStudent = new List<MyExcelClass>();
-            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "关联人" && t.Rows[0][10].ToString() == "QQ" && t.Rows[0][11].ToString() == "备注")
+            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "咨询师" && t.Rows[0][9].ToString() == "备案人" && t.Rows[0][10].ToString() == "关联人" && t.Rows[0][11].ToString() == "QQ" && t.Rows[0][12].ToString() == "备注")
             {
                 //直接设为Excel实体
                 for (int i = 1; i < (t.Rows.Count); i++)
@@ -775,10 +777,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     create_s.Region_id = t.Rows[i][5].ToString();//区域
                     create_s.StuInfomationType_Id = t.Rows[i][6].ToString();//信息来源
                     create_s.StuEducational = t.Rows[i][7].ToString();
-                    create_s.EmployeesInfo_Id = t.Rows[i][8].ToString();//备案人
-                    create_s.Party = t.Rows[i][9].ToString();
-                    create_s.QQ = t.Rows[i][10].ToString();
-                    create_s.Reak = t.Rows[i][11].ToString();//备注
+                    create_s.ConsultTeacher = t.Rows[i][8].ToString();//咨询师
+                    create_s.EmployeesInfo_Id = t.Rows[i][9].ToString();//备案人
+                    create_s.Party = t.Rows[i][10].ToString();
+                    create_s.QQ = t.Rows[i][11].ToString();
+                    create_s.Reak = t.Rows[i][12].ToString();//备注                    
                     new_listStudent.Add(create_s);
                 }
                 DeleteFile();
@@ -832,7 +835,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             AjaxResult add_result = new AjaxResult();
             try
             {
-                List<StudentPutOnRecord> listnew = new List<StudentPutOnRecord>();
+                List<StudentPutOnRecord> listnew = new List<StudentPutOnRecord>();                
                 foreach (MyExcelClass item1 in list)
                 {
                     if (!string.IsNullOrEmpty(item1.StuName))
@@ -860,11 +863,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         s.StuStatus_Id = 1013;
                         s.StuQQ = item1.QQ;
                         s.Party = item1.Party;
+                        if (item1.ConsultTeacher==null || !string.IsNullOrEmpty(item1.ConsultTeacher))
+                        {
+                            s.ConsultTeacher = item1.ConsultTeacher;
+                        }
+                         
                         listnew.Add(s);
                     }
                     
                 }
                 add_result = s_Entity.Add_data(listnew);
+
+                ///向分量表添加数据
+                if (add_result.Success)
+                {
+                    List<StudentPutOnRecord> one = listnew.Where(l => l.ConsultTeacher != null).ToList();
+                    List<Consult> c_list = new List<Consult>(); 
+                    foreach (StudentPutOnRecord item in one)
+                    {
+                        ConsultTeacher find_t = EmployandCounTeacherCoom.Consult_entity.FindOne(item.ConsultTeacher);
+                        if (find_t!= null)
+                        {
+                            Consult c = new Consult();
+                            c.TeacherName = find_t.Id;
+                            c.StuName = s_Entity.StudentOrreideData_OnRecord(item.StuName, item.StuPhone, item.BeanDate).Id;
+                            c.IsDelete = false;
+                            c.ComDate = DateTime.Now;
+                            c_list.Add(c);
+                        }
+                         
+                    }
+
+
+                    //添加分量
+                    EmployandCounTeacherCoom.consult.Add_Data(c_list);
+
+                }
 
                 if (add_result.Success==true)
                 {
@@ -1543,7 +1577,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         #endregion
         
-
 
         #region 获取跟踪详情
         public ActionResult FllowView(int id)

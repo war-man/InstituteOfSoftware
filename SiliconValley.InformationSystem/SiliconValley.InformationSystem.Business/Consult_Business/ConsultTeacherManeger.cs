@@ -70,5 +70,21 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             }            
                 return result;
         }
+
+        /// <summary>
+        /// 根据员工编号获取咨询师编号
+        /// </summary>
+        /// <param name="empName"></param>
+        /// <returns></returns>
+        public ConsultTeacher FindOne(string empName)
+        {
+            string str = @" select  t.Id,t.Employees_Id,t.ConGrade,t.Rmark,t.IsDelete,t.BrainImage from consultTeacher
+  as t left join EmployeesInfo as e on t.Employees_Id = e.EmployeeId where e.EmpName = '"+empName+"' order by Id desc";
+
+           List<ConsultTeacher> finddata= this.GetListBySql<ConsultTeacher>(str);
+
+            return finddata.Count > 0 ? finddata[0] : null;
+        }
+
     }
 }

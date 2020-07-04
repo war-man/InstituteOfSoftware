@@ -122,7 +122,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string ConsultTeacher { get; set; }
 
         /// <summary>
-        /// 备案日期(只有年月日)
+        /// 备案日期(只有年月日):作用用于模糊查询、查询已备案的数据
         /// </summary>
         public DateTime BeanDate { get; set; }
 

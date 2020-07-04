@@ -925,6 +925,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 empName = s2.SalePerson,
                 Party = s2.RelatedPerson,
                 BeanDate = s2.CreateDate,
+                StuDateTime= s2.CreateDate,
                 StuEntering = s2.CreateUserName,
                 StatusTime = null,
                 RegionName = s2.Area,
