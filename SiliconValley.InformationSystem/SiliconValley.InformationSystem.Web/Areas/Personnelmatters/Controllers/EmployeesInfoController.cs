@@ -805,23 +805,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var emp = empmanage.GetEntity(id);
             return View(emp);
         }
-
-        public ActionResult GetETRCount(string id) {
+        #region 员工异动详情
+        public ActionResult GetETRCount(string id)
+        {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var count = empmanage.GetEmpEtrdetails(id).Count();
-            return Json(count,JsonRequestBehavior.AllowGet);
+            return Json(count, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 获取该员工的异动情况
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult GetEmpETRDetail(string id) {
+        public ActionResult GetEmpETRDetail(string id)
+        {
+            ViewBag.id = id;
+            return View();
+        }
+        public ActionResult GetEmpETRDetailData(string id ) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var etrlist = empmanage.GetEmpEtrdetails(id);
             ViewBag.ETRlist = etrlist;
             return Json(etrlist,JsonRequestBehavior.AllowGet);
         }
+        #endregion
+
 
         /// <summary>
         /// 编辑员工信息
