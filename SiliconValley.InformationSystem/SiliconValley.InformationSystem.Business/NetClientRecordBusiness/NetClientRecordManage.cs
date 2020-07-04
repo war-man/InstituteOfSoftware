@@ -99,12 +99,11 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
             ncr.StuVisit = sdk.StuVisit;//面咨时间
             ncr.StuStatus = sdk.StatusName;//是否报名
             ncr.SprEmp = sdk.empName;//备案人
-            ncr.BeanDate = sdk.BeanDate;//备案时间
+            ncr.BeanDate = sdk.StuDateTime;//备案时间
             ncr.StatusTime = sdk.StatusTime;//报名时间
             ncr.RegionName = sdk.RegionName;//所在区域
             ncr.consultemp = sdk.ConsultTeacher;//咨询师（咨询部的）
             ncr.Reak = sdk.Reak;//其他说明
-
             ncr.NetClientDate = item.NetClientDate;//网咨回访时间
             ncr.CallBackCase = item.CallBackCase;//回访情况
             ncr.IsDel = item.IsDel;
@@ -144,6 +143,27 @@ namespace SiliconValley.InformationSystem.Business.NetClientRecordBusiness
                 result = true;//表示该学生已被网络部备案过
             }
             else {
+                result = false;
+            }
+            return result;
+        }
+        /// <summary>
+        /// 将初始回访数据的回访日期改为最新回访的日期
+        /// </summary>
+        /// <param name="sprid"></param>
+        /// <param name="ncrdate"></param>
+        /// <returns></returns>
+        public bool UpdateNetClientDate(int sprid,DateTime? ncrdate) {
+            bool result = false;
+            try
+            {
+                var ncr = this.GetList().Where(s => s.SPRId == sprid && s.IsDel == false).FirstOrDefault();
+                ncr.NetClientDate = ncrdate;
+                this.Update(ncr);
+                result= true;
+            }
+            catch (Exception)
+            {
                 result = false;
             }
             return result;

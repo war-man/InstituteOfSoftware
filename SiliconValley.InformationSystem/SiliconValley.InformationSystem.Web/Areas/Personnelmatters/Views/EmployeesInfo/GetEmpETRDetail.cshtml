@@ -10,16 +10,100 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>GetEmpETRDetail</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 </head>
 <body>
     <div>
-        @{
-            List<EmpTransaction> etrlist = ViewBag.ETRlist as List<EmpTransaction>;
-            <div>
-
-            </div>
-
-        }
+        <input type="hidden" id="Id" name="Id" value="@ViewBag.id" />
+        <table></table>
     </div>
+
+    <script>
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+            var id = $("#Id").val();
+            console.log("异动编号："+id);
+            table.render({
+                elem: '#getemptab'
+                , url: '/Personnelmatters/EmployeesInfo/GetEmpETRDetailData/?id='+id
+                , id: "empInfo"
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 5
+                , cols: [[
+                     { field: 'EmpName', title: '姓名', width: 95, sort: true }
+                    , { field: 'Depart', title: '所属部门', width: 120, sort: true }
+                    , { field: 'Position', title: '所属岗位', width: 110, sort: true }
+                    , { field: 'Sex', title: '性别', sort: true, width: 85}
+                    , { field: 'EntryTime', title: '入职时间', sort: true, width: 140, templet: function (d) { return GetYMD(d.EntryTime) } }
+                    , { field: 'PositiveDate', title: '转正日期', sort: true, width: 140, templet: function (d) { return GetYMD(d.PositiveDate) } }
+
+                ]]
+                , page: true
+            });
+
+            //给数据行绑定双击事件
+            table.on('rowDouble(getemptab)', function (obj) {
+                console.log(obj.tr) //得到当前行元素对象
+                console.log(obj.data) //得到当前行数据
+
+                parent.GetEmpData(obj.data);
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            });
+
+
+            //模糊查询点击事件
+            $("#Conditionselect").click(function () {
+                var ename = $("#EmpName").val();//员工姓名
+
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('empInfo', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }, where: {
+                            ename: ename
+                        }
+                    });
+                });
+
+
+
+            });
+
+
+        });
+
+
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
 </body>
 </html>

@@ -75,7 +75,7 @@
                 </div>
             </div>
 
-            <button class="layui-btn" type="button" id="Conditionselect" style="margin-left:275px;">查询</button>
+            <button class="layui-btn" type="button"  onclick="Conditionselect();" style="margin-left:275px;">查询</button>
         </div>
     </form>
 </fieldset>
@@ -91,6 +91,36 @@
 @section script{
 
     <script>
+        //模糊查询点击事件
+        function Conditionselect() {
+            var name = $("#StuName").val();//网咨学生姓名
+            var stusex = $("#stusex").val();//学生性别
+            var recordemp = $("#recordemp").val();//备案人
+            var IsFaceConsult = $("#IsFaceConsult").val();//是否面咨
+            var findAreavalue = $("#findAreavalue").val();//所在区域
+            var graduschool = $("#graduschool").val();//毕业学校
+            var status = $("#status").val();//入学状态
+            console.log("所在区域：" + findAreavalue);
+            layui.use(['table'], function () {
+                var table = layui.table;
+                table.reload('mynetinfo', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }, where: {
+                        AppCondition: name + "," + stusex + "," + recordemp + "," + IsFaceConsult + "," + findAreavalue + "," + graduschool + "," + status
+                    }
+                });
+            });
+
+        }
+
+        $(document).keydown(function (event) {
+            //console.log(event);
+            if (event.keyCode === 13) {
+                Conditionselect();
+            }
+        });
+
         layui.use(['table', 'layer', 'form', 'laydate'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -106,15 +136,17 @@
                 , limit: 10
                 , cols: [[
                     { field: 'StuName', title: '学生姓名', width: 110, sort: true }
-                    , { field: 'StuSex', title: '性别', width: 90, sort: true }
+                    , { field: 'StuSex', title: '性别', width: 80, sort: true }
                     , { field: 'StuPhone', title: '联系电话', sort: true, width: 120 }
-                    , { field: 'SprEmp', title: '备案人', sort: true, width: 120 }
-                    , { field: 'StuEducational', title: '学历', sort: true, width: 105 }
-                    , { field: 'RegionName', title: '所在区域', sort: true, width: 120 }
+                    , { field: 'SprEmp', title: '备案人', sort: true, width: 90 }
+                    , { field: 'StuEducational', title: '学历', sort: true, width: 80}
+                    , { field: 'RegionName', title: '所在区域', sort: true, width: 110 }
                     , { field: 'StuSchoolName', title: '毕业学校', sort: true, width: 120 }
-                    , { field: 'IsFaceConsult', title: '是否面咨', width: 100 }
-                    , { field: 'Channelemp', title: '市场对接老师', width: 150 }
-                    , { field: 'StuStatus', title: '入学状态', width: 110, unresize: true }
+                    , { field: 'IsFaceConsult', title: '是否面咨', width: 85 }
+                    , { field: 'Channelemp', title: '市场对接老师', width: 115 }
+                    , { field: 'BeanDate', title: '备案时间', width: 160, templet: function (d) { return changeDateTimeFormat(d.BeanDate) }}
+                    , { field: 'NetClientDate', title: '回访时间', width: 160, templet: function (d) { return changeDateTimeFormat(d.NetClientDate) } }
+                    , { field: 'StuStatus', title: '入学状态', width: 90, unresize: true }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo1' }
                 ]]
                 , page: true
@@ -157,28 +189,7 @@
                 }
             });
 
-            //模糊查询点击事件
-            $("#Conditionselect").click(function () {
-                var name = $("#StuName").val();//网咨学生姓名
-                var stusex = $("#stusex").val();//学生性别
-                var recordemp = $("#recordemp").val();//备案人
-                var IsFaceConsult = $("#IsFaceConsult").val();//是否面咨
-                var findAreavalue = $("#findAreavalue").val();//所在区域
-                var graduschool = $("#graduschool").val();//毕业学校
-                var status = $("#status").val();//入学状态
-                console.log("所在区域：" + findAreavalue);
-                layui.use(['table'], function () {
-                    var table = layui.table;
-                    table.reload('mynetinfo', {
-                        page: {
-                            curr: 1 //重新从第 1 页开始
-                        }, where: {
-                            AppCondition: name + "," + stusex + "," + recordemp + "," + IsFaceConsult + "," + findAreavalue + "," + graduschool + "," + status
-                        }
-                    });
-                });
-
-            });
+           
 
             //日期
             var startTime = laydate.render({
@@ -233,6 +244,7 @@
             });
 
         });
+      
 
         //添加网咨学生信息的方法
         function AddNetStu() {

@@ -44,7 +44,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             List<NetClientRecordView> ncrlist = new List<NetClientRecordView>();
-            var list = ncrmanage.GetList().Where(s=>string.IsNullOrEmpty(Convert.ToString(s.NetClientDate))).OrderByDescending(n=>n.Id).ToList();
+            var list = ncrmanage.GetList().Where(s=>s.IsDel==false).OrderByDescending(n=>n.Id).ToList();
             foreach (var item in list)
             {
                 #region 获取属性值 
@@ -86,14 +86,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     ncrlist = ncrlist.Where(e => e.StuStatus == status).ToList();
                 }
             }
-            ncrlist = ncrlist.OrderBy(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var newncrlist= ncrlist.OrderBy(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
            
             var newobj = new
             {
                 code = 0,
                 msg = "",
-                count = list.Count(),
-                data = ncrlist
+                count = ncrlist.Count(),
+                data = newncrlist
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
@@ -124,7 +124,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ncrnew.SPRId = oldncr.SPRId;
                 ncrnew.EmpId = eid;
                 ncrnew.NetClientDate = DateTime.Now;
-                ncrnew.IsDel = oldncr.IsDel;
+                ncrnew.IsDel = true;
                 ncrnew.Grade = ncr.Grade;
                 ncrnew.CallBackCase = ncr.CallBackCase;
                 var ncrlist = nmanage.GetList().Where(s => s.SPRId == ncrnew.SPRId).ToList();
@@ -134,7 +134,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 nmanage.Insert(ncrnew);
                 AjaxResultxx = nmanage.Success();
                 //    BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加了一条回访学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
-               
+                if (AjaxResultxx.Success) {
+                    AjaxResultxx.Success= nmanage.UpdateNetClientDate(ncrnew.SPRId,ncrnew.NetClientDate);
+                }
             }
             catch (Exception ex)
             {
