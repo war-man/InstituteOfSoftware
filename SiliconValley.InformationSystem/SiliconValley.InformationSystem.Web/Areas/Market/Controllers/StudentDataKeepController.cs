@@ -164,6 +164,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 string findPary = Request.QueryString["S_party"].Trim();//关系人
                 string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
                 string markety = Request.QueryString["marketype"];//市场类型
+
+                string qq = Request.QueryString["S_QQ"].Trim();//QQ
+                string edution = Request.QueryString["eduttion"];//学历
+                string reack = Request.QueryString["S_Reack"];//其他说明
                 if (!string.IsNullOrEmpty(findNamevalue))
                 {
                     sb1.Append("and  StuName like  '%" + findNamevalue + "%'");
@@ -227,6 +231,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     sb1.Append(" and MarketType = '" + markety + "'");
                     sb2.Append(" and MarketState like '" + markety + "%'");
+                }
+
+                if (!string.IsNullOrEmpty(qq))
+                {
+                    sb1.Append(" and StuQQ = '" + qq + "'");
+                    sb2.Append(" and QQ = '" + qq + "'");
+                }
+
+                if (!string.IsNullOrEmpty(edution))
+                {
+                    sb1.Append(" and StuEducational = '" + edution + "'");
+                    sb2.Append(" and Education = '" + edution + "'");
+                }
+
+                if (!string.IsNullOrEmpty(reack))
+                {
+                    sb1.Append(" and Reak like '" + reack + "%'");
+                    sb2.Append(" and Remark like '" + reack + "%'");
                 }
                 #endregion               
 

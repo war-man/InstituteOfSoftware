@@ -33,7 +33,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //获取当前上传的操作人
         Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
 
-        // GET: /Market/Consult/AddSingConsultdata
+        // GET: /Market/Consult/
         public ActionResult ConsultIndex()
         {
             ViewBag.data = CM_Entity.GetConsultTeacher().Select(c => new ConsultShowData
@@ -305,25 +305,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             consult.Rmark = Request.Form["Rmark"];
             consult.StuName =  Convert.ToInt32(Request.Form["stuid"]);//备案Id
             consult.TeacherName = Convert.ToInt32(Request.Form["teacherid"]);//咨询Id
-           
-            a.Success= CM_Entity.AddSing(consult);
-            if (a.Success)
+            Consult finddata= CM_Entity.AccordingStuIdGetConsultData(consult.StuName);
+            if (finddata==null)
             {
-                  var name = Request.Form["TeacherName"];//获取咨询师名字
-                if (consult.StuName>=54118)
+                a.Success = CM_Entity.AddSing(consult);
+                if (a.Success)
                 {
-                    StudentPutOnRecord find = EmployandCounTeacherCoom.Studentrecond.GetEntity(consult.StuName);
-                    find.ConsultTeacher = name;
-                    a.Success= EmployandCounTeacherCoom.Studentrecond.My_update(find);
+                    var name = Request.Form["TeacherName"];//获取咨询师名字
+                    if (consult.StuName >= 54118)
+                    {
+                        StudentPutOnRecord find = EmployandCounTeacherCoom.Studentrecond.GetEntity(consult.StuName);
+                        find.ConsultTeacher = name;
+
+                        a.Success = EmployandCounTeacherCoom.Studentrecond.My_update(find);
+                        
+                    }
+                    else
+                    {
+                        Sch_Market find = EmployandCounTeacherCoom.Studentrecond.whereMarketId(consult.StuName);
+                        find.Inquiry = name;
+                        a = EmployandCounTeacherCoom.Studentrecond.s_entity.MyUpdate(find);
+                    }
+
+                }
+                if (a.Success)
+                {
+                    a.Msg = "指派成功！！";
                 }
                 else
                 {
-                    Sch_Market find = EmployandCounTeacherCoom.Studentrecond.whereMarketId(consult.StuName);
-                    find.Inquiry = name;
-                    a= EmployandCounTeacherCoom.Studentrecond.s_entity.MyUpdate(find);                 
+                    a.Msg = "系统异常，请重试！！";
                 }
-                  
             }
+            else
+            {
+                a.Success = false;
+                a.Msg = "已指派咨询师！！！";
+            }
+             
             return Json(a, JsonRequestBehavior.AllowGet);
         }         
     }
