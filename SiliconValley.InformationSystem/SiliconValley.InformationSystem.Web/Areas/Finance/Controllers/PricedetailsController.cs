@@ -18,6 +18,8 @@ using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 {
@@ -417,6 +419,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         /// <returns></returns>
         public ActionResult Entryreview(int id)
         {
+            //当前登陆人
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
             //学员信息
             StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
             string studentid = Request.QueryString["studentid"];
@@ -425,6 +430,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             ViewBag.vier = dbtext.FienPricesa(id);
             ViewBag.OddNumbers = Request.QueryString["OddNumbers"];
             ViewBag.Passornot = Request.QueryString["Passornot"];
+            ViewBag.paymentmethod= Request.QueryString["paymentmethod"];
+            //岗位数据
+            var positon = employeesInfoManage.GetPositionByEmpid(user.EmpNumber);
+           ViewBag.postName=   positon.PositionName.Contains("会计") == true ? 1 : 0;
+       
             return View();
         }
         /// <summary>

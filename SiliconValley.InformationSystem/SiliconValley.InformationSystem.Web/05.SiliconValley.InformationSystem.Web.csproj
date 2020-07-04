@@ -478,6 +478,7 @@
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\plugins\upload\trumbowyg.upload.php" />
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\trumbowyg.js" />
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\trumbowyg.min.js" />
+    <Content Include="Areas\Finance\images\shouju.jpg" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
@@ -1855,6 +1856,7 @@
     <Content Include="Areas\Teachingquality\Views\Messagenotification\Release.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\GetEmpETRDetail.cshtml" />
     <Content Include="libman.json" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Drivingschoolpayment.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

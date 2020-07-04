@@ -679,22 +679,36 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         /// <returns></returns>
         public List<StudentFeeRecordView> Nominaldata(string StudentID, string Name, string TypeID, string qBeginTime, string qEndTime)
         {
+            BaseBusiness<StudentFeeRecordView> StudentFeeRecordViewBusiness = new BaseBusiness<StudentFeeRecordView>();
             EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
             count++;
+            var x = StudentFeeRecordViewBusiness.GetList().Where(a => a.IsDelete == false).ToList();
             //.Mylist("StudentFeeRecord")
-            var x = studentfee.GetList().Where(a=>a.IsDelete==false).Select(a => new StudentFeeRecordView
-            {
-                StudenID = a.StudenID,
-                AddDate = (DateTime)a.AddDate,
-                Name = studentInformationBusiness.GetEntity(a.StudenID).Name,
-                FinancialstaffName = employeesInfoManage.GetEntity(finacemo.GetEntity(a.FinanceModelid).Financialstaff).EmpName,
-                ID = a.ID,
-                Amountofmoney = (decimal)a.Amountofmoney,
-                Costitemsid = a.Costitemsid,
-                ClassName = scheduleForTraineesBusiness.SutdentCLassName(a.StudenID) == null ? "暂无班级" : scheduleForTraineesBusiness.SutdentCLassName(a.StudenID).ClassID,
-                CostitemsName = costitemsBusiness.GetEntity(a.Costitemsid).Name,
-                StageName= costitemsBusiness.GetEntity(a.Costitemsid).Grand_id==null?"": geand.GetEntity(costitemsBusiness.GetEntity(a.Costitemsid).Grand_id).GrandName
-            }).ToList();
+            //var x = StudentFeeRecordViewBusiness.GetList().Where(a => a.IsDelete == false).Select(a=>new StudentFeeRecordView{
+            //   StudenID=  a.StudenID,
+            //    AddDate=a.AddDate,
+            //    Name= a.Name,
+            //    FinancialstaffName= a.FinancialstaffName,
+            //    ID=a.ID,
+            //    Amountofmoney= a.Amountofmoney,
+            //    Costitemsid= a.Costitemsid,
+            //    ClassName=a.ClassName,
+            //    CostitemsName=a.CostitemsName,
+            //    StageName=a.StageName
+            //}).ToList();
+            //var x = studentfee.GetList().Where(a=>a.IsDelete==false).Select(a => new StudentFeeRecordView
+            //{
+            //    StudenID = a.StudenID,
+            //    AddDate = (DateTime)a.AddDate,
+            //    Name = studentInformationBusiness.GetEntity(a.StudenID).Name,
+            //    FinancialstaffName = employeesInfoManage.GetEntity(finacemo.GetEntity(a.FinanceModelid).Financialstaff).EmpName,
+            //    ID = a.ID,
+            //    Amountofmoney = (decimal)a.Amountofmoney,
+            //    Costitemsid = a.Costitemsid,
+            //    ClassName = scheduleForTraineesBusiness.SutdentCLassName(a.StudenID) == null ? "暂无班级" : scheduleForTraineesBusiness.SutdentCLassName(a.StudenID).ClassID,
+            //    CostitemsName = costitemsBusiness.GetEntity(a.Costitemsid).Name,
+            //    StageName= costitemsBusiness.GetEntity(a.Costitemsid).Grand_id==null?"": geand.GetEntity(costitemsBusiness.GetEntity(a.Costitemsid).Grand_id).GrandName
+            //}).ToList();
             if (count == 1)
             {
                 x = x.Where(a => Convert.ToDateTime(a.AddDate).ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
@@ -964,6 +978,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             public decimal Amountofmoney { get; set; }
             public DateTime AddDate { get; set; }
             public string Passornot { get; set; }
+            public string Paymentmethod { get; set; }
             //单号
             public string OddNumbers { get; set; }
         }
@@ -986,6 +1001,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 costitemViews.id = item.id;
                 costitemViews.Passornot = item.Passornot;
                 costitemViews.OddNumbers = item.OddNumbers;
+                costitemViews.Paymentmethod = item.Paymentmethod;
                 var pay = PayviewPaymentverBusiness.GetList().Where(z => z.Paymentver == item.id).ToList();
                 foreach (var item1 in pay)
                 {
@@ -1020,7 +1036,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             {
                 costlist = costlist.Where(a => a.OddNumbers == OddNumbers).ToList();
             }
-            var dataList = costlist.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+            var dataList = costlist.OrderByDescending(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new
             {
