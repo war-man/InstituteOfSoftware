@@ -17,9 +17,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         [Key]
        public int id { get; set; }
         /// <summary>
-        /// 是否成功，null为待审核
+        /// 是否成功，null为待审核 1通过，2作废，3撤销
         /// </summary>
-       public bool ?Passornot { get; set; }
+       public string Passornot { get; set; }
         /// <summary>
         /// 单号
         /// </summary>
@@ -28,5 +28,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// 审核时间
         /// </summary>
        public DateTime? AddDate { get; set; }
+        /// <summary>
+        /// 收款方式
+        /// </summary>
+       public string Paymentmethod { get; set; }
     }
 }
