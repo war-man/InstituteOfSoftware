@@ -101,18 +101,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             BaseBusiness<ScheduleForTraineesview> ScheduleForTraineesviewBusiness = new BaseBusiness<ScheduleForTraineesview>();
             try
             {
+                EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
+                //岗位数据
+                var positon = employeesInfoManage.GetPositionByEmpid(user.EmpNumber);
                 List<ClassSchedule> list = new List<ClassSchedule>();
                 List<ClassSchedule> list1 = new List<ClassSchedule>();
                var dbclass= dbtext.GetListBySql<ClassSchedule>("select *from ClassSchedule").ToList();
-                if (user.UserName == "Admin")
+                if (user.UserName == "Admin" || positon.PositionName.Contains("咨询主任"))
                 {
                     list = dbclass.Where(a => a.ClassStatus == false && a.IsDelete == false).ToList();
                 }
                 else
                 {
-                    EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
-                    //岗位数据
-                    var positon = employeesInfoManage.GetPositionByEmpid(user.EmpNumber);
+                    
                     if (positon.PositionName.Contains("教质主任")|| positon.PositionName.Contains("教质副主任"))
                     {
                         //部门数据
@@ -205,7 +206,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     //Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
                     IsBool = classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault() == null ? "正常" : classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault().TypeName,
                     stuclasss = ScheduleForTraineesviewBusiness.GetListBySql<ScheduleForTraineesview>("select * from ScheduleForTraineesview where Classid=" + a.id).Count()
-              }).OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+              }).OrderByDescending(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
            
             //  var x = dbtext.GetList();
             var data = new
