@@ -154,7 +154,7 @@
                 console.log(data);
                 layer.open({
                     type: 2,
-                    content: "/Finance/Pricedetails/Entryreview/" + data.id + "?Passornot=" + data.Passornot + "&studentid=" + data.studentid + "&OddNumbers="+data.OddNumbers
+                    content: "/Finance/Pricedetails/Entryreview/" + data.id + "?Passornot=" + data.Passornot + "&studentid=" + data.studentid + "&OddNumbers=" + data.OddNumbers + "&paymentmethod=" + data.Paymentmethod
                     , area: ['800px', '600px']
                     , title: "入账审核"
                     , end: function () { table.reload('idTest'); }

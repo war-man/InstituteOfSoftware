@@ -16,6 +16,7 @@ namespace SiliconValley.InformationSystem.Web.App_Start.IPHander
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+
             string isEnabelIPintercep = ConfigurationManager.AppSettings["Enable"].ToString();
 
             if (isEnabelIPintercep == "false")
@@ -125,7 +126,7 @@ namespace SiliconValley.InformationSystem.Web.App_Start.IPHander
             return regex.IsMatch(str1);
         }
 
-        /// <summary>
+        /// <summary> 
         /// 获取浏览器版本号
         /// </summary>
         /// <returns></returns>

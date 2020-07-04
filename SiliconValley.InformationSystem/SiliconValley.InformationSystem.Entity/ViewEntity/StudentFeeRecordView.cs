@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// <summary>
     /// 学员缴费模型类
     /// </summary>
+   [Table("StudentFeeRecordView")]
    public class StudentFeeRecordView
     {
         /// <summary>
@@ -30,6 +33,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 缴费主键
         /// </summary>
+      [Key]
       public int ID { get; set; }
         /// <summary>
         /// 金额
@@ -51,5 +55,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 名目阶段
         /// </summary>
       public string StageName { get; set; }
+
+      public bool IsDelete { get; set; }
     }
 }
