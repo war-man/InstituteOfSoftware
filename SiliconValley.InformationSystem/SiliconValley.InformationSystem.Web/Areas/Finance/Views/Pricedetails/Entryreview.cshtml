@@ -31,6 +31,7 @@
         #table1 td {
             padding-top: 20px;
         }
+
         #No {
             position: absolute;
             right: 330px;
@@ -56,13 +57,17 @@
     </style>
 </head>
 <body>
-    @if (ViewBag.Passornot == "true")
+    @if (ViewBag.Passornot == "1")
     {
         <div id="Yes"></div>
     }
-    else if (ViewBag.Passornot =="false")
+    else if (ViewBag.Passornot == "2")
     {
         <div id="No"></div>
+    }
+    else if (ViewBag.Passornot == "3")
+    {
+        <div id="Revoke"></div>
     }
     <input type="text" id="ids" style="display:none;" value="@ViewBag.id" />
     <div style="float:left">
@@ -113,33 +118,46 @@
         @{
 
             var student = ViewBag.student as StudentInformation;
-            <table id="table1">
-                <tr>
-                    <td>学号：</td>
-                    <td>@student.StudentNumber</td>
-                </tr>
-                <tr>
-                    <td>姓名：</td>
-                    <td>@student.Name</td>
-                </tr>
-                <tr>
-                    <td>身份证：</td>
+        <table id="table1">
+            <tr>
+                <td>学号：</td>
+                <td>@student.StudentNumber</td>
+            </tr>
+            <tr>
+                <td>姓名：</td>
+                <td>@student.Name</td>
+            </tr>
+            <tr>
+                <td>身份证：</td>
 
-                    <td>@student.identitydocument</td>
-                </tr>
-                <tr>
-                    <td>单号：</td>
-                    @if (ViewBag.OddNumbers != "null")
-                    {
-                        <td>@ViewBag.OddNumbers</td>
-                    }
-                    else
-                    {
-                        <td> <input type="text" id="OddNumbers" lay-verify="required|number" placeholder="请输入单号" class="layui-input" /></td>
-                    }
+                <td>@student.identitydocument</td>
+            </tr>
+            <tr>
+                <td>单号：</td>
+                @if (ViewBag.OddNumbers != "null")
+                {
+                    <td>@ViewBag.OddNumbers</td>
+                }
+                else
+                {
+                    <td> <input type="text" id="OddNumbers" lay-verify="required|number" placeholder="单号" class="layui-input" /></td>
+                }
 
-                </tr>
-            </table>
+            </tr>
+            <tr>
+                <td>收款方式：</td>
+                @if (ViewBag.paymentmethod != "null")
+                {
+                    <td>@ViewBag.paymentmethod</td>
+                }
+                else
+                {
+                    <td> <input type="text" id="paymentmethod" lay-verify="required" placeholder="收款方式" class="layui-input" /></td>
+                }
+
+            </tr>
+
+        </table>
         }
 
         <div style="border-bottom:#ffffff solid 1px;border-left:#ffffff solid 1px;border-right:#ffffff solid 1px; height:60px;margin-top:224px;margin-left:-495px;">
@@ -148,6 +166,11 @@
                 {
                     <button class="layui-btn layui-btn-radius" type="button" id="Yess"><i class="layui-icon">&#xe605;</i>通过</button>
                     <button class="layui-btn layui-btn-radius layui-btn-danger" type="button" id="Nos"> <i class="layui-icon">&#x1006;</i>作废</button>
+                }
+                else if (ViewBag.Passornot == "1" )
+                {
+                    <button class="layui-btn layui-btn-radius layui-bg-gray" id="Revoke" type="button"><i class="layui-icon">&#xe702;</i>撤单</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-danger" id="Ceno" type="button"><i class="layui-icon">&#x1007;</i>关闭</button>
                 }
                 else
                 {
@@ -160,33 +183,55 @@
 
 </body>
 </html>
+
 <script>
     layui.use(['table', 'layer', 'tree', 'form'], function () {
         var table = layui.table;
-        var layer = layui.layer;
-        var form = layui.form;
+                    var layer = layui.layer;
+                    var form = layui.form;
         //同意
         $("#Yess").click(function () {
-            var Dabse = {
+         
+                 var Dabse = {
                 id: $("#ids").val(),
-                whether: true,
-                OddNumbers: $("#OddNumbers").val()
-            }
-            TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
-        });
+                whether: 1,
+                     OddNumbers: $("#OddNumbers").val(),
+                     paymentmethod: $("#paymentmethod").val()
+
+             }
+                    TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
+                });
         //拒绝
         $("#Nos").click(function () {
-            var Dabse = {
-                id: $("#ids").val(),
-                whether: false,
-                OddNumbers: $("#OddNumbers").val()
-            }
-            TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
+            layer.confirm("确认作废吗，作废后将无法恢复！", { title: "确认" }, function (index) {
+                var Dabse = {
+                    id: $("#ids").val(),
+                    whether: 2,
+                    OddNumbers: $("#OddNumbers").val(),
+                    paymentmethod: $("#paymentmethod").val()
+                }
+                TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
+                layer.close(index);
+            })
+                  
+        });
+        //撤单
+        $("#Revoke").click(function () {
+            layer.confirm("确认要撤单吗，撤单后不能恢复！", { title: "确认" }, function (index) {
+                var Dabse = {
+                    id: $("#ids").val(),
+                    whether: 3,
+
+                }
+                TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
+                  layer.close(index);
+            });
+
         });
         //关闭
         $("#Ceno").click(function () {
-            closeopen();
-        });
+                    closeopen();
+                });
     });
 
 </script>

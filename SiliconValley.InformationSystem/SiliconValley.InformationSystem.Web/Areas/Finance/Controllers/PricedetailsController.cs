@@ -434,9 +434,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         /// <param name="whether">是否入账</param>
         /// <param name="OddNumbers">单号</param>
         /// <returns></returns>
-        public ActionResult Tuitionentry(int id, bool whether, string OddNumbers)
+        public ActionResult Tuitionentry(int id, string whether, string OddNumbers,string paymentmethod)
         {
-            return Json(dbtext.Tuitionentry(id, whether, OddNumbers), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.Tuitionentry(id, whether, OddNumbers, paymentmethod), JsonRequestBehavior.AllowGet);
         }
 
         StudentDataKeepAndRecordBusiness stuDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
@@ -457,12 +457,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         /// <returns></returns>
         public ActionResult PrepaymentsDate(int page, int limit,string Name)
         {
-           var costlist= stuDataKeepAndRecordBusiness.GetAll();
+           var costlist= stuDataKeepAndRecordBusiness.GetSudentDataAll();
             if (!string.IsNullOrEmpty(Name))
             {
                 costlist = costlist.Where(a => a.StuName.Contains(Name)).ToList();
             }
-            var dataList = costlist.OrderBy(a => a.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var dataList = costlist.OrderByDescending(a => a.Id).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new
             {

@@ -36,8 +36,9 @@
                     <div class="layui-input-block">
                         <select name="IsaDopt">
                             <option value="" selected="">全部</option>
-                            <option value="true">已入账</option>
-                            <option value="false">已作废</option>
+                            <option value="1">已入账</option>
+                            <option value="2">已作废</option>
+                            <option value="3">已撤销</option>
                             <option value="null">待审核</option>
                         </select>
                     </div>
@@ -63,15 +64,23 @@
 
 <script type="text/html" id="barDemo">
 
-    {{#if (d.Passornot ==false){ }}
+    {{#if (d.Passornot ==2){ }}
     <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="process"><i class="layui-icon">&#x1007;</i>已作废</a>
-    {{#  } else if(d.Passornot ==true){ }}
+    {{#  } else if(d.Passornot ==1){ }}
     <a class="layui-btn layui-btn-xs layui-btn-sm" lay-event="process"><i class="layui-icon">&#x1005;</i>已入账</a>
+    {{#  } else if(d.Passornot ==3){ }}
+    <a class="layui-btn layui-btn-xs layui-bg-gray" lay-event="process"><i class="layui-icon">&#xe702;</i>已撤销</a>
     {{#  }else{ }}
 
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="process"><i class="layui-icon">&#xe6b2;</i>待处理</a>
     {{#   } }}
 
+</script>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getRemove"><i class="layui-icon">&#xe62e;</i>订单撤销</button>
+    </div>
 </script>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
@@ -159,7 +168,17 @@
 
         });
 
-
+        //监听头部工具栏
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getRemove':
+                    var a = "开设班级";
+                  
+                    break;
+           
+            };
+        });
     });
 
 </script>
