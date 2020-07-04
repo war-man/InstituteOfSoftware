@@ -13,21 +13,46 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 课件巡班记录表
+    /// </summary>
     [Table("Break")]
     public partial class Break
     {
         [Key]
         public int Id { get; set; }
-        public string ClassSchedule_Id { get; set; }
-        public Nullable<int> ClassRoomID { get; set; }
-        public Nullable<int> ReadNovels { get; set; }
-        public Nullable<int> PlayPhone { get; set; }
-        public Nullable<int> PlayGame { get; set; }
-        public Nullable<int> SeelpCount { get; set; }
-        public string EmployeesInfo_Id { get; set; }
+        /// <summary>
+        /// 班级编号
+        /// </summary>
+        public string ClassSchedule_Id { get; set; }     
+        /// <summary>
+        /// 巡班时间段
+        /// </summary>
         public Nullable<int> BaseDataEnum_Id { get; set; }
+        /// <summary>
+        /// 添加日期
+        /// </summary>
         public Nullable<System.DateTime> RecodeDate { get; set; }
+        /// <summary>
+        /// 备注说明
+        /// </summary>
         public string Rmark { get; set; }
+        
         public Nullable<bool> IsDelete { get; set; }
+
+        /// <summary>
+        /// 违纪类型编号
+        /// </summary>
+        public int Violationofdiscipline_Id { get; set; }
+
+       /// <summary>
+       /// 登记人
+       /// </summary>
+        public string Emp_Id { get; set; }
+
+        /// <summary>
+        /// 违纪人数
+        /// </summary>
+        public int Count { get; set; }
     }
 }

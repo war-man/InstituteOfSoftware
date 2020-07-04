@@ -23,7 +23,7 @@
             line-height: 36px;
         }
 
-        #but1:hover
+            #but1:hover
             {
                 background-color: aqua;
             }
@@ -113,10 +113,10 @@
             color: #fff;
         }
 
-        .layui-unselect
-        {
-            width: 200px;
-        }
+        /*.input2{
+           width:85%;
+           /*margin-left:15%;*/
+        }*/
     </style>
 </head>
 <body>
@@ -125,9 +125,9 @@
             <div class="layui-container">
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
+                        <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownList("Mygrand_select", ViewBag.classSchedules as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input linu" }, { "lay-filter", "grandselect_add" } })
+                            @Html.DropDownList("Mygrand_select", ViewBag.Add_grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input linu" }, { "lay-filter", "grandselect_add" } })
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -138,48 +138,36 @@
                             </select>
                         </div>
                     </div>
-                </div>              
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="layui-form-label">看小说个数:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(b => b.ReadNovels, new Dictionary<string, object>() { { "placeholder", "看小说个数" }, { "class", "layui-input linu" } })
-                        </div>
-
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">玩手机个数:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(b => b.PlayPhone, new Dictionary<string, object>() { { "placeholder", "玩手机个数" }, { "class", "layui-input linu" } })
-                        </div>
-                    </div>
                 </div>
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">睡&nbsp;觉&nbsp;个&nbsp;数:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(b => b.SeelpCount, new Dictionary<string, object>() { { "placeholder", "玩手机个数" }, { "class", "layui-input linu" } })
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">玩游戏个数:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(b => b.PlayGame, new Dictionary<string, object>() { { "placeholder", "玩游戏个数" }, { "class", "layui-input linu" } })
-                        </div>
-
-                    </div>
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="LableCss1">发现时间段:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(b => b.BaseDataEnum_Id, ViewBag.dataenum as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            @Html.DropDownListFor(b => b.BaseDataEnum_Id, ViewBag.Add_dataenum as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
 
                 </div>
+
+                @{
+                    List<SelectListItem> v_list = ViewBag.Add_V as List<SelectListItem>;
+
+                    foreach (SelectListItem it in v_list)
+                    {
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                <label class="LableCss1"><label>@it.Text</label>数量:</label>
+                                <div class="layui-input-block">
+                                    <input data-titype="@it.Value" class="layui-input input2" id="Count" name="Count" placeholder="@it.Text">
+                                </div>
+                             
+                            </div>
+                        </div>
+
+                    }
+                }
+
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明</label>
@@ -191,8 +179,8 @@
             </div>
             <div class="layui-form-item" style="margin-top:80px;">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
-                    <button class="layui-btn butCss1" onclick="MyClose()">取消</button>
+                    <button style="margin-left:35%;" class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
+                    <button class="layui-btn" onclick="MyClose()">取消</button>
                 </div>
             </div>
 
@@ -206,7 +194,7 @@
             layui.use('layer', function () {
                 var layer = layui.layer;
                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                parent.layer.close(index); //再执行关闭   
+                parent.layer.close(index); //再执行关闭
             });
         }
 
@@ -214,8 +202,16 @@
 
             layui.use(['form'], function () {
                 var form = layui.form;
+ 
                 form.on('submit(tijiao)', function (data) {
-                    //console.log(data.field);
+                   var one= $("input[name='Count']");
+                    var str = "";
+                    one.each(function (num, ele) {
+                        if ($(ele).val().length > 0) {
+                            str = str + $(ele).attr("data-titype") + ":" + $(ele).val() + ",";
+                        }
+                    });
+                    data.field.Count = str;                  
                     $.ajax({
                         url: '/Educational/Break/AddorEditFunction',
                         type: 'POST',
@@ -251,33 +247,7 @@
                     }
                 });
 
-                //获取教室
-                form.on('select(schoolAddress)', function (data) {
-                    $("#classroom_div")[0].innerHTML = "";
-                    if (data.value == "0") {
-                        layer.msg('请先有效的校区!!!', { icon: 2 });
-                    } else {
-                        var MY = { "schooldaddressval": data.value };
 
-                        //加载教室
-                        $.ajax({
-                            url: '/Educational/Reconcile/GetSchoolEmptyRoom',
-                            type: 'POST',
-                            data: MY,
-                            success: function (suc) {
-                                if (suc.Data.length > 0) {
-                                    for (var i = 0; i < suc.Data.length; i++) {
-                                        $('<input type="radio" name="myclassroom" id="myclassroom" value=' + suc.Data[i].Value + ' title= ' + suc.Data[i].Text + ' />').appendTo($("#classroom_div"));
-                                    }
-                                    form.render(); //更新全部
-                                } else {
-                                    layer.msg('该校区没有教室!!', { icon: 2, shade: 0.8 });
-                                }
-                            }
-                        });
-                    }
-
-                });
             });
 
 

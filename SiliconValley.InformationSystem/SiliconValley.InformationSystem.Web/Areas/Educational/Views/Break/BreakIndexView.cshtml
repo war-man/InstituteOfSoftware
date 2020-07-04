@@ -26,19 +26,30 @@
     </script>
 <div class="layui-form">
     <div class="layui-form">
-        <div style=" width:800px; display:inline-block;">
-            <label>班级:</label>
+        <div style="display:inline-block;">
+            <label>阶段:</label>
             <div style="display:inline-block">
-
+                @Html.DropDownList("s_grand", ViewBag.s_grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "s_grand" } })
+            </div>
+            <label>班级:</label>
+            <div style="display:inline-block" id="s_classDiv">
+                <select id="s_class" name="s_class">
+                    <option value="0">--请选择--</option>
+                </select>
+            </div>
+            <label>巡班时间</label>
+            <div style="display:inline-block">
+                @Html.DropDownList("s_time", ViewBag.s_dataenum as IEnumerable<SelectListItem>)
             </div>
             <label>开始时间:</label>
-            <div class="btn-group layui-container" style="width:120px;">
-                <input   class="layui-input" id="stateTime" placeholder="开始时间">
+            <div class="btn-group layui-container" style="width:140px;">
+                <input class="layui-input" id="stateTime" placeholder="开始时间">
             </div>
             <label>结束时间:</label>
-            <div class="btn-group layui-container" style="width:120px;">
-                <input   class="layui-input" id="endTime" placeholder="结束时间">
+            <div class="btn-group layui-container" style="width:140px;">
+                <input class="layui-input" id="endTime" placeholder="结束时间">
             </div>
+
             <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="serchBaseData()">查询</button>
         </div>
         <hr />
@@ -145,7 +156,6 @@
             });
             //头工具栏事件
             table.on('toolbar(break_table)', function (obj) {
-                alert(8)
                 switch (obj.event) {
                     case 'getCheckData':
                         layer.open({
@@ -191,7 +201,25 @@
                     });
                 }
             });
-           
+
+            //获取班级
+            form.on('select(s_grand)', function (data) {
+                $("#s_classDiv")[0].innerHTML = "";
+                if (data.value != "0") {
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                        success: function (sudata) {
+                            //获取班级slect
+                            var classselect = $('<select id="s_class" name="s_class"><option value="0" selected>--请选择--</select>');
+                            for (var i = 0; i < sudata.length; i++) {
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                            }
+                            $("#s_classDiv").append(classselect);
+                            form.render(); //更新全部
+                        }
+                    });
+                }
+            });
         });
 
         $(function () {
