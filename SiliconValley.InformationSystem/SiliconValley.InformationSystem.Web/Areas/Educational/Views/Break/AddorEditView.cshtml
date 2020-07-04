@@ -179,8 +179,8 @@
             </div>
             <div class="layui-form-item" style="margin-top:80px;">
                 <div class="layui-input-block">
-                    <button style="margin-left:35%;" class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
-                    <button class="layui-btn" onclick="MyClose()">取消</button>
+                    <button type="button" style="margin-left:35%;" class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
+                    <button type="button" class="layui-btn" onclick="MyClose()">取消</button>
                 </div>
             </div>
 
@@ -200,9 +200,9 @@
 
         $(function () {
 
-            layui.use(['form'], function () {
+            layui.use(['form','layer'], function () {
                 var form = layui.form;
- 
+                var layer = layui.layer;
                 form.on('submit(tijiao)', function (data) {
                    var one= $("input[name='Count']");
                     var str = "";
@@ -211,20 +211,28 @@
                             str = str + $(ele).attr("data-titype") + ":" + $(ele).val() + ",";
                         }
                     });
-                    data.field.Count = str;                  
-                    $.ajax({
-                        url: '/Educational/Break/AddorEditFunction',
-                        type: 'POST',
-                        data: data.field,
-                        success: function (SucData) {
-                            if (SucData == "ok") {
-                                window.parent.Heper('操作成功', 1, window.parent.Flush());
-                                MyClose();
-                            } else {
-                                window.parent.Heper('操作失败，请重试！！！', 2, window.parent.Flush());
+                    data.field.Count = str;    
+
+                    if (data.field.ClassSchedule_Id == undefined || data.field.ClassSchedule_Id == "0") {
+                        layer.msg('请选择班级！！！', { icon: 2 });
+                    } else if (str.length <= 0) {
+                        layer.msg('违纪人数不能为空！！！', { icon: 2 });
+                    } else {
+                        alert(8);
+                        $.ajax({
+                            url: '/Educational/Break/AddorEditFunction',
+                            type: 'POST',
+                            data: data.field,
+                            success: function (SucData) {
+                                if (SucData.Success) {
+                                    window.parent.Heper(SucData.Msg, 1, window.parent.Flush());
+                                    MyClose();
+                                } else {
+                                    window.parent.Heper(SucData.Msg, 2, window.parent.Flush());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }                   
                     return false;
                 });
 

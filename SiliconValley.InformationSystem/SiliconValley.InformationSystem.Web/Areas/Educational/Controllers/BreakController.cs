@@ -8,10 +8,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
-    [CheckLogin]
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Util;
+ 
     public static class MyEntity{
         public static readonly BreakManeger Break_Entity = new BreakManeger();
      }
+    [CheckLogin]
     public class BreakController : Controller
     {
         // GET: /Educational/Break/BreakIndexView
@@ -42,7 +45,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 List<Break> break_list = MyEntity.Break_Entity.GetList().Where(b=>b.IsDelete==false).ToList();
                 if (!string.IsNullOrEmpty(Name) && Name!="选择班级" && Name!="无")
                 {                    
-                    break_list = break_list.Where(b => b.ClassSchedule_Id == Name).ToList();
+                    //break_list = break_list.Where(b => b.ClassSchedule_Id == Name).ToList();
                 }
                 string starDate = Request.QueryString["starDate"];
                 if (!string.IsNullOrEmpty(starDate))
@@ -118,6 +121,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         [HttpPost]
         public ActionResult AddorEditFunction()
         {
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+
             int ClassSchedule_Id=Convert.ToInt32(Request.Form["ClassSchedule_Id"]);
 
             int BaseDataEnum_Id = Convert.ToInt32(Request.Form["BaseDataEnum_Id"]);//时间段
@@ -125,15 +130,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             string Rmark=  Request.Form["Rmark"];
 
             string Count = Request.Form["Count"];//违纪类型与人数
+
+            List<Break> blist = new List<Break>();
+
+            AjaxResult a = new AjaxResult();
             try
             {
+                string[] Counts= Count.Split(',');
+                foreach (string item in Counts)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        Break bre = new Break();
+                        bre.Count = Convert.ToInt32(item.Split(',')[1]);
+                        bre.Violationofdiscipline_Id = Convert.ToInt32(item.Split(',')[0]);
+                        bre.Emp_Id = UserName.EmpNumber;
+                        bre.ClassSchedule_Id = ClassSchedule_Id;
+                        bre.RecodeDate = DateTime.Now;
+                        bre.BaseDataEnum_Id = BaseDataEnum_Id;
+                        bre.IsDelete = false;
+                        bre.Rmark = Rmark;
+
+                        blist.Add(bre);
+                    }                                       
+                }
+
+               a= MyEntity.Break_Entity.Addlist(blist);
+
+
                 //if (b.Id > 0)
                 //{
                 //    //Break fin_b = MyEntity.Break_Entity.GetEntity(b.Id);                    
                 //    ////编辑
-                    
+
                 //    //fin_b.ClassSchedule_Id = b.ClassSchedule_Id;
- 
+
                 //    //fin_b.BaseDataEnum_Id = b.BaseDataEnum_Id;
                 //    //fin_b.Rmark = b.Rmark;
                 //    //MyEntity.Break_Entity.Update(fin_b);
@@ -141,12 +172,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 //else
                 //{
 
-                //    //添加
-                    
+                //    //添加                   
                 //    MyEntity.Break_Entity.Insert(b);
                 //}
 
-                return Json("ok", JsonRequestBehavior.AllowGet);
+                return Json(a, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
@@ -64,6 +65,24 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
             List<Grand> grands = Reconcile_Com.Grand_Entity.GetList().Where(g => g.IsDelete == false).ToList();
             return grands;
+        }
+
+        public AjaxResult Addlist(List<Break> list)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Insert(list);
+                a.Success = true;
+                a.Msg = "操作成功！";
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = "系统异常，请刷新重试！";
+            }
+
+            return a;
         }
     }
 }

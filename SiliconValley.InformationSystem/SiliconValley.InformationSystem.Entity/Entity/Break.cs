@@ -24,7 +24,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 班级编号
         /// </summary>
-        public string ClassSchedule_Id { get; set; }     
+        public int ClassSchedule_Id { get; set; }     
         /// <summary>
         /// 巡班时间段
         /// </summary>

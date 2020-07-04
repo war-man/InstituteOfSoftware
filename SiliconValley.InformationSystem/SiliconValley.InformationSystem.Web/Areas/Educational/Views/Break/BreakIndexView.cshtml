@@ -1,13 +1,15 @@
 ﻿
 @{
-    ViewBag.Title = "BreakIndexView";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "BreakIndexView";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using SiliconValley.InformationSystem.Entity.MyEntity
 @section style{
     <style>
         /*给添加的弹出框设置样式*/
-        body .demo-class .layui-layer-title 
+        body .demo-class .layui-layer-title
         {
             background: #009688;
             color: #fff;
@@ -15,15 +17,15 @@
         }
     </style>
 }
-    <script type="text/html" id="breaktoolbarDemo">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe608;</i>添加</button>
-        </div>
-    </script>
-    <script type="text/html" id="breakbarDemo">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>
+<script type="text/html" id="breaktoolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe608;</i>添加</button>
+    </div>
+</script>
+<script type="text/html" id="breakbarDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 <div class="layui-form">
     <div class="layui-form">
         <div style="display:inline-block;">
@@ -56,7 +58,7 @@
     </div>
 </div>
 <table id="break_table" lay-filter="break_table"></table>
- 
+
 @section script{
     <script>
         //转换时间的方法
@@ -106,10 +108,10 @@
                     });
                 });
             } else {
-                Heper('结束时间不能小于开始时间',2)
+                Heper('结束时间不能小于开始时间', 2)
             }
         }
-        layui.use(['table', 'form', 'layer','laydate'], function () {
+        layui.use(['table', 'form', 'layer', 'laydate'], function () {
             var table = layui.table;
             var form = layui.form;
             var layer = layui.layer;
@@ -126,7 +128,7 @@
                 , cols: [[
                     { type: 'radio', fixed: 'left' }
                     , { field: 'ClassSchedule_Id', title: '班级名称', fixed: 'left' }
-                    , { field: 'ClassName', title: '教室名称'}
+                    , { field: 'ClassName', title: '教室名称' }
                     , { field: 'ReadNovels', title: '看小说人数' }
                     , { field: 'PlayPhone', title: '玩手机人数' }
                     , { field: 'PlayGame', title: '玩游戏人数' }
@@ -160,7 +162,7 @@
                     case 'getCheckData':
                         layer.open({
                             type: 2,
-                            content: '/Educational/Break/AddorEditView'  
+                            content: '/Educational/Break/AddorEditView'
                             , area: ['900px', '600px'],
                             title: '添加信息'
                             , shade: 0.8
@@ -179,7 +181,7 @@
                     layer.confirm('真的删除行么?', function (index) {
                         $.ajax({
                             url: '/Educational/Break/Deletefunction/' + data.Id,
-                            type:"POST",
+                            type: "POST",
                             success: function (Sudata) {
                                 if (Sudata == "ok") {
                                     Heper("删除成功！！！", 1, Flush());

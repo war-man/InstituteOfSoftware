@@ -297,6 +297,14 @@
         //    }
         //});
 
+        //这是一个模糊查询的Enter快捷键
+        $(document).keydown(function (event) {
+            //console.log(event);
+            if (event.keyCode === 13) {
+                my_searchBtn();
+            }
+        });
+
         //这是一个模糊查询的方法
         $("#searchBtn").click(function () {
             my_searchBtn();
