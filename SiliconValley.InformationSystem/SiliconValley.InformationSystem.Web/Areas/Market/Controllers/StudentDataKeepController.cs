@@ -170,8 +170,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 string reack = Request.QueryString["S_Reack"];//其他说明
                 if (!string.IsNullOrEmpty(findNamevalue))
                 {
-                    sb1.Append("and  StuName like  '%" + findNamevalue + "%'");
-                    sb2.Append(" and StudentName like  '%" + findNamevalue + "%'");
+                    sb1.Append("and  StuName like  '" + findNamevalue + "%'");
+                    sb2.Append(" and StudentName like  '" + findNamevalue + "%'");
                 }
                 if (!string.IsNullOrEmpty(findPhonevalue))
                 {
@@ -239,7 +239,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     sb2.Append(" and QQ = '" + qq + "'");
                 }
 
-                if (!string.IsNullOrEmpty(edution))
+                if (!string.IsNullOrEmpty(edution) && edution!="0")
                 {
                     sb1.Append(" and StuEducational = '" + edution + "'");
                     sb2.Append(" and Education = '" + edution + "'");

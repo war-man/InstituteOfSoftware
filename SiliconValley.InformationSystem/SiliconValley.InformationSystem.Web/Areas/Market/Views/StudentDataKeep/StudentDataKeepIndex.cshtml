@@ -154,7 +154,8 @@
                         <label class="spanCss2">学生学历:</label>
                         <div class="divCss1">
                             <select class="layui-select" id="eduttion" name="eduttion">
-                                <option value="其他" selected>其他</option>
+                                <option value="0" selected>--请选择--</option>
+                                <option value="其他">其他</option>
                                 <option value="初中">初中</option>
                                 <option value="高中">高中</option>
                                 <option value="大专">大专</option>
@@ -266,7 +267,7 @@
             var S_QQ = $("#S_QQ").val();
             var eduttion = $("#eduttion").val();
             var S_Reack = $("#S_Reack").val();
-            if (findNamevalue.length <= 0 && findPhonevalue.length <= 0 && findInformationvalue == "0" && findStartvalue.length <= 0 && findEndvalue.length <= 0 && findAreavalue == "0" && findBeanManvalue.length <= 0 && S_consultTeacher == "0" && S_status == "0" && S_intosysMan.length <= 0 && S_party.length <= 0 && S_QQ.length <= 0 && eduttion.length <= 0 && S_Reack.length<=0) {
+            if (findNamevalue.length <= 0 && findPhonevalue.length <= 0 && findInformationvalue == "0" && findStartvalue.length <= 0 && findEndvalue.length <= 0 && findAreavalue == "0" && findBeanManvalue.length <= 0 && S_consultTeacher == "0" && S_status == "0" && S_intosysMan.length <= 0 && S_party.length <= 0 && S_QQ.length <= 0 && eduttion.length != "0" && S_Reack.length<=0) {
                 table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
             } else {
                 table.reload('tabletest1', {
