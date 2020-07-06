@@ -1,4 +1,4 @@
-﻿@model SiliconValley.InformationSystem.Entity.MyEntity.Break
+﻿@model SiliconValley.InformationSystem.Entity.MyEntity.MyBreak
 
 @{
     Layout = null;
@@ -23,7 +23,7 @@
             line-height: 36px;
         }
 
-            #but1:hover
+        #but1:hover
             {
                 background-color: aqua;
             }
@@ -113,10 +113,7 @@
             color: #fff;
         }
 
-        /*.input2{
-           width:85%;
-           /*margin-left:15%;*/
-        }*/
+     
     </style>
 </head>
 <body>
@@ -221,7 +218,6 @@
                     } else if (str.length <= 0) {
                         layer.msg('违纪人数不能为空！！！', { icon: 2 });
                     } else {
-                        alert(8);
                         $.ajax({
                             url: '/Educational/Break/AddorEditFunction',
                             type: 'POST',

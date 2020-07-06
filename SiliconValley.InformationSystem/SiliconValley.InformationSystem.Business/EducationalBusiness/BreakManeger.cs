@@ -96,5 +96,50 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return list;
         }
+
+        /// <summary>
+        /// 根据Id获取单个视图数据
+        /// </summary>
+        /// <returns></returns>
+        public BaseDataView GetSingData(int id)
+        {
+           List<BaseDataView> singe= this.GetListBySql<BaseDataView>("select *from BaseDataView where id=" + id + "");
+
+            return singe.Count > 0 ? singe[0] : null;
+        }
+
+        /// <summary>
+        /// 获取单条违纪数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MyBreak GetFindId(int id)
+        {
+           List<MyBreak> list=  this.GetListBySql<MyBreak>(" select *from  MyBreak where id=" + id + "");
+
+            return list.Count > 0 ? list[0] : null; 
+        }
+
+        /// <summary>
+        /// 修改单条数据
+        /// </summary>
+        /// <returns></returns>
+        public AjaxResult EditData(MyBreak newdata)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Update(newdata);
+                a.Success = true;
+                a.Msg = "修改成功！！！";
+            }
+            catch (Exception)
+            {
+
+                a.Msg = "系统异常，请重试！！！";
+            }
+
+            return a;
+        }
     }
 }

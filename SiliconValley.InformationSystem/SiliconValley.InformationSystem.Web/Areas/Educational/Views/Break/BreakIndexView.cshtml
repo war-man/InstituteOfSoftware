@@ -15,6 +15,10 @@
             color: #fff;
             border: none;
         }
+
+        .layui-unselect{
+          width:130px;
+        }
     </style>
 }
 <script type="text/html" id="breaktoolbarDemo">
@@ -38,6 +42,10 @@
                 <select id="s_class" name="s_class">
                     <option value="0">--请选择--</option>
                 </select>
+            </div>
+            <label>违纪类型:</label>
+            <div>
+                @Html.DropDownList("typeV", ViewBag.Selct_V as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
             </div>
             <label>巡班时间</label>
             <div style="display:inline-block">
@@ -128,8 +136,8 @@
                 , cols: [[
                     { type: 'radio', fixed: 'left' }
                     , { field: 'ClassNumber', title: '班级' }
-                    , { field: 'PlayPhone', title: '违纪名称' }
-                    , { field: 'PlayGame', title: '违纪人数' }
+                    , { field: 'Name', title: '违纪名称' }
+                    , { field: 'count', title: '违纪人数' }
                     , { field: 'EmpName', title: '录入人' }
                     , { field: 'BaseDataTime', title: '时间段' }
                     , {
@@ -191,8 +199,8 @@
                 } else if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
-                        content: '/Educational/Break/AddorEditView/' + data.Id
-                        , area: ['900px', '600px'],
+                        content: '/Educational/Break/EditView/' + data.Id
+                        , area: ['800px', '500px'],
                         title: '编辑信息'
                         , shade: 0.8
                         , anim: 4

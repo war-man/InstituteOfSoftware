@@ -45,7 +45,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// <summary>
         /// 违纪人数
         /// </summary>
-        public int Count { get; set; }
+        public int count { get; set; }
 
         /// <summary>
         /// 登记人姓名

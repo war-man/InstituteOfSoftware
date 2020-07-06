@@ -30,6 +30,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             BaseDataEnum find_data = BreakManeger.BaseDataEnum_Entity.GetSingData("巡班时间段", false);
             ViewBag.s_dataenum = BreakManeger.BaseDataEnum_Entity.GetChildData(find_data.Id).Select(b => new SelectListItem { Text = b.Name, Value = b.Id.ToString() }).ToList();
 
+ 
+            //获取上课违纪类型
+            BaseDataEnum find_dataV = BreakManeger.BaseDataEnum_Entity.GetSingData("上课违纪类型", false);
+            List<SelectListItem> typelist = BreakManeger.BaseDataEnum_Entity.GetChildData(find_dataV.Id).Select(b => new SelectListItem { Text = b.Name, Value = b.Id.ToString(),Selected=false }).ToList();
+            typelist.Add(new SelectListItem() { Text="--请选择--" ,Value="0" ,Selected=true});
+            ViewBag.Selct_V = typelist;
             return View();
         }
         /// <summary>
@@ -183,6 +189,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 fin_b.IsDelete = true;
                 MyEntity.Break_Entity.Update(fin_b);
                 return Json("ok", JsonRequestBehavior.AllowGet);            
+        }
+
+        public ActionResult EditView(int id)
+        {
+            //根据Id获取要修改的数据
+            BaseDataView find= MyEntity.Break_Entity.GetSingData(id);
+
+            //加载阶段
+            List<SelectListItem> g_list = MyEntity.Break_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString(), Selected = false }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.Add_grandlist = g_list;
+            return View(find);
+        }
+
+        [HttpPost]
+        public ActionResult EditFunction(BaseDataView newdata)
+        {
+            MyBreak find = MyEntity.Break_Entity.GetFindId(newdata.Id);
+
+            find.ClassSchedule_Id = newdata.ClassSchedule_Id;
+            find.Count = newdata.count;
+            find.Rmark = newdata.Rmark;
+
+           AjaxResult a=  MyEntity.Break_Entity.EditData(find);
+
+            return Json(a,JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -1,0 +1,231 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity.BaseDataView
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .DivCss
+        {
+            width: 95%;
+            margin: 0px auto;
+        }
+
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover
+            {
+                background-color: aqua;
+            }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .TextAreCss1
+        {
+            height: 80px;
+        }
+
+        .butCss1
+        {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+
+        .formCssOne{
+        margin-top:20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="DivCss">
+        <form class="layui-form formCssOne">
+            <div class="layui-container">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段:</label>
+                        <div class="layui-input-block">
+                            <input name="id" id="id" type="hidden" value="@Model.Id"/>
+                            @Html.DropDownList("Mygrand_select", ViewBag.Add_grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input linu" }, { "lay-filter", "grandselect_add" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
+                        <div id="class_addDiv" class="layui-input-block">
+                            <select name="ClassSchedule_Id" id="ClassSchedule_Id">
+                                <option value="@Model.ClassSchedule_Id">@Model.ClassNumber</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="LableCss1">发现时间段:</label>
+                        <div class="layui-input-block">
+                            <select class="layui-input" name="BaseDataTime" id="BaseDataTime">
+                                @{
+                                    if (Model.BaseDataTime == "上午")
+                                    {
+                                        <option selected="selected" value="上午">上午</option>
+                                        <option value="下午">下午</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="上午">上午</option>
+                                        <option value="下午" selected="selected">下午</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="LableCss1"><label>@Model.Name</label>数量:</label>
+                        <div class="layui-input-block">
+                            <input data-titype="" class="layui-input input2" id="Count" name="Count" value="@Model.count">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明</label>
+                        <div class="layui-input-block">
+                            @Html.TextArea("Rmark",Model.Rmark, new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top:80px;">
+                <div class="layui-input-block">
+                    <button type="button" style="margin-left:35%;" class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
+                    <button type="button" class="layui-btn" onclick="MyClose()">取消</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use('form', function () {
+            var form = layui.form;
+            //获取班级
+            form.on('select(grandselect_add)', function (data) {
+                $("#class_addDiv")[0].innerHTML = "";
+                if (data.value != "0") {
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                        success: function (sudata) {
+                            //获取班级slect
+                            var classselect = $('<select id="ClassSchedule_Id" name="ClassSchedule_Id" class="layui-select linu" ></select>');
+                            for (var i = 0; i < sudata.length; i++) {
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                            }
+                            $("#class_addDiv").append(classselect);
+                            form.render(); //更新全部
+                        }
+                    });
+                }
+            });
+
+            form.on('submit(tijiao)', function (data) {                 
+                    $.ajax({
+                        url: '/Educational/Break/EditFunction',
+                        type: 'POST',
+                        data: data.field,
+                        success: function (SucData) {
+                            if (SucData.Success) {
+                                window.parent.Heper(SucData.Msg, 1, window.parent.Flush());
+                                MyClose();
+                            } else {
+                                window.parent.Heper(SucData.Msg, 2, window.parent.Flush());
+                            }
+                        }
+                    });               
+                return false;
+            });
+        });
+        //关闭
+        function MyClose() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            });
+        }
+
+    </script>
+</body>
+</html>

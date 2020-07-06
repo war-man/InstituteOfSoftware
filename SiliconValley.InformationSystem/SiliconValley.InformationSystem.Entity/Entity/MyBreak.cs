@@ -16,7 +16,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     /// <summary>
     /// 课件巡班记录表
     /// </summary>
-    [Table("Break")]
+    [Table("MyBreak")]
     public partial class MyBreak
     {
         [Key]
@@ -32,7 +32,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 添加日期
         /// </summary>
-        public Nullable<System.DateTime> RecodeDate { get; set; }
+        public DateTime RecodeDate { get; set; }
         /// <summary>
         /// 备注说明
         /// </summary>
