@@ -73,6 +73,7 @@
       <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Linq.Dynamic">
@@ -91,6 +92,7 @@
     <Compile Include="00Cache\BaseCache\BaseCache.T.cs" />
     <Compile Include="00Cache\BaseCache\IBaseCache.T.cs" />
     <Compile Include="00Cache\Base_UserModelCache.cs" />
+    <Compile Include="BaiduAPI_Business\IdentificationBusines.cs" />
     <Compile Include="BaseBusiness\BaseBusiness.T.cs" />
     <Compile Include="BaseDataEnum_Business\BaseDataEnumBusiness.cs" />
     <Compile Include="BaseSysManage\Base_UserBusiness.cs" />
