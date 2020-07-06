@@ -74,14 +74,16 @@
                         <label class="layui-form-label">班级</label>
                         @Html.HiddenFor(a => a.ClassID)
                         <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="Lists" style="display:none; border:0px;" readonly="readonly" />
+                            @Html.DropDownList("ClassID", ViewBag.preentryfeeViews as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input" } })
+
+                            @*<input type="text" class="layui-input" id="Lists" style="display:none; border:0px;" readonly="readonly" />*@
                         </div>
 
-                        <div class="layui-input-inline" id="CLassNames">
+                        @*<div class="layui-input-inline" id="CLassNames">
                             <button type="button" style="width:190px;height:38px;" class="layui-btn layui-btn-sm layui-btn-primary">
                                 <i class="layui-icon" id="ClassName" style="margin-left:156px;">&#xe615;</i>
                             </button>
-                        </div>
+                        </div>*@
                     </div>
                     <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
                         <label class="layui-form-label">缴费金额</label>
@@ -138,18 +140,18 @@
             //return false;
 
             var datas = data.field;
-          
-            if ($("#Lists").val() != "") {
+
+            console.log(datas);
 
                 ajaxprice("/Finance/Pricedetails/PaytheadvancefeeAdd", datas, function () {
                     
                     window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 900, 600);
-                    //var index = parent.layer.getFrameIndex(window.name);
+                    var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);//关闭当前页  
                  
                 });
               
-            }
+            
         });
         //正在执行中
         function showLoad() {

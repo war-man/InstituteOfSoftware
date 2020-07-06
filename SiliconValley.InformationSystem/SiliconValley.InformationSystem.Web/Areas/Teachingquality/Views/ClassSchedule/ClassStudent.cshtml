@@ -223,7 +223,7 @@
             <div>
                 <button type="button" id="Basicinformation" class="layui-btn layui-btn-fluid mybut">基本资料</button>
             </div>
-              <div>
+            <div>
                 <button type="button" id="IDcardphoto" class="layui-btn layui-btn-fluid mybut">身份证照片</button>
             </div>
             <div>
@@ -234,6 +234,9 @@
             </div>
             <div>
                 <button type="button" id="getpaswwd" class="layui-btn layui-btn-fluid mybut">密码修改</button>
+            </div>
+            <div>
+                <button type="button" id="Dormitoryarrangement" class="layui-btn layui-btn-fluid mybut">新生入住</button>
             </div>
 
         </div>
@@ -777,13 +780,34 @@
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         }
-        //照片变更
+        //身份证照上传
         $("#IDcardphoto").click(function () {
             if ($(".color").length == 1) {
                 var x = $($($(".color")[0]).children()[0]).text();
                 console.log(x);
                 IDcardphoto(x)
              
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+
+        });
+        //新手入住
+        $("#Dormitoryarrangement").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+
+             
+                layer.open({
+                    title: "基本资料",
+                    type: 2,
+                    area: ['1000px', '800px']
+                    , content: "/Dormitory/NewbornR/NewBornrView?studentNumber=" + x
+                    , end: function () { }
+                    , anim: 1,
+                    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                });
+           ///
             } else {
                 layer.alert('请选择一个学员', { icon: 0 });
             }
