@@ -23,3 +23,5 @@
 {"GuidKey":"53b0ce05-e4ef-4299-a806-e80547f4cefb","IPAddress":"::1","RequestTime":"2020-07-04 14:09:20","BrowseVersion":"Chrome83.0","OSVersion":"Windows 10"}
 {"GuidKey":"6edae618-019f-4ca3-87b5-fc0989b3e3ae","IPAddress":"::1","RequestTime":"2020-07-04 14:45:54","BrowseVersion":"Chrome83.0","OSVersion":"Windows 10"}
 {"GuidKey":"babe1fc3-9e41-4702-8402-76c13d6996ca","IPAddress":"::1","RequestTime":"2020-07-04 14:46:03","BrowseVersion":"Chrome83.0","OSVersion":"Windows 10"}
+{"GuidKey":"78fa7b94-9cc4-4c8e-89f4-c0e826017ee7","IPAddress":"::1","RequestTime":"2020-07-06 08:40:47","BrowseVersion":"Firefox78.0","OSVersion":"Windows 10"}
+{"GuidKey":"a932870a-ef04-45d0-8371-12f95eb3fa66","IPAddress":"::1","RequestTime":"2020-07-06 08:40:56","BrowseVersion":"Firefox78.0","OSVersion":"Windows 10"}
