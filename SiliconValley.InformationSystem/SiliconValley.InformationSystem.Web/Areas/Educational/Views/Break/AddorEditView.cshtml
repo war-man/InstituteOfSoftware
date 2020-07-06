@@ -142,8 +142,11 @@
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="LableCss1">发现时间段:</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownListFor(b => b.BaseDataEnum_Id, ViewBag.Add_dataenum as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        <div class="layui-input-block">                   
+                            <select class="layui-input" name="BaseDataTime" id="BaseDataTime">
+                                <option value="上午" selected>上午</option>
+                                <option value="下午">下午</option>
+                            </select>
                         </div>
                     </div>
 

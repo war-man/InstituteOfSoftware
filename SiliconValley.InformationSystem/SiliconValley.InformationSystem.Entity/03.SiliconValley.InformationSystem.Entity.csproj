@@ -89,7 +89,7 @@
     <Compile Include="Entity\BeOnDuty.cs" />
     <Compile Include="Entity\BiddingRecord.cs" />
     <Compile Include="Entity\BookInformation.cs" />
-    <Compile Include="Entity\Break.cs" />
+    <Compile Include="Entity\MyBreak.cs" />
     <Compile Include="Entity\CancelLeaveApply.cs" />
     <Compile Include="Entity\Cancelreceipt.cs" />
     <Compile Include="Entity\CandidateInfo.cs" />
@@ -490,6 +490,7 @@
     <Compile Include="ViewEntity\ThearStuCommentView.cs" />
     <Compile Include="ViewEntity\TM_Data\Laterecord.cs" />
     <Compile Include="ViewEntity\TM_Data\Laterecord_StudentAttendance.cs" />
+    <Compile Include="ViewEntity\TM_Data\MyViewEntity\BaseDataView.cs" />
     <Compile Include="ViewEntity\TM_Data\TM_ConsultView.cs" />
     <Compile Include="ViewEntity\TotalcostView.cs" />
     <Compile Include="ViewEntity\TraineeDateVIew.cs" />

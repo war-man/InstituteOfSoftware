@@ -127,14 +127,11 @@
                 , title: '用户数据表'
                 , cols: [[
                     { type: 'radio', fixed: 'left' }
-                    , { field: 'ClassSchedule_Id', title: '班级名称', fixed: 'left' }
-                    , { field: 'ClassName', title: '教室名称' }
-                    , { field: 'ReadNovels', title: '看小说人数' }
-                    , { field: 'PlayPhone', title: '玩手机人数' }
-                    , { field: 'PlayGame', title: '玩游戏人数' }
-                    , { field: 'SeelpCount', title: '睡觉人数' }
-                    , { field: 'E_Name', title: '记录人' }
-                    , { field: 'DataEnumName', title: '时间段' }
+                    , { field: 'ClassNumber', title: '班级' }
+                    , { field: 'PlayPhone', title: '违纪名称' }
+                    , { field: 'PlayGame', title: '违纪人数' }
+                    , { field: 'EmpName', title: '录入人' }
+                    , { field: 'BaseDataTime', title: '时间段' }
                     , {
                         field: 'RecodeDate', title: '日期', templet: function (res) {
                             return TimeChange(res.RecodeDate);

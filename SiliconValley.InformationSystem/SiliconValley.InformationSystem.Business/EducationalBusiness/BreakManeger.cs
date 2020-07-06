@@ -9,10 +9,11 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
-   public class BreakManeger:BaseBusiness<Break>
+   public class BreakManeger:BaseBusiness<MyBreak>
     {         
         public static readonly ClassroomManeger Classroom_Entity = new ClassroomManeger();
         public static readonly EmployeesInfoManage Employee_Entity = new EmployeesInfoManage();
@@ -67,7 +68,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return grands;
         }
 
-        public AjaxResult Addlist(List<Break> list)
+        public AjaxResult Addlist(List<MyBreak> list)
         {
             AjaxResult a = new AjaxResult();
             try
@@ -83,6 +84,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
 
             return a;
+        }
+
+        /// <summary>
+        /// 获取所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<BaseDataView> ALL_DATA()
+        {
+            List <BaseDataView> list= this.GetListBySql<BaseDataView>("select *from BaseDataView");
+
+            return list;
         }
     }
 }

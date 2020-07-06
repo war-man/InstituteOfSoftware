@@ -10,7 +10,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Util;
- 
+    using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
+
     public static class MyEntity{
         public static readonly BreakManeger Break_Entity = new BreakManeger();
      }
@@ -41,35 +42,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             try
             {
-                string Name = Request.QueryString["classname"];
-                List<Break> break_list = MyEntity.Break_Entity.GetList().Where(b=>b.IsDelete==false).ToList();
-                if (!string.IsNullOrEmpty(Name) && Name!="选择班级" && Name!="无")
-                {                    
-                    //break_list = break_list.Where(b => b.ClassSchedule_Id == Name).ToList();
-                }
-                string starDate = Request.QueryString["starDate"];
-                if (!string.IsNullOrEmpty(starDate))
-                {
+                //string Name = Request.QueryString["classname"];
+                List<BaseDataView> break_list = MyEntity.Break_Entity.ALL_DATA().Where(b=>b.IsDelete==false).OrderByDescending(b=>b.Id).ToList();
+                //if (Name!=null)
+                //{                    
+                //    //break_list = break_list.Where(b => b.ClassSchedule_Id == Name).ToList();
+                //}
+                //string starDate = Request.QueryString["starDate"];
+                //if (!string.IsNullOrEmpty(starDate))
+                //{
 
-                    break_list = break_list.Where(b => b.RecodeDate >= Convert.ToDateTime(starDate)).ToList();
-                }
+                //    break_list = break_list.Where(b => b.RecodeDate >= Convert.ToDateTime(starDate)).ToList();
+                //}
 
-                string endDate = Request.QueryString["endDate"];
-                if (!string.IsNullOrEmpty(endDate))
-                {
-                    break_list = break_list.Where(b => b.RecodeDate <= Convert.ToDateTime(endDate)).ToList();
-                }
-                var mydata = break_list.OrderByDescending(b=>b.Id).Skip((page - 1) * limit).Take(limit).Select(b=>new {
-                    Id=b.Id,
-                    ClassSchedule_Id=b.ClassSchedule_Id,
-                   
-                    BaseDataEnum_Id = b.BaseDataEnum_Id,
-                    RecodeDate = b.RecodeDate,
-                    Rmark=b.Rmark,
-                    IsDelete =b.IsDelete,
-                     
-                    DataEnumName=BreakManeger.BaseDataEnum_Entity.GetSingData(b.BaseDataEnum_Id.ToString(),true).Name
-                }).ToList();
+                //string endDate = Request.QueryString["endDate"];
+                //if (!string.IsNullOrEmpty(endDate))
+                //{
+                //    break_list = break_list.Where(b => b.RecodeDate <= Convert.ToDateTime(endDate)).ToList();
+                //}
+                var mydata = break_list.Skip((page - 1) * limit).Take(limit);
+
                 var datajson = new
                 {
                     code = 0,
@@ -79,12 +71,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 };
                 return Json(datajson, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                string st = ex.Message;
             }
-            
+
+            return null;
         }
 
         public ActionResult AddorEditView(int? Id)
@@ -94,14 +87,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
             ViewBag.Add_grandlist = g_list;
 
-            //获取巡班时间段
-            BaseDataEnum find_data= BreakManeger.BaseDataEnum_Entity.GetSingData("巡班时间段", false);
-            ViewBag.Add_dataenum = BreakManeger.BaseDataEnum_Entity.GetChildData(find_data.Id).Select(b=>new SelectListItem { Text = b.Name, Value = b.Id.ToString() }).ToList();
-
             //获取上课违纪类型
             BaseDataEnum find_dataV = BreakManeger.BaseDataEnum_Entity.GetSingData("上课违纪类型", false);
             ViewBag.Add_V = BreakManeger.BaseDataEnum_Entity.GetChildData(find_dataV.Id).Select(b => new SelectListItem { Text = b.Name, Value = b.Id.ToString() }).ToList();
-
 
             
 
@@ -113,7 +101,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             else
             {
                 //编辑
-               Break find_b= MyEntity.Break_Entity.GetEntity(Id);                 
+               MyBreak find_b= MyEntity.Break_Entity.GetEntity(Id);                 
                     return View(find_b);                            
             }
             
@@ -125,13 +113,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
             int ClassSchedule_Id=Convert.ToInt32(Request.Form["ClassSchedule_Id"]);
 
-            int BaseDataEnum_Id = Convert.ToInt32(Request.Form["BaseDataEnum_Id"]);//时间段
+            string BaseDataTime =  Request.Form["BaseDataTime"];//时间段
 
             string Rmark=  Request.Form["Rmark"];
 
             string Count = Request.Form["Count"];//违纪类型与人数
 
-            List<Break> blist = new List<Break>();
+            List<MyBreak> blist = new List<MyBreak>();
 
             AjaxResult a = new AjaxResult();
             try
@@ -141,13 +129,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 {
                     if (!string.IsNullOrEmpty(item))
                     {
-                        Break bre = new Break();
-                        bre.Count = Convert.ToInt32(item.Split(',')[1]);
-                        bre.Violationofdiscipline_Id = Convert.ToInt32(item.Split(',')[0]);
+                        string[] istr = item.Split(':');
+                        MyBreak bre = new MyBreak();
+                        bre.Count = Convert.ToInt32(istr[1]);
+                        bre.Violationofdiscipline_Id = Convert.ToInt32(istr[0]);
                         bre.Emp_Id = UserName.EmpNumber;
                         bre.ClassSchedule_Id = ClassSchedule_Id;
                         bre.RecodeDate = DateTime.Now;
-                        bre.BaseDataEnum_Id = BaseDataEnum_Id;
+                        bre.BaseDataTime = BaseDataTime;
                         bre.IsDelete = false;
                         bre.Rmark = Rmark;
 
@@ -187,10 +176,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         }
         
         [HttpPost]
-
         public ActionResult Deletefunction(int Id)
         {
-            Break fin_b = MyEntity.Break_Entity.GetEntity(Id);
+            MyBreak fin_b = MyEntity.Break_Entity.GetEntity(Id);
              //删除
                 fin_b.IsDelete = true;
                 MyEntity.Break_Entity.Update(fin_b);

@@ -17,7 +17,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     /// 课件巡班记录表
     /// </summary>
     [Table("Break")]
-    public partial class Break
+    public partial class MyBreak
     {
         [Key]
         public int Id { get; set; }
@@ -28,7 +28,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 巡班时间段
         /// </summary>
-        public Nullable<int> BaseDataEnum_Id { get; set; }
+        public string BaseDataTime { get; set; }
         /// <summary>
         /// 添加日期
         /// </summary>
@@ -38,7 +38,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public string Rmark { get; set; }
         
-        public Nullable<bool> IsDelete { get; set; }
+        public  bool IsDelete { get; set; }
 
         /// <summary>
         /// 违纪类型编号
