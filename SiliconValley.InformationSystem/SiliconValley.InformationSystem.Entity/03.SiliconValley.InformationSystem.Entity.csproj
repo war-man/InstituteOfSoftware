@@ -397,6 +397,7 @@
     <Compile Include="ViewEntity\grand_number.cs" />
     <Compile Include="ViewEntity\HeadmasterView.cs" />
     <Compile Include="ViewEntity\HealthRegistrationtableview.cs" />
+    <Compile Include="ViewEntity\IdCard.cs" />
     <Compile Include="ViewEntity\InsuranceStudentView.cs" />
     <Compile Include="ViewEntity\InsuranceView.cs" />
     <Compile Include="ViewEntity\layuitableview.cs" />

@@ -50,6 +50,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AipSdk, Version=3.6.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Baidu.AI.3.6.14\lib\net45\AipSdk.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.1.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
@@ -3548,6 +3551,7 @@
     <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20201113033222阳亮.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExportAll\20200605090846.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExportAll\20200606082337.xls" />
+    <Content Include="Views\Home\IdCard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
