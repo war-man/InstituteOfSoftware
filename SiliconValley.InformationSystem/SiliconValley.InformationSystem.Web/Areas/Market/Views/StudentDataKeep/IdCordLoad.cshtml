@@ -1,0 +1,76 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>IdCordLoad</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="layui-upload" style="margin-top:20px">
+        <button type="button" class="layui-btn" id="test1">选择图片</button>
+        <button type="button" class="layui-btn" id="test2" style="position:absolute;right:10px;" onclick="Tijiao()">确定提交</button>
+        <div class="layui-upload-list" style="text-align:center">
+            <img class="layui-upload-img" id="demo1" width="400" height="200">
+            <p id="demoText"></p>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        var idcaord = "";
+        layui.use('upload', function () {
+            var upload = layui.upload;
+            var layer = layui.layer;
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#test1'
+                , url: '/Market/StudentDataKeep/Identification' //改成您自己的上传接口
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#demo1').attr('src', result); //图片链接（base64）                        
+                    });
+                }
+                , done: function (res) {
+                    if (res.ErrorCode == 200) {
+                        idcaord = res.Data;
+                    } else {
+                        layer.msg('系统异常，请重试', { icon: 2,shade:0.8});
+                    }
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function () {
+                        uploadInst.upload();
+                    });
+                }
+            });
+        });
+
+        function Tijiao() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                if (idcaord == "" || idcaord.length <= 0) {
+                    layer.msg("请选择图片!!!", { iocn: 2,shade:0.8});
+                } else {
+                    //当你在iframe页面关闭自身时
+                    window.parent.SetIdCord(idcaord);
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭   
+                }
+                
+               
+            });
+            
+        }
+    </script>
+</body>
+</html>

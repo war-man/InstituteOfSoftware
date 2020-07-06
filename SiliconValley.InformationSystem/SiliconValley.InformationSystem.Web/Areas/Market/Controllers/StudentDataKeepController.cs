@@ -37,6 +37,8 @@ using System.Text.RegularExpressions;
 using BaiduBce;
 using BaiduBce.Auth;
 using BaiduBce.Services.Bos;
+using System.Configuration;
+using SiliconValley.InformationSystem.Business.BaiduAPI_Business;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -44,7 +46,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     [CheckLogin]
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/FllowView
+        // GET: /Market/StudentDataKeep/
 
         #region 创建实体
 
@@ -1467,11 +1469,56 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             return Json(a, JsonRequestBehavior.AllowGet);
         }
+        
+        /// <summary>
+        /// 图片上传页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult IdCordLoad()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 获取身份证
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Identification()
+        {
+            AjaxResult result = new AjaxResult();
+            var file = Request.Files[0];
+            var appid = ConfigurationManager.AppSettings["AppID"].ToString();
+            var API_Key = ConfigurationManager.AppSettings["API_Key"].ToString();
+            var Secret_Key = ConfigurationManager.AppSettings["Secret_Key"].ToString();
+            //创建请求路由
+            var client = new Baidu.Aip.Ocr.Ocr(API_Key, Secret_Key);
+            var idCardSide = "front";
+            var imageByte = file.InputStream.ReadToBytes();
+            try
+            {
+                var res = client.Idcard(imageByte, idCardSide);
+                var root = res.Root.ToString();
+                var data = IdentificationBusines.GetFrontInfo(root);
+                result.ErrorCode = 200;
+                result.Msg = "识别成功";
+                result.Data = data.CardNumber;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "异常";
+                result.Data = null;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
 
         #region 一键转咨询师
-         public ActionResult ChangTeacher()
+        public ActionResult ChangTeacher()
         {
             string[] id = Request.Form["id"].Split(',') ;
             int teacherid =Convert.ToInt32(Request.Form["teacherid"]);

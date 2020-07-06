@@ -20,6 +20,7 @@ using SiliconValley.InformationSystem.Business.NetClientRecordBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data;
+using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -1080,5 +1081,15 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
         }
         
+        /// <summary>
+        /// 获取已缴预录费的身份证
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetylfCord(int id)
+        {
+
+            return null;
+        }
     }
 }
