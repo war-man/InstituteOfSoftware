@@ -506,35 +506,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         {
             var allclasslist = new List<ClassSchedule>();
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
-            //List<ClassCourseView> resultlist = new List<ClassCourseView>();
-
-
-            //Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-            //SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
-
-            //var emplist = dbsatis.GetMyDepEmp(user);
-
-            //TeacherBusiness dbteacher = new TeacherBusiness();
-
-            //foreach (var item in emplist)
-            //{
-            //    var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
-
-            //    if (teacher != null)
-            //    {
-            //        var tempclasslist = dbteacherclass.GetCrrentMyClass(teacher.TeacherID);
-
-            //        allclasslist.AddRange(tempclasslist);
-            //    }
-
-            //}
 
             allclasslist = dbteacherclass.AllClassSchedule();
 
             ViewBag.classlist = allclasslist;
 
-
+            ViewBag.grandlist = db_grand.AllGrand();
 
 
             return View();
@@ -877,6 +854,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
             return Json(result);
            
+        }
+
+        public ActionResult ClassDataByGrand(string grandid)
+        {
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+            var allclasslist = dbteacherclass.AllClassSchedule().Where(d => d.grade_Id == int.Parse(grandid)).ToList();
+
+            return Json(allclasslist, JsonRequestBehavior.AllowGet);
         }
     }
 }
