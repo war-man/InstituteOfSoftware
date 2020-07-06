@@ -1289,7 +1289,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             List<Preeviews> list = new List<Preeviews>();
             foreach (var item in preenlist)
             {
-              var Keep=  studentDataKeepAndRecordBusiness.GetAll().Where(a=>a.Id==item.keeponrecordid).FirstOrDefault();
+              var Keep=  studentDataKeepAndRecordBusiness.findId(item.keeponrecordid.ToString());
                 var x = new Preeviews()
                 {
                     id= item.id,
@@ -1301,7 +1301,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                     Refundornot= item.Refundornot,
                     Amountofmoney= item.Amountofmoney,
                     identitydocument= item.identitydocument,
-                    ClassNumber= classschedu.GetEntity(item.ClassID).ClassNumber
+                    ClassNumber= item.ClassID
                 };
                 list.Add(x);
             }
@@ -1644,6 +1644,20 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }
             return studentRefunditems.Amountofmoney;
 
+        }
+        /// <summary>
+        /// 通过备案id获取身份证
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string Identityid(int id)
+        {
+           var x= Preentryfeebusenn.GetList().Where(a => a.keeponrecordid == id).FirstOrDefault();
+            if (x!=null)
+            {
+                return x.identitydocument;
+            }
+            return ""   ;
         }
     }
 }
