@@ -272,17 +272,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             }
             else
             {
+                var GrandName = "";
+                var stuid = personlist[0].StudenID.Split(',');
+                if (stuid[1] == "初中生待定")
+                {
+                    GrandName = "Y1";
+                }
+                else
+                {
+                    GrandName = "S1";
+                }
                 //班级业务类
                 ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
-                var stu = stuDataKeepAndRecordBusiness.GetAll().Where(a => a.Id ==int.Parse( personlist[0].StudenID)).FirstOrDefault();
-               var ClassID = Preentryfeebusenn.GetList().Where(a => a.FinanceModelid == int.Parse(personlist[0].StudenID) || a.identitydocument == personlist[0].Remarks).OrderByDescending(a => a.id).FirstOrDefault().ClassID;
-
-               var GrandName = classScheduleBusiness.GetClassGrand(ClassID, 2);
+                var stu = stuDataKeepAndRecordBusiness.GetAll().Where(a => a.Id ==int.Parse(stuid[0])).FirstOrDefault();
+            
                 var student = new
                 {
                     Name = stu.StuName,
                     identitydocument = personlist[0].Remarks,
-                    classa = classScheduleBusiness.GetEntity(ClassID).ClassNumber,
+                    classa = stuid[1],
                     GrandName = GrandName
 
                 };
@@ -483,10 +491,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             };
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
+        public class PreentryfeeView
+        {
+            public string Name { get; set; }
+        }
         public ActionResult Paytheadvancefee(int id)
         {
-        ViewBag.ExportStudentBeanData = stuDataKeepAndRecordBusiness.GetAll().Where(a => a.Id == id).FirstOrDefault();
+            List<PreentryfeeView> preentryfeeViews = new List<PreentryfeeView>();
+            PreentryfeeView preentryfeeView = new PreentryfeeView();
+            preentryfeeView.Name = "初中生待定";
+            preentryfeeViews.Add(preentryfeeView);
+            preentryfeeView = new PreentryfeeView();
+            preentryfeeView.Name = "高中生待定";
+            preentryfeeViews.Add(preentryfeeView);
+            ViewBag.preentryfeeViews= preentryfeeViews.Select(a => new SelectListItem { Value = a.Name, Text = a.Name });
+            ViewBag.ExportStudentBeanData = stuDataKeepAndRecordBusiness.findId(id.ToString());
+         
             return View();
         }
         /// <summary>

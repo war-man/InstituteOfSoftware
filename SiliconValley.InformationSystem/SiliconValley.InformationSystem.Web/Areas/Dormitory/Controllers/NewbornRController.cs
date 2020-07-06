@@ -45,8 +45,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             return View();
         }
 
-        public ActionResult NewBornrView(string studentNumber)
+        public ActionResult NewBornrView()
         {
+            string studentNumber = Request.QueryString["studentNumber"];
             dbconversion = new ConversionToViewBusiness();
             dbaccstu = new dbacc_dbstu();
             var data = dbaccstu.GetUninhabitedData().Where(d => d.StudentNumber == studentNumber).ToList();

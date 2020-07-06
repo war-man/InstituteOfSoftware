@@ -1238,7 +1238,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 Payview studentFee = new Payview();
          
 
-                studentFee.StudenID = preentryfee.keeponrecordid.ToString();
+                studentFee.StudenID = preentryfee.keeponrecordid.ToString()+"," + preentryfee.ClassID;
                 studentFee.Amountofmoney = preentryfee.Amountofmoney;
                 studentFee.AddDate = DateTime.Now;
                 studentFee.Remarks = preentryfee.identitydocument;
