@@ -46,6 +46,13 @@
             background-color: #fff;
             border-radius: 2px;
         }
+
+        body .demo-class2 .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -58,6 +65,7 @@
                             <label class="LableCss1">学生姓名:</label>
                             <div class="layui-input-block">
                                 <input type="text" class="layui-input linu" readonly="readonly" value="@ViewBag.Name" />
+                                <input type="hidden" name="Stuid" id="Stuid" value="@ViewBag.stuId"/>
                             </div>
                         </div>
                         <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -69,10 +77,16 @@
                         <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                             <label class="LableCss1">市场等级:</label>
                             <div class="layui-input-block">
-                                
-                                    @Html.DropDownList("Marktype", ViewBag.marketlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
-                                 
+
+                                @Html.DropDownList("Marktype", ViewBag.marketlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+
                             </div>
+                        </div>
+                    
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                           <button style="position:absolute;right:10px;" class="layui-btn" type="button" onclick="OpenAddView()">添加跟踪数据</button>
                         </div>
                     </div>
                 </fieldset>           
@@ -240,6 +254,14 @@
                 }
             });
         });
+
+        //弹出添加页面
+        function OpenAddView() {
+            var id = $("#Stuid").val();
+
+            window.parent.OpenChildAddView(id);            
+        }
+
     </script>
 </body>
 </html>

@@ -1088,8 +1088,9 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <returns></returns>
         public string GetylfCord(int id)
         {
-
-            return null;
+            StudentFeeStandardBusinsess student = new StudentFeeStandardBusinsess();
+            return student.Identityid(id);
+            
         }
     }
 }

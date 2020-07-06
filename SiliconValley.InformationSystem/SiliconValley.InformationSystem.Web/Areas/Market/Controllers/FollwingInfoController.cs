@@ -226,6 +226,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             Consult find_c= CM_Entity.GetIQueryable().Where(c => c.StuName == id).FirstOrDefault();
             List<FollwingInfo> flist= CM_Entity.Fi_Entity.GetIQueryable().Where(f => f.Consult_Id == find_c.Id).ToList();
             ViewBag.flist = flist;
+            ViewBag.stuId = id;
             //获取学生跟踪等级
             List<SelectListItem> marketGrand = GetMarketGrand().Select(c=>new SelectListItem() { Text=c.Text,Value=c.Value,Selected=c.Value==find_c.MarketType?true:false}).ToList();
             

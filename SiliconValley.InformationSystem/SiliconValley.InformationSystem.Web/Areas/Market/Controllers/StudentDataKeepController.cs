@@ -1387,6 +1387,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         data.stuName = findda.StudentName;
                         data.stuSex = findda.Sex;
                         data.stuPhone = findda.Phone;
+                        data.IdCare = s_Entity.GetylfCord(Myid) == "" ? null : s_Entity.GetylfCord(Myid);
                         data.Id = item;
                     }
                     else
@@ -1395,6 +1396,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         data.stuName = finda.StuName;
                         data.stuSex = finda.StuSex;
                         data.stuPhone = finda.StuPhone;
+                        data.IdCare= s_Entity.GetylfCord(Myid) == "" ? null : s_Entity.GetylfCord(Myid);
                         data.Id = item;
                     }
                     list.Add(data);

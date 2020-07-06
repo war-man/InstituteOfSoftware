@@ -150,6 +150,8 @@
     <script>
 
         var indexs;
+        var innlindex = 0;//关闭编辑页面弹出添加页面
+        var mvalue = -1;
         //这是获取到多个学生的数据显示方法
         function StudentShow(url, mytitle, myskin, mycloseBtn) {
             layui.use('layer', function () {
@@ -297,7 +299,7 @@
                         break;
                     case 'edit':
                         if (checkStatus.data.length == 1) {
-                            layer.open({
+                            innlindex= layer.open({
                                 type: 2,
                                 content: '/Market/FollwingInfo/EditView/' + checkStatus.data[0].Id
                                 , area: ['1000px', '680px'],
@@ -335,15 +337,30 @@
         function Query() {
             layui.use(['table','form'], function () {
                 var table = layui.table;
-                var form = layui.form;
+                var form = layui.form;               
 
-                var data1 = form.val("Serch_from");
-               // console.log(data1);
-                table.reload('follwing_form', {
-                    url: '/Market/FollwingInfo/GetTableData'
-                    , where: data1
-                });
+                if (mvalue != -1) {
+                    //弹出编辑页面
+                    layer.open({
+                        type: 2,
+                        content: '/Market/FollwingInfo/EditView/' + mvalue
+                        , area: ['1000px', '680px'],
+                        title: '编辑跟踪页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class2'
+                    });
+                } else {
+                    var data1 = form.val("Serch_from");
+                    // console.log(data1);
+                    table.reload('follwing_form', {
+                        url: '/Market/FollwingInfo/GetTableData'
+                        , where: data1
+                    });
+                }
             });
+
+
 
         }
 
@@ -359,13 +376,31 @@
         }
 
         //3秒刷新数据
-        $(function () {
-            window.setInterval(function () {
-                layer.msg('系统自动刷新数据，请稍等.......', function () {
-                    table.reload('follwing_form', { url: '/Market/FollwingInfo/OneTableData' });
-                });
-            }, 180000);
-        });
+        //$(function () {
+        //    window.setInterval(function () {
+        //        layer.msg('系统自动刷新数据，请稍等.......', function () {
+        //            table.reload('follwing_form', { url: '/Market/FollwingInfo/OneTableData' });
+        //        });
+        //    }, 180000);
+        //});
 
+        function OpenChildAddView(id) {
+            mvalue = id;
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.close(innlindex);
+                layer.open({
+                    type: 2,
+                    content: '/Market/FollwingInfo/AddFollwingInfo/' + id
+                    , area: ['800px', '580px']
+                    , title: '添加跟踪页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class2'
+                });
+            });
+
+            
+        }
     </script>
 
