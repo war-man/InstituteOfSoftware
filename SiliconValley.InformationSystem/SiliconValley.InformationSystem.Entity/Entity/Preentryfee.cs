@@ -29,9 +29,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
         public decimal Amountofmoney { get; set; }
         /// <summary>
-        /// 班级id
+        /// 班级(如初中班级，高中班级)
         /// </summary>
-        public int ClassID { get; set; }
+        public string ClassID { get; set; }
         /// <summary>
         /// 是否报名 null未报名，true已报名，float已退款
         /// </summary>

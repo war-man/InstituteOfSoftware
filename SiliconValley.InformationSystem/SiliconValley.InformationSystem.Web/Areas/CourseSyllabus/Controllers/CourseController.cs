@@ -506,35 +506,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         {
             var allclasslist = new List<ClassSchedule>();
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
-            //List<ClassCourseView> resultlist = new List<ClassCourseView>();
-
-
-            //Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-            //SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
-
-            //var emplist = dbsatis.GetMyDepEmp(user);
-
-            //TeacherBusiness dbteacher = new TeacherBusiness();
-
-            //foreach (var item in emplist)
-            //{
-            //    var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
-
-            //    if (teacher != null)
-            //    {
-            //        var tempclasslist = dbteacherclass.GetCrrentMyClass(teacher.TeacherID);
-
-            //        allclasslist.AddRange(tempclasslist);
-            //    }
-
-            //}
 
             allclasslist = dbteacherclass.AllClassSchedule();
 
             ViewBag.classlist = allclasslist;
 
-
+            ViewBag.grandlist = db_grand.AllGrand();
 
 
             return View();
@@ -542,40 +519,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
         public ActionResult ClassCourseArrangementData(int page)
         {
-          
-            var allclasslist = new List<ClassSchedule>();
+
+        
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+
             List<ClassCourseView> resultlist = new List<ClassCourseView>();
 
-          
+            var allclasslist = dbteacherclass.AllClassSchedule();
 
-            allclasslist = dbteacherclass.AllClassSchedule();
+            BaseBusiness<ClassTeacher> dbclassTeacher = new BaseBusiness<ClassTeacher>();
 
-            
+            var list = dbclassTeacher.GetList();
+            var skiplist = list.Skip((page - 1) * 8).Take(8).ToList();
 
-            var totalCount = allclasslist.Count;
-
-            var skiplist = allclasslist.Skip((page - 1) * 8).Take(8).ToList();
-
-            foreach (var item in skiplist)
+            list.ForEach(d=>
             {
-                var teacherclass = db_course.CurrentClassCourse(item.id);
-                if (teacherclass != null)
-                {
-                    resultlist.Add(teacherclass);
-                }
-            }
+                var tempobj =db_course.ConvertToView(d);
+
+                if (tempobj != null) resultlist.Add(tempobj);
+            });
 
             var objresult = new
             {
 
                 status = 0,
                 message = "成功",
-                total = totalCount,
+                total = list.Count,
                 data = resultlist
 
             };
-
             return Json(objresult, JsonRequestBehavior.AllowGet);
 
         }
@@ -882,6 +854,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
             return Json(result);
            
+        }
+
+        public ActionResult ClassDataByGrand(string grandid)
+        {
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+            var allclasslist = dbteacherclass.AllClassSchedule().Where(d => d.grade_Id == int.Parse(grandid)).ToList();
+
+            return Json(allclasslist, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -57,11 +57,11 @@
             top: 60px;
             left: 60px;
         }
-
+        
         #toor {
             position: absolute;
             top: 60px;
-            left: 70%;
+            left: 50%;
         }
     </style>
 
@@ -79,21 +79,28 @@
 
             <div class="layui-form-item">
                 <div class="layui-inline">
-                   
-                    <span id="flush">刷新<i  style="font-size:20px;" class="layui-icon layui-icon-refresh"></i></span>
+
+                    <span id="flush">刷新<i style="font-size:20px;" class="layui-icon layui-icon-refresh"></i></span>
 
                 </div>
-
+                <div class="layui-inline">
+                    <label class="layui-form-label">阶段</label>
+                    <div class="layui-input-inline">
+                        <select name="grand" id="grand" lay-filter="grand">
+                            @{
+                                foreach (var item in ViewBag.grandlist as List<Grand>)
+                                {
+                                    <option selected value="@item.Id">@item.GrandName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">班级</label>
                     <div class="layui-input-inline">
-                        <select name="classnumber">
-                            @{
-                                foreach (var item in ViewBag.classlist as List<ClassSchedule>)
-                                {
-                                    <option selected value="@item.id">@item.ClassNumber</option>
-                                }
-                            }
+                        <select name="classnumber" id="classnumber">
+                           
                         </select>
                     </div>
                 </div>
@@ -152,6 +159,41 @@
             var form = layui.form;
             var layer = layui.layer;
             var flow = layui.flow;
+
+
+            //下拉框联动
+            form.on('select(grand)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/CourseSyllabus/Course/ClassDataByGrand",
+                    data: { grandid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+
+
+
+                        if (resultData.length > 0) {
+                            //清空赋值
+                            $("#classnumber").empty();
+                            console.log(resultData);
+                            $("#classnumber").append(new Option("请选择项目", ""));
+                            $.each(resultData, function (index, item) {
+                                
+                                //赋值
+                                $('#classnumber')
+                                    .append(new Option(item.ClassNumber, item.id));
+                            });
+                        } else {
+                            $("#classnumber").empty();
+                            $("#classnumber").append(new Option("暂无数据", ""));
+                        }
+
+                        layui.form.render("select");
+                    }
+                });
+            });
+            layui.form.render("select");
 
             flow.load({
                 elem: '#mycontent' //指定列表容器
@@ -243,9 +285,6 @@
             form.on('switch(IsUsing)', function (data) {
                 var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒
                 var IsUsing = this.checked ? "true" : "false";
-
-
-
                 var classteacherid = $(data.elem).parent().parent().parent().attr("classteacherid");
                 $.post("/CourseSyllabus/Course/UsingOrProhibit", { status: IsUsing, classteacherid: classteacherid }, function (result) {
 
