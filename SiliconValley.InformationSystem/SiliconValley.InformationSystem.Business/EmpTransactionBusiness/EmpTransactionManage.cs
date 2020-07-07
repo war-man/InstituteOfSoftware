@@ -34,7 +34,16 @@ namespace SiliconValley.InformationSystem.Business.EmpTransactionBusiness
             MoveTypeManage mtmanage = new MoveTypeManage();
             return mtmanage.GetList().Where(s => s.MoveTypeName == tname).FirstOrDefault();
         }
-
+        /// <summary>
+        /// 根据异动类型编号获取类型对象
+        /// </summary>
+        /// <param name="typeid"></param>
+        /// <returns></returns>
+        public MoveType GetmoveTypeById(int typeid) {
+            MoveTypeManage mtmanage = new MoveTypeManage();
+            var mt = mtmanage.GetEntity(typeid);
+            return mt;
+        }
        
     }
 }
