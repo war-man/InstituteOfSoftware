@@ -119,7 +119,12 @@
     <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
 
     <script>
+        function escapeHTMLString(str) {
+            str = str.replace(/</g, '&lt;');
+            str = str.replace(/>/g, '&gt;');
 
+            return str;
+        }
     layui.use(['table', 'layer','form'], function () {
 
         var form = layui.form;
@@ -182,11 +187,46 @@
             , cols: [[
                 { type: 'checkbox' },
                 { field: 'Id', width: 80, title: 'ID', hide: true, sort: true }
-                , { field: 'Title', width: 200, title: '题目' }
-                , { field: 'OptionA', width: 150, title: '选项A', sort: true }
-                , { field: 'OptionB', width: 150, title: '选项B' }
-                , { field: 'OptionC', title: '选项C', width: 150, }
-                , { field: 'OptionD', title: '选项D', sort: true , width: 150}
+                , {
+                    field: 'Title', width: 200, title: '题目', templet: function (res) {
+
+                        var result = escapeHTMLString(res.Title);
+
+                        return result;
+
+                    } }
+                , {
+                    field: 'OptionA', width: 150, title: '选项A', sort: true, templet: function (res) {
+
+                        var result = escapeHTMLString(res.OptionA);
+
+                        return result;
+
+                    } }
+                , {
+                    field: 'OptionB', width: 150, title: '选项B', templet: function (res) {
+
+                        var result = escapeHTMLString(res.OptionB);
+
+                        return result;
+
+                    } }
+                , {
+                    field: 'OptionC', title: '选项C', width: 150, templet: function (res) {
+
+                        var result = escapeHTMLString(res.OptionC);
+
+                        return result;
+
+                    } }
+                , {
+                    field: 'OptionD', title: '选项D', sort: true, width: 150, templet: function (res) {
+
+                        var result = escapeHTMLString(res.OptionD);
+
+                        return result;
+
+                    }}
                 , {
                     field: 'IsRadio', title: '单选/多选', sort: true, templet: function (data) {
 
