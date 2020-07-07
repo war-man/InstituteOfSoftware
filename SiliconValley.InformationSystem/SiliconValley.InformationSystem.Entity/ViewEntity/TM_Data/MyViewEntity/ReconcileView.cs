@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,7 +51,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// <summary>
         /// 上课日期
         /// </summary>
-        public DateTime AnpaiDate { get; set; }
+        public DateTime AnPaiDate { get; set; }
         /// <summary>
         /// 生成日期
         /// </summary>
@@ -63,5 +64,27 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// 其他说明
         /// </summary>
         public string Rmark { get; set; }
+
+        /// <summary>
+        /// 将试图模型转换为实体模型
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        public static Reconcile ToModel(ReconcileView r)
+        {
+            Reconcile reconcile = new Reconcile();
+            reconcile.Id = r.Id;
+            reconcile.AnPaiDate = r.AnPaiDate;
+            reconcile.ClassRoom_Id = r.ClassRoom_Id;
+            reconcile.ClassSchedule_Id = r.ClassSchedule_Id;
+            reconcile.Curriculum_Id = r.Curriculum_Id;
+            reconcile.Curse_Id = r.Curse_Id;
+            reconcile.EmployeesInfo_Id = r.EmployeesInfo_Id;
+            reconcile.IsDelete = r.Isdelete;
+            reconcile.NewDate = r.NewDate;
+            reconcile.Rmark = r.Rmark;
+
+            return reconcile;
+        }
     }
 }

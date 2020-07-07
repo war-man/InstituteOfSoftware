@@ -1,6 +1,7 @@
 ﻿using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -405,10 +406,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             int curtypeid2 = Reconcile_Com.CourseType_Entity.FindSingeData("语文课", false).Id; 
             int curtypeid3 = Reconcile_Com.CourseType_Entity.FindSingeData("数学课", false).Id; 
             int curtypeid4 = Reconcile_Com.CourseType_Entity.FindSingeData("英语课", false).Id; 
-            List<Reconcile> Recon_all = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= startime && r.AnPaiDate <= endtime && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) != null).ToList();
+            List<ReconcileView> Recon_all = Reconcile_Entity.SQLGetReconcileDate().Where(r => r.AnPaiDate >= startime && r.AnPaiDate <= endtime && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) != null).ToList();
             Recon_all = Recon_all.Where(r => Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid2 || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid3 || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid4).OrderBy(r => r.AnPaiDate).ToList();//获取这个时间段上专业课的排课数据
             
-              Recon_all.AddRange(Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= startime && r.AnPaiDate <= endtime && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) == null).ToList());
+              Recon_all.AddRange(Reconcile_Entity.SQLGetReconcileDate().Where(r => r.AnPaiDate >= startime && r.AnPaiDate <= endtime && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) == null).ToList());
 
             int timenameindex = 0;
             string[] timename = new string[] { "晚一", "晚二" };
@@ -443,7 +444,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     List<string> classname = new List<string>();
                     for (int i = 0; i < classSchedule_all.Count; i++)//判断这个日期这个班级是否安排了专业课
                     {
-                        Reconcile find_r = Recon_all.Where(r => r.ClassSchedule_Id == classSchedule_all[i].id && r.AnPaiDate == startime).FirstOrDefault();
+                        ReconcileView find_r = Recon_all.Where(r => r.ClassSchedule_Id == classSchedule_all[i].id && r.AnPaiDate == startime).FirstOrDefault();
 
                         //返回没有排课的班级
                         if (find_r == null)
@@ -454,7 +455,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         {
                             if (find_r != null)//安排晚自习
                             {
-                                Reconcile find_r2 = Recon_all.Where(r => r.ClassRoom_Id == find_r.ClassRoom_Id && r.ClassSchedule_Id != find_r.ClassSchedule_Id).FirstOrDefault();
+                                ReconcileView find_r2 = Recon_all.Where(r => r.ClassRoom_Id == find_r.ClassRoom_Id && r.ClassSchedule_Id != find_r.ClassSchedule_Id).FirstOrDefault();
                                 EvningSelfStudy new_ev = new EvningSelfStudy();
                                 new_ev.Anpaidate = startime;
                                 new_ev.Classroom_id = Convert.ToInt32(find_r.ClassRoom_Id);

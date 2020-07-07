@@ -2,19 +2,18 @@
 function TimeChange(newtime) {
     if (newtime == null)
         return "";
+ 
     var date = new Date(parseInt(newtime.slice(6)));
     var year = date.getFullYear();
-    var month = date.getMonth();
-    if ((month + 1) < 10) {
-        month = "0" + Number(month + 1);
-    } else {
-        month = Number(month + 1);
+    var month = parseInt(date.getMonth()) + 1;
+    if (month < 10) {
+        month = "0" + month;
     }
-    var day = date.getDate();
-    if (day < 10) {
-        day = "0" + day;
+    var days = date.getDate();
+    if (days < 10) {
+        days = "0" + days;
     }
-    var result = year + '-' + month + '-' + day;
+    var result = year + '-' + month + '-' + days;
     return result;
 }
 //判断星期几
@@ -66,4 +65,5 @@ function TimeFormt(newtime) {
 
     return year + "年" + month +"月"+ day +"日"
 }
+
  

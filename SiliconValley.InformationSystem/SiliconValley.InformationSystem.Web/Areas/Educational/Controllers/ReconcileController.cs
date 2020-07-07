@@ -14,6 +14,7 @@ using SiliconValley.InformationSystem.Business.DepartmentBusiness;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
@@ -636,7 +637,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
         public ActionResult GetReconAllData(int page, int limit)
         {
-            List<Reconcile> all = Reconcile_Entity.AllReconcile().OrderByDescending(r => r.Id).ToList();//获取所有排课数据                   
+            List<ReconcileView> all = Reconcile_Entity.SQLGetReconcileDate().OrderBy(r => r.Id).ToList();//获取所有排课数据                   
             string class_select1 = Request.QueryString["class_select1"];
             string starTime = Request.QueryString["starTime"];
             string endTime = Request.QueryString["endTime"];
@@ -692,20 +693,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                     all = all.Where(r => r.Curriculum_Id == curr_select1).ToList();
                 }
             }
-            var mydata = all.Skip((page - 1) * limit).Take(limit).Select(r => new
-            {
-                Id = r.Id,
-                class_id = r.ClassSchedule_Id,
-                class_name = Reconcile_Com.ClassSchedule_Entity.GetEntity(r.ClassSchedule_Id).ClassNumber,//获取班级名称
-                teacher_id = r.EmployeesInfo_Id,
-                teacher_name = r.EmployeesInfo_Id == null ? "无" : Reconcile_Com.Employees_Entity.GetEntity(r.EmployeesInfo_Id).EmpName,//获取任课老师名称
-                currname = r.Curriculum_Id,
-                timeName = r.Curse_Id,
-                time = r.AnPaiDate,
-                classroom_id = r.ClassRoom_Id,
-                rake = r.Rmark,
-                classroom_name = r.ClassRoom_Id==null?null: Reconcile_Com.Classroom_Entity.GetEntity(r.ClassRoom_Id).ClassroomName//获取教室名称
-            }).ToList();
+            var mydata = all.Skip((page - 1) * limit).Take(limit).ToList();
 
             var jsondata = new { code = 0, msg = "", data = mydata, count = all.Count };
             return Json(jsondata, JsonRequestBehavior.AllowGet);
@@ -905,8 +893,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime date =Convert.ToDateTime(Request.QueryString["date"]);
             int id=  Convert.ToInt32(Request.QueryString["id"]);
             ClassSchedule find_c = Reconcile_Com.ClassSchedule_Entity.GetEntity(id);
-            Reconcile find_r = Reconcile_Entity.AllReconcile().Where(r=>r.ClassSchedule_Id==id && r.AnPaiDate==date).FirstOrDefault();
-            int? room = find_r == null ? null : find_r.ClassRoom_Id;
+            ReconcileView find_r = Reconcile_Entity.SQLGetReconcileDate().Where(r=>r.ClassSchedule_Id==id && r.AnPaiDate==date).FirstOrDefault();
+            int room = find_r == null ? 0 : find_r.ClassRoom_Id;
             int? address = null;
             if (find_r!=null)
             {
@@ -958,7 +946,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 
                 string date = date1.Year + "-" + date1.Month + "-" + date1.Day;
                 DateTime dd2 = Convert.ToDateTime(date);
-                List<Reconcile> find_list = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= dd2 && r.ClassSchedule_Id == class_id).ToList();
+                List<ReconcileView> find_list = Reconcile_Entity.SQLGetReconcileDate().Where(r => r.AnPaiDate >= dd2 && r.ClassSchedule_Id == class_id).ToList();
                 AjaxResult a2 = Reconcile_Entity.Update_data2(find_list, time,room);
                 if (a2.Success == true && a.Success == true)
                 {
@@ -1046,8 +1034,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                         marjo = findclass.Major_Id.ToString();
                     }
                     List<Curriculum> list_cur = Reconcile_Entity.GetCurr(findclass.grade_Id, true, Convert.ToInt32(marjo));
-                    List<Reconcile> find_list = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= time && r.ClassSchedule_Id == class_id ).ToList();//获取属于这个班级的所有排课数据
-                    List<Reconcile> TureEditData = new List<Reconcile>();//修改专业课的任课老师
+                    List<ReconcileView> find_list = Reconcile_Entity.SQLGetReconcileDate().Where(r => r.AnPaiDate >= time && r.ClassSchedule_Id == class_id ).ToList();//获取属于这个班级的所有排课数据
+                    List<ReconcileView> TureEditData = new List<ReconcileView>();//修改专业课的任课老师
                     foreach (Curriculum cu in list_cur)
                     {
                         TureEditData.AddRange( find_list.Where(f => f.Curriculum_Id == cu.CourseName).ToList());
@@ -1089,9 +1077,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime startime = Convert.ToDateTime(Request.Form["starTime"]);
             DateTime endtime = Convert.ToDateTime(Request.Form["endTime"]);
             List<ClassSchedule> class_s = Reconcile_Com.GetClass();
-            List<Reconcile> lisr_r = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate == startime).ToList();
-            List<Reconcile> find_lidt = new List<Reconcile>();
-            foreach (Reconcile i in lisr_r)
+            List<ReconcileView> lisr_r = Reconcile_Entity.SQLGetReconcileDate().Where(r => r.AnPaiDate == startime).ToList();
+            List<ReconcileView> find_lidt = new List<ReconcileView>();
+            foreach (ReconcileView i in lisr_r)
             {
                 int count = class_s.Where(s => s.id == i.ClassSchedule_Id).ToList().Count;
                 if (count > 0)
@@ -1120,7 +1108,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             int class_id = Convert.ToInt32(Request.Form["class_select"]);
             DateTime startime = Convert.ToDateTime(Request.Form["starTime"]);
             DateTime endtime = Convert.ToDateTime(Request.Form["endTime"]);
-            List<Reconcile> find_list = Reconcile_Entity.AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == startime).ToList();
+            List<ReconcileView> find_list = Reconcile_Entity.SQLGetReconcileDate().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == startime).ToList();
             AjaxResult a = Reconcile_Entity.update_date4(find_list, endtime);
             return Json(a, JsonRequestBehavior.AllowGet);
         }

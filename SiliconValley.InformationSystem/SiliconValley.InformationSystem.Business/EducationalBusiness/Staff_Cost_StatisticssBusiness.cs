@@ -21,6 +21,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
     using NPOI.HSSF.UserModel;
     using NPOI.SS.UserModel;
     using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
+    using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
     using System.IO;
     using System.Net;
 
@@ -366,7 +367,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="date"></param>
         /// <param name="type">type:0 = 所有；type: skill = 专业；type: other = 其他</param>
         /// <returns></returns>
-        public List<Reconcile> ScreenReconcile(string empid, DateTime date, string type = "0")
+        public List<ReconcileView> ScreenReconcile(string empid, DateTime date, string type = "0")
         {
             ReconcileManeger tempdb_reconcile = new ReconcileManeger();
             CourseBusiness db_course = new CourseBusiness();
@@ -374,10 +375,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             //获取当期日期
             var currentData = DateTime.Now;
 
-            var list = tempdb_reconcile.AllReconcile().Where(d => d.AnPaiDate.Month == date.Month && d.AnPaiDate.Year == date.Year && d.EmployeesInfo_Id == empid).ToList();
+            var list = tempdb_reconcile.SQLGetReconcileDate().Where(d => d.AnPaiDate.Month == date.Month && d.AnPaiDate.Year == date.Year && d.EmployeesInfo_Id == empid).ToList();
 
             //定义返回值
-            List<Reconcile> result = new List<Reconcile>();
+            List<ReconcileView> result = new List<ReconcileView>();
 
             switch (type)
             {
@@ -421,7 +422,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
         }
 
-        public bool IsContains(List<Reconcile> sourcs, Reconcile r)
+        public bool IsContains(List<ReconcileView> sourcs, ReconcileView r)
         {
             foreach (var item in sourcs)
             {
@@ -796,7 +797,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             ///获取到这个月教员所带班级个数
             ///
-            List<Reconcile> tempcount = new List<Reconcile>(); //记录带班个数
+            List<ReconcileView> tempcount = new List<ReconcileView>(); //记录带班个数
 
             var reconlielist = this.ScreenReconcile(emp.EmployeeId, date, type: "skill");
 

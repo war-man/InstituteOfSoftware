@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;//教官业务类
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
@@ -29,9 +30,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// 通过sql语句获取所有数据
         /// </summary>
         /// <returns></returns>
-        public List<Reconcile> SQLGetReconcileDate()
+        public List<ReconcileView> SQLGetReconcileDate()
         {
-            List<Reconcile> list = this.GetListBySql<Reconcile>("select * from Reconcile");
+            List<ReconcileView> list = this.GetListBySql<ReconcileView>("select * from ReconcileView");
             return list;
         }
        
@@ -82,27 +83,27 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// 获取排课所有数据
         /// </summary>
         /// <returns></returns>
-        public List<Reconcile> AllReconcile()
-        {
-            #region 使用缓存拿数据
-            List<Reconcile> get_reconciles_list = new List<Reconcile>();
-            get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
-            if (get_reconciles_list == null || get_reconciles_list.Count == 0)
-            {
-                get_reconciles_list = SQLGetReconcileDate();
-                Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
-            }
-            #endregion
-            return SQLGetReconcileDate();
-        }
+        //public List<Reconcile> SQLGetReconcileDate()
+        //{
+        //    #region 使用缓存拿数据
+        //    List<Reconcile> get_reconciles_list = new List<Reconcile>();
+        //    get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
+        //    if (get_reconciles_list == null || get_reconciles_list.Count == 0)
+        //    {
+        //        get_reconciles_list = SQLGetReconcileDate();
+        //        Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
+        //    }
+        //    #endregion
+        //    return SQLGetReconcileDate();
+        //}
         /// <summary>
         /// 获取单条数据
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Reconcile GetSingleData(int id)
+        public ReconcileView GetSingleData(int id)
         {
-            return AllReconcile().Where(r => r.Id == id).FirstOrDefault();
+            return SQLGetReconcileDate().Where(r => r.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -115,13 +116,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             bool s = false;
             try
             {
-                List<Reconcile> find_list = AllReconcile().Where(rs => rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curriculum_Id == r.Curriculum_Id).ToList();
+                List<ReconcileView> find_list = SQLGetReconcileDate().Where(rs => rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curriculum_Id == r.Curriculum_Id).ToList();
                 int count = find_list.Count;
                 if (count <= 0)
                 {
                     this.Insert(r);
                     s = true;
-                   Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 }
                 else
                 {
@@ -145,7 +145,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                Reconcile find_r = AllReconcile().Where(f => f.Id == r.Id).FirstOrDefault();
+                ReconcileView find_r = SQLGetReconcileDate().Where(f => f.Id == r.Id).FirstOrDefault();
                 find_r.AnPaiDate = r.AnPaiDate;//日期                
                 a.Success = true;
                 Reconcile_Com.redisCache.RemoveCache("ReconcileList");
@@ -247,12 +247,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
-        public AjaxResult Update_data2(List<Reconcile> r, string timename,int room)
+        public AjaxResult Update_data2(List<ReconcileView> r, string timename,int room)
         {
             AjaxResult a = new AjaxResult();
             try
             {
-                foreach (Reconcile item in r)
+                foreach (ReconcileView item in r)
                 {
                     if (item.Curse_Id == "下午" || item.Curse_Id == "上午")
                     {
@@ -269,7 +269,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         item.ClassRoom_Id = room;
                     }
 
-                    this.Update(item);
+                    this.Update(ReconcileView.ToModel(item));
                 }
                 Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 a.Success = true;
@@ -284,15 +284,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
-        public AjaxResult Update_date3(List<Reconcile> r, string emp)
+        public AjaxResult Update_date3(List<ReconcileView> r, string emp)
         {
             AjaxResult a = new AjaxResult();
             try
             {
-                foreach (Reconcile item in r)
+                foreach (ReconcileView item in r)
                 {
                     item.EmployeesInfo_Id = emp;
-                    this.Update(item);
+                    this.Update(ReconcileView.ToModel(item));
                 }
                 a.Success = true;
                 Reconcile_Com.redisCache.RemoveCache("ReconcileList");
@@ -305,15 +305,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
-        public AjaxResult update_date4(List<Reconcile> r, DateTime time)
+        public AjaxResult update_date4(List<ReconcileView> r, DateTime time)
         {
             AjaxResult a = new AjaxResult();
             try
             {
-                foreach (Reconcile em in r)
+                foreach (ReconcileView em in r)
                 {
                     em.AnPaiDate = time;
-                    this.Update(em);
+                    this.Update(ReconcileView.ToModel(em));
                 }
                 a.Success = true;
             }
@@ -477,7 +477,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool IsHaveClass(string Teacher_Id, string timename, DateTime date)
         {
             bool s = false;
-            List<Reconcile> find_r = AllReconcile().Where(r => r.EmployeesInfo_Id == Teacher_Id && r.AnPaiDate == date && r.Curse_Id == timename).ToList();
+            List<ReconcileView> find_r = SQLGetReconcileDate().Where(r => r.EmployeesInfo_Id == Teacher_Id && r.AnPaiDate == date && r.Curse_Id == timename).ToList();
             if (find_r.Count > 0)
             {
                 s = true;
@@ -646,7 +646,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     foreach (HeadClass c in headClasses)
                     {
                         //判断是否有带的班级已在这时间段安排了班会课
-                        count = count + AllReconcile().Where(r => r.AnPaiDate == time && r.Curse_Id == timename && r.EmployeesInfo_Id == find_a.Data.ToString() && r.ClassSchedule_Id == c.ClassID).ToList().Count;
+                        count = count + SQLGetReconcileDate().Where(r => r.AnPaiDate == time && r.Curse_Id == timename && r.EmployeesInfo_Id == find_a.Data.ToString() && r.ClassSchedule_Id == c.ClassID).ToList().Count;
                     }
                 }
                 if (count <= 0)
@@ -739,7 +739,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             if (singledata)
             {
                 //单条数据判断
-                Reconcile find_r = AllReconcile().Where(rs => rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curriculum_Id == r.Curriculum_Id && rs.AnPaiDate == r.AnPaiDate && rs.Curse_Id == r.Curse_Id).FirstOrDefault();
+                ReconcileView find_r = SQLGetReconcileDate().Where(rs => rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curriculum_Id == r.Curriculum_Id && rs.AnPaiDate == r.AnPaiDate && rs.Curse_Id == r.Curse_Id).FirstOrDefault();
                 if (find_r != null)
                 {
                     s = true;
@@ -748,7 +748,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             else
             {
                 //集合数据判断
-                Reconcile find_r = AllReconcile().Where(rs => rs.Curriculum_Id == r.Curriculum_Id && rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id == r.ClassSchedule_Id).FirstOrDefault();
+                ReconcileView find_r = SQLGetReconcileDate().Where(rs => rs.Curriculum_Id == r.Curriculum_Id && rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id == r.ClassSchedule_Id).FirstOrDefault();
                 if (find_r != null)
                 {
                     s = true;
@@ -767,7 +767,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool ToHavaKe(int class_id, DateTime time, string currname)
         {
             bool s = false;
-            int count = AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == time && r.Curriculum_Id == currname).ToList().Count;
+            int count = SQLGetReconcileDate().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == time && r.Curriculum_Id == currname).ToList().Count;
             if (count > 0)
             {
                 s = true;
@@ -836,7 +836,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool Existence(Mydate time, int ClassName, string CurrName)
         {
             bool s = false;
-            int count = AllReconcile().Where(r => r.AnPaiDate >= time.StarTime && r.AnPaiDate <= time.EndTime && r.ClassSchedule_Id == ClassName && r.Curriculum_Id == CurrName).ToList().Count;
+            int count = SQLGetReconcileDate().Where(r => r.AnPaiDate >= time.StarTime && r.AnPaiDate <= time.EndTime && r.ClassSchedule_Id == ClassName && r.Curriculum_Id == CurrName).ToList().Count;
             if (count > 0)
             {
                 s = true;
@@ -853,7 +853,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool ExistenceToday(DateTime? time, int class_id, string currname)
         {
             bool s = false;
-            int count = AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == time && r.Curriculum_Id == currname).ToList().Count;
+            int count = SQLGetReconcileDate().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == time && r.Curriculum_Id == currname).ToList().Count;
             if (count > 0)
             {
                 s = true;
@@ -883,7 +883,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 str.Add("上午12节");
                 str.Add("上午34节");
             }
-            List<Reconcile> reconciles = AllReconcile().Where(r => r.AnPaiDate == d && r.ClassRoom_Id == c_id).ToList();
+            List<ReconcileView> reconciles = SQLGetReconcileDate().Where(r => r.AnPaiDate == d && r.ClassRoom_Id == c_id).ToList();
             for (int i = 0; i < reconciles.Count; i++)
             {
                 for (int j = 0; j < str.Count; j++)
@@ -927,7 +927,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             List<Classroom> c_list = Reconcile_Com.Classroom_Entity.GetEffectiveClass();
             if (TimeName == "晚自习" || TimeName == "晚一" || TimeName == "晚二")
             {
-                List<Reconcile> reconciles = AllReconcile().Where(r => (r.Curse_Id == "晚自习" || r.Curse_Id == "晚一" || r.Curse_Id == "晚二") && r.AnPaiDate == time).ToList();
+                List<ReconcileView> reconciles = SQLGetReconcileDate().Where(r => (r.Curse_Id == "晚自习" || r.Curse_Id == "晚一" || r.Curse_Id == "晚二") && r.AnPaiDate == time).ToList();
                 for (int i = 0; i < reconciles.Count; i++)
                 {
                     for (int j = 0; j < c_list.Count; j++)
@@ -942,14 +942,14 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             else
             {
-                List<Reconcile> reconciles = new List<Reconcile>();
+                List<ReconcileView> reconciles = new List<ReconcileView>();
                 if (TimeName.Contains("上午"))
                 {
-                    reconciles = AllReconcile().Where(r => (r.Curse_Id == TimeName || r.Curse_Id == "上午") && r.AnPaiDate == time).ToList();
+                    reconciles = SQLGetReconcileDate().Where(r => (r.Curse_Id == TimeName || r.Curse_Id == "上午") && r.AnPaiDate == time).ToList();
                 }
                 else if (TimeName.Contains("下午"))
                 {
-                    reconciles = AllReconcile().Where(r => (r.Curse_Id == TimeName || r.Curse_Id == "下午") && r.AnPaiDate == time).ToList();
+                    reconciles = SQLGetReconcileDate().Where(r => (r.Curse_Id == TimeName || r.Curse_Id == "下午") && r.AnPaiDate == time).ToList();
                 }
                 for (int i = 0; i < reconciles.Count; i++)
                 {
@@ -976,7 +976,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool IshavaOrther(int class_id, string timename, DateTime time)
         {
             bool s = false;
-            int count = AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == time && r.Curse_Id == timename).ToList().Count;
+            int count = SQLGetReconcileDate().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == time && r.Curse_Id == timename).ToList().Count;
             if (count > 0)
             {
                 s = true;
@@ -996,7 +996,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool IsHaveCurr(DateTime startime, DateTime endtime, string currName, int class_id)
         {
             bool s = false;
-            int count = AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.Curriculum_Id == currName && r.AnPaiDate >= startime && r.AnPaiDate <= endtime).ToList().Count();
+            int count = SQLGetReconcileDate().Where(r => r.ClassSchedule_Id == class_id && r.Curriculum_Id == currName && r.AnPaiDate >= startime && r.AnPaiDate <= endtime).ToList().Count();
             if (count > 0)
             {
                 s = true;
@@ -1033,8 +1033,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                Reconcile find_r = AllReconcile().Where(r => r.Id == r_id).FirstOrDefault();
-                this.Delete(find_r);
+                ReconcileView find_r = SQLGetReconcileDate().Where(r => r.Id == r_id).FirstOrDefault();
+                this.Delete(ReconcileView.ToModel(find_r));
                 a.Success = true;
                 a.Msg = "操作成功";
                 //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
@@ -1081,7 +1081,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             //查看这个老师这一天是否有课
             if (!string.IsNullOrEmpty(sb.ToString()))
             {
-                int count = AllReconcile().Where(r => r.EmployeesInfo_Id == sb.ToString() && r.AnPaiDate == time && r.Curse_Id == timename).ToList().Count;
+                int count = SQLGetReconcileDate().Where(r => r.EmployeesInfo_Id == sb.ToString() && r.AnPaiDate == time && r.Curse_Id == timename).ToList().Count;
                 if (count > 0)
                 {
                     sb.Append("");
@@ -1207,9 +1207,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="class_id">班级编号</param>
         /// <param name="Time">上午或下午</param>
         /// <returns></returns>
-        public List<Reconcile> GetReconcile(DateTime time, int class_id, string currName)
+        public List<ReconcileView> GetReconcile(DateTime time, int class_id, string currName)
         {
-            return AllReconcile().Where(r => r.AnPaiDate == time && r.ClassSchedule_Id == class_id && r.Curse_Id == currName).ToList();
+            return SQLGetReconcileDate().Where(r => r.AnPaiDate == time && r.ClassSchedule_Id == class_id && r.Curse_Id == currName).ToList();
         }
 
         /// <summary>
@@ -1217,21 +1217,20 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="r"></param>
         /// <returns></returns>
-        public ResconcileView ConvertToView(Reconcile r)
+        public ResconcileView ConvertToView(ReconcileView r)
         {
-            BaseBusiness<EmployeesInfo> entity = new BaseBusiness<EmployeesInfo>();
-            ResconcileView new_r = new ResconcileView();
-            new_r.AnPaiDate = r.AnPaiDate;
-            new_r.ClassRoom_Id = Reconcile_Com.Classroom_Entity.GetEntity(r.ClassRoom_Id);
-            new_r.ClassSchedule_Id = Reconcile_Com.ClassSchedule_Entity.GetEntity(r.Id);
-            new_r.Curriculum_Id = r.Curriculum_Id;
-            new_r.Curse_Id = r.Curse_Id;
-            new_r.EmployeesInfo_Id = entity.GetEntity(r.EmployeesInfo_Id);
-            new_r.Id = r.Id;
-            new_r.IsDelete = r.IsDelete;
-            new_r.NewDate = r.NewDate;
-            new_r.Rmark = r.Rmark;
-            return new_r;
+            ResconcileView view = new ResconcileView();
+            view.AnPaiDate = r.AnPaiDate;
+            view.ClassRoom_Id = new Classroom() { Id=r.ClassRoom_Id,ClassroomName=r.ClassroomName};
+            view.ClassSchedule_Id = new ClassSchedule() { id = r.ClassSchedule_Id, ClassNumber = r.ClassNumber };
+            view.Curriculum_Id = r.Curriculum_Id;
+            view.Curse_Id = r.Curse_Id;
+            view.EmployeesInfo_Id = new EmployeesInfo() { EmployeeId = r.EmployeesInfo_Id, EmpName = r.EmpName };
+            view.Id = r.Id;
+            view.IsDelete = r.Isdelete;
+            view.NewDate = r.NewDate;
+            view.Rmark = r.Rmark;
+            return view;
         }
         /// <summary>
         /// 代课业务(fasle--操作不成功，ture--操作成功)
@@ -1246,9 +1245,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult s = new AjaxResult();
             try
             {
-                Reconcile find_r = AllReconcile().Where(r => r.AnPaiDate == dateTime && r.ClassSchedule_Id == class_id).FirstOrDefault();
+                ReconcileView find_r = SQLGetReconcileDate().Where(r => r.AnPaiDate == dateTime && r.ClassSchedule_Id == class_id).FirstOrDefault();
                 find_r.EmployeesInfo_Id = emp_id;
-                this.Update(find_r);
+                this.Update(ReconcileView.ToModel(find_r));
                 s.Msg = "代课成功";
                 s.Success = true;
             }
@@ -1388,11 +1387,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 int yes = 0;
                 try
                 {
-                    List<Reconcile> find_list = AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate > dateTime).ToList();
-                    foreach (Reconcile item in find_list)
+                    List<ReconcileView> find_list = SQLGetReconcileDate().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate > dateTime).ToList();
+                    foreach (ReconcileView item in find_list)
                     {
                         item.AnPaiDate = item.AnPaiDate.AddDays(addcount);
-                        this.Update(item);
+                        this.Update(ReconcileView.ToModel(item));
                     }
                     //清空缓存
                     //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
@@ -1460,7 +1459,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         //{
         //    List<Classroom> classrooms_data = Reconcile_Com.Classroom_Entity.GetAddreeClassRoom(schooladdree);//获取某校区所有教室
 
-        //    List<Reconcile> find_reconcile_data = this.AllReconcile().Where(ll => ll.AnPaiDate == time && ll.Curse_Id.Contains(timename)).ToList();  //获取这个日期的排课数据
+        //    List<Reconcile> find_reconcile_data = this.SQLGetReconcileDate().Where(ll => ll.AnPaiDate == time && ll.Curse_Id.Contains(timename)).ToList();  //获取这个日期的排课数据
 
         //    for (int i = 0; i < find_reconcile_data.Count; i++) //获取空教室
         //    {
@@ -1966,7 +1965,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                List<Reconcile> findlist= this.AllReconcile().Where(r => r.ClassRoom_Id == reconcile.ClassRoom_Id && r.Curse_Id == reconcile.Curse_Id && r.ClassSchedule_Id!=reconcile.ClassSchedule_Id).ToList();
+                List<ReconcileView> findlist= this.SQLGetReconcileDate().Where(r => r.ClassRoom_Id == reconcile.ClassRoom_Id && r.Curse_Id == reconcile.Curse_Id && r.ClassSchedule_Id!=reconcile.ClassSchedule_Id).ToList();
                 if (findlist.Count>0)
                 {
                     for (int i=0;i<findlist.Count;i++)
