@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -237,6 +238,7 @@ namespace SiliconValley.InformationSystem.Web
         /// <returns></returns>
         public static object UserClass()
         {
+            CloudstorageBusiness db_Bos = new CloudstorageBusiness();
             //员工表
             EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
             //session["UserId"] = user.UserId;
@@ -248,7 +250,7 @@ namespace SiliconValley.InformationSystem.Web
                 emp.EmployeeId,
                 emp.EmpName,
                 employeesInfoManage.GetDeptByEmpid(emp.EmployeeId).DeptName,
-                emp.Image
+                Image=db_Bos.ImagesFine("xinxihua", "EmpImage", emp.Image,10)
             };
             return x;
             
