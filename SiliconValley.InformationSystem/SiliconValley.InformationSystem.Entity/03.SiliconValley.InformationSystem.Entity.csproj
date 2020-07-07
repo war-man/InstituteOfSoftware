@@ -369,6 +369,7 @@
     <Compile Include="ViewEntity\EmployeeInfoView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
+    <Compile Include="ViewEntity\EmpTransactionView.cs" />
     <Compile Include="ViewEntity\EmptyClass.cs" />
     <Compile Include="ViewEntity\Emp_consult.cs" />
     <Compile Include="ViewEntity\EnrollmentStudentView.cs" />

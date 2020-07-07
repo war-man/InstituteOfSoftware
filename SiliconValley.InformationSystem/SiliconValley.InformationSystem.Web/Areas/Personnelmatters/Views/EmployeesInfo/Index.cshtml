@@ -120,7 +120,7 @@
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">员工详情</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="ETRdetail">员工异动详情</a>
+                @*<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="ETRdetail">员工异动详情</a>*@
             </script>
             <button class="layui-btn layui-btn-warm" style="display:none;" id="contractEndbtn" >合同到期人员</button>
 
@@ -231,10 +231,12 @@
             //监听行工具事件
             table.on('tool(emptab)', function (obj) {
                 var data = obj.data;
+                var empid = data.EmployeeId;
+                console.log("员工编号："+data.EmployeeId);
                 if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
-                        content: '/Personnelmatters/EmployeesInfo/EditEmp/?id=' + data.EmployeeId
+                        content: '/Personnelmatters/EmployeesInfo/EditEmp/?id=' + empid
                         , area: ["1200px", "730px"]
                         , title: '编辑员工信息'
                         , shade: 0.8
@@ -244,7 +246,7 @@
                 } else if (obj.event === 'detail') {
                     layer.open({
                         type: 2,
-                        content: '/Personnelmatters/EmployeesInfo/EmpDetail/?id=' + data.EmployeeId
+                        content: '/Personnelmatters/EmployeesInfo/EmpDetail/?id=' + empid
                         , area: ['1200px', '800px'],
                         title: '员工详细信息'
                         , shade: 0.8
@@ -256,7 +258,7 @@
                     $.ajax({
                         type: "get",
                         dataType: "json",
-                        url: "/Personnelmatters/EmployeesInfo/GetETRCount/?id=" + data.EmployeeId,
+                        url: '/Personnelmatters/EmployeesInfo/GetETRCount/?id=' + empid,
                        // data: data.EmployeeId,
                         success: function (data) {
                             if (data<=0) {
@@ -265,8 +267,8 @@
                             } else {
                                 layer.open({
                                     type: 2,
-                                    content: '/Personnelmatters/EmployeesInfo/GetEmpETRDetail/?id=' + data.EmployeeId
-                                    , area: ['800px', '600px'],
+                                    content: '/Personnelmatters/EmployeesInfo/GetEmpETRDetail/?id=' + empid
+                                    , area: ['1200px', '500px'],
                                     title: '员工异动详细信息'
                                     , shade: 0.8
                                     , anim: 4

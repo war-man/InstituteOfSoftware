@@ -911,10 +911,42 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public List<EmpTransaction> GetEmpEtrdetails(string empid) {
+        public List<EmpTransactionView> GetEmpEtrdetails(string empid) {
             EmpTransactionManage etrmanage = new EmpTransactionManage();
-            var etrlist = etrmanage.GetList().Where(s => s.EmployeeId == empid).ToList();
-            return etrlist;
+            var etrlist = etrmanage.GetList().Where(s => s.EmployeeId == empid && s.IsDel==false).ToList();
+            MoveTypeManage mtmanage = new MoveTypeManage();
+            List<EmpTransactionView> etrviewlist = new List<EmpTransactionView>();
+            foreach (var item in etrlist)
+            {
+                EmpTransactionView etrview = new EmpTransactionView();
+                etrview.TransactionId = item.TransactionId;
+                etrview.EmployeeId = item.EmployeeId;
+                etrview.TransactionTime = item.TransactionTime;
+                etrview.Reason = item.Reason;
+                etrview.Remark = item.Remark;
+                etrview.IsDel = item.IsDel;
+                etrview.TransactionType = item.TransactionType;
+                etrview.PreviousDept = item.PreviousDept;
+                etrview.PreviousPosition = item.PreviousPosition;
+                etrview.PreviousSalary = item.PreviousSalary;
+                etrview.PresentDept = item.PresentDept;
+                etrview.PresentPosition = item.PresentPosition;
+                etrview.PresentSalary = item.PresentSalary;
+                etrview.BeforeContractStartTime = item.BeforeContractStartTime;
+                etrview.BeforeContractEndTime = item.BeforeContractEndTime;
+                etrview.AfterContractStartTime = item.AfterContractStartTime;
+                etrview.AfterContractEndTime = item.AfterContractEndTime;
+
+                etrview.Transactionname = mtmanage.GetEntity(item.TransactionType).MoveTypeName;
+                etrview.beforedname = this.GetDeptById((int)item.PreviousDept).DeptName;
+                etrview.beforepname = this.GetPobjById((int)item.PreviousPosition).PositionName;
+                etrview.afterdname = this.GetDeptById((int)item.PresentDept).DeptName;
+                etrview.afterpname = this.GetPobjById((int)item.PresentPosition).PositionName;
+                etrview.ename = this.GetInfoByEmpID(item.EmployeeId).EmpName;
+                etrview.EntryTime = this.GetInfoByEmpID(item.EmployeeId).EntryTime;
+                etrviewlist.Add(etrview);
+            }
+            return etrviewlist;
         }
     }
 }

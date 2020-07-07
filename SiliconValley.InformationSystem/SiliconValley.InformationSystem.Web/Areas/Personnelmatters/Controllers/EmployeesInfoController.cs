@@ -819,15 +819,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>
         public ActionResult GetEmpETRDetail(string id)
         {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
             ViewBag.id = id;
+            ViewBag.ETRlist = empmanage.GetEmpEtrdetails(id);
+
+            //MoveTypeManage mt = new MoveTypeManage();
+            //var mtlist = mt.GetList().Where(s => s.IsDel == false).ToList();
+            //ViewBag.etrType = mtlist;
+           
             return View();
         }
-        public ActionResult GetEmpETRDetailData(string id ) {
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var etrlist = empmanage.GetEmpEtrdetails(id);
-            ViewBag.ETRlist = etrlist;
-            return Json(etrlist,JsonRequestBehavior.AllowGet);
-        }
+       
+
         #endregion
 
 
