@@ -150,16 +150,31 @@
     </div>
 
 </script>
+<script type="text/template" id="selectDate">
+
+    <div style="margin:100px auto;text-align:center;">
+        <form class="layui-form">
+
+            <input type="date" id="DateInput" />
+
+            <button type="button" class="layui-btn layui-btn-primary" id="IsUsingBtn">确定</button>
+        </form>
+    </div>
+   
+</script>
 @section script{
     <script src="~/Areas/Teaching/Scripts/util.js"></script>
 
     <script src="~/Scripts/underscore.js"></script>
     <script>
-        layui.use(['layer', 'flow', 'form'], function () {
+        layui.use(['layer', 'flow', 'form','laydate'], function () {
             var form = layui.form;
             var layer = layui.layer;
             var flow = layui.flow;
+            var laydate = layui.laydate;
 
+            var TOPLAYER = undefined;
+           
 
             //下拉框联动
             form.on('select(grand)', function (data) {
@@ -281,12 +296,52 @@
 
             });
 
+            var UsingData = undefined;
+
+            var IsUsing = undefined;
             //监听指定开关
             form.on('switch(IsUsing)', function (data) {
+                UsingData = data;
+                IsUsing = this.checked ? "true" : "false";
+
+                //选择时间
+                TOPLAYER = layer.open({
+                    type: 1,
+                    title: "选择日期",
+                    area: ["300px", "400px"],
+                    content: $("#selectDate").html(),
+                    end: function () {
+                        UsingData = undefined;
+                        IsUsing = undefined;
+                    }
+                });
+
+               
+
+            });
+
+            $(document).off("click", '#IsUsingBtn').on('click', '#IsUsingBtn', function () {
+
+                var selectDate = $("#DateInput").val();
+
+                console.log(selectDate);
+
+                if (selectDate == undefined || selectDate =="") {
+
+                    layer.msg("请选择日期", {icon:2});
+                    return;
+
+                }
+
+                if (UsingData == undefined || IsUsing == undefined) {
+                    layer.msg("请刷新", { icon: 2 });
+                    return;
+                }
+
                 var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒
-                var IsUsing = this.checked ? "true" : "false";
-                var classteacherid = $(data.elem).parent().parent().parent().attr("classteacherid");
-                $.post("/CourseSyllabus/Course/UsingOrProhibit", { status: IsUsing, classteacherid: classteacherid }, function (result) {
+               
+                var classteacherid = $(UsingData.elem).parent().parent().parent().attr("classteacherid");
+                $.post("/CourseSyllabus/Course/UsingOrProhibit", { status: IsUsing, classteacherid: classteacherid, date: selectDate }, function (result) {
 
                     if (result.ErrorCode == 200) {
                         layer.msg('操作成功', { icon: 1 }, function () {
@@ -295,8 +350,6 @@
                             window.location.reload();
 
                         });
-
-
                     }
                     else {
                         layer.msg('服务器错误', { icon: 2 }, function () {
@@ -304,7 +357,6 @@
                         });
                     }
                 });
-
 
             });
 
