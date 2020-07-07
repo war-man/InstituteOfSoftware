@@ -5,6 +5,9 @@ function GetStudentByClass(classnumber,successcabllack, errorcallback) {
 
     var index = layer.load(1); //换了种风格
 
+    
+
+
     Ajax("/Teaching/Class/GetStudentByClass", { classnumber: classnumber }, "post", function (data) {
 
         layer.close(index);
@@ -14,7 +17,7 @@ function GetStudentByClass(classnumber,successcabllack, errorcallback) {
 
         errorcallback(error);
 
-        });
+    }, asycn = false);
 
 }
 
@@ -28,7 +31,7 @@ function GetClassInfo(classnumber,successcallback, errorcallback) {
     }, function (error) {
 
         errorcallback(error);
-        });
+    }, asycn = false);
 
 }
 
@@ -185,11 +188,9 @@ layui.use(["table", "layer", "element"], function () {
 
     //发送请求
     GetStudentByClass(clickclassnumber, function (data) {
-
     
         if (data.length != 0) {
             //渲染数据
-
             for (var i = 0; i < data.length; i++) {
                 var studenthtml = _.template($("#studenthtml").html());
 
@@ -197,8 +198,6 @@ layui.use(["table", "layer", "element"], function () {
 
                 $("#studentlist").append($(studentdata));
             }
-
-
            
         }
 
@@ -235,8 +234,8 @@ layui.use(["table", "layer", "element"], function () {
         //加载班级学生
 
         GetStudentByClass(classnumber, function (data) {
-
-            console.log(data);
+            console.log(".................");
+             console.log(data);
              layer.close(loadindex);
 
             if (data.length > 0) {

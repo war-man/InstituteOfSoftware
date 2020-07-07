@@ -794,13 +794,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         /// <param name="status">状态 true：启用  false：禁用</param>
         /// <param name="classteacherid"></param>
         /// <returns></returns>
-        public ActionResult UsingOrProhibit(string status, int classteacherid)
+        public ActionResult UsingOrProhibit(string status, int classteacherid, string date)
         {
             AjaxResult result = new AjaxResult();
 
             try
             {
-                db_course.UsingOrProhibit(status, classteacherid);
+                db_course.UsingOrProhibit(status, classteacherid, DateTime.Parse(date));
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";
