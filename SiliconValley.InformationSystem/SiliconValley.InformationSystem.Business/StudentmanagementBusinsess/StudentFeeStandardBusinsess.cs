@@ -1229,16 +1229,17 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 preentryfee.AddDate = DateTime.Now;
                 preentryfee.IsDit = false;
                 preentryfee.FinanceModelid = fine.id;
+                var classid = preentryfee.ClassID.Split(',');
+                Payview studentFee = new Payview();
+                studentFee.StudenID = preentryfee.keeponrecordid.ToString() + "," + preentryfee.ClassID;
+                preentryfee.ClassID = classid[0];
                 Preentryfeebusenn.Insert(preentryfee);
 
              
                
 
                   List<Payview> liststudents = new List<Payview>();
-                Payview studentFee = new Payview();
-         
-
-                studentFee.StudenID = preentryfee.keeponrecordid.ToString()+"," + preentryfee.ClassID;
+            
                 studentFee.Amountofmoney = preentryfee.Amountofmoney;
                 studentFee.AddDate = DateTime.Now;
                 studentFee.Remarks = preentryfee.identitydocument;
