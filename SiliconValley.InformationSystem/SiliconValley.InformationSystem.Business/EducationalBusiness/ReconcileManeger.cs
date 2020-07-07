@@ -32,7 +32,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public List<Reconcile> SQLGetReconcileDate()
         {
             List<Reconcile> list = this.GetListBySql<Reconcile>("select * from Reconcile");
-
             return list;
         }
        
