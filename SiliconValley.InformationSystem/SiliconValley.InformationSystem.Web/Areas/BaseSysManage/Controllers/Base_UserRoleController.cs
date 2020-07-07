@@ -55,80 +55,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             return View();
         }
 
-        public ActionResult AccountData(int page, int limit, string state,/*string empname,*/ string empnumber)
+        public ActionResult AccountData(int page, int limit,  string empname, string empnumber)
         {
 
-            List<Base_User> userlist = new List<Base_User>();
-            if (!string.IsNullOrEmpty(empnumber))
+            List<Base_User> userlist = db_user.GetList();
+
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+
+
+            if (!string.IsNullOrEmpty(empname) && string.IsNullOrEmpty(empnumber))
             {
-                if (state == "on")
+                //按照姓名筛选
+                userlist.ForEach(u=>
                 {
+                    var empobj = dbemp.GetInfoByEmpID(u.EmpNumber);
 
-                    var templist = db_user.GetList().Where(d => d.EmpNumber == empnumber).ToList();
-
-                    if (templist != null)
+                    if (empobj != null)
                     {
-                        userlist.AddRange(templist);
-                    }
-                }
 
-                else
-                {
-                    //根据员工名称查询
-
-                    var templist = db_user.GetList().ToList();
-
-                    foreach (var item in templist)
-                    {
-                        var tempuser = db_user.ConvetToView(item);
-
-                        if (tempuser != null)
+                        if (!empobj.EmpName.Contains(empname))
                         {
-                            if (tempuser.Emp.EmpName.Contains(empnumber))
-                            {
-                                userlist.Add(item);
-                            }
-
+                            //从集合中删除
+                            userlist.RemoveAt(userlist.IndexOf(u));
                         }
                     }
-                }
-            }
 
-            //if (empname == null && empnumber != null)
-            //{
-            //   var templist = db_user.GetList().Where(d => d.EmpNumber == empnumber).ToList();
-
-            //    if (templist != null)
-            //    {
-            //        userlist.AddRange(templist);
-            //    }
-
-            //}
-
-            //if (empnumber == null && empname != null)
-            //{
-
-            //    ///根据员工名称查询
-            //    ///
-
-            //    var templist = db_user.GetList().ToList();
-
-            //    foreach (var item in templist)
-            //    {
-            //       var tempuser = db_user.ConvetToView(item);
-
-            //        if (tempuser != null && tempuser.Emp.EmpName.Contains(empname))
-            //        {
-            //            userlist.Add(item);
-            //        }
-            //    }
-
-            //}
-
-            else
-            {
-                var templist = db_user.GetList().ToList();
-                userlist.AddRange(templist);
+                });
+               
             }
 
             var skiplist = userlist.Skip((page - 1) * limit).Take(limit).ToList();

@@ -91,7 +91,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             var list = new List<MultipleChoiceQuestion>();
 
-            list.AddRange(redisCache.GetCache <List<MultipleChoiceQuestion>>("MultipleChoiceQuestion"));
+            var redisdata = redisCache.GetCache<List<MultipleChoiceQuestion>>("MultipleChoiceQuestion");
+            if (redisdata != null)
+            {
+                list.AddRange(redisdata);
+            }
 
             if (list == null || list.Count == 0)
             {
@@ -261,7 +265,12 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             var list = new List<AnswerQuestionBank>();
 
-            list.AddRange(redisCache.GetCache<List<AnswerQuestionBank>>("AnswerQuestionBank"));
+            var redisdata = redisCache.GetCache<List<AnswerQuestionBank>>("AnswerQuestionBank");
+            if (redisdata != null)
+            {
+                list.AddRange(redisdata);
+            }
+            
 
             if (list == null || list.Count == 0)
             {
@@ -415,7 +424,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             var list = new List<MachTestQuesBank>();
 
-            list.AddRange(redisCache.GetCache<List<MachTestQuesBank>>("MachTestQuesBank"));
+            var redisdata = redisCache.GetCache<List<MachTestQuesBank>>("MachTestQuesBank");
+            if (redisdata != null)
+            {
+                list.AddRange(redisdata);
+            }
 
             if (list == null || list.Count == 0)
             {
