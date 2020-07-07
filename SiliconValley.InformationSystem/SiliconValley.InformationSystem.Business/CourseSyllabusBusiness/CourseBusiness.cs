@@ -277,7 +277,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
 
         }
 
-        public void UsingOrProhibit(string status, int classteacherid)
+        public void UsingOrProhibit(string status, int classteacherid, DateTime date)
         {
             var classteacher = db_classteacher.GetIQueryable().Where(d => d.ID == classteacherid).FirstOrDefault();
 
@@ -292,13 +292,15 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
                     foreach (var item in templist)
                     {
                         item.IsDel = true;
+                        classteacher.EndDate = date;
                         db_classteacher.Update(item);
                     }
                 }
 
 
                 classteacher.IsDel = false;
-
+                classteacher.BeginDate = date;
+                classteacher.EndDate = null;
                 db_classteacher.Update(classteacher);
             }
 
@@ -306,7 +308,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             {
                 //禁用
                 classteacher.IsDel = true;
-
+                classteacher.EndDate = date;
                 db_classteacher.Update(classteacher);
 
             }

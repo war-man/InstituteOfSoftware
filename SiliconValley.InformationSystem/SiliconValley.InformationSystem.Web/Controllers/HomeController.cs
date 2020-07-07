@@ -236,14 +236,10 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                 }
                 catch (Exception)
                 {
-
                     
                 }
-               
-                
             }
-
-
+            
             sqlBulkCopy.WriteToServer(table);
 
             return Content("ok");
@@ -283,7 +279,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                 result.Data = null;
             }
            
-
+             
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
