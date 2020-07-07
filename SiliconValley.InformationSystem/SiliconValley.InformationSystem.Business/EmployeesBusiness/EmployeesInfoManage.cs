@@ -314,7 +314,8 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             EmployeesInfo employees = new EmployeesInfo();
             if (key)
             {
-                employees = this.GetEntity(name);
+                 List<EmployeesInfo> list2 = this.GetListBySql<EmployeesInfo>("select * from EmpView where EmployeeId='" + name + "'").ToList();
+                employees = list2.Count > 0 ? list2[0] : null;
             }
             else
             {

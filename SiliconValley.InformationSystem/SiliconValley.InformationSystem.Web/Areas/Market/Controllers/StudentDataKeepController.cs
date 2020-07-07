@@ -1659,5 +1659,204 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
         #endregion
+
+        #region 给市场显示的数据
+          public ActionResult MarkeView()
+          {
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            //获取信息来源的所有数据
+            List<SelectListItem> se = s_Entity.StuInfomationType_Entity.GetList().Select(s => new SelectListItem { Text = s.Name, Value = s.Name }).ToList();
+            se.Add(new SelectListItem() { Text = "请选择", Selected = true, Value = "0" });
+            ViewBag.infomation = se;
+            //获取区域所有信息
+            SelectListItem newselectitem = new SelectListItem() { Text = "请选择", Value = "0", Selected = true };
+            var r_list = s_Entity.GetEffectiveRegionAll(true).Select(r => new SelectListItem { Text = r.RegionName, Value = r.RegionName }).ToList();
+            r_list.Add(newselectitem);
+            ViewBag.are = r_list;
+            //获取咨询师的所有数据
+            List<SelectListItem> list_cteacher = new List<SelectListItem>();
+            List<SelectListItem> list_one = new List<SelectListItem>();
+            list_cteacher.Add(new SelectListItem() { Text = "请选择", Value = "0", Selected = true });
+            list_one.Add(new SelectListItem() { Text = "请选择", Value = "0", Selected = true });
+            list_cteacher.AddRange(EmployandCounTeacherCoom.getallCountTeacher(true).Select(c => new SelectListItem() { Text = c.empname, Value = c.empname }).ToList());
+            list_one.AddRange(EmployandCounTeacherCoom.GetTeacher().Select(c => new SelectListItem() { Text = c.Employees_Id, Value = c.Id.ToString() }).ToList());
+            ViewBag.teacherlist = list_cteacher;
+            ViewBag.Teacher = list_one;
+            //获取学生状态所有数据
+            List<SelectListItem> ss = new List<SelectListItem>();
+            ss.Add(new SelectListItem() { Value = "0", Text = "请选择", Selected = true });
+            ss.AddRange(s_Entity.Stustate_Entity.GetList().Select(s => new SelectListItem { Text = s.StatusName, Value = s.StatusName }).ToList());
+
+            ViewBag.slist = ss;
+
+            ViewBag.Pers = s_Entity.GetPostion(UserName.EmpNumber);
+
+            //获取市场类型
+            ViewBag.type = Marketgrand();
+            return View();
+          }
+        /// <summary>
+        /// 模糊查询的
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public ActionResult GetTableData_Mark(int limit, int page)
+        {
+            List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();
+            //获取当前登录人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            EmployeesInfo indata= s_Entity.Enplo_Entity.FindEmpData(UserName.EmpNumber, true) ;
+            if (indata!=null)
+            {
+                StringBuilder sb1 = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
+                sb1.Append("select * from StudentBeanView  where 1=1 and  empName='"+ indata.EmpName + "'");
+                sb2.Append("select * from Sch_MarketView where 1=1 and SalePerson='"+ indata.EmpName+ "' or RelatedPerson='"+ indata.EmpName + "'");                
+                 
+                    #region 模糊查询
+                    string findNamevalue = Request.QueryString["findNamevalue"];//姓名
+                    string findPhonevalue = Request.QueryString["findPhonevalue"];//电话
+                    string findInformationvalue = Request.QueryString["findInformationvalue"];//信息来源
+                    string findStartvalue = Request.QueryString["findStartvalue"];//录入开始时间
+                    string findEndvalue = Request.QueryString["findEndvalue"];//录入结束时间
+                    string findBeanManvalue = Request.QueryString["findBeanManvalue"];//备案人
+                    string findAreavalue = Request.QueryString["findAreavalue"];//区域
+                    string findTeacher = Request.QueryString["S_consultTeacher"];//咨询师
+                    string findStatus = Request.QueryString["S_status"];//备案状态
+                    string findPary = Request.QueryString["S_party"];//关系人
+                    string findCreateMan = Request.QueryString["S_intosysMan"];//录入人
+                    string markety = Request.QueryString["marketype"];//市场类型
+
+                    string qq = Request.QueryString["S_QQ"];//QQ
+                    string edution = Request.QueryString["eduttion"];//学历
+                    string reack = Request.QueryString["S_Reack"];//其他说明
+                    if (!string.IsNullOrEmpty(findNamevalue))
+                    {
+                        sb1.Append("and  StuName like  '" + findNamevalue + "%'");
+                        sb2.Append(" and StudentName like  '" + findNamevalue + "%'");
+                    }
+                    if (!string.IsNullOrEmpty(findPhonevalue))
+                    {
+                        sb1.Append(" and Stuphone = '" + findPhonevalue + "'");
+                        sb2.Append(" and Phone = '" + findPhonevalue + "'");
+                    }
+                    if (findInformationvalue != "0" && !string.IsNullOrEmpty(findInformationvalue))
+                    {
+                        sb1.Append(" and stuinfomation = '" + findInformationvalue + "'");
+                        sb2.Append(" and source = '" + findInformationvalue + "'");
+                    }
+                    if (!string.IsNullOrEmpty(findBeanManvalue))
+                    {
+                        sb1.Append(" and empName = '" + findBeanManvalue + "'");
+                        sb2.Append(" and SalePerson = '" + findBeanManvalue + "'");
+                    }
+                    if (findAreavalue != "0" && !string.IsNullOrEmpty(findAreavalue))
+                    {
+                        sb1.Append(" and RegionName = '" + findAreavalue + "'");
+                        sb2.Append(" and Area = '" + findAreavalue + "'");
+                    }
+                    if (findStatus != "0" && !string.IsNullOrEmpty(findStatus))
+                    {
+                        sb1.Append(" and StatusName = '" + findStatus + "'");
+                        sb2.Append(" and  MarketState like '已报名%'");
+                    }
+                    if (!string.IsNullOrEmpty(findPary))
+                    {
+                        sb1.Append(" and Party = '" + findPary + "'");
+                        sb2.Append(" and RelatedPerson = '" + findPary + "'");
+                    }
+                    if (!string.IsNullOrEmpty(findCreateMan))
+                    {
+                        sb1.Append(" and StuEntering = '" + findCreateMan + "'");
+                        sb2.Append(" and CreateUserName = '" + findCreateMan + "'");
+                    }
+
+                    if (!string.IsNullOrEmpty(findStartvalue))
+                    {
+                        sb1.Append(" and BeanDate >= '" + findStartvalue + "'");
+                        sb2.Append(" and CreateDate >= '" + findStartvalue + "'");
+                    }
+
+                    if (!string.IsNullOrEmpty(findTeacher) && findTeacher != "0")
+                    {
+                        sb1.Append(" and ConsultTeacher = '" + findTeacher + "'");
+                        sb2.Append(" and Inquiry = '" + findTeacher + "'");
+                    }
+
+                    if (!string.IsNullOrEmpty(findEndvalue))
+                    {
+                        sb1.Append(" and BeanDate <= '" + findEndvalue + "'");
+                        sb2.Append(" and CreateDate <= '" + findEndvalue + "'");
+                    }
+
+                    if (markety != "0" && !string.IsNullOrEmpty(markety))
+                    {
+                        sb1.Append(" and MarketType = '" + markety + "'");
+                        sb2.Append(" and MarketState like '" + markety + "%'");
+                    }
+
+                    if (!string.IsNullOrEmpty(qq))
+                    {
+                        sb1.Append(" and StuQQ = '" + qq + "'");
+                        sb2.Append(" and QQ = '" + qq + "'");
+                    }
+
+                    if (!string.IsNullOrEmpty(edution) && edution != "0")
+                    {
+                        sb1.Append(" and StuEducational = '" + edution + "'");
+                        sb2.Append(" and Education = '" + edution + "'");
+                    }
+
+                    if (!string.IsNullOrEmpty(reack))
+                    {
+                        sb1.Append(" and Reak like '" + reack + "%'");
+                        sb2.Append(" and Remark like '" + reack + "%'");
+                    }
+                    #endregion
+                
+                list = s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.StuDateTime).ToList();
+
+                var data = list.Skip((page - 1) * limit).Take(limit).ToList();
+
+                var josndata = new { code = 0, count = list.Count, data = data };
+
+                return Json(josndata, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+
+        public ActionResult OnewData(int limit, int page)
+        {
+            List<ExportStudentBeanData> list = new List<ExportStudentBeanData>();
+            //获取当前登录人
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            EmployeesInfo indata = s_Entity.Enplo_Entity.FindEmpData(UserName.EmpNumber, true);
+            if (indata != null)
+            {
+                StringBuilder sb1 = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
+                sb1.Append("select * from StudentBeanView  where 1=1 and  empName='" + indata.EmpName + "'");
+                sb2.Append("select * from Sch_MarketView where 1=1 and SalePerson='" + indata.EmpName + "' or RelatedPerson='" + indata.EmpName + "'");
+                
+                list = s_Entity.Serch(sb1.ToString(), sb2.ToString()).OrderByDescending(s => s.StuDateTime).ToList();
+
+                var data = list.Skip((page - 1) * limit).Take(limit).ToList();
+
+                var josndata = new { code = 0, count = list.Count, data = data };
+
+                return Json(josndata, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        #endregion
     }
 }
