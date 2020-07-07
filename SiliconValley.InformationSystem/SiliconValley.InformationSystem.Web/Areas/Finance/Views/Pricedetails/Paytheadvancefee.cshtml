@@ -141,11 +141,24 @@
 
             var datas = data.field;
 
-            console.log(datas);
+        
 
                 ajaxprice("/Finance/Pricedetails/PaytheadvancefeeAdd", datas, function () {
                     
                     window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 900, 600);
+
+                   
+                    //layer.prompt({
+                    //    formType: 0,
+                    //    value: $(data.elem).attr("Amountofmoney"),
+                    //    title: data.elem.title,
+                    //    area: ['100px', '100px'], //自定义文本域宽高
+                    //    btn2: function () {
+                    //        data.elem.checked = false;
+                    //        form.render();
+                    //    }
+                    //}, function (value, index, elem) { }
+                         
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);//关闭当前页  
                  

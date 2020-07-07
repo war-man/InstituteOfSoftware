@@ -274,17 +274,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             {
                 var GrandName = "";
                 var stuid = personlist[0].StudenID.Split(',');
-                if (stuid[1] == "初中生待定")
-                {
-                    GrandName = "Y1";
-                }
-                else
-                {
-                    GrandName = "S1";
-                }
+              
+                    GrandName = stuid[2];
+            
                 //班级业务类
                 ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
-                var stu = stuDataKeepAndRecordBusiness.GetAll().Where(a => a.Id ==int.Parse(stuid[0])).FirstOrDefault();
+                var stu = stuDataKeepAndRecordBusiness.findId(stuid[0]);
             
                 var student = new
                 {
@@ -494,17 +489,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         public class PreentryfeeView
         {
             public string Name { get; set; }
+            public string gradeName { get; set; }
         }
         public ActionResult Paytheadvancefee(int id)
         {
+            //班级业务类
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
             List<PreentryfeeView> preentryfeeViews = new List<PreentryfeeView>();
             PreentryfeeView preentryfeeView = new PreentryfeeView();
             preentryfeeView.Name = "初中生待定";
+            preentryfeeView.gradeName = "Y1";
             preentryfeeViews.Add(preentryfeeView);
             preentryfeeView = new PreentryfeeView();
+            preentryfeeView.gradeName = "S1";
             preentryfeeView.Name = "高中生待定";
             preentryfeeViews.Add(preentryfeeView);
-            ViewBag.preentryfeeViews= preentryfeeViews.Select(a => new SelectListItem { Value = a.Name, Text = a.Name });
+
+          var cls=  classScheduleBusiness.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false && a.ClassstatusID == null && a.grade_Id == 1 || a.grade_Id == 1002).OrderByDescending(a=>a.grade_Id).Select(a=>new PreentryfeeView { gradeName= classScheduleBusiness.GetClassGrand(a.id,2), Name=a.ClassNumber }).ToList();
+            preentryfeeViews.AddRange(cls);
+            ViewBag.preentryfeeViews= preentryfeeViews.Select(a => new SelectListItem { Value = a.Name+","+a.gradeName, Text = a.Name });
             ViewBag.ExportStudentBeanData = stuDataKeepAndRecordBusiness.findId(id.ToString());
          
             return View();
