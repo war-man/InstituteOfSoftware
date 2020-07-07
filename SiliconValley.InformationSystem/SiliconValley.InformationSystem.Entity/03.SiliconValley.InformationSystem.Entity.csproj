@@ -492,6 +492,7 @@
     <Compile Include="ViewEntity\TM_Data\Laterecord.cs" />
     <Compile Include="ViewEntity\TM_Data\Laterecord_StudentAttendance.cs" />
     <Compile Include="ViewEntity\TM_Data\MyViewEntity\BaseDataView.cs" />
+    <Compile Include="ViewEntity\TM_Data\MyViewEntity\ReconcileView.cs" />
     <Compile Include="ViewEntity\TM_Data\TM_ConsultView.cs" />
     <Compile Include="ViewEntity\TotalcostView.cs" />
     <Compile Include="ViewEntity\TraineeDateVIew.cs" />

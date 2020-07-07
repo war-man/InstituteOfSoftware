@@ -25,12 +25,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             List<SelectListItem> g_list = MyEntity.Break_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString(),Selected=false }).ToList();
             g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
             ViewBag.s_grandlist = g_list;
-
-            //获取巡班时间段
-            BaseDataEnum find_data = BreakManeger.BaseDataEnum_Entity.GetSingData("巡班时间段", false);
-            ViewBag.s_dataenum = BreakManeger.BaseDataEnum_Entity.GetChildData(find_data.Id).Select(b => new SelectListItem { Text = b.Name, Value = b.Id.ToString() }).ToList();
-
- 
+             
             //获取上课违纪类型
             BaseDataEnum find_dataV = BreakManeger.BaseDataEnum_Entity.GetSingData("上课违纪类型", false);
             List<SelectListItem> typelist = BreakManeger.BaseDataEnum_Entity.GetChildData(find_dataV.Id).Select(b => new SelectListItem { Text = b.Name, Value = b.Id.ToString(),Selected=false }).ToList();
@@ -48,24 +43,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             try
             {
-                //string Name = Request.QueryString["classname"];
-                List<BaseDataView> break_list = MyEntity.Break_Entity.ALL_DATA().Where(b=>b.IsDelete==false).OrderByDescending(b=>b.Id).ToList();
-                //if (Name!=null)
-                //{                    
-                //    //break_list = break_list.Where(b => b.ClassSchedule_Id == Name).ToList();
-                //}
-                //string starDate = Request.QueryString["starDate"];
-                //if (!string.IsNullOrEmpty(starDate))
-                //{
+                string Name = Request.QueryString["s_class"];
+                List<BaseDataView> break_list = MyEntity.Break_Entity.ALL_DATA().Where(b => b.IsDelete == false).OrderByDescending(b => b.Id).ToList();
+                if (Name != null)
+                {
+                    int classid = Convert.ToInt32(Name);
+                   break_list = break_list.Where(b => b.ClassSchedule_Id == classid).ToList();
+                }
+                string type = Request.QueryString["typeV"];
+                if (type!="0" && type!=null)
+                {
+                    int typeid = Convert.ToInt32(type);
+                    break_list = break_list.Where(b => b.Violationofdiscipline_Id== typeid).ToList();
+                }
+                string time = Request.QueryString["s_time"];
+                if (time!="0" && time!=null)
+                {
+                    break_list= break_list.Where(b => b.BaseDataTime==time).ToList();
+                }
+                string starDate = Request.QueryString["stateTime"];
+                if (!string.IsNullOrEmpty(starDate))
+                {
 
-                //    break_list = break_list.Where(b => b.RecodeDate >= Convert.ToDateTime(starDate)).ToList();
-                //}
+                    break_list = break_list.Where(b => b.RecodeDate >= Convert.ToDateTime(starDate)).ToList();
+                }
 
-                //string endDate = Request.QueryString["endDate"];
-                //if (!string.IsNullOrEmpty(endDate))
-                //{
-                //    break_list = break_list.Where(b => b.RecodeDate <= Convert.ToDateTime(endDate)).ToList();
-                //}
+                string endDate = Request.QueryString["endTime"];
+                if (!string.IsNullOrEmpty(endDate))
+                {
+                    break_list = break_list.Where(b => b.RecodeDate <= Convert.ToDateTime(endDate)).ToList();
+                }
                 var mydata = break_list.Skip((page - 1) * limit).Take(limit);
 
                 var datajson = new

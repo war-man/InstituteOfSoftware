@@ -31,37 +31,44 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <div class="layui-form">
-    <div class="layui-form">
-        <div style="display:inline-block;">
-            <label>阶段:</label>
-            <div style="display:inline-block">
-                @Html.DropDownList("s_grand", ViewBag.s_grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "s_grand" } })
-            </div>
-            <label>班级:</label>
-            <div style="display:inline-block" id="s_classDiv">
-                <select id="s_class" name="s_class">
-                    <option value="0">--请选择--</option>
-                </select>
-            </div>
-            <label>违纪类型:</label>
-            <div>
-                @Html.DropDownList("typeV", ViewBag.Selct_V as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
-            </div>
-            <label>巡班时间</label>
-            <div style="display:inline-block">
-                @Html.DropDownList("s_time", ViewBag.s_dataenum as IEnumerable<SelectListItem>)
-            </div>
-            <label>开始时间:</label>
-            <div class="btn-group layui-container" style="width:140px;">
-                <input class="layui-input" id="stateTime" placeholder="开始时间">
-            </div>
-            <label>结束时间:</label>
-            <div class="btn-group layui-container" style="width:140px;">
-                <input class="layui-input" id="endTime" placeholder="结束时间">
-            </div>
+    <div>
+        <form class="layui-form" lay-filter="Oneform">
+            <div style="display:inline-block;">
+                <label>阶段:</label>
+                <div style="display:inline-block">
+                    @Html.DropDownList("s_grand", ViewBag.s_grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "s_grand" } })
+                </div>
+                <label>班级:</label>
+                <div style="display:inline-block" id="s_classDiv">
+                    <select id="s_class" name="s_class">
+                        <option value="0">--请选择--</option>
+                    </select>
+                </div>
+                <label>违纪类型:</label>
+                <div style="display:inline-block">
+                    @Html.DropDownList("typeV", ViewBag.Selct_V as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                </div>
+                <label>巡班时间</label>
+                <div style="display:inline-block">
+                    <select id="s_time" name="s_time">
+                        <option selected="selected" value="0">--请选择--</option>
+                        <option value="上午">上午</option>
+                        <option value="下午">下午</option>
+                    </select>
+                </div>
+                <label>开始时间:</label>
+                <div class="btn-group layui-container" style="width:140px;">
+                    <input class="layui-input" id="stateTime" name="stateTime" placeholder="开始时间">
+                </div>
+                <label>结束时间:</label>
+                <div class="btn-group layui-container" style="width:140px;">
+                    <input class="layui-input" id="endTime" name="endTime" placeholder="结束时间">
+                </div>
 
-            <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="serchBaseData()">查询</button>
-        </div>
+                <button id="serchBtn1" type="button" class="layui-btn layui-btn-radius layui-btn-primary" onclick="serchBaseData()">查询</button>
+            </div>
+        </form>
+      
         <hr />
     </div>
 </div>
@@ -103,21 +110,21 @@
             });
         }
         //查询
-        function serchBaseData() {
-            var classname = $("#selectGrand")[0].innerText;//获取班级名称
+        function serchBaseData() {            
             var starDate = new Date($("#stateTime").val());
             var endDate = new Date($("#endTime").val());
-            if (endDate - starDate >= 0) {
-                layui.use(['table'], function () {
+                        
+                layui.use(['form', 'table'], function () {
+                    var form = layui.form;
                     var table = layui.table;
+                    var data1 = form.val("Oneform");
+                    //console.log(data1);
                     table.reload('break_table', {
                         url: '/Educational/Break/GetBrakData'
-                        , where: { "classname": classname, "starDate": $("#stateTime").val(), "endDate": $("#endTime").val() } //设定异步数据接口的额外参数
+                        , where: data1 //设定异步数据接口的额外参数
                     });
                 });
-            } else {
-                Heper('结束时间不能小于开始时间', 2)
-            }
+             
         }
         layui.use(['table', 'form', 'layer', 'laydate'], function () {
             var table = layui.table;
@@ -134,17 +141,18 @@
                 }]
                 , title: '用户数据表'
                 , cols: [[
-                    { type: 'radio', fixed: 'left' }
+                    { type: 'checkbox' }
                     , { field: 'ClassNumber', title: '班级' }
                     , { field: 'Name', title: '违纪名称' }
                     , { field: 'count', title: '违纪人数' }
-                    , { field: 'EmpName', title: '录入人' }
+                  
                     , { field: 'BaseDataTime', title: '时间段' }
                     , {
                         field: 'RecodeDate', title: '日期', templet: function (res) {
                             return TimeChange(res.RecodeDate);
                         }
                     }
+                    , { field: 'EmpName', title: '录入人' }
                     , { field: 'Rmark', title: '备注' }
                     , { fixed: 'right', title: '操作', toolbar: '#breakbarDemo', width: 150 }
                 ]]
