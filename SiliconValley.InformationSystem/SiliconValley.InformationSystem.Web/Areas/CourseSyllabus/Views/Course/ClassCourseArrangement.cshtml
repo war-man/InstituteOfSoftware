@@ -139,6 +139,7 @@
             <div><label>课程：</label><span></span>{{=CourseName}}</div>
             <div><label>上课老师：</label><span></span>{{=TeacherName}}</div>
             <div><label>开始时间：</label><span></span>{{=BeginDate}}</div>
+            <div><label>结束时间：</label><span></span>{{=EndDate}}</div>
             <div><label>状态：</label><span></span>{{=status}}</div>
 
             <div>
@@ -233,9 +234,17 @@
                             var dateutc = item.BeginDate.substr(item.BeginDate.indexOf('(') + 1, 13);
                             beginDate = formaDateUtc(dateutc);
 
+                            var enddate = "未结束"
+
+                            if (item.EndDate != undefined && item.EndDate != null) {
+                              
+                                var enddateutc = item.EndDate.substr(item.EndDate.indexOf('(') + 1, 13);
+                                enddate = formaDateUtc(enddateutc);
+                            }
+                           
 
                             var template = _.template($("#muban").html());
-                            var templateData = template({ classteacherid: item.ID, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
+                            var templateData = template({ classteacherid: item.ID, EndDate: enddate, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
                             $("#mycontent form").append(templateData);
 
                         });
@@ -395,10 +404,16 @@
 
                                 var dateutc = item.BeginDate.substr(item.BeginDate.indexOf('(') + 1, 13);
                                 beginDate = formaDateUtc(dateutc);
+                                var enddate = "未结束"
 
+                                if (item.EndDate != undefined && item.EndDate != null) {
+
+                                    var enddateutc = item.EndDate.substr(item.EndDate.indexOf('(') + 1, 13);
+                                    enddate = formaDateUtc(enddateutc);
+                                }
 
                                 var template = _.template($("#muban").html());
-                                var templateData = template({ classteacherid: item.ID, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
+                                var templateData = template({ classteacherid: item.ID,EndDate:enddate, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
                                 $("#mycontent form").append(templateData);
 
                             });
