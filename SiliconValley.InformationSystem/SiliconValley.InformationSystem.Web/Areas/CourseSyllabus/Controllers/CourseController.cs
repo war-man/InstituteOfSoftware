@@ -601,16 +601,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         /// <returns></returns>
         public ActionResult EditClassCourseArrangment()
         {
-            //提供所有班级
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-           
 
-            List<ClassSchedule> classlist = new List<ClassSchedule>();
-
-            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
-
-            ViewBag.classlist = dbteacherclass.AllClassSchedule();
+            ViewBag.grandlist = db_grand.AllGrand();
 
 
             //提供所有课程
@@ -862,6 +855,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             var allclasslist = dbteacherclass.AllClassSchedule().Where(d => d.grade_Id == int.Parse(grandid)).ToList();
 
             return Json(allclasslist, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ClassDataByGrandAjax(string grandid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+                var allclasslist = dbteacherclass.AllClassSchedule().Where(d => d.grade_Id == int.Parse(grandid)).ToList();
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = allclasslist;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+         
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

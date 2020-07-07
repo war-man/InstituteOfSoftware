@@ -42,17 +42,11 @@
             <div class="layui-form-item">
 
 
-                <div class="layui-inline">
-                    <label class="layui-form-label">开关</label>
-                    <div class="layui-input-inline" style="width:100px;">
-                        <input type="checkbox" name="close" lay-skin="switch" lay-text="员工编号|员工名称">
-                    </div>
-                </div>
-
+             
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width:100px;">关键字：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="searchcontent" autocomplete="off" class="layui-input">
+                        <input type="text" name="searchcontent" id="searchcontent" placeholder="员工编号/员工姓名" class="layui-input">
                     </div>
                 </div>
 
@@ -131,6 +125,14 @@
             return empData
         }
 
+        //验证字符串是否属于数值类型
+        function checkNumber(theObj) {
+            var reg = /^[0-9]+.?[0-9]*$/;
+            if (reg.test(theObj)) {
+                return true;
+            }
+            return false;
+        }
         layui.use(['table','layer','form'], function(){
 
             var table = layui.table;
@@ -159,21 +161,35 @@
                 , page: true
             });
 
+            function SearchTable() {
+
+                var searchContent = $("#searchcontent").val();
+                console.log(searchContent);
+                var isNumber = checkNumber(searchContent);
+
+                if (isNumber) {
+                    table.reload('accaountTable', {
+
+                        where: {
+                            empnumber: searchContent,
+                            empname: ""
+                        }
+                    });
+                }
+
+                else {
+                    table.reload('accaountTable', {
+                      
+                        where: {
+                            empname: searchContent,
+                            empnumber: "",
+                        }
+                    });
+                }
+            }
             ///查询
             form.on('submit(search)', function (data) {
-                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
-                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
-                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
-
-                table.reload('accaountTable', {
-                      url: '/BaseSysManage/Base_UserRole/AccountData',
-                    where: {
-                          state: data.field.close,
-                          empnumber: data.field.searchcontent,
-
-                      }
-                  });
-
+                SearchTable();
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
 

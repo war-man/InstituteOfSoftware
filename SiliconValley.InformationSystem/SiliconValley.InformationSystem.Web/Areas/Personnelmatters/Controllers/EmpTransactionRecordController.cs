@@ -84,6 +84,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              e.PreviousSalary,
                              e.PresentSalary,
                              e.Reason,
+                             e.BeforeContractStartTime,
+                             e.BeforeContractEndTime,
+                             e.AfterContractStartTime,
+                             e.AfterContractEndTime,
                              e.IsDel
                          };
             var newobj = new
@@ -561,6 +565,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         }
                     }
                 } else if (mtname.Equals("续签")) {
+                    
                     emp.ContractStartTime = etr.AfterContractStartTime;
                     emp.ContractEndTime = etr.AfterContractEndTime;
                     empmanage.Update(emp);

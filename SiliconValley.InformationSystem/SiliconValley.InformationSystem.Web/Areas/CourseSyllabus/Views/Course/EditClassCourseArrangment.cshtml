@@ -24,32 +24,33 @@
         <form class="layui-form" lay-filter="myform">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">班级:</label>
+                    <label class="layui-form-label">阶段:</label>
                     <div class="layui-input-inline">
-                        <select lay-filter="classnumber" name="classnumber">
+                        <select id="grand" name="grand" lay-filter="grand">
                             @{
-                                foreach (var item in ViewBag.classlist as List<ClassSchedule>)
+                                foreach (var item in ViewBag.grandlist as List<Grand>)
                                 {
-                                    <option value="@item.id">@item.ClassNumber</option>
+                                    <option value="@item.Id">@item.GrandName</option>
                                 }
                             }
                         </select>
                     </div>
                 </div>
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">班级:</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="classnumber" id="classnumber" name="classnumber"></select>
+                    </div>
+                </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">课程:</label>
                     <div class="layui-input-inline">
-                        <select id="course" name="course" lay-filter="course">
-                           
-                        </select>
+                        <select id="course" name="course" lay-filter="course"></select>
                     </div>
                 </div>
 
-
-            </div>
-
-
-            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">上课老师:</label>
                     <div class="layui-input-inline">
@@ -64,6 +65,11 @@
                     </div>
                 </div>
 
+            </div>
+
+
+            <div class="layui-form-item">
+                
             </div>
 
             
@@ -110,7 +116,37 @@
                 });
                
             });
+            form.on('select(grand)', function (data) {
 
+                var loadindex = layer.load(1, { shade: false }); //0代表加载的风格，支持0-2
+
+                $("#classnumber option").remove();
+                $.post("/CourseSyllabus/Course/ClassDataByGrandAjax", { grandid: data.value }, function (result) {
+
+                    layer.close(loadindex);
+
+                    console.log(result);
+
+                    if (result.ErrorCode == 200) {
+
+                        for (var i = 0; i < result.Data.length; i++) {
+
+                            var option = $("<option></option>");
+                            option.text(result.Data[i].ClassNumber);
+                            option.val(result.Data[i].id);
+
+                            $("#classnumber").append(option);
+                        }
+
+                        form.render();
+
+
+                    }
+
+
+                });
+
+            });
             form.on('select(course)', function (data) {
 
                 var loadindex = layer.load(1, { shade: false }); //0代表加载的风格，支持0-2

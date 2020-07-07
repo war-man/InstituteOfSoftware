@@ -123,23 +123,28 @@
                 <span class="questionIndex">{{=index}}</span> <code style="margin-left:5px;">{{=question}}</code>&nbsp;&nbsp;(<span class="listScores">{{=score}}</span>分)<input type="hidden" class="hidescore" value="{{=score}}" />
             </div>
             <div class="option">
-                <form class="layui-form">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label"></label>
-                        <div class="layui-input-block">
-                            <input type="checkbox" value="A" lay-filter="option" name="OptionA" title="{{=A}} (选项A)">
-                            <br />
-                            <br />
-                            <input type="checkbox" value="B" lay-filter="option" name="OptionB" title="{{=B}} (选项B)">
-                            <br />
-                            <br />
-                            <input type="checkbox" value="C" lay-filter="option" name="OptionC" title="{{=C}} (选项C)">
-                            <br />
-                            <br />
-                            <input type="checkbox" value="D" lay-filter="option" name="OptionD" title="{{=D}} (选项D)">
-                        </div>
-                    </div>
+                @*<form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+
+                </div>
+            </div>
+        </form>*@
+                <form>
+                    @*<input type="checkbox" value="A" lay-filter="option" name="OptionA" title="{{=A}} (选项A)">*@
+                    <div class="optiond"><label>选项A：</label><input name="option" value="A" type="checkbox" /><code>{{=A}}</code></div>
+                    <br />
+                    <div class="optiond"><label>选项B：</label><input name="option" value="B" type="checkbox" /><code name="OptionA">{{=B}}</code></div>
+                    @*<input type="checkbox" value="B" lay-filter="option" name="OptionB" title="{{=B}} (选项B)">*@
+                    <br />
+                    <div class="optiond"><label>选项C：</label><input name="option" value="C" type="checkbox" /><code name="OptionA">{{=C}}</code></div>
+                    <br />
+                    @*<input type="checkbox" value="C" lay-filter="option" name="OptionC" title="{{=C}} (选项C)">*@
+                    <div class="optiond"><label>选项D：</label><input name="option" value="D" type="checkbox" /><code name="OptionA">{{=D}}</code></div>
+                    @*<input type="checkbox" value="D" lay-filter="option" name="OptionD" title="{{=D}} (选项D)">*@
                 </form>
+                
             </div>
         </div>
     </script>
@@ -173,6 +178,13 @@
                 div.appendChild(HTMLDOM)
                 return div.innerHTML
             }
+        }
+
+        function escapeHTMLString(str) {
+            str = str.replace(/</g, '&lt;');
+            str = str.replace(/>/g, '&gt;');
+
+            return str;
         }
         var formData = new FormData();  //点击提交时将要提交的数据
 
@@ -248,7 +260,10 @@
                             var title = $("<label></label>");
                             title.text(RESULT.Data.data[i].Title);
 
-
+                            console.log(document.HTMLDOMtoString(title[0]));
+                            console.log(document.HTMLDOMtoString(a[0]));
+                            console.log(document.HTMLDOMtoString(b[0]));
+                            console.log(document.HTMLDOMtoString(c[0])); console.log(document.HTMLDOMtoString(d[0]));
                             var htmldate = html({ questionid: RESULT.Data.data[i].Id, index: i + 1, question: document.HTMLDOMtoString(title[0]), A: document.HTMLDOMtoString(a[0]), B: document.HTMLDOMtoString(b[0]), C: document.HTMLDOMtoString(c[0]), D: document.HTMLDOMtoString(d[0]), score: itemscores });
                             $("#choicequestion").append(htmldate);
 
@@ -466,14 +481,17 @@
                                    // arry_answer.pop();
                                     //获取学员选择的答案
                                     var arry_stuanswer = new Array();
-                                    $(this).find(".layui-form-checked").each(function (index, elem) {
+                                    $(this).find("input").each(function (index, elem) {
 
+                                        if (elem.checked == true) {
+                                            arry_stuanswer.push($(elem).val());
 
-                                        arry_stuanswer.push($(elem).prev().val());
-
+                                        }
+                                       
 
                                     });
 
+                                    console.log(arry_stuanswer);
 
                                     ///判断答案是否一致
                                     var isTrue = arry_answer.toString() == arry_stuanswer.toString();
@@ -484,7 +502,7 @@
                                         //如果一致
                                         var score = $(questionitem).find(".hidescore").val();
 
-                                        trueQuestionscores += parseInt(score);
+                                        trueQuestionscores += parseFloat(score);
                                         var span = $('<span class="panduan"><i style="font-size:25px; color:green;" class="layui-icon layui-icon-ok"></i></span>');
                                         questionitem.find(".title").append(span);
 
@@ -572,6 +590,10 @@
 
             });
 
+            $(document).off("click", ".optiond").on("click", ".optiond", function () {
+
+                $(this).find("input").click();
+            });
 
         });
 
