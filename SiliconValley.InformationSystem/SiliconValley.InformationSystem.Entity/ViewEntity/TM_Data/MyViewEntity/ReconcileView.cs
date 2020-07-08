@@ -64,6 +64,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// 其他说明
         /// </summary>
         public string Rmark { get; set; }
+        /// <summary>
+        /// 所属校区
+        /// </summary>
+        public int BaseData_Id { get; set; }
 
         /// <summary>
         /// 将试图模型转换为实体模型

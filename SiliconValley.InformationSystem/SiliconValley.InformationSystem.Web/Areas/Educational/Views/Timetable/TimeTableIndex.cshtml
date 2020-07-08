@@ -71,6 +71,7 @@
             </div>
             <div class="layui-col-sm4" style="margin-left:20px">
                 <button type="button" class="layui-btn" onclick="GetKebiao()">获取课表</button>
+                <button type="button" class="layui-btn" onclick="SysStudy()">安排自习课</button>
             </div>
         </div>
     </form>
@@ -392,6 +393,22 @@
            
 
         }
+        function SysStudy() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 2,
+                    content: '/Educational/Reconcile/SysView'
+                    , area: ['800px', '450px'],
+                    title: '系统安排自习课'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            });
+        }
+
+
     </script>
 }
 

@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;//教官业务类
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
@@ -83,19 +84,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// 获取排课所有数据
         /// </summary>
         /// <returns></returns>
-        //public List<Reconcile> SQLGetReconcileDate()
-        //{
-        //    #region 使用缓存拿数据
-        //    List<Reconcile> get_reconciles_list = new List<Reconcile>();
-        //    get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
-        //    if (get_reconciles_list == null || get_reconciles_list.Count == 0)
-        //    {
-        //        get_reconciles_list = SQLGetReconcileDate();
-        //        Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
-        //    }
-        //    #endregion
-        //    return SQLGetReconcileDate();
-        //}
+
         /// <summary>
         /// 获取单条数据
         /// </summary>
@@ -135,6 +124,25 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return s;
         }
+      
+        public AjaxResult AddData(List<Reconcile> r)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Insert(r);
+                a.Success = true;
+                a.Msg = "操作成功！！";
+            }
+            catch (Exception ex)
+            {
+                a.Msg = "系统错误，请刷新重试！！";
+                a.Success = false;
+            }
+
+            return a;
+        }
+        
         /// <summary>
         /// 修改数据 （false--失败,true--成功）
         /// </summary>
@@ -440,22 +448,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<EmployeesInfo> GetSir(DateTime time, string timename)
         {
-            //DepartmentManage department = new DepartmentManage();
-            //BaseBusiness<Position> position = new BaseBusiness<Position>();
-            List<EmployeesInfo> employees = GetAlljiaoguan(false); /*Reconcile_Com.Employees_Entity.GetList().Where(e => e.IsDel == false).ToList();*/
-            //List<EmployeesInfo> em = new List<EmployeesInfo>();
+            
+             List<EmployeesInfo> employees = GetAlljiaoguan(false); 
              List<EmployeesInfo> em2 = new List<EmployeesInfo>();//获取空闲的教官
-
-            //S1，S2教官
-            //Department find_d1 = department.GetList().Where(d => d.DeptName == "s1、s2教质部").FirstOrDefault();
-            //Position p1 = position.GetList().Where(p => p.PositionName == "教官" && p.DeptId == find_d1.DeptId).FirstOrDefault();
-            //em.AddRange(employees.Where(c => c.PositionId == p1.Pid).ToList());
-
-            ////S3,S4教官
-            //Department find_d2 = department.GetList().Where(d => d.DeptName == "s3教质部").FirstOrDefault();
-            //Position p2 = position.GetList().Where(p => p.PositionName == "教官" && p.DeptId == find_d2.DeptId).FirstOrDefault();
-            //em.AddRange(employees.Where(c => c.PositionId == p2.Pid).ToList());
-
+            
             //判断教官是否在这个时间段有课
             foreach (EmployeesInfo ee in employees)
             {
@@ -2026,8 +2022,118 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             
         }
-        
-        
+
+
+        #endregion
+        /// <summary>
+        /// 获取空教室
+        /// </summary>
+        /// <param name="addressid">校区</param>
+        /// <returns></returns>
+        public  List<EmtyClassroom> GetEmtyClassroom(int addressid,DateTime date,List<Classroom> classrooms)
+        {
+            List<EmtyClassroom> ddlit = new List<EmtyClassroom>();
+            try
+            {
+                string mm = "select * from ReconcileView where AnPaiDate='" + date + "' and BaseData_Id=" + addressid + "";
+
+                List<ReconcileView> reconciles = this.GetListBySql<ReconcileView>(mm);//获取某个校区已排好的数据
+
+                foreach (Classroom it in classrooms)
+                {
+
+                    List<string> str = new List<string>() { "上午12节", "上午34节", "下午12节", "下午34节" };
+                    List<ReconcileView> list = reconciles.Where(r => r.ClassRoom_Id == it.Id).ToList();
+                    int count1 = list.Where(l => l.Curse_Id == "上午12节").Count();
+                    if (count1 > 0)
+                    {
+                        str.Remove("上午12节");
+                    }
+                    int count2 = list.Where(l => l.Curse_Id == "下午12节").Count();
+                    if (count2 > 0)
+                    {
+                        str.Remove("下午12节");
+                    }
+                    int count5 = list.Where(l => l.Curse_Id == "上午34节").Count();
+                    if (count5 > 0)
+                    {
+                        str.Remove("上午34节");
+                    }
+                    int count6 = list.Where(l => l.Curse_Id == "下午34节").Count();
+                    if (count6 > 0)
+                    {
+                        str.Remove("下午34节");
+                    }
+                    int count4 = list.Where(l => l.Curse_Id == "上午").Count();
+                    if (count4 > 0)
+                    {
+                        str.Remove("上午12节");
+                        str.Remove("上午34节");
+                    }
+                    int count3 = list.Where(l => l.Curse_Id == "下午").Count();
+                    if (count3 > 0)
+                    {
+                        str.Remove("下午12节");
+                        str.Remove("下午34节");
+                    }
+
+                    if (str.Count > 0)
+                    {
+                        foreach (string item in str)
+                        {
+                            EmtyClassroom emty = new EmtyClassroom();
+                            emty.ClassroomId = it.Id;
+                            emty.ClassroomName = it.ClassroomName;
+                            emty.Time = item;
+
+                            ddlit.Add(emty);
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                string m = ex.Message;
+            }
+           
+            
+            return ddlit;
+        }
+
+        #region 系统安排班级上机
+        /// <summary>
+        /// 自动安排自习课
+        /// </summary>
+        /// <param name="myclass"></param>
+        /// <param name="classrooms"></param>
+        /// <returns></returns>
+         public List<Reconcile> SysclassStuty(List<ClassSchedule> myclass, List<EmtyClassroom> classrooms,DateTime date)
+        {
+            List<Reconcile> list = new List<Reconcile>();
+            int count = myclass.Count;
+            for (int i = 0; i < classrooms.Count; i++)
+            {
+                if (i< count)
+                {
+                    Reconcile r = new Reconcile();
+                    r.AnPaiDate = date;
+                    r.ClassRoom_Id = classrooms[i].ClassroomId;
+                    r.ClassSchedule_Id = myclass[i].id;
+                    r.Curriculum_Id = "自习";
+                    r.Curse_Id = classrooms[i].Time;
+                    r.EmployeesInfo_Id = null;
+                    r.NewDate = DateTime.Now;
+                    r.Rmark = null;
+                    r.IsDelete = false;
+
+                    list.Add(r);
+                }
+            }
+
+            return list;
+        }
         #endregion
     }
 }

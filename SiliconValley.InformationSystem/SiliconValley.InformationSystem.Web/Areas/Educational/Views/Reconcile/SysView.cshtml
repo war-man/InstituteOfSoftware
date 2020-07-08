@@ -1,0 +1,128 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SysView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-top:20px;width:90%;margin-left:auto;margin-right:auto;">
+        <form class="layui-form" lay-filter="sysStudyform">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-x12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
+                    <div class="layui-input-block">
+                        @{
+                            List<SelectListItem> list =  ViewBag.grandlist as List<SelectListItem>;
+                            foreach (SelectListItem item in list)
+                            {
+                                <input type="checkbox" name="grand" title="@item.Text" value="@item.Value">
+                            }
+                        }
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">校 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区:</label>
+                    <div id="childviewcurr_div" class="layui-input-block">
+                        @{
+                            List<SelectListItem> list2 = ViewBag.Schooladdress as List<SelectListItem>;
+                            foreach (SelectListItem item in list2)
+                            {
+                                <input type="radio" name="xiaoqu" title="@item.Text" value="@item.Value">
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="LableCss1">日 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 期:</label>
+                    <div id="childteacher_div" class="layui-input-block">
+                        <input name="date" id="date" class="layui-input" lay-verify="required"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item" style="margin-top:60px;">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div style="text-align:center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="childview_add">提交</button>                    
+                        <input type="button" class="layui-btn" value="关闭" onclick="Myclose()" />
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form','laydate'], function () {
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+            laydate.render({
+                elem: '#date', 
+                trigger: 'click'
+            });
+
+            form.on('submit(childview_add)', function (data) {
+                //获取选中的阶段
+                var grand = $("input[name='grand']:checked");
+                var str = "";
+                grand.each(function (index,ele) {
+                    str = str+ $(ele).val()+",";
+                });
+                var data1 = form.val("sysStudyform");
+                data1.grands = str;
+ 
+                $.ajax({
+                    url: '/Educational/Reconcile/SystemMyseltStudey',
+                    type: 'POST',
+                    data:data1,
+                    success: function (suc) {
+                        if (suc.Success == true) {
+                            layer.msg(suc.Msg, { icon: 1 });
+                            window.parent.GetKebiao();
+                            Myclose();
+                        } else {
+                            layer.msg(suc.Msg, { icon:2 })
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+        //关闭弹出层
+        function Myclose() {
+            var layer = layui.layer;
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+        }
+    </script>
+</body>
+</html>

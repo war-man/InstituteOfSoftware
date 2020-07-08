@@ -15,6 +15,7 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
 using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
@@ -1114,5 +1115,56 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         }
         #endregion
 
+        #region 自动安排自习课
+        [HttpPost]
+        public ActionResult SystemMyseltStudey()
+        {
+            DateTime date=Convert.ToDateTime( Request.Form["date"]);//排课的日期
+            string[] grands = Request.Form["grands"].Split(',');//获取要排上机课的阶段
+            int address =Convert.ToInt32(Request.Form["xiaoqu"]);//获取校区Id 
+            List<Classroom> roomlist = Reconcile_Com.Classroom_Entity.GetAddreeClassRoom(address);//获取XX校区的有效教室
+
+            List<EmtyClassroom> classrooms = Reconcile_Entity.GetEmtyClassroom(address,date, roomlist);//获取所有空教室
+
+            List<EmtyClassroom> one = classrooms.Where(c1 => c1.Time.Contains("上午")).ToList();//获取上午的空教室
+            List<EmtyClassroom> two = classrooms.Where(c1 => c1.Time.Contains("下午")).ToList();//获取下午的空教室
+
+            List<ClassSchedule> list = Reconcile_Com.GetClass();
+            List<ClassSchedule> cla1 = new List<ClassSchedule>();// 获取上午专业课的班级
+            List<ClassSchedule> cla2 = new List<ClassSchedule>();//获取下午专业课的班级
+
+            foreach (string ite in grands)
+            {
+                if (!string.IsNullOrEmpty(ite))
+                {
+                    int grand_id = Convert.ToInt32(ite);
+                    cla1.AddRange( list.Where(l => l.grade_Id == grand_id && l.BaseDataEnum_Id==1).ToList());
+                    cla2.AddRange(list.Where(l => l.grade_Id == grand_id && l.BaseDataEnum_Id == 2).ToList());
+                }
+            }
+
+            List<Reconcile> listr = Reconcile_Entity.SysclassStuty(cla2,one, date);
+            listr.AddRange(Reconcile_Entity.SysclassStuty(cla1, two, date));
+
+           AjaxResult a= Reconcile_Entity.AddData(listr);
+            return Json(a,JsonRequestBehavior.AllowGet);
+        }
+        
+        /// <summary>
+        /// 安排晚自习页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SysView()
+        {
+            //加载阶段
+            List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            ViewBag.grandlist = g_list;
+            //加载校区
+            BaseDataEnumManeger baseDataEnum_Entity = new BaseDataEnumManeger();
+            List<SelectListItem> schooladdress = baseDataEnum_Entity.GetsameFartherData("校区地址").Select(s => new SelectListItem() { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            ViewBag.Schooladdress = schooladdress;
+            return View();
+        }
+        #endregion 
     }
 }
