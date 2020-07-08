@@ -1,0 +1,262 @@
+﻿
+@{
+    ViewBag.Title = "LaterecordIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="layui-table" id="Latercordtable"> </table>
+<script type="text/html" id="Late_barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="ser">查看详情</a>
+</script>
+
+<script>
+    //table刷新
+    function TableFulsh() {
+        layui.use('table', function () {
+            var table = layui.table;
+            table.reload('Latercordtable');
+        });
+    }
+    layui.use(['element', 'layer', 'form', 'laydate', 'table'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var table = layui.table;
+        //获取班级
+        form.on('select(Re_grand)', function (data) {
+            $("#Re_class")[0].innerHTML = "";
+            $.ajax({
+                url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                success: function (sudata) {
+                    //获取班级slect
+                    var classselect = $('<select id="class_select" name="class_select1" class="layui-select"><option value="0" selected>--请选择--</select>');
+                    for (var i = 0; i < sudata.length; i++) {
+                        $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                    }
+                    $("#Re_class")[0].innerHTML = "";
+                    $("#Re_class").append(classselect);
+                    form.render(); //更新全部
+                }
+            });
+        });
+        //获取专业课程
+        form.on('select(Re_grand2)', function (data) {
+            $("#Re_curr_div1")[0].innerHTML = "";
+            if (data.value != 0) {
+                $.ajax({
+                    url: '/Educational/Reconcile/GetCurrrlistdata/' + data.value,
+                    success: function (sudata) {
+                        var classselect = $('<select id="curr_select1" name="curr_select1" class="layui-select"><option value="0" selected>--请选择--</select>');
+                        for (var i = 0; i < sudata.length; i++) {
+                            $('<option value=' + sudata[i].Value + '>' + sudata[i].Text + '<option>').appendTo(classselect);
+                        }
+                        $("#Re_curr_div1").append(classselect);
+                        form.render(); //更新全部
+                    }
+                });
+            }
+
+        });
+        //时间初始化
+        laydate.render({
+            elem: '#starTime'
+            , theme: 'molv'
+        });
+
+        laydate.render({
+            elem: '#endTime'
+            , theme: 'molv'
+        });
+
+        laydate.render({
+            elem: "#Time"
+            , theme: 'molv'
+        });
+
+        laydate.render({
+            elem: "#Time2"
+            , theme: 'molv'
+        });
+
+        //table初始化
+        table.render({
+            elem: '#Latercordtable'
+            , toolbar: '#Latercordtable'
+            , url: '/Educational/Reconcile/GetReconAllData'
+            , cols: [[
+                { type: 'radio' }
+                , { field: 'ClassNumber', title: '班级' }
+                , { field: 'ClassroomName', title: '教室', }
+                , { field: 'Curriculum_Id', title: '课程' }
+                , { field: 'Curse_Id', title: '上课时间段' }
+                , { field: 'EmpName', title: '任课老师' }
+                , {
+                    field: 'AnPaiDate', title: '上课日期', templet: function (res) {
+                        var date = new Date(parseInt(res.AnPaiDate.slice(6)));
+                        var year = date.getFullYear();
+                        var month = parseInt(date.getMonth()) + 1;
+                        if (month < 10) {
+                            month = "0" + month;
+                        }
+                        var days = date.getDate();
+                        if (days<10) {
+                            days = "0" + days;
+                        }
+                        return year + "-"+month + "-" + days;
+                    }
+                }
+                , { field: 'Rmark', title: '说明' }
+                , { fixed: 'right', title: '操作', toolbar: '#Late_barDemo', width: 150 }
+            ]]
+            , page: true
+        });
+
+        //监听行工具事件
+        table.on('tool(Latercordtable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除吗？', function (index) {
+                    $.ajax({
+                        url: '/Educational/Reconcile/Delete/' + data.Id,
+                        success: function (sucdata) {
+                            if (sucdata.Success == false) {
+                                //失败
+                                layer.msg('操作失败!!', { icon: 2 });
+                            } else {
+                                //成功
+                                layer.msg(sucdata.Msg, { icon: 1, shade: 0.8 }, function () {
+                                    TableFulsh();
+                                });
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+
+            } else if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    content: '/Educational/Reconcile/Edit_rView/' + data.Id,
+                    area: ['800px', '500px'],
+                    title: '编辑数据'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            }
+        });
+
+        //查询1
+        //监听提交
+        form.on('submit(serch1)', function (data) {
+            var class_select1 = data.field.class_select1;
+            var starTime = data.field.starTime;
+            var endTime = data.field.endTime;
+            table.reload('Recon_table', {
+                url: '/Educational/Reconcile/GetReconAllData'
+                , where: { "class_select1": class_select1, "starTime": starTime, "endTime": endTime, "teachername": "", "Time2": "", "curr_select1": "" }
+            });
+            return false;
+        });
+        form.on('submit(serch3)', function (data) {
+            var teachername = data.field.teachername;
+            var Time2 = data.field.Time2;
+
+            table.reload('Latercordtable', {
+                url: '/Educational/Reconcile/GetReconAllData'
+                , where: { "teachername": teachername, "Time2": Time2, "class_select1": "", "starTime": "", "endTime": "", "curr_select1": "" }
+            });
+            return false;
+        });
+        form.on('submit(serch2)', function (data) {
+            var curr_select1 = data.field.curr_select1;
+            table.reload('Latercordtable', {
+                url: '/Educational/Reconcile/GetReconAllData'
+                , where: { "curr_select1": curr_select1, "class_select1": "", "starTime": "", "endTime": "", "teachername": "", "Time2": "" }
+            });
+            return false;
+        });
+
+        //批量调课
+        //头工具栏事件
+        table.on('toolbar(Latercordtable)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/BigDataUpdate',
+                        area: ['680px', '400px'],
+                        title: '全体数据修改'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+                case 'Class_getCheckData':
+                    //班级调课
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/ClassBigDataAID',
+                        area: ['680px', '450px'],
+                        title: '班级数据修改'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+                case 'Class_getUpdateData':
+                    //班级修改上课时间段
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/UpdateClassView',
+                        area: ['680px', '450px'],
+                        title: '班级数据修改'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+                case 'Class_getUpdateData2':
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/UpdateClassTeacher',
+                        area: ['680px', '450px'],
+                        title: '修改班级上专业课老师'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+                case 'Class_getCheckData2':
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/ChangReconciledata',
+                        area: ['680px', '450px'],
+                        title: '全体上课日期调换'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+                case 'Class_getCheckData3':
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/ChangClassDateView',
+                        area: ['680px', '450px'],
+                        title: '指定班级上课日期调换'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+            };
+        });
+
+    });
+</script>
+
+

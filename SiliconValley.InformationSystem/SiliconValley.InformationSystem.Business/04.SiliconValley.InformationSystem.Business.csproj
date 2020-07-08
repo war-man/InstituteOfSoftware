@@ -173,6 +173,7 @@
     <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
     <Compile Include="EducationalBusiness\InternalTrainingCostBusiness.cs" />
+    <Compile Include="EducationalBusiness\LaterecordManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
     <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
