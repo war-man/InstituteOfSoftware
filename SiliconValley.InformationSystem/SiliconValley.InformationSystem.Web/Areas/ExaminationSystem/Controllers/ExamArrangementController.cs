@@ -845,16 +845,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                     BaseBusiness<CandidateInfo> dbcnad = new BaseBusiness<CandidateInfo>();
 
-                  var canlist =  dbcnad.GetIQueryable().Where(d => d.Examination == examid).ToList();
+                  
 
-                    
-                    foreach (var item in canlist)
+                    list.ForEach(s=>
                     {
+                        var stu = dbcnad.GetIQueryable().Where(d => d.Examination == examid && d.StudentID == s.Key).FirstOrDefault();
                         //初始化成绩单
-                        db_scores.InitExamScores(examid, item.CandidateNumber);
-
-             
-                    }
+                        db_scores.InitExamScores(examid, stu.CandidateNumber);
+                    });
 
 
                     result.ErrorCode = 200;

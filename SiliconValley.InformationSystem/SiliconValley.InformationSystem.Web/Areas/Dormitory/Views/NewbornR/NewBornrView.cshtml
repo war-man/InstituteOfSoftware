@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -29,17 +28,18 @@
             height: 100%;
             /*border: 1px solid pink;*/
             float: left;
-            margin-left: 10px;
+            margin-left: 50px;
         }
 
         #protable {
             width: 40%;
             height: 100%;
             float: left;
+            margin-left: 50px;
         }
 
-        h2{
-            text-align:center;
+        h2, h4 {
+            text-align: left;
         }
     </style>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
@@ -48,7 +48,7 @@
 
 </head>
 <body>
-    <input type="hidden" value="@ViewBag.student.StudentNumber"  id="studentnumber" />
+    <input type="hidden" value="@ViewBag.student.StudentNumber" id="studentnumber" />
     <div>
         <div id="procontent">
 
@@ -59,10 +59,30 @@
             <div id="prouninhabited">
 
                 @*<table class="layui-hide" id="UninhabitedStudent" lay-filter="UninhabitedStudent"></table>*@<br />
-                <h2>@ViewBag.student.Name</h2>
-                <br />
-                <h2>@ViewBag.student.ClassNO</h2><br />
-                <h2 id="sex">@ViewBag.student.Sex</h2>
+                <fieldset>
+                    <legend>学生信息</legend>
+                    <h2>@ViewBag.student.Name</h2>
+                    <br />
+                 
+                    <h2 class="">
+                        @{
+
+                            string sex = ViewBag.student.Sex == true ? "男" : "女";
+                        }
+                        @sex
+                        <label id="sex" style="display:none;">@ViewBag.student.Sex</label>
+                    </h2>
+                </fieldset>
+                <fieldset>
+                    <legend>宿舍信息</legend>
+
+                    <h4><label style="font-size:16px; color:black;">宿舍：</label><span id="Tung" style="font-size:14px; color:gray;">----</span></h4>
+                    <h4><label style="font-size:16px; color:black;">楼层：</label><span id="floor" style="font-size:14px; color:gray;">----</span></h4>
+                    <h4><label style="font-size:16px; color:black;">房间：</label><span id="room" style="font-size:14px; color:gray;">----</span></h4>
+                    <h4><label style="font-size:16px; color:black;">床号：</label><span id="bed" style="font-size:14px; color:gray;">----</span></h4>
+
+                </fieldset>
+
             </div>
             <div id="protable" style="display:none">
                 <form class="layui-form" action="">
@@ -222,7 +242,7 @@
                         });
                     }
                 });
-            }     
+            }
             // 绑定节点点击
             dtree.on("node('demoTree')", function (obj) {
                 //console.log(obj);
@@ -442,13 +462,36 @@
 
 
 
-                //var mytr = obj.tr[0];
-                //$("tr").css("background", "");
-                //$(mytr).css("background", "pink");
-                //jsstudentdata = obj.data;
-                ////console.log(jsstudentdata);
-                //jsdatatype = jsstudentdata.datatype;
+            //var mytr = obj.tr[0];
+            //$("tr").css("background", "");
+            //$(mytr).css("background", "pink");
+            //jsstudentdata = obj.data;
+            ////console.log(jsstudentdata);
+            //jsdatatype = jsstudentdata.datatype;
             //getUninhabiteddormdata(jsstudentdata);
+
+
+            //加载学生房间信息
+
+            function loadStuRoominfo() {
+
+                var studentnumber = $("#studentnumber").val();
+
+                $.post("/NewbornR/GetDongByStudent", { studentNumber: studentnumber }, function (data) {
+
+                    console.log(data);
+
+                    if (data.ErrorCode == 200) {
+
+                        $("#Tung").text(data.Data.TungInfo);
+                        $("#floor").text(data.Data.FloorInfo);
+                        $("#room").text(data.Data.RoomInfo);
+                        $("#bed").text(data.Data.BedInfo);
+                    }
+                });
+            }
+
+            loadStuRoominfo();
 
 
 
@@ -457,3 +500,5 @@
     </script>
 </body>
 </html>
+
+

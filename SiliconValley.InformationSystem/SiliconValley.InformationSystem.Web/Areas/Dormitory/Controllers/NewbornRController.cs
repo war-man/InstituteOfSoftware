@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.Common;
+﻿using SiliconValley.InformationSystem.Business;
+using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Psychro;
@@ -49,12 +50,92 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         {
             string studentNumber = Request.QueryString["studentNumber"];
             dbconversion = new ConversionToViewBusiness();
+
             dbaccstu = new dbacc_dbstu();
+
             var data = dbaccstu.GetUninhabitedData().Where(d => d.StudentNumber == studentNumber).ToList();
-            var result = dbconversion.StudentInformationToProStudentView(data, false).FirstOrDefault();
+
+            //var result = dbconversion.StudentInformationToProStudentView(data, false).FirstOrDefault();
+
+            BaseBusiness<StudentInformation> dbstu = new BaseBusiness<StudentInformation>();
+
+            var result = dbstu.GetEntity(studentNumber);
+            
             ViewBag.student = result;
 
             return View();
+        }
+
+        /// <summary>
+        /// 学生居住信息
+        /// </summary>
+        /// <param name="studentNumber"></param>
+        /// <returns></returns>
+        public ActionResult GetDongByStudent(string studentNumber)
+        {
+            AjaxResult result = new AjaxResult();
+
+
+            try
+            {
+                BaseBusiness<Tung> dbtung = new BaseBusiness<Tung>();
+                BaseBusiness<Dormitoryfloor> dbfloor = new BaseBusiness<Dormitoryfloor>();
+                BaseBusiness<TungFloor> dbtungfloor = new BaseBusiness<TungFloor>();
+                BaseBusiness<BenNumber> dbbed = new BaseBusiness<BenNumber>();
+                dbacc = new AccdationinformationBusiness();
+                var TungFloor = dbacc.GetDormBystudentno(studentNumber);
+                
+                if(TungFloor == null)
+                {
+                    var tempdata = new
+                    {
+                        TungInfo = "无",
+                        FloorInfo = "无",
+                        RoomInfo = "无",
+                        BedInfo = "无",
+
+                    };
+
+                    result.ErrorCode = 200;
+                    result.Data = tempdata;
+                    result.Msg = "成功";
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+
+                }
+
+                var roomNumber = TungFloor.DormInfoName;//房间号码
+                var Tungfloorobj = dbtungfloor.GetList().Where(d => d.Id == TungFloor.TungFloorId).FirstOrDefault();
+                var tungobj = dbtung.GetList().Where(d => d.Id == Tungfloorobj.TungId).FirstOrDefault(); //栋对象
+                var floorobj = dbfloor.GetList().Where(d => d.ID == Tungfloorobj.FloorId).FirstOrDefault();//楼层对象
+                var accdation = dbacc.GetAccdationByStudentNumber(studentNumber);
+                var bedName = dbbed.GetList().Where(d => d.Id == accdation.BedId).FirstOrDefault().BenNo;//床位号
+
+                var data = new
+                {
+                    TungInfo = tungobj.TungName,
+                    FloorInfo = floorobj.FloorName,
+                    RoomInfo = roomNumber,
+                    BedInfo = bedName
+
+                };
+
+                result.ErrorCode = 200;
+                result.Data = data;
+                result.Msg = "成功";
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "失败";
+
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
         }
 
         /// <summary>
