@@ -295,7 +295,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
                 {
 
                     personlist[0].Amountofmoney,
-                    ostitemsName = "预入费",
+                    ostitemsName = "预录学费",
                     GrandName = GrandName,
                     Rategory = "预入费",
                     Remarks = "",
