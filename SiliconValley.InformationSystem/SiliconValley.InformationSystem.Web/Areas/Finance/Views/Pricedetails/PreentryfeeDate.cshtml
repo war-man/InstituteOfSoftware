@@ -138,10 +138,9 @@
                             if (value !== "") {
                                 $.post("/Finance/Pricedetails/ReentryfeeOddNumbers", db, function (da) {
                                     layer.msg(da.Msg, { time: 1000 }, function () {
-                                        table.reload('idTest');
-                                        layer.close(index);
-                                     
                                        
+                                        layer.close(index);
+                                        table.reload('idTest');
                                     });
                                 })
                             } else {
