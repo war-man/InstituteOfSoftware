@@ -2,7 +2,7 @@
 @{
     Layout = null;
 }
-
+@using SiliconValley.InformationSystem.Entity.ViewEntity
 <!DOCTYPE html>
 
 <html>
@@ -14,7 +14,34 @@
     <script src="~/Scripts/layui/layui.js"></script>
 </head>
 <body>
-    <div> 
-    </div>
+  
+    <ul class="layui-timeline" style="margin-top:20px;">
+        @{
+            foreach (var item in ViewBag.listvier as List<vierprice>)
+            {
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">@item.Date</h3>
+                        @foreach (var item1 in item.Chicked)
+                        {
+                            <ul>
+                                <li>@item1.GrandName</li>
+
+                            </ul>
+                            <p>
+                               @item1.Rategory
+                            </p>
+                        }
+
+
+                    </div>
+                </li>
+            }
+        }
+      
+
+    </ul>
+
 </body>
 </html>

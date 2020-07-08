@@ -11,6 +11,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// </summary>
     public class vierprice
     {
+        public vierprice()
+        {
+            this.Chicked = new List<vierprice>();
+        }
         public string Date
         {
             get; set;
