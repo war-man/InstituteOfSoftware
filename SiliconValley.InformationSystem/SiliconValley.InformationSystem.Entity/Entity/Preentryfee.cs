@@ -48,5 +48,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// 经办人
         /// </summary>
         public int? FinanceModelid { get; set; }
+        /// <summary>
+        /// 单号
+        /// </summary>
+        public string OddNumbers { get; set; }
     }
 }

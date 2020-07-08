@@ -662,7 +662,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return Json(dbtext.Drivingschoolpayment(payview), JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 预入费单号补入
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="OddNumbers"></param>
+        /// <param name="typez"></param>
+        /// <returns></returns>
+        public ActionResult ReentryfeeOddNumbers(int id,string OddNumbers,int typez)
+        {
+            return Json(dbtext.ReentryfeeOddNumbers(id, OddNumbers, typez), JsonRequestBehavior.AllowGet);
+        }
 
-    
+
     } 
 }

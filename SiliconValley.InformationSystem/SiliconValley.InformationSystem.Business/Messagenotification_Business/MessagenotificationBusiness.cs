@@ -133,7 +133,7 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
 
         public object Date(int page, int limit)
         {
-            var list = MessagenotificationViewBusiness.GetList().Select(a => new { a.id, a.PublisherName, a.Duedate, a.Content, a.Addtime }).ToList();
+            var list = MessagenotificationViewBusiness.GetList();
             var dataList = list.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new

@@ -1277,6 +1277,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             public decimal Amountofmoney { get; set; }
             public string identitydocument { get; set; }
             public string ClassNumber { get; set; }
+            public string OddNumbers { get; set; }
         }
         /// <summary>
         /// 获取已缴预入费数据
@@ -1302,7 +1303,9 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                     Refundornot= item.Refundornot,
                     Amountofmoney= item.Amountofmoney,
                     identitydocument= item.identitydocument,
-                    ClassNumber= item.ClassID
+                    ClassNumber= item.ClassID,
+                    OddNumbers=item.OddNumbers==null?"请补录": item.OddNumbers
+
                 };
                 list.Add(x);
             }
@@ -1659,6 +1662,40 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 return x.identitydocument;
             }
             return ""   ;
+        }
+        /// <summary>
+        /// 通过预入费id去补录单号
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="OddNumbers">单号</param>
+        /// <param name="type">为1则id为备案id，否则为预入费id</param>
+        /// <returns></returns>
+        public object ReentryfeeOddNumbers(int id,string OddNumbers,int type)
+        {
+            AjaxResult retus = null;
+            try
+            {
+                if (type==1)
+                {
+                    id = Preentryfeebusenn.GetList().Where(a => a.keeponrecordid == id).OrderByDescending(a => a.id).FirstOrDefault().id;
+                }
+                   var preentryfee = Preentryfeebusenn.GetEntity(id);
+                preentryfee.OddNumbers = OddNumbers;
+                Preentryfeebusenn.Update(preentryfee);
+                retus = new SuccessResult();
+                retus.Success = true;
+                retus.Msg = "单号录入成功";
+            }
+            catch (Exception ex)
+            {
+
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            return retus;
         }
     }
 }
