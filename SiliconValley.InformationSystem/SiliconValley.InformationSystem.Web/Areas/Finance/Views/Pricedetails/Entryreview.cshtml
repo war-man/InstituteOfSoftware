@@ -198,8 +198,13 @@
                      OddNumbers: $("#OddNumbers").val(),
                      paymentmethod: $("#paymentmethod").val()
 
-             }
-                    TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
+            }
+            if (Dabse.paymentmethod != "" && Dabse.OddNumbers != "") {
+                TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
+            } else {
+                layer.msg("请输入单号或收款方式！");
+            
+            }    
                 });
         //拒绝
         $("#Nos").click(function () {
