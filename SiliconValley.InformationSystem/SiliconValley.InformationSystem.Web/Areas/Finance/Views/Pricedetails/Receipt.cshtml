@@ -60,8 +60,13 @@
     <div id="shouju" style="position:absolute;">
         <img src="~/Areas/Finance/images/shouju.jpg" style="width:672px;z-index:0;margin-top:-22px;margin-left:41px;" />
     </div>
-    <div style="z-index:999;position:absolute;top:76px;left:10px;height:200px;" id="text">
+    <div style="z-index:999;position:absolute;top:73px;left:10px;height:200px;" id="text">
+
         <div id="AddDate" style="position:absolute;left:540px;top:16px;">2020-06-23</div>
+        <div id="Name" style="position:absolute;left:93px;top:42px;"></div>
+        <div id="classa" style="position:absolute;left:218px;top:42px;"></div>
+        <div id="GrandName" style="position:absolute;left:340px;top:42px;"></div>
+        <div id="identitydocument" style="position:absolute;left:500px;top:42px;"></div>
         <table cellpadding="1" style="width:790px;">
             <tr>
                 <td></td>
@@ -73,13 +78,13 @@
 
             <tr>
                 <td style="width:80px;"></td>
-                <th id="Name" style="width:113px;"></th>
+                <th style="width:113px;"></th>
                 <td style="width:35px;"></td>
-                <th id="classa" style="text-align:inherit;width:90px;">1710NA</th>
+                <th style="text-align:inherit;width:90px;"></th>
                 <td style="width:50px;"></td>
-                <th id="GrandName" style="text-align:inherit;width:145px;">S1</th>
+                <th style="text-align:inherit;width:145px;"></th>
 
-                <th id="identitydocument" colspan="2" style="text-align:inherit;width:220px;">431124200103303850</th>
+                <th colspan="2" style="text-align:inherit;width:220px;"></th>
             </tr>
             <tr>
                 <td colspan="7" style="width:530px;"></td>
@@ -94,10 +99,11 @@
                 </tr>*@
 
         </table>
-        <div id="" style="width:80px;position:absolute;top:284px;left:316px;"> <input type="text" style="border:1px;" lay-verify="required" class="layui-input" /></div>
+        <div id="" style="width:80px;position:absolute;top:280px;left:284px;"> <input type="text" style="border:0px;height:12px;margin-top:12px;" lay-verify="required" class="layui-input" /></div>
 
-        <div id="DaXie" style="position:absolute;left:182px;"></div>
+        <div id="DaXie" style="position:absolute;left:188px;"></div>
         <div id="pricent" style="position:absolute;left:524px;"></div>
+        <div id="Remarks" style="position:absolute;left:100px;top:249px;"></div>
     </div>
 
 
@@ -125,7 +131,7 @@
     $("#classa").text(studen.classa);
     $("#identitydocument").text(studen.identitydocument);
     var Receiptdata = JSON.parse('@Html.Raw(ViewBag.Receiptdata)');
-    console.log(Receiptdata);
+    $("#Remarks").text(Receiptdata[0].Remarks);
     var count = 0;
     var ostitemsName = "";
     var Amountofmoneys = 0;
@@ -150,7 +156,7 @@
             $("#xiangmu").append($('<tr style="height:55px;"> <td colspan="4" style="text-align:center;">' + Receiptdata[i].Rategory + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
             // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         } else if (Receiptdata[i].Rategory == "预入费") {
-            console.log("其")
+           
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
             $("#xiangmu").append($('<tr style="height:55px;"> <td colspan="4" style="text-align:center;">' + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
             // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
