@@ -326,7 +326,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
 
                     //解答题答卷
-                    string SheetStr = filedata.ObjectContent.ReadToString(Encoding.UTF8);
+                    MemoryStream stream = new MemoryStream();
+                    filedata.ObjectContent.CopyTo(stream);
+
+                    string SheetStr =Encoding.UTF8.GetString(stream.ReadToBytes());
 
                     var list = JsonConvert.DeserializeObject<List<AnswerSheetHelp>>(SheetStr);
 

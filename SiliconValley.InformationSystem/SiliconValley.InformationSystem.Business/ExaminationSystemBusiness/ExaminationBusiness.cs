@@ -851,9 +851,6 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             }
 
             return resultlist;
-
-
-
         }
 
 
