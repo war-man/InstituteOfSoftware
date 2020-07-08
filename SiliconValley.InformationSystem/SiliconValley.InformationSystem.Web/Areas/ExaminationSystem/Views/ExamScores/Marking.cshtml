@@ -507,7 +507,7 @@
 
                 $.post("/ExaminationSystem/ExamScores/MarkeAnswerSheetData", { examid: examid, examroom: examroom, index: index, StudentNumber: studentnumber }, function (result) {
 
-                   
+                    layer.close(lodindex);
                     $("#itemlist").html("");
 
                     $("#download").remove();
@@ -529,7 +529,7 @@
                         if (result.Data[0].question != "") {
                             var layerthtml = _.template($("#moban2").html());
 
-                              var label = $("<div></div>");
+                              var label = $("<label></label>");
 
                               label.text(result.Data[i].questionTitle.Title);
 

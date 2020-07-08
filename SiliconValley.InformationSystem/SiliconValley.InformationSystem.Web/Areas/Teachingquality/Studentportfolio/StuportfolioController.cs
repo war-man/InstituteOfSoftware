@@ -1,6 +1,10 @@
-﻿using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
+﻿using SiliconValley.InformationSystem.Business;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
+using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Business.StudentportfolioBusiness;
+using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,15 +48,83 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
             student.Identityjustimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identityjustimg", student.Identityjustimg, 5);
             return View(student);
         }
+        // 学员家长访谈业务类型
+        BaseBusiness<InterviewRecordsof> intervirereco = new BaseBusiness<InterviewRecordsof>();
+        //学员访谈业务类
+        InterviewStudentsBusiness interviewStudentsBusiness = new InterviewStudentsBusiness();
         //学员访谈
         [HttpGet]
-        public ActionResult Traineeinterview()
+        public ActionResult Traineeinterview(string id)
         {
+            var studentid = id.Split(',');
+            List<vierprice> listvier = new List<vierprice>();
+            List<object> intss = new List<object>();
+            if (studentid[0]=="1")
+            {
+               
+                var x = interviewStudentsBusiness.GetList().Where(a => a.IsDelete == false && a.StudentNumberID == studentid[1]).OrderByDescending(a => a.Dateofinterview).ToList();
+                foreach (var item in x)
+                {
+                    intss.Add(Convert.ToDateTime(item.Dateofinterview).ToLongDateString().ToString());
+                }
+                var myinterview = intss.Distinct().ToList();
+                foreach (var item in myinterview)
+                {
+                    vierprice vierprice = new vierprice();
+                    vierprice.Date = item.ToString();
+                    foreach (var item1 in x)
+                    {
+
+                        string date = Convert.ToDateTime(item1.Dateofinterview).ToLongDateString().ToString();
+                        if (item.ToString() == date)
+                        {
+                            vierprice vierprice1 = new vierprice();
+                            vierprice1.GrandName = item1.InterviewTopics;//标题
+                            vierprice1.Rategory = item1.Interviewcontent;//内容
+                            vierprice.Chicked.Add(vierprice1);
+                        }
+
+                    }
+                    listvier.Add(vierprice);
+                }
+            }
+            else
+            {
+                var x = intervirereco.GetList().Where(a => a.IsDelete == false && a.Studentnumber == studentid[1]).OrderByDescending(a => a.Interviewtime).ToList();
+                foreach (var item in x)
+                {
+                    intss.Add(Convert.ToDateTime(item.Interviewtime).ToLongDateString().ToString());
+                }
+                var myinterview = intss.Distinct().ToList();
+                foreach (var item in myinterview)
+                {
+                    vierprice vierprice = new vierprice();
+                    vierprice.Date = item.ToString();
+                    foreach (var item1 in x)
+                    {
+
+                        string date = Convert.ToDateTime(item1.Interviewtime).ToLongDateString().ToString();
+                        if (item.ToString() == date)
+                        {
+                            vierprice vierprice1 = new vierprice();
+                            vierprice1.GrandName = item1.InterviewTopics;//标题
+                            vierprice1.Rategory = item1.Interviewcontent;//内容
+                            vierprice.Chicked.Add(vierprice1);
+                        }
+
+                    }
+                    listvier.Add(vierprice);
+                }
+            }
+         
+
+            ViewBag.listvier = listvier;
             return View();
         }
         //家长访谈记录
         public ActionResult Parentinterview()
         {
+         
             return View();
         }
     }

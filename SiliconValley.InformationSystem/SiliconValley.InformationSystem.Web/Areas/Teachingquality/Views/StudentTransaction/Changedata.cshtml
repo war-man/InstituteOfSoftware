@@ -15,7 +15,7 @@
             background-color: #ffffff;
         }
 </style>
-<div id="ClassPro" style="position:absolute;width:200px;left:977px;top:98px;background-color: #e6e6e6 ;display:none;border:1px solid #808080;z-index:1;"><ul id="myUl">
+<div id="ClassPro" style="position:absolute;width:189px;left:335px;top:128px;background-color: #e6e6e6 ;display:none;border:1px solid #808080;z-index:999;"><ul id="myUl">
 
     
 </ul></div>
@@ -108,7 +108,7 @@
                 , { field: 'Studentnumber', title: '学号', sort: true }
                 , { field: 'Name', title: '姓名' }
                 , { field: 'Sex', title: '性别 ' }
-                , { field: 'FormerClass', title: '原班级 ' }
+                , { field: 'ClassNumber', title: '原班级 ' }
                 , { field: 'Telephone', title: '联系电话 ' }
                 , { field: 'StatesName', title: '类型 ' }
 
@@ -116,8 +116,8 @@
                 , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
             ]]
             , page: true
-            , limit: 8
-            , limits: [8, 10, 15]
+            , limit: 15
+            , limits: [18, 20, 13]
         });
         //监听行工具栏
         table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
