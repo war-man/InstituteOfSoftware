@@ -147,20 +147,42 @@
                     
                     window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 900, 600);
 
-                   
-                    //layer.prompt({
-                    //    formType: 0,
-                    //    value: $(data.elem).attr("Amountofmoney"),
-                    //    title: data.elem.title,
-                    //    area: ['100px', '100px'], //自定义文本域宽高
-                    //    btn2: function () {
-                    //        data.elem.checked = false;
-                    //        form.render();
-                    //    }
-                    //}, function (value, index, elem) { }
-                         
                     var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);//关闭当前页  
+                    layer.prompt({
+                        formType: 0,
+                        value: "",
+                        title: "请输入回执单号",
+                        area: ['100px', '100px'], //自定义文本域宽高
+                        closeBtn: 0,
+                        btn2: function () {
+                            parent.layer.close(index);//关闭当前页  
+                        }
+                    }, function (value, indexs, elem) {
+                            var db = {
+                                id: datas.keeponrecordid,
+                                OddNumbers: value,
+                                typez:1
+                            }
+
+                            if (value !== "") {
+                                $.post("/Finance/Pricedetails/ReentryfeeOddNumbers", db, function (da) {
+                                    layer.msg(da.Msg, { time: 1000 }, function () {
+                                        parent.layer.close(index);//关闭当前页  
+                                        layer.close(index);
+                                    });
+                                })
+                            } else {
+                                layer.msg('请输入单号!', {
+                                    icon: 2,
+                                    shade: 0.8
+                                });
+                            }
+                         
+                         
+                    });
+                         
+                    
+               
                  
                 });
               

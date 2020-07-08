@@ -38,6 +38,13 @@
             var result = year + '-' + month + '-' + day;
             return result;
         }
+        //html中去掉带标签字符串
+        function text(html) {
+            var dd = html.replace(/<[^>]+>/g, "");//截取html标签
+            var dds = dd.replace(/&nbsp;/ig, "");//截取空格等特殊标签  
+            var ddds=dds.test.replace(/&nbsp;/ig, "");//截取空格标签
+            return ddds.substring(0, 34) + "...";//截取200个字符
+        }
         layui.use(['table', 'layer', 'tree', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -55,13 +62,22 @@
                     { type: 'radio' }
                    
                  , {
-                     field: 'Conten', title: '内容', templet: function (c) {
-                         return c.Conten;
+                     field: 'aa', title: '内容', templet: function (c) {
+                         return text(c.Content);                       
                         }
                     }
-                    , { field: 'Duedate', title: '到期日期 ' }
+                    , {
+                        field: 'Addtime', title: '发布日期 ',templet: function (c) {
+                            return TimeChange(c.Addtime);
+                        }
+                    }
+                    , {
+                        field: 'Duedate', title: '到期日期 ', templet: function (c) {
+                            return TimeChange(c.Addtime);
+                        }
+                    }
                     , { field: 'PublisherName', title: '发布人 ' }
-                    , { field: 'Addtime', title: '发布日期 ' }
+                
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
                 ]]
                 , page: true
