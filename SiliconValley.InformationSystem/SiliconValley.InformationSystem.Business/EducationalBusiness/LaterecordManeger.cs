@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
    public class LaterecordManeger:BaseBusiness<Laterecord>
     {
 
+        /// <summary>
+        /// 获取所有迟到的视图数据
+        /// </summary>
+        /// <returns></returns>
+        //public List<LaterecordView> GetallView()
+        //{
+        //    this.GetListBySql<LaterecordView>("select * from ")
+        //}
     }
 }

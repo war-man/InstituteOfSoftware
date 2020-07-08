@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,13 +11,15 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
     /// <summary>
     /// 教务迟到登记视图
     /// </summary>
-   public class LaterecordView
+    [Table("LaterecordView")]
+    public class LaterecordView
     {
+        [Key]
        public int Id { get; set; }
         /// <summary>
         /// --班级编号
         /// </summary>
-        public bool Class_Id { get; set; }
+        public int Class_Id { get; set; }
         /// <summary>
         /// --班级名称
         /// </summary>
@@ -24,14 +28,20 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// --班主任是否到场
         /// </summary>
         public bool IsHavaHeadMaster { get; set; }
+
+        public string HavaHeadMaster { get; set; }
         /// <summary>
         /// --任课老师是否到场
         /// </summary>
         public bool IsHavaTeacher { get; set; }
+
+        public string HavaTeacher { get; set; }
         /// <summary>
         /// --PPT是否在讲
         /// </summary>
        public bool IshavaPPT { get; set; }
+        
+        public string HavaPPT { get; set; }
         /// <summary>
         /// --应到场人数
         /// </summary>
@@ -48,5 +58,26 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// --日期
         /// </summary>
         public DateTime Createdate { get; set; }
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string CreateUser { get; set; }
+
+        public static Laterecord ToEntity(LaterecordView news)
+        {
+            Laterecord ter = new Laterecord();
+            ter.Class_Id = news.Class_Id;
+            ter.Createdate = news.Createdate;
+            ter.Id = news.Id;
+            ter.IsHavaHeadMaster = news.IsHavaHeadMaster;
+            ter.IshavaPPT = news.IshavaPPT;
+            ter.IsHavaTeacher = news.IsHavaTeacher;
+            ter.PctualCout = news.PctualCout;
+            ter.PersonCount = news.PersonCount;
+            ter.Reak = news.Reak;
+            ter.CreateUser = news.CreateUser;
+
+            return ter;
+        }
     }
 }

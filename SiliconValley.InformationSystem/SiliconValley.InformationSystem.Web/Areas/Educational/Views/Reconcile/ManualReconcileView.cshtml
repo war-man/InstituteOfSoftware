@@ -141,8 +141,8 @@
                     <select id="childview_timetype" lay-filter="childview_timetype" name="childview_timetype">
                         <option value="0">--请选择--</option>
                         <option value="上午12节">上午1/2节</option>
-                        <option value="下午12节">下午1/2节</option>
                         <option value="上午34节">上午3/4节</option>
+                        <option value="下午12节">下午1/2节</option>
                         <option value="下午34节">下午3/4节</option>
                         <option value="上午">上午4节</option>
                         <option value="下午">下午4节</option>
@@ -212,9 +212,9 @@
             }
             var timetype = $("#childview_timetype");
             $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
-            $('<option value="下午12节">上午1/2节</option>').appendTo(timetype);
-            $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);
-            $('<option value="下午34节">上午3/4节</option>').appendTo(timetype);
+            $('<option value="上午12节">上午1/2节</option>').appendTo(timetype);
+            $('<option value="上午34节">上午3/4节</option>').appendTo(timetype);
+            $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);           
             $('<option value="下午34节">下午3/4节</option>').appendTo(timetype);
 
         }
