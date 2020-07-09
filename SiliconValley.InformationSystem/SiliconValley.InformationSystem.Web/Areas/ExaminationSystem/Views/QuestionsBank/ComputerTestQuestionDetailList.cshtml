@@ -60,7 +60,11 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">课程</label>
                         <div class="layui-input-inline">
-                            <button type="button" class="layui-btn layui-btn-primary">@Model.Course.CourseName</button>
+                            <button type="button" class="layui-btn layui-btn-primary">@{
+
+                                string name = Model.Course == null ? "升学题目" : Model.Course.CourseName;
+
+                            }@name</button>
                         </div>
                     </div>
 
