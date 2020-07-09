@@ -5,6 +5,7 @@ using BaiduBce.Services.Bos.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 
 namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
 {
@@ -219,7 +220,8 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
         {
             try
             {
-                var client = this.BosClient();
+        
+        var client = this.BosClient();
                 // 删除Object
                 client.DeleteObject(bucketName, objectKey);
                 return true;
@@ -231,6 +233,22 @@ namespace SiliconValley.InformationSystem.Business.Cloudstorage_Business
                 return false;
             }
 
+        }
+
+        public string text(string bucketName,string objectName)
+        {
+            var client = this.BosClient();
+            // 生成url，并通过该url直接下载和打印对象内容
+            string url = client.GeneratePresignedUrl(bucketName, objectName, 60).AbsoluteUri;
+            using (WebClient webClient = new WebClient())
+            {
+                using (Stream stream = webClient.OpenRead(url))
+                using (StreamReader streamReader = new StreamReader(stream))
+                {
+                    string response = streamReader.ReadToEnd();
+                 return response;  // 您传入的<SampleData>
+                }
+            }
         }
     }
 }

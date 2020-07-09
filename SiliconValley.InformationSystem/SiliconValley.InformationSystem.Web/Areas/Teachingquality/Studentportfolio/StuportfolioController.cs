@@ -46,13 +46,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
             var student = studentInformation.GetEntity(id);
             student.Identitybackimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identitybackimg", student.Identitybackimg, 5);
             student.Identityjustimg = cloudstorage_Business.ImagesFine("xinxihua", "IDcardphotoImg/Identityjustimg", student.Identityjustimg, 5);
+            //student.Identitybackimg = cloudstorage_Business.text("xinxihua", "IDcardphotoImg/Identitybackimg/"+student.Identitybackimg);
+            //student.Identityjustimg = cloudstorage_Business.text("xinxihua", "IDcardphotoImg/Identityjustimg/"+ student.Identityjustimg);
             return View(student);
         }
         // 学员家长访谈业务类型
         BaseBusiness<InterviewRecordsof> intervirereco = new BaseBusiness<InterviewRecordsof>();
         //学员访谈业务类
         InterviewStudentsBusiness interviewStudentsBusiness = new InterviewStudentsBusiness();
-        //学员访谈
+        //学员访谈/家长访谈
         [HttpGet]
         public ActionResult Traineeinterview(string id)
         {
@@ -121,10 +123,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
             ViewBag.listvier = listvier;
             return View();
         }
-        //家长访谈记录
-        public ActionResult Parentinterview()
+        //保险记录
+        public ActionResult Parentinterview(string id)
         {
-         
+            BaseBusiness<DetailedStudentIn> DetailedStudentInBusiness = new BaseBusiness<DetailedStudentIn>();
+          ViewBag.DetailedStudentIn= DetailedStudentInBusiness.GetList().Where(a => a.StudentID == id).ToList();
+            return View();
+        }
+        /// <summary>
+        /// 成绩
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Achievement()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 缴费信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Paymentinformation(string id)
+        {
+            StudentFeeStandardBusinsess studentFeeStandardBusinsess = new StudentFeeStandardBusinsess();
+            ViewBag.vier = studentFeeStandardBusinsess.FienPrice(id);
+            ViewBag.Tuitionrefund = studentFeeStandardBusinsess.FienTuitionrefund(studentFeeStandardBusinsess.FienPrice(id));
             return View();
         }
     }
