@@ -160,6 +160,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 count = data.Count(),
                 data = data2
             };
+            
             return Json(returnObj, JsonRequestBehavior.AllowGet);
 
         }
@@ -195,7 +196,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 
             if (string.IsNullOrEmpty(studentName) && string.IsNullOrEmpty(studentNumber))
             {
-                filterData.AddRange(data)
+                filterData.AddRange(data);
             }
             //进行分页
             List<StudentInformation> pagedata = filterData.Skip((page - 1) * limit).Take(limit).ToList();
