@@ -1133,9 +1133,16 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 List<Reconcile> Recon = new List<Reconcile>();
                 foreach (Reconcile re in reconciles)
                 {
-                    re.AnPaiDate = re.AnPaiDate.AddDays(days);
-                    Recon.Add(re);
-                   
+                    if (this.IsSaturday(re.AnPaiDate)==1)
+                    {
+                        re.AnPaiDate = re.AnPaiDate.AddDays((days+1));
+                    }
+                    else
+                    {
+                        re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                    }
+ 
+                    Recon.Add(re);                   
                     index++;
                 }
 
