@@ -1,0 +1,148 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Paymentinformation</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+
+
+    @if (ViewBag.vier.Count > 0)
+    {
+        <div style="float:left;">
+            <ul class="layui-timeline">
+
+                @{
+                    int Total = 0;
+                    foreach (var item in ViewBag.vier as List<vierprice>)
+                    {
+                        decimal db = 0;
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                @foreach (var item1 in item.Chicked)
+                                {
+
+                                    db += item1.Amountofmoney;
+                                    Total += Convert.ToInt32(item1.Amountofmoney);
+
+                                }
+                                <h3 class="layui-timeline-title">@item.Date (@db)</h3>
+
+                                @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
+                                {
+                                    <p>@s</p>
+                                    foreach (var item1 in item.Chicked)
+                                    {
+                                        if (item1.Rategory == s)
+                                        {
+                                            <ul>
+                                                <li>@item1.GrandName @item1.CostitemName,缴纳: @item1.Amountofmoney</li>
+                                            </ul>
+                                        }
+                                    }
+
+                                }
+
+
+                            </div>
+                        </li>
+                    }
+                }
+
+
+            </ul>
+        </div>
+
+        <div style="float:right;">
+
+            <ul class="layui-timeline">
+
+                @{
+                    int Tota2 = 0;
+                    foreach (var item in ViewBag.Tuitionrefund as List<vierprice>)
+                    {
+                        decimal db = 0;
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                @foreach (var item1 in item.Chicked)
+                                {
+
+                                    db += item1.Amountofmoney;
+                                    Tota2 += Convert.ToInt32(item1.Amountofmoney);
+
+                                }
+                                <h3 class="layui-timeline-title">@item.Date (@db)</h3>
+
+                                @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
+                                {
+                                    <p>@s</p>
+                                    foreach (var item1 in item.Chicked)
+                                    {
+                                        if (item1.Rategory == s)
+                                        {
+                                            <ul>
+                                                <li>@item1.GrandName @item1.CostitemName,退款: @item1.Amountofmoney</li>
+                                            </ul>
+                                        }
+                                    }
+
+                                }
+
+
+                            </div>
+                        </li>
+                    }
+                    int Tota3 = Total - Tota2;
+                }
+
+
+            </ul>
+        </div>
+
+        <div style="">
+            <ul class="site-doc-icon site-doc-anim">
+                @{
+                    if (Total > 0)
+                    {
+                        <li style="float:left;margin-left:220px;">
+                            <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">收款合计:<label style="font:18pt;color:#000000;">@Total</label>  元</div>
+                        </li>
+                        if (Tota2 > 0)
+                        {
+                            <li style="float:left;margin-left:20px;">
+                                <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">退款合计:<label style="font:18pt;color:#000000;">@Tota2</label>  元</div>
+                            </li>
+                            <li style="float:left;margin-left:20px;">
+                                <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">合计:<label style="font:18pt;color:#000000;">@Tota3</label>  元</div>
+                            </li>
+                        }
+
+
+
+
+                    }
+
+                }
+
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div>
+            <img src="~/Areas/Teachingquality/images/无数据.jpg" style="width:100%;height:600px;" />
+        </div>
+    }
+</body>
+</html>

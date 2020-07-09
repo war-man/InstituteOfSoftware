@@ -850,7 +850,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             int ClassID = int.Parse(Request.QueryString["ClassID"]);
             int grade_Id = dbtext.GetEntity(ClassID).grade_Id;
             ExamScoresBusiness examScoresBusiness = new ExamScoresBusiness();
-            var z = examScoresBusiness.ClassScores(ClassID, grade_Id);
+       
             var x = examScoresBusiness.ClassScores(ClassID, grade_Id).Select(a => new {
 
                 a.StudentNumber,
