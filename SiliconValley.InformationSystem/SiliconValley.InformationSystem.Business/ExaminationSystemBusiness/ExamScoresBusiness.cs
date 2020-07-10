@@ -460,18 +460,20 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             List<CandidateInfo> allCadidateInfo = db_exam.AllCandidateInfo();
 
-            allScores.ForEach(d=> {
+            List<TestScore> resultlist = new List<TestScore>();
 
-                var didInfo = allCadidateInfo.Where(x => x.CandidateNumber == d.CandidateInfo).FirstOrDefault();
+            var didInfolist = allCadidateInfo.Where(x => x.StudentID == studentNumber).ToList();
 
-                if (didInfo.StudentID != studentNumber)
+            didInfolist.ForEach(d=>
+            {
+               var templist = allScores.Where(t => t.CandidateInfo == d.CandidateNumber).ToList();
+                if (templist != null)
                 {
-                    allScores.RemoveAt(allScores.IndexOf(d));
+                    resultlist.AddRange(templist);
                 }
-
             });
 
-            allScores.ForEach(d=> {
+            resultlist.ForEach(d=> {
 
                 StudentExamScoreView examScoreView = ConvertToStudentExamScoreView(d);
 
