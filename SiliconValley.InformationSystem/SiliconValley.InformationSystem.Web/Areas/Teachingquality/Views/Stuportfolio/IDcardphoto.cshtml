@@ -34,11 +34,24 @@
        
         $("#imgbut").click(function () {
             var img = $("#IDcard").children("img");
+            console.log(img);
             for (var i = 0; i < img.length; i++) {
                 var name = $(img[i]).attr("src").split('/');
-                download(name[5], $(img[i]).attr("src"))
+                download(i, $(img[i]).attr("src"))
 
             }
         })
+        //下载多个文件
+        function download(name, href) {
+
+            console.log(name, href);
+              window.location.href = "/Courseware/Coursewaremaking/Filedownload?URL=" + href + "&filename=" + name;
+            var a = document.createElement("a"), //创建a标签
+                e = document.createEvent("MouseEvents"); //创建鼠标事件对象
+            e.initEvent("click", false, false); //初始化事件对象
+            a.href = href ; //设置下载地址
+            a.download = name; //设置下载文件名
+            a.dispatchEvent(e); //给指定的元素，执行事件click事件
+        }
     });
 </script>

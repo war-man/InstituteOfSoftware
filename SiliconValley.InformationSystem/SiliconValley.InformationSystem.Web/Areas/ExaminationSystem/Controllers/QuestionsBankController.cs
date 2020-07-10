@@ -948,8 +948,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             ViewBag.ComputerTestQuestionIds = ids;
 
-            //读取文件
-            byte[] s = System.IO.File.ReadAllBytes(obj.SaveURL);
+            ////读取文件
+            //byte[] s = System.IO.File.ReadAllBytes(obj.SaveURL);
 
             ViewBag.ids = ids;
 

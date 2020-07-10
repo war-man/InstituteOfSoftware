@@ -437,6 +437,10 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         {
             bool bol= false;
          var x= Hoadclass.GetList().Where(a => a.ClassID == ClassID && a.EndingTime == null).FirstOrDefault();
+            if (x==null)
+            {
+                return false;
+            }
             x.EndingTime = DateTime.Now;
             try
             {

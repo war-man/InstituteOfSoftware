@@ -87,7 +87,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             var skiplist = userlist.Skip((page - 1) * limit).Take(limit).ToList();
 
             ///转为模型视图
-            ///
 
             List<AccountView> accountlist = new List<AccountView>();
 

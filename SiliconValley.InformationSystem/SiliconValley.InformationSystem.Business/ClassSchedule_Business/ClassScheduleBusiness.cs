@@ -851,6 +851,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public AjaxResult ClassEnd(int ClassID)
         {
+           
             AjaxResult result = null;
             try
             {
@@ -2380,5 +2381,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
             return Headyees;
         }
+
+        //public bool kohtualluvus()
+        //{
+
+        //}
     }
 }

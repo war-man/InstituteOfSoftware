@@ -850,7 +850,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             int ClassID = int.Parse(Request.QueryString["ClassID"]);
             int grade_Id = dbtext.GetEntity(ClassID).grade_Id;
             ExamScoresBusiness examScoresBusiness = new ExamScoresBusiness();
-            var z = examScoresBusiness.ClassScores(ClassID, grade_Id);
+       
             var x = examScoresBusiness.ClassScores(ClassID, grade_Id).Select(a => new {
 
                 a.StudentNumber,
@@ -984,5 +984,48 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
          
             return Json(x,JsonRequestBehavior.AllowGet);
         }
+
+        //public ActionResult xxx()
+        //{
+        //    EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
+        //    //岗位数据
+        //    var positon = employeesInfoManage.GetPositionByEmpid(user.EmpNumber);
+        //    if (positon.PositionName.Contains("教质主任") || positon.PositionName.Contains("教质副主任"))
+        //    {
+        //        //部门数据
+        //        var dept = employeesInfoManage.GetDept(positon.Pid);
+        //        var Grandlist = Grandcontext.GetList();
+        //        List<ClassSchedule> mylist = new List<ClassSchedule>();
+        //        if (dept.DeptName.Contains("s1"))
+        //        {
+        //            var x = Grandlist.Where(a => a.GrandName == "S1" || a.GrandName == "S2").ToList();
+        //            foreach (var item in x)
+        //            {
+        //                mylist.AddRange(dbclass.Where(a => a.grade_Id == item.Id).ToList());
+        //            }
+        //        }
+        //        else
+        //        {
+        //            var x = Grandlist.Where(a => a.GrandName == "S3").ToList();
+        //            foreach (var item in x)
+        //            {
+        //                mylist.AddRange(dbclass.Where(a => a.grade_Id == item.Id).ToList());
+        //            }
+        //        }
+        //        list = mylist;
+        //    }
+        //    else
+        //    {
+        //        var HadnID = Hadmst.GetList().Where(c => c.informatiees_Id == user.EmpNumber && c.IsDelete == false).FirstOrDefault();
+        //        if (HadnID != null)
+        //        {
+        //            var x = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HadnID.ID).ToList();
+        //            foreach (var item in x)
+        //            {
+        //                list.Add(dbclass.Where(a => a.ClassStatus == false && a.IsDelete == false && a.id == item.ClassID).FirstOrDefault());
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

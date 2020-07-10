@@ -160,6 +160,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 count = data.Count(),
                 data = data2
             };
+            
             return Json(returnObj, JsonRequestBehavior.AllowGet);
 
         }

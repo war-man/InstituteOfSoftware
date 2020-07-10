@@ -501,6 +501,7 @@
     <Content Include="Areas\Teachingquality\images\db618f149fc242299c9ebac0576ca2a1_th.jpg" />
     <Content Include="Areas\Teachingquality\images\guigu.png" />
     <Content Include="Areas\Teachingquality\images\审批.png" />
+    <Content Include="Areas\Teachingquality\images\无数据.jpg" />
     <Content Include="Areas\Teachingquality\js\priceview.js" />
     <Content Include="Areas\Teachingquality\js\Print.js" />
     <Content Include="Areas\Teachingquality\studentImg\20031998063000011.jpg" />
@@ -1865,11 +1866,8 @@
     <Content Include="Areas\Market\Views\StudentDataKeep\IdCordLoad.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\MarkeView.cshtml" />
     <Content Include="Areas\Educational\Views\Laterecord\LaterecordIndex.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\SysView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\GrandChangDataView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\GrandUpdatDataView.cshtml" />
-    <Content Include="Areas\Educational\Views\Laterecord\insertView.cshtml" />
-    <Content Include="Areas\Educational\Views\Laterecord\EditView.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\Achievement.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\Paymentinformation.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3562,6 +3560,7 @@
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExportAll\20200605090846.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExportAll\20200606082337.xls" />
     <Content Include="Views\Home\IdCard.cshtml" />
+    <Content Include="Views\Home\Scores.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

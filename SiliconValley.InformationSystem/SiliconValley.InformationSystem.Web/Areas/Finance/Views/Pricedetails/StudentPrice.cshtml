@@ -75,7 +75,7 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">学费</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "Amountofmoney" }, { "class", "layui-input " } })
                             <input type="text" style="display:none;" id="Amountofmoney1" name="Amountofmoney1" />
                             <div style="position:absolute;left:200px;top:-41px;color:dodgerblue;width:200px;"  id="Tuitionrefund"></div>
                         </div>
@@ -84,7 +84,7 @@
                         <label class="layui-form-label">食宿费</label>
                         <div class="layui-input-inline">
                             <input type="text" style="display:none;" id="Amountofmoneys1" name="Amountofmoneys1" />
-                            <input type="text" class="layui-input" lay-verify="required|Amountofmoney" name="Amountofmoneys" id="Amountofmoneys" />
+                            <input type="text" class="layui-input" lay-verify="Amountofmoney" name="Amountofmoneys" id="Amountofmoneys" />
 
                         </div>
                     </div>
@@ -231,9 +231,19 @@
         //正则
         form.verify({
             Amountofmoney: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if (!/(^[1-9]([0-9]{0,4})(\.[0-9]{1,2})$)|(^[1-9]([0-9]{0,4})$)|(^[0-9]\.[0-9]{1,2}$)/.test(value)) {
-                    return '请输入正确的价格';
+
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        if (!/(^[1-9]([0-9]{0,4})(\.[0-9]{1,2})$)|(^[1-9]([0-9]{0,4})$)|(^[0-9]\.[0-9]{1,2}$)/.test(value)) {
+                            return '请输入正确的价格';
+                        }
+                    }
                 }
+               
             },
             Name: function (value, item) { //value：表单的值、item：表单的DOM对象
                 if (!/^[^\s]*$/.test(value)) {
@@ -258,43 +268,55 @@
          //  window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 900, 600);
             var db = data.field;
 
-            var obj = {};
-            obj.Costitemsid = db.Amountofmoney1;
-            obj.Amountofmoney = db.Amountofmoney;
-            obj.StudenID = $("#StudentNumber").text();
-       
-            list.push(obj);
-             obj = {};
-            obj.Costitemsid = db.Amountofmoneys1;
-            obj.Amountofmoney = db.Amountofmoneys;
-           
-            obj.StudenID  = $("#StudentNumber").text();
-            list.push(obj);
-          
-            var dbase = {
-                person: JSON.stringify(list),
-                Remarks: db.Remarks,
-                Stage: db.Stage
-            };
-            ajaxprice("/Finance/Pricedetails/StudentPrices", dbase, function () {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index);//关闭当前页  
-                window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1,800, 600);
-            });
         
-         //  ajaxUniom("/Finance/Pricedetails/StudentPrices", dbase);
+            if (Number(db.Amountofmoney) > 0 || Number(db.Amountofmoneys) > 0) {
+                if (Number(db.Amountofmoney) > 0 ) {
+                    var obj = {};
+                    obj.Costitemsid = db.Amountofmoney1;
+                    obj.Amountofmoney = db.Amountofmoney;
+                    obj.StudenID = $("#StudentNumber").text();
+                    list.push(obj);
+                }
+                if (Number(db.Amountofmoneys) > 0 ) {
+                    obj = {};
+                    obj.Costitemsid = db.Amountofmoneys1;
+                    obj.Amountofmoney = db.Amountofmoneys;
+                    obj.StudenID = $("#StudentNumber").text();
+                    list.push(obj);
+                }
+
+                var dbase = {
+                    person: JSON.stringify(list),
+                    Remarks: db.Remarks,
+                    Stage: db.Stage
+                };
+                ajaxprice("/Finance/Pricedetails/StudentPrices", dbase, function () {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);//关闭当前页  
+                    window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 800, 600);
+                });
+
+              //  ajaxUniom("/Finance/Pricedetails/StudentPrices", dbase);
+            } else {
+                layer.msg("至少选择一项缴费！");
+            }
+           
+          
+        
+          
+         
 
         });
         //文本框监听/学费
         $("#Amountofmoney").keyup(function () {      // 按键弹起时触发的事件；
 
-            var eys = parseInt($("#Amountofmoneys").val()) + parseInt($(this).val()) + parseInt($("#price").text());
-
+            var eys = Number($("#Amountofmoneys").val()) + Number($(this).val()) + Number($("#price").text());
+        
             $("#Totalsum").text(eys);
         });
         //文本框监听/食宿费
         $("#Amountofmoneys").keyup(function () {      // 按键弹起时触发的事件；
-            var eys = parseInt($("#Amountofmoney").val()) + parseInt($(this).val()) + parseInt($("#price").text());
+            var eys = Number($("#Amountofmoney").val()) + Number($(this).val()) + Number($("#price").text());
             $("#Totalsum").text(eys);;
         });
 
