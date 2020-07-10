@@ -3560,6 +3560,7 @@
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExportAll\20200605090846.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExportAll\20200606082337.xls" />
     <Content Include="Views\Home\IdCard.cshtml" />
+    <Content Include="Views\Home\Scores.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

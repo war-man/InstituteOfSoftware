@@ -16,6 +16,7 @@ using SiliconValley.InformationSystem.Web.Common;
 using SiliconValley.InformationSystem.Business.Messagenotification_Business;
 using System.Configuration;
 using SiliconValley.InformationSystem.Business.BaiduAPI_Business;
+using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
@@ -283,7 +284,19 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Scores(string grandid, string classid)
+        {
+            ExamScoresBusiness dbscore = new ExamScoresBusiness();
+            dbscore.ClassScores(int.Parse(classid), int.Parse(grandid));
+            return View();
+        }
 
+        public ActionResult stdentScores(string studentnumber)
+        {
+            ExamScoresBusiness dbscore = new ExamScoresBusiness();
+            dbscore.StudentScores(studentnumber);
+            return View();
+        }
 
     }
 }
