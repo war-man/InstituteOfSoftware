@@ -459,6 +459,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //按学号查询单个学员返回json格式
         public ActionResult Select()
         {
+            CloudstorageBusiness db_Bos = new CloudstorageBusiness();
             string stuid = Request.QueryString["stuid"];
             var a = Finds(stuid);//Mylist("ScheduleForTrainees")
             var ClassID = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber).First().ClassID;
@@ -483,10 +484,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Guardian = a.Guardian,//亲属Mylist("ScheduleForTrainees").
                 AddDate = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber).First().AddDate,//入班时间
                 classa = Stuclass.ClassNames(stuid),//班级号
-                Images = a.Picture
+                Images = db_Bos.ImagesFine("xinxihua", "StudentImage",a.Picture,5)
                 //a => a.IsDelete == false && a.ClassStatus == false
             };
-
+          
             //classab = classschedu.GetList().Where(w => w.IsDelete == false&&w.ClassNumber== Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == false).First().ClassID && w.ClassStatus == false).FirstOrDefault().ClassNumber //班级名称
             //a => a.IsDelete == false && a.ClassStatus == false
             return Json(x, JsonRequestBehavior.AllowGet);

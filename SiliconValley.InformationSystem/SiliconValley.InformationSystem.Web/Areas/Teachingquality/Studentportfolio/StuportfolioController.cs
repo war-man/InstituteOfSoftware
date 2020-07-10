@@ -138,7 +138,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
         public ActionResult Achievement(string id)
         {
             ExamScoresBusiness examScoresBusiness = new ExamScoresBusiness();
-           var x= examScoresBusiness.StudentScores(id);
+         ViewBag.examScoresBusiness= examScoresBusiness.StudentScores(id);
             return View();
         }
         /// <summary>

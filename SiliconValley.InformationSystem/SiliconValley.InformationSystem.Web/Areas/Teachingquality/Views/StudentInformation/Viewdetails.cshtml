@@ -123,7 +123,7 @@
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label">家庭住址</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="Familyaddress" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                    <input type="text" id="Familyaddress" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;width:250px;" />
                 </div>
             </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -242,7 +242,7 @@
             $("#Hobby").val(data.Hobby)//兴趣爱好
             $("#Nation").val(data.Nation)//民族
             if (data.Images!= null) {
-                $("#StudentImages").append($("<img style='width:100px; height:100px;' src='/Areas/Teachingquality/studentImg/" + data.Images + "' />"));
+                $("#StudentImages").append($("<img style='width:100px; height:100px;' src='" + data.Images + "' />"));
             }
          
             var ClassS = data.classa.split(',');
@@ -263,7 +263,7 @@
             $("#Sexs").text(trim(GuaSex[1])+"姓名")//亲属关系
             $("#Familyphone").val(data.Familyphone)//亲属电话
             $("#Guardian").val(GuaSex[0])//亲属姓名
-            console.log(Age(TimeChange(data.BirthDate)));
+       
 
         
           

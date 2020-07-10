@@ -2,7 +2,7 @@
 @{
     Layout = null;
 }
-
+@using SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView
 <!DOCTYPE html>
 
 <html>
@@ -14,7 +14,42 @@
     <script src="~/Scripts/layui/layui.js"></script>
 </head>
 <body>
-    <div> 
-    </div>
+    @if (ViewBag.examScoresBusiness.Count > 0)
+    {
+        <ul class="layui-timeline" style="margin-top:20px;">
+            @{
+                foreach (var item in ViewBag.examScoresBusiness as List<StudentExamScoreView>)
+                {
+                 
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis"></i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">@item.ExamTitle</h3>
+
+
+                            <p>
+                                阅卷老师 ：@item.MarkingTeacherName
+                            </p>
+                            <ul>
+                                <li>选择题：@item.Score.ChooseScore 分</li>
+                                <li>解答题：@item.Score.TextQuestionScore 分</li>
+                                <li>机试题：@item.Score.OnBoard 分</li>
+                            </ul>
+
+                        </div>
+                    </li>
+                }
+            }
+
+
+        </ul>
+    }
+    else
+    {
+        <div>
+            <img src="~/Areas/Teachingquality/images/无数据.jpg" style="width:100%;height:600px;" />
+        </div>
+
+    }
 </body>
 </html>
