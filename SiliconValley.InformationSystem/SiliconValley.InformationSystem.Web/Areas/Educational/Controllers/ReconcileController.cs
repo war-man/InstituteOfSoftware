@@ -125,7 +125,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 string time = Request.Form["time"];//获取上课时间
                 string techar = Request.Form["teachersele"];//获取任课老师
                 DateTime startTime = Convert.ToDateTime(Request.Form["startTime"]);//获取排课日期
-                bool DoubleRest = true;//默认双休
+
                 //开始排课
                 Curriculum find_c = Reconcile_Com.Curriculum_Entity.GetEntity(kengcheng);
                 //查看这个课程的课时数
@@ -146,11 +146,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 {
                    
                     GetYear find_g = Reconcile_Entity.MyGetYear(startTime.Year.ToString(), Server.MapPath("~/Xmlconfigure/Reconcile_XML.xml")); //获取单休双休月份
-                    if (startTime.Month <= find_g.EndmonthName && startTime.Month >= find_g.StartmonthName)
-                    {
-                      
-                        DoubleRest = false;  //单休
-                    }
+                     
                     List<Reconcile> new_list = new List<Reconcile>();
                    
                     if (y1_id.ToString() == grand_Id) //判断是否是Y1的班级
@@ -160,7 +156,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                         string yuwen=  Request.Form["yuwen"]; //获取语文老师
                         string shuxue = Request.Form["shuxue"]; //获取数学老师
                         string yingyu = Request.Form["yingyu"]; //获取英语老师
-                        List<Reconcile> get_new_data = Reconcile_Entity.MiddleStudentReconcileFunction(DoubleRest, kengcheng, startTime, time, classroom_Id, techar, class_Id, y1_id,yuwen,shuxue,yingyu);
+                        List<Reconcile> get_new_data = Reconcile_Entity.MiddleStudentReconcileFunction(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, y1_id,yuwen,shuxue,yingyu);
                          a = Reconcile_Entity.Inser_list(get_new_data);
                         #endregion
                     }
@@ -171,7 +167,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                         ClassSchedule find_class = Reconcile_Com.ClassSchedule_Entity.GetEntity(class_Id);
                         int marjoin=Convert.ToInt32(find_class.Major_Id);
                         int grand = find_class.grade_Id;
-                        List<Reconcile> get_new_data = Reconcile_Entity.HeghtStudentReconcileFunction(DoubleRest, kengcheng, startTime, time, classroom_Id, techar, class_Id, grand, marjoin);
+                        List<Reconcile> get_new_data = Reconcile_Entity.HeghtStudentReconcileFunction(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, grand, marjoin);
                         a = Reconcile_Entity.Inser_list(get_new_data);
                         #endregion
                     }
@@ -186,39 +182,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
             return Json(a, JsonRequestBehavior.AllowGet);
         }
-
-
-        /// <summary>
-        /// 获取排课数据
-        /// </summary>
-        /// <param name="limit"></param>
-        /// <param name="page"></param>
-        /// <returns></returns>
-        //public ActionResult GetTableData(int limit, int page)
-        //{
-        //    int classname = Convert.ToInt32(Request.QueryString["classname"]);//班级名称
-        //    if (classname <= 0)
-        //    {
-        //        return Json(new { code = 0, msg = "", count = 0, data = "" }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    else
-        //    {
-        //        List<Reconcile> lisr_r = Reconcile_Entity.GetList().Where(r => r.ClassSchedule_Id == classname).ToList();
-        //        var mydata = lisr_r.Skip((page - 1) * limit).Take(limit).Select(r => new
-        //        {
-        //            Id = r.Id,
-        //            classname = Reconcile_Com.ClassSchedule_Entity.GetEntity(r.ClassSchedule_Id).ClassNumber,//班级名称
-        //            classroom = r.ClassRoom_Id==null?"无" :Reconcile_Com.Classroom_Entity.GetEntity(r.ClassRoom_Id).ClassroomName,//教室
-        //            curriName = r.Curriculum_Id,//课程
-        //            Sketime = r.Curse_Id,//课程时间字段
-        //            ADate = r.AnPaiDate,
-        //            Teacher = r.EmployeesInfo_Id == null ? "无" : Reconcile_Com.Employees_Entity.GetEntity(r.EmployeesInfo_Id).EmpName
-        //        });
-        //        var jsondata = new { code = 0, msg = "", count = lisr_r.Count, data = mydata };
-        //        return Json(jsondata, JsonRequestBehavior.AllowGet);
-        //    }
-
-        //}
 
         /// <summary>
         /// 获取某个时间段没有安排上课的空教室
@@ -858,7 +821,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime endtime = Convert.ToDateTime(Request.Form["endtime"]);
             var days = endtime.Subtract(startme);
             int count = days.Days;
-            bool s = Reconcile_Entity.AidAllData(startme, count);
+ 
+            GetYear years = Reconcile_Entity.MyGetYear(startme.Year.ToString(), Server.MapPath("~/Xmlconfigure/Reconcile_XML.xml"));
+            List<Reconcile> list =Reconcile_Entity.GetReconcileDate(startme, true);
+            bool s = Reconcile_Entity.AidAllData(count,years, list);
             return Json(s, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
@@ -881,7 +847,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime endtime = Convert.ToDateTime(Request.Form["endTime"]);
             var days = endtime.Subtract(startime);
             int count = days.Days;
-            bool s = Reconcile_Entity.AidClassData(startime, count, class_id);
+            GetYear years = Reconcile_Entity.MyGetYear(startime.Year.ToString(), Server.MapPath("~/Xmlconfigure/Reconcile_XML.xml"));
+            bool s = Reconcile_Entity.AidClassData(startime, count, class_id, years);
             return Json(s, JsonRequestBehavior.AllowGet);
         }
 
@@ -1111,8 +1078,111 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime endtime = Convert.ToDateTime(Request.Form["endTime"]);
             List<ReconcileView> find_list = Reconcile_Entity.SQLGetReconcileDate().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == startime).ToList();
             AjaxResult a = Reconcile_Entity.update_date4(find_list, endtime);
+
             return Json(a, JsonRequestBehavior.AllowGet);
         }
+       
+        /// <summary>
+        /// 指定阶段调课
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GrandChangDataView()
+        {
+            //获取所有阶段
+            List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();           
+            ViewBag.Mygrandlist = g_list;
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult GrandChangData()
+        {
+            string[] grand = Request.Form["grands"].Split(',') ;
+
+            DateTime de1 = Convert.ToDateTime(Request.Form["starTime"]);
+
+            DateTime de2 = Convert.ToDateTime(Request.Form["endTime"]);
+
+            var days = de2.Subtract(de1);
+            int count = days.Days;
+
+
+            List<ClassSchedule> myclass = new List<ClassSchedule>();
+
+            foreach (string it in grand)
+            {
+                if (!string.IsNullOrEmpty(it))
+                {
+                    int grandid = Convert.ToInt32(it);
+                    myclass.AddRange(Reconcile_Com.GetClass().Where(c=>c.grade_Id==grandid).ToList());
+                }
+            }
+
+            //获取属于这个日期的这些班级的排课数据
+
+            List<Reconcile> myclist = new List<Reconcile>();
+            List<Reconcile> all = Reconcile_Entity.GetList().Where(a=>a.AnPaiDate>= de1).ToList();
+            foreach (ClassSchedule cla in myclass)
+            {
+                myclist.AddRange( all.Where(a=>a.ClassSchedule_Id==cla.id).ToList() );
+            }
+
+ 
+            GetYear years= Reconcile_Entity.MyGetYear(de1.Year.ToString(), Server.MapPath("~/Xmlconfigure/Reconcile_XML.xml"));
+
+            bool s = Reconcile_Entity.AidAllData(count, years, myclist);
+
+            return Json(s, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 阶段日期调换
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GrandUpdatDataView()
+        {
+            //获取所有阶段
+            List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            ViewBag.Mygrandlist = g_list;
+            return View();
+        }
+
+        public ActionResult GrandUpdatDataFuntion()
+        {
+            string[] grand = Request.Form["grands"].Split(',');
+
+            DateTime de1 = Convert.ToDateTime(Request.Form["starTime"]);
+
+            DateTime de2 = Convert.ToDateTime(Request.Form["endTime"]);
+
+
+
+            List<ClassSchedule> myclass = new List<ClassSchedule>();
+
+            foreach (string it in grand)
+            {
+                if (!string.IsNullOrEmpty(it))
+                {
+                    int grandid = Convert.ToInt32(it);
+                    myclass.AddRange(Reconcile_Com.GetClass().Where(c => c.grade_Id == grandid).ToList());
+                }
+            }
+
+            //获取属于这个日期的这些班级的排课数据
+
+            List<ReconcileView> myclist = new List<ReconcileView>();
+            List<ReconcileView> all = Reconcile_Entity.SQLGetReconcileDate().Where(a => a.AnPaiDate == de1).ToList();
+            foreach (ClassSchedule cla in myclass)
+            {
+                myclist.AddRange(all.Where(a => a.ClassSchedule_Id == cla.id).ToList());
+            }
+
+           AjaxResult a1= Reconcile_Entity.update_date4(myclist, de2);
+
+
+            return Json(a1,JsonRequestBehavior.AllowGet);
+        }
+       
         #endregion
 
         #region 自动安排自习课
@@ -1151,7 +1221,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         }
         
         /// <summary>
-        /// 安排晚自习页面
+        /// 安排自习页面
         /// </summary>
         /// <returns></returns>
         public ActionResult SysView()

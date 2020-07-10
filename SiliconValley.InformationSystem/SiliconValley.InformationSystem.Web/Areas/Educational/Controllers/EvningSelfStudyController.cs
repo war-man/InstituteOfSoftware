@@ -40,7 +40,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             string startime = Request.QueryString["onetime"];
             string endtime = Request.QueryString["twotime"];
             string grandid = Request.QueryString["Grand"];
-            if (!string.IsNullOrEmpty(c_id) && c_id!="0")
+            if (!string.IsNullOrEmpty(c_id) && c_id != "0")
             {
                 int class_id = int.Parse(c_id);
                 Evn_list = Evn_list.Where(e => e.ClassSchedule_id == class_id).ToList();
@@ -55,7 +55,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 DateTime d2 = Convert.ToDateTime(endtime);
                 Evn_list = Evn_list.Where(e => e.Anpaidate <= d2).ToList();
             }
-            if (!string.IsNullOrEmpty(grandid) && grandid!="0")
+            if (!string.IsNullOrEmpty(grandid) && grandid != "0")
             {
                 int grand_id = Convert.ToInt32(grandid);
                 Evn_list = Evn_list.Where(e => Reconcile_Com.ClassSchedule_Entity.GetEntity(e.ClassSchedule_id).grade_Id == grand_id).ToList();
@@ -75,7 +75,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        
+
 
         #region 安排晚自习
         public ActionResult AnPaiEvningSelfStudyView()
@@ -84,7 +84,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             BaseDataEnumManeger dataEnum_Entity = new BaseDataEnumManeger();
             ViewBag.myclass = Reconcile_Com.GetClass().Select(c => new SelectListItem() { Text = c.ClassNumber, Value = c.id.ToString() }).ToList(); //获取所有有效的班级
             List<SelectListItem> teachers = Teacher_Entity.GetTeachers().Select(t => new SelectListItem() { Value = t.EmployeeId, Text = Reconcile_Com.GetEmpName(t.EmployeeId) }).ToList(); //获取所有未辞职的教员
-            teachers.Add(new SelectListItem() { Text="--请选择--",Value="0"});
+            teachers.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
             ViewBag.teacher = teachers.OrderBy(t => t.Value).ToList();
             List<SelectListItem> s_list = dataEnum_Entity.GetsameFartherData("校区地址").Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }).ToList(); //获取有效校区
             s_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
@@ -117,7 +117,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             else
             {
                 List<EvningSelfStudy> list = a.Data as List<EvningSelfStudy>;
-                a= EvningSelefstudy_Entity.Add_Data(list,true);
+                a = EvningSelefstudy_Entity.Add_Data(list, true);
                 return Json(a, JsonRequestBehavior.AllowGet);
             }
 
@@ -132,18 +132,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             AjaxResult a = new AjaxResult();
             EvningSelfStudy new_data = new EvningSelfStudy();
-            new_data.Anpaidate= Convert.ToDateTime(Request.Form["mytime"]); //自习日期
-            new_data.Classroom_id =  Convert.ToInt32(Request.Form["classroom"]);//所在教室
-            new_data.ClassSchedule_id=Convert.ToInt32(Request.Form["classShdule_sele"]);//班级
-            new_data.curd_name=Request.Form["timename"]; //自习时间
-            new_data.Rmark=Request.Form["ramke"];//其他说明
-            new_data.emp_id=Request.Form["teacher_sele"]=="0"?null: Request.Form["teacher_sele"];//任课老师
+            new_data.Anpaidate = Convert.ToDateTime(Request.Form["mytime"]); //自习日期
+            new_data.Classroom_id = Convert.ToInt32(Request.Form["classroom"]);//所在教室
+            new_data.ClassSchedule_id = Convert.ToInt32(Request.Form["classShdule_sele"]);//班级
+            new_data.curd_name = Request.Form["timename"]; //自习时间
+            new_data.Rmark = Request.Form["ramke"];//其他说明
+            new_data.emp_id = Request.Form["teacher_sele"] == "0" ? null : Request.Form["teacher_sele"];//任课老师
             new_data.Newdate = DateTime.Now;
             new_data.IsDelete = false;
 
-            a= EvningSelefstudy_Entity.Add_Data(new_data);
+            a = EvningSelefstudy_Entity.Add_Data(new_data);
 
-            return Json(a,JsonRequestBehavior.AllowGet);
+            return Json(a, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -154,22 +154,53 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             //获取阶段
             List<SelectListItem> g_list = Reconcile_Com.GetGrand_Id().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
-            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
             ViewBag.grlist = g_list;
             return View();
         }
+
+        /// <summary>
+        /// 安排一周的晚自习
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult GoodEvningSelfStudyFunction()
         {
-            string class_ids = Request.Form["checkid_Str"];
+            string[] class_ids = Request.Form["checkid_Str"].Split(',');
+            //根据阶段获取班级
+            List<ClassSchedule> list_c = new List<ClassSchedule>();
+            foreach (string it in class_ids)
+            {
+                if (!string.IsNullOrEmpty(it)) { int grandid = Convert.ToInt32(it); list_c.AddRange(Reconcile_Com.GetClass().Where(c => c.grade_Id == grandid).ToList()); }
+            }
+
             DateTime starttime = Convert.ToDateTime(Request.Form["starTime"].Split('到')[0]);
             DateTime endtime = Convert.ToDateTime(Request.Form["starTime"].Split('到')[1]);
-            GrandClassAnpaiEvningSelf data=  EvningSelefstudy_Entity.GoodsEvningSelfStudyFunction(class_ids, starttime, endtime);
-            AjaxResult a= EvningSelefstudy_Entity.Add_Data(data.evnlist, false);
+            GrandClassAnpaiEvningSelf data = EvningSelefstudy_Entity.GoodsEvningSelfStudyFunction(list_c, starttime, endtime);
+            AjaxResult a = EvningSelefstudy_Entity.Add_Data(data.evnlist, false);
             a.Data = data.emplist;
-            return Json(a,JsonRequestBehavior.AllowGet);
+            return Json(a, JsonRequestBehavior.AllowGet);
         }
-        
+
+        /// <summary>
+        /// 安排一天的晚自习
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GoodEvningSelftSudyFinciton2()
+        {
+            string[] class_ids = Request.Form["checkid_Str"].Split(',');
+            //根据阶段获取班级
+            List<ClassSchedule> list_c = new List<ClassSchedule>();
+            foreach (string it in class_ids)
+            {
+                if (!string.IsNullOrEmpty(it)) { int grandid = Convert.ToInt32(it); list_c.AddRange(Reconcile_Com.GetClass().Where(c => c.grade_Id == grandid).ToList()); }
+            }
+            DateTime starttime= Convert.ToDateTime(Request.Form["starTime"]);
+
+            GrandClassAnpaiEvningSelf data = EvningSelefstudy_Entity.GoodsEvningSelfStudyFunction(list_c, starttime);
+            AjaxResult a = EvningSelefstudy_Entity.Add_Data(data.evnlist, true);
+            a.Data = data.emplist;
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
         #region 对于数据的操作
@@ -181,13 +212,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// <returns></returns>
         public ActionResult UpdateEvning(int id)
         {
-         
+
             List<SelectListItem> class_select = Reconcile_Com.GetClass().Select(e => new SelectListItem() { Text = e.ClassNumber, Value = e.id.ToString() }).ToList();   //获取班级
             ViewBag.Classlist = class_select;
-       
+
             List<SelectListItem> classrooms = Reconcile_Com.Classroom_Entity.GetEffectiveClass().Select(c => new SelectListItem() { Text = c.ClassroomName, Value = c.Id.ToString() }).ToList();     //获取教室
             ViewBag.classroom = classrooms;
-         
+
             List<SelectListItem> timename_list = new List<SelectListItem>();   //获取上课时间段
             timename_list.Add(new SelectListItem() { Text = "晚一", Value = "晚一" });
             timename_list.Add(new SelectListItem() { Text = "晚二", Value = "晚二" });
@@ -195,13 +226,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             EvningSelfStudy find_e = EvningSelefstudy_Entity.GetEntity(id);
             TeacherBusiness Teacher_Entity = new TeacherBusiness();
             List<SelectListItem> teachers = Teacher_Entity.GetTeachers().Select(t => new SelectListItem() { Value = t.EmployeeId, Text = Reconcile_Com.GetEmpName(t.EmployeeId) }).ToList(); //获取所有未辞职的教员
-            teachers.Add(new SelectListItem() { Text="--请选择--",Selected=true,Value="0"});
+            teachers.Add(new SelectListItem() { Text = "--请选择--", Selected = true, Value = "0" });
             ViewBag.tt = teachers;
             //获取排课日期
             ViewBag.date = find_e.Anpaidate.Year + "-" + find_e.Anpaidate.Month + "-" + find_e.Anpaidate.Day;
             return View(find_e);
         }
-        
+
         /// <summary>
         /// 编辑
         /// </summary>
@@ -288,7 +319,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             DateTime startime = Convert.ToDateTime(Request.Form["oldTime"]);//获取原来上课的日期
             DateTime endtime = Convert.ToDateTime(Request.Form["endtime"]);//获取更改的日期
-          
+
 
             List<EvningSelfStudy> find_e = EvningSelefstudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == startime).ToList();//获取原来日期的晚自习安排数据
 
@@ -333,11 +364,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// <returns></returns>
         public ActionResult GetEmptyClassroom()
         {
-            string timename= Request.Form["timename"];//时间
-            DateTime time =Convert.ToDateTime( Request.Form["time"]);//日期
+            string timename = Request.Form["timename"];//时间
+            DateTime time = Convert.ToDateTime(Request.Form["time"]);//日期
             int shcooldrees_id = Convert.ToInt32(Request.Form["schooladdres"]);//校区编号
-            List<Classroom> list=  EvningSelefstudy_Entity.GetEmptyClassrooms(timename, time, shcooldrees_id);
-            return Json(list,JsonRequestBehavior.AllowGet);
+            List<Classroom> list = EvningSelefstudy_Entity.GetEmptyClassrooms(timename, time, shcooldrees_id);
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
     }
 }

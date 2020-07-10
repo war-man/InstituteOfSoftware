@@ -21,8 +21,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data
         /// </summary>
         public int Laterecord_Id { get; set; }
         /// <summary>
-        /// 学生编号
+        /// 学生姓名
         /// </summary>
-        public int StudentAttendance_Id { get; set; }
+        public string StudentName { get; set; }
     }
 }

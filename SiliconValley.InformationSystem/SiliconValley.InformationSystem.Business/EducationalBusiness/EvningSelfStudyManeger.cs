@@ -514,19 +514,19 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         }
 
         /// <summary>
-        /// 阶段安排晚自习
+        /// 阶段安排一周晚自习
         /// </summary>
         /// <param name="class_ids">班级id</param>
         /// <param name="s_time">开始日期</param>
         /// <param name="e_time">结束日期</param>
         /// <returns></returns>
-        public GrandClassAnpaiEvningSelf GoodsEvningSelfStudyFunction(string class_ids, DateTime s_time, DateTime e_time)
+        public GrandClassAnpaiEvningSelf GoodsEvningSelfStudyFunction(List<ClassSchedule> class_ids, DateTime s_time, DateTime e_time)
         {
             GrandClassAnpaiEvningSelf ResultData = new GrandClassAnpaiEvningSelf();
             List<EvningSelfStudy> evlist = new List<EvningSelfStudy>();
             ReconcileManeger reconcile = new ReconcileManeger();
             List<EmptyClass> emotylist = new List<EmptyClass>();
-            List<string> ids = class_ids.Split(',').ToList();
+
 
             List<EvningSelfStudy> All = EvningSelfStudyGetAll();
 
@@ -537,12 +537,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 EmptyClass empty = new EmptyClass();
                 empty.date = s_time;
                 List<string> classnames = new List<string>();
-                for (int j=0; j<ids.Count;j++)
+                for (int j=0; j< class_ids.Count;j++)
                 {
-                    if (!string.IsNullOrEmpty(ids[j]))
-                    {
-                        int classsid = Convert.ToInt32(ids[j]);
-                        List<Reconcile> list = reconcile.GetSingData(s_time, classsid); //查看这个日期是否安排了专业课
+                     
+                        List<Reconcile> list = reconcile.GetSingData(s_time, class_ids[j].id); //查看这个日期是否安排了专业课
                         string time2 = null;
                         if (list.Count > 0)
                         {
@@ -551,7 +549,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             {
                                 if (evlist.Count>0)
                                 {
-                                   EvningSelfStudy findata= evlist.Where(e => e.Classroom_id == list[0].ClassRoom_Id && e.Anpaidate == s_time && e.ClassSchedule_id != classsid).FirstOrDefault();
+                                   EvningSelfStudy findata= evlist.Where(e => e.Classroom_id == list[0].ClassRoom_Id && e.Anpaidate == s_time && e.ClassSchedule_id != class_ids[j].id).FirstOrDefault();
                                     if (findata!=null)
                                     {
                                         time2 = findata.curd_name == "晚一" ? "晚二" : "晚一";
@@ -561,7 +559,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                                 EvningSelfStudy new_data1 = new EvningSelfStudy();
                                 new_data1.Anpaidate = s_time;
                                 new_data1.Classroom_id = Convert.ToInt32(list[0].ClassRoom_Id);
-                                new_data1.ClassSchedule_id = classsid;
+                                new_data1.ClassSchedule_id = class_ids[j].id;
                                 new_data1.curd_name = time2 == null ? time : time2;
                                 new_data1.IsDelete = false;
                                 new_data1.Newdate = DateTime.Now;
@@ -570,12 +568,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             }
                             else if (find_e.Count==1)
                             {
-                                if (find_e[0].ClassSchedule_id != classsid)
+                                if (find_e[0].ClassSchedule_id != class_ids[j].id)
                                 {
                                     EvningSelfStudy new_data1 = new EvningSelfStudy();
                                     new_data1.Anpaidate = s_time;
                                     new_data1.Classroom_id = Convert.ToInt32(list[0].ClassRoom_Id);
-                                    new_data1.ClassSchedule_id = classsid;
+                                    new_data1.ClassSchedule_id = class_ids[j].id;
                                     new_data1.curd_name = find_e[0].curd_name=="晚二" ? "晚一" : "晚二";
                                     new_data1.IsDelete = false;
                                     new_data1.Newdate = DateTime.Now;
@@ -588,11 +586,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         }
                         else
                         {                             
-                            string empclassname = Reconcile_Com.ClassSchedule_Entity.GetEntity(classsid).ClassNumber+",";
+                            string empclassname = class_ids[j].ClassNumber+",";
                             classnames.Add(empclassname);
                         }
 
-                    }
+                    
                 }
                  empty.ClassName = classnames;
                 if (empty.ClassName.Count>0)
@@ -606,6 +604,110 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             ResultData.evnlist = evlist;
             return ResultData;
         }
+
+        public GrandClassAnpaiEvningSelf GoodsEvningSelfStudyFunction(List<ClassSchedule> class_ids, DateTime s_time)
+        {
+            ReconcileManeger Reconcile_Entity = new ReconcileManeger();
+            ReconcileManeger reconcile = new ReconcileManeger();
+            GrandClassAnpaiEvningSelf ResultData = new GrandClassAnpaiEvningSelf();
+            List<EmptyClass> emp = new List<EmptyClass>();//存放没有安排专业课的班级
+            List<EvningSelfStudy> evlist = new List<EvningSelfStudy>();
+   
+            List<EmptyClass> emotylist = new List<EmptyClass>();
+
+            int curtypeid = Reconcile_Com.CourseType_Entity.FindSingeData("专业课", false).Id;//获取课程类型id
+            int curtypeid2 = Reconcile_Com.CourseType_Entity.FindSingeData("语文课", false).Id;
+            int curtypeid3 = Reconcile_Com.CourseType_Entity.FindSingeData("数学课", false).Id;
+            int curtypeid4 = Reconcile_Com.CourseType_Entity.FindSingeData("英语课", false).Id;
+            List<ReconcileView> Recon_all = Reconcile_Entity.SQLGetReconcileDate().Where(r => r.AnPaiDate == s_time && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) != null).ToList();
+            Recon_all = Recon_all.Where(r => Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid2 || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid3 || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid4).OrderBy(r => r.AnPaiDate).ToList();//获取这个时间段上专业课的排课数据
+
+            Recon_all.AddRange(Reconcile_Entity.SQLGetReconcileDate().Where(r => r.AnPaiDate == s_time && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) == null).ToList());
+
+            DateTime time = s_time.AddDays(-1);
+            List<EvningSelfStudy> All = EvningSelfStudyGetAll().Where(a=>a.Anpaidate==time).ToList();
+            StringBuilder sb = new StringBuilder();
+            EmptyClass empty = new EmptyClass();
+            empty.date = s_time;
+            List<string> st = new List<string>();
+             
+            for (int i=0;i< class_ids.Count;i++)
+            {                
+                EvningSelfStudy find_e= All.Where(a => a.ClassSchedule_id == class_ids[i].id).FirstOrDefault();//获取前天的晚自习安排数据
+                if (find_e==null)//说明昨天没有安排数据
+                {
+                    ReconcileView find_r = Recon_all.Where(r => r.ClassSchedule_Id == class_ids[i].id && r.AnPaiDate == s_time).FirstOrDefault();//是否安排了专业课
+                    if (find_r == null)
+                    {
+                        sb.Append(class_ids[i].ClassNumber+",");
+                    }
+                    else
+                    {
+                        EvningSelfStudy evning = new EvningSelfStudy(class_ids[i].id, find_r.ClassRoom_Id, "晚一", s_time, DateTime.Now, null, false);
+                        evlist.Add(evning);
+
+                        ReconcileView find_r2 = Recon_all.Where(r => r.ClassSchedule_Id != class_ids[i].id && r.AnPaiDate == s_time && r.ClassRoom_Id == find_r.ClassRoom_Id).FirstOrDefault();//同教室的班级
+                        if (find_r2 != null)
+                        {
+                            string cu = evning.curd_name == "晚一" ? "晚二" : "晚一";
+                            EvningSelfStudy evning2 = new EvningSelfStudy(find_r2.ClassSchedule_Id, find_r2.ClassRoom_Id, cu, s_time, DateTime.Now, null, false);
+                            evlist.Add(evning2);
+
+                            ClassSchedule schedule = class_ids.Where(c => c.id == find_r2.ClassSchedule_Id).FirstOrDefault();
+
+                            if (schedule != null)
+                            {
+                                class_ids.Remove(schedule);
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    //说明安排的晚自习，那么昨天是晚一，今天就算晚二
+                    ReconcileView find_r = Recon_all.Where(r => r.ClassSchedule_Id == class_ids[i].id && r.AnPaiDate == s_time).FirstOrDefault();//是否安排了专业课
+                    if (find_r==null)
+                    {                        
+                        sb.Append(class_ids[i].ClassNumber+",");
+                    }
+                    else
+                    {
+                        
+                        string cur= find_e.curd_name == "晚一" ? "晚二" : "晚一";
+
+                        EvningSelfStudy evning = new EvningSelfStudy(class_ids[i].id, find_r.ClassRoom_Id, cur, s_time, DateTime.Now,null,false);
+                        evlist.Add(evning);
+                        ReconcileView find_r2 = Recon_all.Where(r => r.ClassSchedule_Id != class_ids[i].id && r.AnPaiDate == s_time && r.ClassRoom_Id == find_r.ClassRoom_Id).FirstOrDefault();//同教室的班级
+                        if (find_r2!=null)
+                        {
+                            string cu= evning.curd_name == "晚一" ? "晚二" : "晚一";
+                            EvningSelfStudy evning2 = new EvningSelfStudy(find_r2.ClassSchedule_Id, find_r2.ClassRoom_Id, cu, s_time, DateTime.Now, null, false);
+                            evlist.Add(evning2);
+
+                            ClassSchedule schedule= class_ids.Where(c => c.id == find_r2.ClassSchedule_Id).FirstOrDefault();
+
+                            if (schedule!=null)
+                            {
+                                class_ids.Remove(schedule);
+                            }
+                        }
+                    }
+                }
+                
+            }
+            st.Add( sb.ToString());
+            empty.ClassName = st;
+            emotylist.Add(empty);
+
+            ResultData.evnlist = evlist;
+
+            ResultData.emplist = emotylist;
+
+            return ResultData;
+        }
+
+
         /// <summary>
         /// 获取单休月份数据
         /// </summary>
@@ -685,8 +787,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return a_list;
         }
-
         
-
     }
 }

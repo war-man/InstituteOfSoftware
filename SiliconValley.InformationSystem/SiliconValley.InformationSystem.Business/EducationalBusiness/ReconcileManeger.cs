@@ -84,7 +84,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// 获取排课所有数据
         /// </summary>
         /// <returns></returns>
-
+        public List<Reconcile> GetAll()
+        {
+           return this.GetListBySql<Reconcile>("select * from  Reconcile");
+        }
         /// <summary>
         /// 获取单条数据
         /// </summary>
@@ -424,7 +427,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 if (s)
                 {
                     //获取所有教官
-                    emolist.Add(dbemployeesInfo.GetEntity(item.EmployeeNumber));
+                    emolist.Add(dbemployeesInfo.FindEmpData(item.EmployeeNumber,true));
                 }
                 else
                 {
@@ -1033,7 +1036,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 this.Delete(ReconcileView.ToModel(find_r));
                 a.Success = true;
                 a.Msg = "操作成功";
-                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                 
             }
             catch (Exception ex)
             {
@@ -1121,39 +1124,46 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="date">开始日期</param>
         /// <param name="days">天数</param>
-        /// <param name="s1ors3">教务（true--S1教务,false-S3教务）</param>
         /// <returns></returns>
-        public bool AidAllData(DateTime date, int days)
+        public bool AidAllData(int days, GetYear year, List<Reconcile> reconciles)
         {
             bool s = false;
-            int index = 0;
             try
             {
-                List<Reconcile> reconciles = GetReconcileDate(date, true);
+                 
                 List<Reconcile> Recon = new List<Reconcile>();
                 foreach (Reconcile re in reconciles)
                 {
-                    if (this.IsSaturday(re.AnPaiDate)==1)
+                    if (re.AnPaiDate.Month>=year.StartmonthName && re.AnPaiDate.Month <= year.EndmonthName)
                     {
-                        re.AnPaiDate = re.AnPaiDate.AddDays((days+1));
+                        //单休
+                        if (this.IsSaturday(re.AnPaiDate) == 1)
+                        {
+                            re.AnPaiDate = re.AnPaiDate.AddDays((days + 1));
+                        }
+                        else
+                        {
+                            re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                        }
                     }
                     else
                     {
-                        re.AnPaiDate = re.AnPaiDate.AddDays(days);
-                    }
- 
-                    Recon.Add(re);                   
-                    index++;
+                        //双休
+                        DayOfWeek week = re.AnPaiDate.DayOfWeek;
+                        if (week== DayOfWeek.Friday)
+                        {
+                            re.AnPaiDate = re.AnPaiDate.AddDays((days + 2));
+                        }
+                        else
+                        {
+                            re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                        }
+                    }                                                        
+                    Recon.Add(re);
                 }
-
                 this.Update(Recon);
 
-                //清空缓存
-                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-                //if (index == list.Count)
-                //{
-                //    s = true;
-                //}
+                 
                 s = true;
             }
             catch (Exception)
@@ -1172,26 +1182,45 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="days"></param>
         /// <param name="class_id"></param>
         /// <returns></returns>
-        public bool AidClassData(DateTime date, int days, int class_id)
+        public bool AidClassData(DateTime date, int days, int class_id,GetYear YearMon)
         {
             bool s = false;
-            int index = 0;
+
             try
             {
                 List<Reconcile> recon = new List<Reconcile>();
                 List<Reconcile> reconciles = GetReconcileDate(date,true).Where(r =>r.ClassSchedule_Id == class_id).ToList();
                 foreach (Reconcile re in reconciles)
                 {
-                    re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                    if (re.AnPaiDate.Month >= YearMon.StartmonthName && re.AnPaiDate.Month <= YearMon.EndmonthName)
+                    {
+                        //单休
+                        if (this.IsSaturday(re.AnPaiDate) == 1)
+                        {
+                            re.AnPaiDate = re.AnPaiDate.AddDays((days + 1));
+                        }
+                        else
+                        {
+                            re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                        }
+                    }
+                    else
+                    {
+                        //双休
+                        DayOfWeek week = re.AnPaiDate.DayOfWeek;
+                        if (week == DayOfWeek.Friday)
+                        {
+                            re.AnPaiDate = re.AnPaiDate.AddDays((days + 2));
+                        }
+                        else
+                        {
+                            re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                        }
+                    }
+                   
                     recon.Add(re);
-                    index++;
-                }
-                //清空缓存
-                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-                //if (index == reconciles.Count)
-                //{
-                //    s = true;
-                //}
+
+                }                 
                 this.Update(recon);
                 s = true;
             }
@@ -1439,7 +1468,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         }
         #endregion
 
-
         #region
         /// <summary>
         /// 获取这个日期的课表
@@ -1450,28 +1478,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
             return GetReconcileDate(time,false).Where(a => a.AnPaiDate == time).ToList();
         }
-
-        /// <summary>
-        /// 获取某校区指定日期的空教室
-        /// </summary>
-        /// <param name="timename">上课时间</param>
-        /// <param name="time">日期</param>
-        /// <param name="schooladdree">校区地址编号</param>
-        /// <returns></returns>
-        //public List<Classroom> GetSchoolEmptyRoomFunction(string timename, DateTime time, int schooladdree)
-        //{
-        //    List<Classroom> classrooms_data = Reconcile_Com.Classroom_Entity.GetAddreeClassRoom(schooladdree);//获取某校区所有教室
-
-        //    List<Reconcile> find_reconcile_data = this.SQLGetReconcileDate().Where(ll => ll.AnPaiDate == time && ll.Curse_Id.Contains(timename)).ToList();  //获取这个日期的排课数据
-
-        //    for (int i = 0; i < find_reconcile_data.Count; i++) //获取空教室
-        //    {
-        //        Classroom find_over = classrooms_data.Where(c => c.Id == find_reconcile_data[i].ClassRoom_Id).FirstOrDefault();
-        //        classrooms_data.Remove(find_over);
-        //    }
-
-        //    return classrooms_data;
-        //}
+         
         /// <summary>
         /// 高中生排课
         /// </summary>
@@ -1483,7 +1490,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="empNo">老师员工编号</param>
         /// <param name="classNo">班级编号</param>
         /// <returns></returns>
-        public List<Reconcile> HeghtStudentReconcileFunction(bool doublecease, int curNo, DateTime time, string timename, int classroomid, string empNo, int classNo,int grand,int marjion_id)
+        public List<Reconcile> HeghtStudentReconcileFunction(GetYear getYear, int curNo, DateTime time, string timename, int classroomid, string empNo, int classNo,int grand,int marjion_id)
         {
             Curriculum find_curdata = Reconcile_Com.Curriculum_Entity.GetEntity(curNo);   //获取课程
 
@@ -1499,18 +1506,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 for (int i = 0; i < Sumcout; i++)
                 {
                     index++;
-                    if (doublecease == true) //双休
-                    {
-                        if (this.IsSaturday(time) == 1)
-                        {
-                            Sumcout = Sumcout + 2;
-                            index = index + 2;
-                            i = i + 2;
-                            time = time.AddDays(2);
-                        }
 
-                    }
-                    else //单休
+                    if (time.Month<= getYear.EndmonthName && time.Month>=getYear.StartmonthName) //单休
                     {
                         if (this.IsSaturday(time) == 2)
                         {
@@ -1519,6 +1516,18 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             index++;
                             i++;
                         }
+                    }
+                    else //双休
+                    {
+                         
+                        if (this.IsSaturday(time) == 1)
+                        {
+                            Sumcout = Sumcout + 2;
+                            index = index + 2;
+                            i = i + 2;
+                            time = time.AddDays(2);
+                        }
+
                     }
                     Reconcile new_R = new Reconcile();
                     new_R.AnPaiDate = time;
@@ -1570,7 +1579,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="classNo"></param>
         /// <param name="grandid"></param>
         /// <returns></returns>
-        public List<Reconcile> MiddleStudentReconcileFunction(bool doublecease, int curNo, DateTime time, string timename, int classroomid, string empNo, int classNo, int grandid,string yuwen,string shuxue,string yingyu)
+        public List<Reconcile> MiddleStudentReconcileFunction(GetYear doublecease, int curNo, DateTime time, string timename, int classroomid, string empNo, int classNo, int grandid,string yuwen,string shuxue,string yingyu)
         {
             Curriculum find_curdata = Reconcile_Com.Curriculum_Entity.GetEntity(curNo);   //获取课程
 
@@ -1593,38 +1602,31 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
                     Reconcile r = new Reconcile();
                     //判断是否是单休
-                    if (doublecease)
-                    {
-                        //双休
-                        if (this.IsSaturday(time) == 1)
-                        {
-                            //如果是周六
-                            // r.AnPaiDate = time.AddDays(i + 2);
-                            time= time.AddDays(2);
-                            i = i + 2;
-                            Sumcout = Sumcout + 2;
-                        }
-                        //else
-                        //{
-                        //    // r.AnPaiDate = time.AddDays(i);
-                        //    time = time.AddDays(1);
-                        //}
-                    }
-                    else
+
+                    if (time.Month>=doublecease.StartmonthName && time.Month<=doublecease.EndmonthName)
                     {
                         //单休
                         if (this.IsSaturday(time) == 2)
                         {
                             //如果是周日
-                            //r.AnPaiDate = time.AddDays(i + 1);
-                            time= time.AddDays(1);
+
+                            time = time.AddDays(1);
                             i++;
                             Sumcout++;
                         }
-                        //else
-                        //{
-                        //    r.AnPaiDate = time.AddDays(i);
-                        //}
+
+                    }
+                    else
+                    {                        
+                        //双休
+                        if (this.IsSaturday(time) == 1)
+                        {
+                            //如果是周六
+                            // r.AnPaiDate = time.AddDays(i + 2);
+                            time = time.AddDays(2);
+                            i = i + 2;
+                            Sumcout = Sumcout + 2;
+                        }
                     }
                     r.AnPaiDate = time;
                     r.ClassRoom_Id = classroomid;
@@ -2032,6 +2034,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
 
         #endregion
+      
+
         /// <summary>
         /// 获取空教室
         /// </summary>

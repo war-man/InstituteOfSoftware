@@ -37,7 +37,7 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
         public DateTime Newdate { get; set; }
         /// <summary>
-        /// 课程名称
+        /// 值班老师
         /// </summary>
         public string emp_id { get; set; }
         /// <summary>
@@ -48,5 +48,22 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// 是否删除
         /// </summary>
         public bool IsDelete { get; set; }
+
+
+        public EvningSelfStudy ()
+        {
+
+        }
+
+        public EvningSelfStudy(int ClassSchedule_id,int Classroom_id,string curd_name,DateTime Anpaidate,DateTime Newdate,string emp_id,bool IsDelete)
+        {
+            this.ClassSchedule_id = ClassSchedule_id;
+            this.Classroom_id = Classroom_id;
+            this.curd_name = curd_name;
+            this.Anpaidate = Anpaidate;
+            this.Newdate = Newdate;
+            this.emp_id = emp_id;
+            this.IsDelete = IsDelete;
+        }
     }
 }

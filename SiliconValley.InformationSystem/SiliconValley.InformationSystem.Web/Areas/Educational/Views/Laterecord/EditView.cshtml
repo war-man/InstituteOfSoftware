@@ -1,0 +1,123 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity.LaterecordView
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div style="margin-top:20px;width:90%;margin-left:auto;margin-right:auto;">
+        <form class="layui-form" lay-filter="sysStudyform">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-x12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
+                    <div class="layui-input-block">
+                        <input name="Id" type="hidden" id="Id" value="@Model.Id"/>
+                        @Html.DropDownList("grand", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grandselect" } })
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
+                    <div id="childviewcurr_div" class="layui-input-block">
+                        <select id="Class_Id" name="Class_Id" class="layui-select" lay-filter="bianji"><option value="@Model.Class_Id" selected>@Model.ClassNumber</option></select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">实到人数:</label>
+                    <div id="childviewcurr_div" class="layui-input-block">
+                        <input name="PctualCout" id="PctualCout" class="layui-input" value="@Model.PersonCount"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">班主任状态:</label>
+                    <div id="childviewcurr_div" class="layui-input-block">
+                        @{
+                            if (Model.IsHavaHeadMaster == true)
+                            {
+                                <input name="IsHavaHeadMaster" id="IsHavaHeadMaster" class="layui-input" type="radio" value="false" title="不在场" />
+                                <input name="IsHavaHeadMaster" id="IsHavaHeadMaster" class="layui-input" type="radio" value="true" checked="checked" title="在场" />
+                            }
+                            else
+                            {
+                                <input name="IsHavaHeadMaster" id="IsHavaHeadMaster" class="layui-input" type="radio" value="false" title="不在场" checked="checked" />
+                                <input name="IsHavaHeadMaster" id="IsHavaHeadMaster" class="layui-input" type="radio" value="true"  title="在场" />
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">教学老师状态:</label>
+                    <div id="childviewcurr_div" class="layui-input-block">
+                        @{
+                            if (Model.IsHavaTeacher == true)
+                            {
+                                <input name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" checked="checked" title="在场" value="true" />
+                                <input name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="不在场" value="false" />
+                            }
+                            else
+                            {
+                                <input name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="在场" value="true" />
+                                <input name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="不在场" value="false" checked="checked" />
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">是否在讲PPT:</label>
+                    <div id="childviewcurr_div" class="layui-input-block">
+                        @{
+                            if (Model.IshavaPPT == true)
+                            {
+                                <input name="IshavaPPT" id="IshavaPPT" class="layui-input" checked="checked" value="true" title="在讲" />
+                                <input name="IshavaPPT" id="IshavaPPT" class="layui-input"  value="false" title="不在讲" />
+                            }
+                            else
+                            {
+                                <input name="IshavaPPT" id="IshavaPPT" class="layui-input"   value="true" title="在讲" />
+                                <input name="IshavaPPT" id="IshavaPPT" class="layui-input" checked="checked" value="false" title="不在讲" />
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="LableCss1">其他说明:</label>
+                    <div id="childteacher_div" class="layui-input-block">
+                        <textarea class="layui-textarea" name="Reak" id="Reak">@Model.Reak</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item" style="margin-top:60px;">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div style="text-align:center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="childview_add">修改</button>
+                        <input type="button" class="layui-btn" value="关闭" onclick="Myclose()" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</body>
+</html>

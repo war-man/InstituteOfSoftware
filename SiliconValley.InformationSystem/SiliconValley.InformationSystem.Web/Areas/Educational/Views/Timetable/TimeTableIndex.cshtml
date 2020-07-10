@@ -101,7 +101,6 @@
                 , skin: 'demo-class'
             });
         }
-
         function SetEvningValue(id) {
             var layer = layui.layer;
             layer.open({
@@ -170,6 +169,7 @@
                 }
             });
         });
+        //获取课表
         function GetKebiao() {
             var layer = layui.layer;
             var formdata = { "SelectTime": $("#SelectTime").val(), "campus": $(":checked").val() };       
@@ -205,7 +205,12 @@
                         var tr3 = $('<tr></tr>');
                         for (var i = 0; i < sucdata.MymongingOne.length; i++) {
                             if (sucdata.MymongingOne[i].NeiRong != null) {
-                                $('<th><span>' + sucdata.MymongingOne[i].NeiRong + '</span><span>/</span><span>' + sucdata.MymongingOne[i].Teacher + '</span></th>').appendTo(tr3);
+                                if (sucdata.MymongingOne[i].Teacher == "无" || sucdata.MymongingOne[i].Teacher == null) {
+                                    $('<th><span>' + sucdata.MymongingOne[i].NeiRong + '</span><span>').appendTo(tr3);
+                                } else {
+                                    $('<th><span>' + sucdata.MymongingOne[i].NeiRong + '</span><span>/</span><span>' + sucdata.MymongingOne[i].Teacher + '</span></th>').appendTo(tr3);
+                                }
+                                
                             } else {
                                 $('<th></th>').appendTo(tr3);
                             }
@@ -226,7 +231,12 @@
                         var tr5 = $('<tr></tr>');
                         for (var i = 0; i < sucdata.MymongingTwo.length; i++) {
                             if (sucdata.MymongingTwo[i].NeiRong != null) {
-                                $('<th><span>' + sucdata.MymongingTwo[i].NeiRong + '</span><span>/</span><span>' + sucdata.MymongingTwo[i].Teacher + '</span></th>').appendTo(tr5);
+                                if (sucdata.MymongingTwo[i].Teacher == null || sucdata.MymongingTwo[i].Teacher == "无") {
+                                    $('<th><span>' + sucdata.MymongingTwo[i].NeiRong + '</span><span>').appendTo(tr5);
+                                } else {
+                                    $('<th><span>' + sucdata.MymongingTwo[i].NeiRong + '</span><span>/</span><span>' + sucdata.MymongingTwo[i].Teacher + '</span></th>').appendTo(tr5);
+                                }
+                                 
                             } else {
                                 $('<th></th>').appendTo(tr5);
                             }
@@ -248,7 +258,12 @@
                         var tr7 = $('<tr></tr>');
                         for (var i = 0; i < sucdata.MyafternoonOne.length; i++) {
                             if (sucdata.MyafternoonOne[i].NeiRong != null) {
-                                $('<th><span>' + sucdata.MyafternoonOne[i].NeiRong + '</span><span>/</span><span>' + sucdata.MyafternoonOne[i].Teacher + '</span></th>').appendTo(tr7);
+                                if (sucdata.MyafternoonOne[i].Teacher == null || sucdata.MyafternoonOne[i].Teacher == "无") {
+                                    $('<th><span>' + sucdata.MyafternoonOne[i].NeiRong + '</span></th>').appendTo(tr7);
+                                } else {
+                                    $('<th><span>' + sucdata.MyafternoonOne[i].NeiRong + '</span><span>/</span><span>' + sucdata.MyafternoonOne[i].Teacher + '</span></th>').appendTo(tr7);
+                                }
+                                 
                             } else {
                                 $('<th></th>').appendTo(tr7);
                             }
@@ -271,7 +286,12 @@
                         var tr9 = $('<tr></tr>');
                         for (var i = 0; i < sucdata.MyafternoonTwo.length; i++) {
                             if (sucdata.MyafternoonTwo[i].NeiRong != null) {
-                                $('<th><span>' + sucdata.MyafternoonTwo[i].NeiRong + '</span><span>/</span><span>' + sucdata.MyafternoonTwo[i].Teacher + '</span></th>').appendTo(tr9);
+                                if (sucdata.MyafternoonTwo[i].Teacher == null || sucdata.MyafternoonTwo[i].Teacher == "无") {
+                                    $('<th><span>' + sucdata.MyafternoonTwo[i].NeiRong + '</span></th>').appendTo(tr9);
+                                } else {
+                                    $('<th><span>' + sucdata.MyafternoonTwo[i].NeiRong + '</span><span>/</span><span>' + sucdata.MyafternoonTwo[i].Teacher + '</span></th>').appendTo(tr9);
+                                }
+                                
                             } else {
                                 $('<th></th>').appendTo(tr9);
                             }
@@ -284,7 +304,13 @@
 
                         for (var i = 0; i < sucdata.MyngintOne.length; i++) {
                             if (sucdata.MyngintOne[i].ClassName != null) {
-                                $('<th class="item2" data-rid= ' + sucdata.MyngintOne[i].R_Id + ' > <span>' + sucdata.MyngintOne[i].ClassName + '</span><span>/' + sucdata.MyngintOne[i].Teacher + '</span></th>').appendTo(tr10);
+                                if (sucdata.MyngintOne[i].Teacher == "无" || sucdata.MyngintOne[i].Teacher == null) {
+                                    $('<th class="item2" data-rid= ' + sucdata.MyngintOne[i].R_Id + ' > <span>' + sucdata.MyngintOne[i].ClassName + '</span></th>').appendTo(tr10);
+                                   
+                                } else {
+                                    $('<th class="item2" data-rid= ' + sucdata.MyngintOne[i].R_Id + ' > <span>' + sucdata.MyngintOne[i].ClassName + '</span><span>/' + sucdata.MyngintOne[i].Teacher + '</span></th>').appendTo(tr10);
+                                }
+                                
                             } else {
                                 $('<th><i class="layui-icon iCss2">&#xe624;</i></th>').appendTo(tr10);
                             }
@@ -298,7 +324,12 @@
 
                         for (var i = 0; i < sucdata.MyngintTwo.length; i++) {
                             if (sucdata.MyngintTwo[i].ClassName != null) {
-                                $('<th class="item2" data-rid= ' + sucdata.MyngintTwo[i].R_Id + '  ><span>' + sucdata.MyngintTwo[i].ClassName + '</span><span>/' + sucdata.MyngintTwo[i].Teacher + '</span></th>').appendTo(tr11);
+                                if (sucdata.MyngintTwo[i].Teacher == "无" || sucdata.MyngintTwo[i].Teacher == null) {
+                                    $('<th class="item2" data-rid= ' + sucdata.MyngintTwo[i].R_Id + '  ><span>' + sucdata.MyngintTwo[i].ClassName + '</span></th>').appendTo(tr11);
+                                } else {
+                                    $('<th class="item2" data-rid= ' + sucdata.MyngintTwo[i].R_Id + '  ><span>' + sucdata.MyngintTwo[i].ClassName + '</span><span>/' + sucdata.MyngintTwo[i].Teacher + '</span></th>').appendTo(tr11);
+                                }
+                                 
                             } else {
                                 $('<th><i class="layui-icon iCss2">&#xe624;</i></th>').appendTo(tr11);
                             }

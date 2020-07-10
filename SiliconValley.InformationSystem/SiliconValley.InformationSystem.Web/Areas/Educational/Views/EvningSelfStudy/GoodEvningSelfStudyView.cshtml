@@ -18,15 +18,23 @@
                 <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                     <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
                     <div class="layui-input-block">
-                        @Html.DropDownList("glist", ViewBag.grlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grand" } })
+
+                        @{
+                            List<SelectListItem> list = ViewBag.grlist as List<SelectListItem>;
+                            foreach (var item in list)
+                            {
+                                <input name="glist" class="layui-col-xs3" type="checkbox" value="@item.Value" title="@item.Text" />
+                            }
+                        }
                     </div>
                 </div>
             </div>
             <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
-                    <div id="Myclass_Div" class="layui-input-block">
-
+                <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                    <label class="layui-form-label">安排类型:</label>
+                    <div class="layui-input-block">
+                        <input type="radio"   name="type" title="安排一天晚自习" value="one" lay-filter="typeradio"/>
+                        <input type="radio"   name="type" title="安排一周晚自习" value="two" lay-filter="typeradio"/>
                     </div>
                 </div>
 
@@ -34,12 +42,12 @@
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                     <label class="layui-form-label">安排日期:</label>
-                    <div class="layui-input-block">
-                        <input id="starTime" name="starTime" class="layui-input" lay-verify="required" />
+                    <div id="DateDiv" class="layui-input-block">
+                        
                     </div>
                 </div>
 
-            </div>             
+            </div>
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;margin-top:50px">
                     <button type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai_CBig">确定安排</button>
@@ -55,45 +63,48 @@
         layui.use(['form', 'laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
-            laydate.render({
-                elem: '#starTime'
-                , theme: 'molv',
-                trigger: 'click'
-                , type: 'date'
-                , range: '到'
-                , format: 'yyyy-MM-dd'
-            });            
-            form.on('select(grand)', function (data) {
-                $("#Myclass_Div")[0].innerHTML = "";
-                if (data.value != "0") {
-                    $.ajax({
-                        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
-                        success: function (sudata) {
-                            //获取班级slect
-                            for (var i = 0; i < sudata.length; i++) {
-                                $('<input name="class_changdate" class="layui-col-xs3" type="checkbox" value="' + sudata[i].id + '" title="' + sudata[i].ClassNumber + '"/>').appendTo($("#Myclass_Div"))
-                            }
-                            form.render(); //更新全部
-                        }
+            
+            form.on('radio(typeradio)', function (data) {
+ 
+                $('#DateDiv')[0].innerHTML = "";
+                if (data.value == "two") {
+                    $('<input id="starTime" name="starTime" class="layui-input" lay-verify="required"/>').appendTo($('#DateDiv'));
+                    laydate.render({
+                        elem: '#starTime'
+                        , theme: 'molv',
+                        trigger: 'click'
+                        , type: 'date'
+                        , range: '到'
+                        , format: 'yyyy-MM-dd'
+                    });   
+                } else {
+                    $('<input id="starTime" name="starTime" class="layui-input" lay-verify="required"/>').appendTo($('#DateDiv'));
+                    laydate.render({
+                        elem: '#starTime'
+                        , trigger: 'click'
                     });
                 }
-            });
-
+            });  
             //监听提交
             form.on('submit(Anpai_CBig)', function (data) {
                 var indexss = layer.load(1);
-                var check = $("input:checked");
+                var check = $("input[name='glist']:checked");
                 var checkid_Str = "";
                 for (var i = 0; i < check.length; i++) {
                     checkid_Str += $(check[i]).val() + ",";
                 }
                 var new_data = { "checkid_Str": checkid_Str, "starTime": data.field.starTime };
+
+                var myulr = '/Educational/EvningSelfStudy/GoodEvningSelfStudyFunction';
+
+                if (data.field.starTime.indexOf('到')==-1) {
+                    var myulr = '/Educational/EvningSelfStudy/GoodEvningSelftSudyFinciton2';
+                }
                 $.ajax({
-                    url: '/Educational/EvningSelfStudy/GoodEvningSelfStudyFunction',
+                    url: myulr ,
                     type: 'POST',
                     data: new_data,
                     success: function (sucdata) {
-                        //console.log(sucdata);
                         layer.close(indexss);
                         if (sucdata.Success == false) {
                             layer.msg('系统错误，请重试！！', { icon: 2 });

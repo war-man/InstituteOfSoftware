@@ -142,8 +142,10 @@
     <script type="text/html" id="Recon_toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe642;</i>全体推迟、提前课程</button>
+            <button class="layui-btn layui-btn-sm" lay-event="changGrand"><i class="layui-icon">&#xe642;</i>阶段推迟、提前课程</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData"><i class="layui-icon">&#xe642;</i>班级推迟、提前课程</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData2"><i class="layui-icon">&#xe642;</i>全体上课日期调换</button>
+            <button class="layui-btn layui-btn-sm" lay-event="grand_getCheckData"><i class="layui-icon">&#xe642;</i>阶段上课日期调换</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData3"><i class="layui-icon">&#xe642;</i>班级上课日期调换</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData"><i class="layui-icon">&#xe642;</i>修改班级上专业课时间段</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData2"><i class="layui-icon">&#xe642;</i>修改班级上专业课老师</button>
@@ -327,12 +329,25 @@
         table.on('toolbar(Recon_table)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
+                //全体调课
                 case 'getCheckData':
                     layer.open({
                         type: 2,
                         content: '/Educational/Reconcile/BigDataUpdate',
                         area: ['680px', '400px'],
                         title: '全体数据修改'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+                //阶段调课
+                case 'changGrand':
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/GrandChangDataView',
+                        area: ['680px', '400px'],
+                        title: '阶段数据修改'
                         , shade: 0.8
                         , anim: 4
                         , skin: 'demo-class'
@@ -379,6 +394,18 @@
                         content: '/Educational/Reconcile/ChangReconciledata',
                         area: ['680px', '450px'],
                         title: '全体上课日期调换'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+                case 'grand_getCheckData':
+                    //阶段日期调换
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/GrandUpdatDataView',
+                        area: ['680px', '450px'],
+                        title: '阶段上课日期调换'
                         , shade: 0.8
                         , anim: 4
                         , skin: 'demo-class'

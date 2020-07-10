@@ -29,19 +29,18 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// </summary>
         public bool IsHavaHeadMaster { get; set; }
 
-        public string HavaHeadMaster { get; set; }
+ 
         /// <summary>
         /// --任课老师是否到场
         /// </summary>
         public bool IsHavaTeacher { get; set; }
 
-        public string HavaTeacher { get; set; }
+ 
         /// <summary>
         /// --PPT是否在讲
         /// </summary>
        public bool IshavaPPT { get; set; }
-        
-        public string HavaPPT { get; set; }
+ 
         /// <summary>
         /// --应到场人数
         /// </summary>
@@ -59,9 +58,14 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// </summary>
         public DateTime Createdate { get; set; }
         /// <summary>
-        /// 创建人
+        /// 创建人（员工编号）
         /// </summary>
         public string CreateUser { get; set; }
+
+        /// <summary>
+        /// 员工姓名
+        /// </summary>
+        public string EmpName { get; set; }
 
         public static Laterecord ToEntity(LaterecordView news)
         {
