@@ -1,5 +1,6 @@
 ﻿using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
+using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Business.StudentportfolioBusiness;
@@ -134,8 +135,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
         /// 成绩
         /// </summary>
         /// <returns></returns>
-        public ActionResult Achievement()
+        public ActionResult Achievement(string id)
         {
+            ExamScoresBusiness examScoresBusiness = new ExamScoresBusiness();
+           var x= examScoresBusiness.StudentScores(id);
             return View();
         }
         /// <summary>

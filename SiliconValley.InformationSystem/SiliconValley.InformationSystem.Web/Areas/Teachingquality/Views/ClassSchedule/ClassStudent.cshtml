@@ -998,19 +998,24 @@
         });
         //升学业务
         $("#EntitAddClassSchedule").click(function () {
-            var dbase = {
-                ClassName:@Html.Raw(ViewBag.ClassID),
-            };
-            Gotoschool("/Teachingquality/ClassSchedule/EntitAddClassSchedule", dbase);
-
+            layer.confirm("确认要升学吗？升学后将不可撤回！", { title: "确认" }, function (index) {
+                var dbase = {
+                    ClassName:@Html.Raw(ViewBag.ClassID),
+                };
+                Gotoschool("/Teachingquality/ClassSchedule/EntitAddClassSchedule", dbase);
+                layer.close(index);
+            });
         });
         //S4毕业
         $("#ClassEnd").click(function () {
-            var dbase = {
+           
+           layer.confirm("确认要毕业吗？确认将无法恢复！", { title: "确认" }, function (index) {
+              var dbase = {
                 ClassID:@Html.Raw(ViewBag.ClassID),
             };
             Gotoschool("/Teachingquality/ClassSchedule/ClassEnd", dbase);
-
+                layer.close(index);
+            });
         });
     });
     $("#Basicinformation").click(function () {
