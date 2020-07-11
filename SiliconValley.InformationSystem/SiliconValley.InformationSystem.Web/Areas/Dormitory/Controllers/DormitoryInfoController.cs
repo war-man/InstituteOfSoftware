@@ -1089,6 +1089,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             try
             {
                 var querydata = dbacc_Dbben_Dbroomnumber_Dbdorm.GetSurplusbyDorminfoID(DorminfoID, datatype);
+
+                //判断床位号是否已经有人居住
+
                 BusHelper.WriteSysLog("位于Dormitory/DormitoryInfo/BedInfo", Entity.Base_SysManage.EnumType.LogType.查询数据success);
                 ajaxResult.Data = querydata;
                 ajaxResult.Success = true;
@@ -1159,7 +1162,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                     {
                         ajaxResult.Data = "";
                         ajaxResult.Success = true;
-                    }
+                    }   
                     else
                     {
                         ajaxResult.Data = "";
