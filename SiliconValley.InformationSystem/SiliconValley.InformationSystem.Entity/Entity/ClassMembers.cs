@@ -13,6 +13,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 班委
+    /// </summary>
     [Table("ClassMembers")]
     public partial class ClassMembers
     {
