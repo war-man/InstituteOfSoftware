@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 
@@ -219,10 +220,26 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             return c;
         }
         //生成学号
-        public string StudentID(string IDnumber)
+        public string StudentID(string IDnumber,string gradeName)
         {
+            if (gradeName=="S1")
+            {
+                gradeName = "2";
+            }
+            else if (gradeName=="S2")
+            {
+                gradeName="3";
+            }
+            else if (gradeName=="S3")
+            {
+                gradeName = "4";
+            }
+            else if (gradeName=="Y1")
+            {
+                gradeName = "1";
+            }
             string mingci = string.Empty;
-            DateTime date = Convert.ToDateTime(Date());
+            DateTime date = Convert.ToDateTime(DateTime.Now);//Date()
             //当前年份
             string n = date.Year.ToString().Substring(2);//获取年份
             //学员总数Mylist("StudentInformation")
@@ -232,13 +249,13 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             // string count = Count().ToString();
             string count = laststr.ToString();
             if (count.Length < 2)
-                mingci = "0000" + count;
+                mingci = gradeName+"000" + count;
             else if (count.Length < 3)
-                mingci = "000" + count;
+                mingci = gradeName+"00" + count;
             else if (count.Length < 4)
-                mingci = "00" + count;
+                mingci = gradeName+"0" + count;
             else if (count.Length < 5)
-                mingci = "0" + count;
+                mingci = gradeName + count;
             else mingci = count;
             string xuehao = n + y + sfz + mingci;
             return xuehao;
@@ -263,16 +280,19 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             }
 
         }
-     
+
         /// <summary>
         /// 注册学员
         /// </summary>
         /// <param name="studentInformation">学员数据对象</param>
         /// <param name="List">班级id</param>
         /// <param name="NameKeysid">备案id</param>
+        /// <param name="grade_Id">阶段id</param>
         /// <returns></returns>
-        public AjaxResult StudfentEnti(StudentInformation studentInformation, int List, int NameKeysid)
+        public AjaxResult StudfentEnti(StudentInformation studentInformation, int List, int NameKeysid,string gradeName)
         {
+            //阶段
+            GrandBusiness Grandcontext = new GrandBusiness();
             //学员班级
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
             AjaxResult result = null;
@@ -282,7 +302,7 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
                 {
                     
                     
-                    studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
+                    studentInformation.StudentNumber = StudentID(studentInformation.identitydocument, gradeName);
                     studentInformation.InsitDate = DateTime.Now;
                     studentInformation.Password = "000000";
                     studentInformation.StudentPutOnRecord_Id = NameKeysid;
@@ -323,6 +343,20 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
                 result.Msg = "身份证重复";
             }
             return result;
+        }
+        /// <summary>
+        /// 验证是否注册
+        /// </summary>
+        /// <param name="id">备案id</param>
+        /// <returns></returns>
+        public bool IsRegister(int id)
+        {
+           var x= this.GetList().Where(a => a.StudentPutOnRecord_Id == id).FirstOrDefault();
+            if (x==null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     public partial class StudentInformation
     {
         /// <summary>
-        /// 学号
+        /// 学号后面五位的第一位1为预科班，2为初s1，3为s2.，4为s3
         /// </summary>
         [Key]
         public string StudentNumber { get; set; }
@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 身份证号
         /// </summary>
-     
+       
         public string identitydocument { get; set; }
         /// <summary>
         /// 电话号码

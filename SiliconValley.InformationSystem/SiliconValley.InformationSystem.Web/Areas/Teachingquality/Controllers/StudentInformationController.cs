@@ -1284,6 +1284,147 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return null;
            
         }
+        /// <summary>
+        /// 改学号
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Text7()
+        {
+            List<StudentInformation> studentInformation = new List<StudentInformation>();
+            List<ScheduleForTrainees> scheduleForTrainees = new List<ScheduleForTrainees>();
+          var x=  dbtext.GetListBySql<StudentInformation>("select * from StudentInformation").ToList();
+            foreach (var item in x)
+            {
+                scheduleForTrainees.Add(Stuclass.GetListBySql<ScheduleForTrainees>("select * from ScheduleForTrainees where StudentID='" + item.StudentNumber + "'").OrderBy(a => a.ID).FirstOrDefault());
+            }
+
+            foreach (var item in scheduleForTrainees)
+            {
+                var GrandName = classschedu.ClassGrand(item.ID_ClassName).GrandName;
+                var student = dbtext.GetListBySql<StudentInformation>("select * from StudentInformation where StudentNumber='" + item.StudentID+"'").FirstOrDefault();
+                if (GrandName == "S1")
+                {
+                    GrandName = "2";
+                }
+                else if (GrandName == "S2")
+                {
+                    GrandName = "3";
+                }
+                else if (GrandName == "S3")
+                {
+                    GrandName = "4";
+                }
+                else if (GrandName == "Y1")
+                {
+                    GrandName = "1";
+                }
+
+              var nyr=  student.StudentNumber.Substring(0, student.StudentNumber.Length - 5);
+                var wei = student.StudentNumber.Substring(student.StudentNumber.Length - 4);
+                student.StudentNumber = nyr + GrandName + wei;
+                studentInformation.Add(student);
+            }
+            // dbtext.Update(studentInformation);
+            dbtext.Update(studentInformation);
+            x = studentInformation;
+            scheduleForTrainees = new List<ScheduleForTrainees>();
+            foreach (var item in x)
+            {
+              var z=  Stuclass.GetListBySql<ScheduleForTrainees>("select * from ScheduleForTrainees where identitydocument='" + item.identitydocument + "'").ToList();
+                foreach (var item1 in z)
+                {
+                    item1.StudentID = item.StudentNumber;
+                    scheduleForTrainees.Add(item1);
+                }
+            }
+
+         
+            Stuclass.Update(scheduleForTrainees);
+            return null;
+           
+        }
+
+        public ActionResult Text8()
+        {
+            BaseBusiness<DetailedStudentIn> a1 = new BaseBusiness<DetailedStudentIn>();
+            BaseBusiness<ClassMembers> a2 = new BaseBusiness<ClassMembers>();
+            BaseBusiness<ClassDynamics> a3 = new BaseBusiness<ClassDynamics>();
+            BaseBusiness<ApplicationDropout> a4 = new BaseBusiness<ApplicationDropout>();
+            BaseBusiness<ApplicationRepair> a5 = new BaseBusiness<ApplicationRepair>();
+            BaseBusiness<Expels> a6 = new BaseBusiness<Expels>();
+            BaseBusiness<Transfer> a7 = new BaseBusiness<Transfer>();
+            BaseBusiness<StudentFeeRecord> a8 = new BaseBusiness<StudentFeeRecord>();
+            BaseBusiness<InterviewStudents> a9 = new BaseBusiness<InterviewStudents>();
+            BaseBusiness<Payview> a10 = new BaseBusiness<Payview>();
+            var x = dbtext.GetListBySql<StudentInformation>("select * from StudentInformation").ToList();
+            foreach (var item in x)
+            {
+                var nyr = item.StudentNumber.Substring(0, item.StudentNumber.Length - 5);
+                var wei = item.StudentNumber.Substring(item.StudentNumber.Length - 4);
+               string stuid = nyr + "0" + wei;
+                var x1 = a1.GetList().Where(a => a.StudentID == stuid).ToList();
+                foreach (var item1 in x1)
+                {
+                    item1.StudentID = item.StudentNumber;
+                    a1.Update(item1);
+                }
+                var x2 = a2.GetList().Where(a => a.Studentnumber == stuid).ToList();
+                foreach (var item1 in x2)
+                {
+                    item1.Studentnumber = item.StudentNumber;
+                    a2.Update(item1);
+                }
+                var x3 = a3.GetList().Where(a => a.Studentnumber == stuid).ToList();
+                foreach (var item1 in x3)
+                {
+                    item1.Studentnumber = item.StudentNumber;
+                    a3.Update(item1);
+                }
+                var x4 = a4.GetList().Where(a => a.Studentnumber == stuid).ToList();
+                foreach (var item1 in x4)
+                {
+                    item1.Studentnumber = item.StudentNumber;
+                    a4.Update(item1);
+                }
+                var x5 = a5.GetList().Where(a => a.StudentID == stuid).ToList();
+                foreach (var item1 in x5)
+                {
+                    item1.StudentID = item.StudentNumber;
+                    a5.Update(item1);
+                }
+                var x6 = a6.GetList().Where(a => a.Studentnumber == stuid).ToList();
+                foreach (var item1 in x6)
+                {
+                    item1.Studentnumber = item.StudentNumber;
+                    a6.Update(item1);
+                }
+                var x7 = a7.GetList().Where(a => a.Studentnumber == stuid).ToList();
+                foreach (var item1 in x7)
+                {
+                    item1.Studentnumber = item.StudentNumber;
+                    a7.Update(item1);
+                }
+                var x8 = a8.GetList().Where(a => a.StudenID == stuid).ToList();
+                foreach (var item1 in x8)
+                {
+                    item1.StudenID = item.StudentNumber;
+                    a8.Update(item1);
+                }
+                var x9 = a9.GetList().Where(a => a.StudentNumberID == stuid).ToList();
+                foreach (var item1 in x9)
+                {
+                    item1.StudentNumberID = item.StudentNumber;
+                    a9.Update(item1);
+                }
+                var x10 = a10.GetList().Where(a => a.StudenID == stuid).ToList();
+                foreach (var item1 in x10)
+                {
+                    item1.StudenID = item.StudentNumber;
+                    a10.Update(item1);
+                }
+            }
+            return null;
+        }
 
         public void GetObject(BosClient client, String bucketName, String objectKey)
         {

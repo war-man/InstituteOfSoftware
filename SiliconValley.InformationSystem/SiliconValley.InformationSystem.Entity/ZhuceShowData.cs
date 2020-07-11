@@ -42,5 +42,9 @@ namespace SiliconValley.InformationSystem.Entity
         public string Class_ID { get; set; }
 
         public bool YesHei { get; set; }
+        /// <summary>
+        /// 阶段名称
+        /// </summary>
+        public string gradeName { get; set; }
     }
 }

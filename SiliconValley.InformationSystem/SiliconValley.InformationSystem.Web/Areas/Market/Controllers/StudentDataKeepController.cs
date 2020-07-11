@@ -1461,7 +1461,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     return Json(a, JsonRequestBehavior.AllowGet);
                 }
 
-                a = informationBusiness.StudfentEnti(student, Convert.ToInt32(data.Class_ID), Convert.ToInt32(data.Id));
+                a = informationBusiness.StudfentEnti(student, Convert.ToInt32(data.Class_ID), Convert.ToInt32(data.Id), data.gradeName);
                 
             }
             else
