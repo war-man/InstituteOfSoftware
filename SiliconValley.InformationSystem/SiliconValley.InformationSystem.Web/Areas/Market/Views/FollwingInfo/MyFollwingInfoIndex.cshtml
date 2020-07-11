@@ -66,6 +66,9 @@
     display:inline-block;
         width:150px;
     }
+    .FontClor{
+    color:red;
+    }
 </style>
 
  
@@ -220,6 +223,15 @@
                     , { field: 'StatusName', title: '学生状态', width: 80 }
                     , { field: 'MarketType', title: '市场类型', width: 60 }
                     , { field: 'StuEntering', title: '录入人员', width: 100 }
+                    , {
+                        field: 'Iszhuce', title: '是否注册学号', width: 30, templet: function (res) {
+                            if (res.Iszhuce == true) {
+                                return '是';
+                            } else {
+                                return '<lable class="FontClor">否</lable>'
+                            }
+                        }
+                    }
                     , { field: 'BeanDate', title: '备案日期', width: 120, templet: function (res) { return TimeChange(res.BeanDate); } }
                     , { field: 'CountBeanDate', title: '分量日期', templet: function (res) { return TimeChange(res.BeanDate); }, width: 120 }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }

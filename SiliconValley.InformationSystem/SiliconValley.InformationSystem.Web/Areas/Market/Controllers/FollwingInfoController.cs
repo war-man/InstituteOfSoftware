@@ -13,6 +13,7 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -472,7 +473,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //第一次获取数据
         public ActionResult OneTableData(int limit ,int page)
         {
-            ConsultTeacher = new ConsultTeacherManeger();
+            StudentInformationBusiness stu = new StudentInformationBusiness();
+           ConsultTeacher = new ConsultTeacherManeger();
  
              //获取当前上传的操作人
              Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
@@ -508,11 +510,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 MarketType = l.MarketType,
                 StuQQ = l.StuQQ,
                 ConsultTeacher = l.ConsultTeacher,
-                CountBeanDate = CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
+                CountBeanDate = CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate,
+                Iszhuce= stu.IsRegister(l.Id)
             }).ToList();
             var data = new { data = mydata, count = CM_Entity.Count(f_id), code = 0, msg = "" };
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+
+
     }
 }

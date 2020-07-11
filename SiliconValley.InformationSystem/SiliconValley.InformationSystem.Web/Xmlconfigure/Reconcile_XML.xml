@@ -8,4 +8,12 @@
     <startmonth>5</startmonth>
     <endmonth>9</endmonth>
   </Year>
+  <Year name="2021">
+    <startmonth>6</startmonth>
+    <endmonth>9</endmonth>
+  </Year>
+  <Year name="2022">
+    <startmonth>6</startmonth>
+    <endmonth>9</endmonth>
+  </Year>
 </GetYear>
