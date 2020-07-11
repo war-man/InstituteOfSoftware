@@ -538,6 +538,11 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             return a;
         }
 
+        /// <summary>
+        /// 编辑数据
+        /// </summary>
+        /// <param name="olds"></param>
+        /// <returns></returns>
         public bool My_update(StudentPutOnRecord olds)
         {
             bool s = true;
@@ -545,7 +550,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             {
                 this.Update(olds);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 s = false;
                 
@@ -828,7 +833,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where StudentName='双振撼' and Phone='13762627762'";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where  StudentName ='郭吉鹏' and SalePerson='陈亚红'";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
 

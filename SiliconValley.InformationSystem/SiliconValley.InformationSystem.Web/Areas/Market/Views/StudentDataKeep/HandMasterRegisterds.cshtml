@@ -8,6 +8,13 @@
     width:200px;
     display:inline-block;
     }
+
+    body .demo-class .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
 </style>
 <div>
     <form class="layui-form">
@@ -30,8 +37,9 @@
 <table id="tabletest1" lay-filter="tabletest1"></table>
 
 <script type="text/html" id="toolbarDemo1">
-    <div class="layui-btn-container">        
+    <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
+        <button class="layui-btn layui-btn-sm" onclick="Updat()"> <i class="layui-icon">&#xe714;</i> 修改数据</button>
     </div>
 </script>
 
@@ -94,7 +102,43 @@
         });
     });
 
+    //这是修改备案姓名或性别的刷新页面方法
+    function TableFulsh () {
+        layui.use('table', function () {
+            var table = layui.table;
+            var findNamevalue = $("#findNamevalue").val();
+            var findPhonevalue = $("#findPhonevalue").val();
+            table.reload('tabletest1', {
+                url: '/Market/StudentDataKeep/GetTableData'
+                , where: { 'findName': findNamevalue, 'findPhone': findPhonevalue, 'limit': 20, 'page': 1 }
+            });
+        });
+    }
+
+    function Updat() {
+        layui.use(['layer','table'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var checkStatus = table.checkStatus('tabletest1');
+
+            if (checkStatus.data.length <= 0 || checkStatus.data.length>1) {
+                layer.msg('只能选择一条备案数据', { icon: 2, shade: 0.8 });
+            } else{
+                layer.open({
+                    type: 2
+                    , content: '/Market/StudentDataKeep/UpDataStudentName/' + checkStatus.data[0].Id
+                    , area: ['600px', '320px']
+                    , title: '修改备案数据页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            }
+             
+        });
+    }
 
     
+
 </script>
 

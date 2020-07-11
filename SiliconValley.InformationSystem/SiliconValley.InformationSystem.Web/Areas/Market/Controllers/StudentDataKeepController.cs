@@ -46,7 +46,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     [CheckLogin]
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/
+        // GET: /Market/StudentDataKeep/UpDataStudentFunction
 
         #region 创建实体
 
@@ -1357,7 +1357,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #region 远程数据导入       
         public ActionResult InlocalServer()
         {
-            //s_Entity.UpdateAre();
+            s_Entity.InServer();
             //s_Entity.FF();
             return null;
         }
@@ -1515,6 +1515,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        
+        public ActionResult UpDataStudentName(int id)
+        {
+           ExportStudentBeanData data= s_Entity.findId(id.ToString());
+            return View(data);
+        }
+
+        /// <summary>
+        /// 修改学生姓名跟性别
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UpDataStudentFunction(ExportStudentBeanData news)
+        {
+            AjaxResult a = new AjaxResult();
+            if (news.Id>=54118)
+            {
+                StudentPutOnRecord findata= s_Entity.whereStudentId(news.Id);
+                findata.StuName = news.StuName;
+                findata.StuSex = news.StuSex;
+                a.Success= s_Entity.My_update(findata);
+                a.Msg = "操作成功！！！";
+            }
+            else
+            {
+               Sch_Market findata= s_Entity.whereMarketId(news.Id);
+                findata.StudentName = news.StuName;
+                findata.Sex = news.StuSex;
+                a= s_Entity.s_entity.MyUpdate(findata);
+
+            }
+
+            return Json(a,JsonRequestBehavior.AllowGet);
         }
         #endregion
 
