@@ -1871,6 +1871,9 @@
     <Content Include="Areas\Educational\Views\Laterecord\EditView.cshtml" />
     <Content Include="Areas\Educational\Views\Laterecord\insertView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\UpDataStudentName.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\GrandChangDataView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\GrandUpdatDataView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\SysView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

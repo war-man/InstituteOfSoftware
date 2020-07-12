@@ -159,7 +159,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         }
 
         /// <summary>
-        /// 安排一周的晚自习
+        /// 安排一天的晚自习
         /// </summary>
         /// <returns></returns>
         [HttpPost]

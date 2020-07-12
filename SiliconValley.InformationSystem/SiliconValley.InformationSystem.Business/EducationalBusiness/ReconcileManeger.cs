@@ -2123,15 +2123,31 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
          public List<Reconcile> SysclassStuty(List<ClassSchedule> myclass, List<EmtyClassroom> classrooms,DateTime date)
         {
             List<Reconcile> list = new List<Reconcile>();
+             
+            string str = @"select * from ReconcileView where Curriculum_Id like '语文' or Curriculum_Id like '数学' or Curriculum_Id like '英语' or
+Curriculum_Id like '职素' or Curriculum_Id like '班会' or Curriculum_Id like '军事'";
+            List<ReconcileView> all = this.GetListBySql<ReconcileView>(str);
+            all = all.Where(a=>a.AnPaiDate==date).ToList();
+
+            for (int i = 0; i < myclass.Count; i++)
+            {
+                //判断班级是否安排了英语，数学，语文，班会，职素，军事,如果安排了，就不需要自习了       
+                int findcount = all.Where(a => a.ClassSchedule_Id == myclass[i].id).ToList().Count;
+                if (findcount > 0)
+                {
+                    myclass.Remove(myclass[i]);
+                }
+            }
             int count = myclass.Count;
             for (int i = 0; i < classrooms.Count; i++)
             {
-                if (i< count)
-                {
+               int j =i;
+                if (j< count)
+                {                                                                                                       
                     Reconcile r = new Reconcile();
                     r.AnPaiDate = date;
                     r.ClassRoom_Id = classrooms[i].ClassroomId;
-                    r.ClassSchedule_Id = myclass[i].id;
+                    r.ClassSchedule_Id = myclass[j].id;
                     r.Curriculum_Id = "自习";
                     r.Curse_Id = classrooms[i].Time;
                     r.EmployeesInfo_Id = null;
@@ -2144,6 +2160,28 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// 去掉重复的数据
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public List<Reconcile> DeleteOrrdieData(List<Reconcile> list)
+        {
+            List<ReconcileView> Rlist = this.SQLGetReconcileDate();
+            List<Reconcile> newdata = new List<Reconcile>();
+            foreach (Reconcile item in list)
+            {
+               int count= Rlist.Where(r => r.AnPaiDate == item.AnPaiDate && r.ClassSchedule_Id == item.ClassSchedule_Id && r.Curriculum_Id == item.Curriculum_Id).Count();
+
+                if (count<=0)
+                {
+                    newdata.Add(item);
+                }
+            }
+
+            return newdata;
         }
         #endregion
     }

@@ -72,6 +72,7 @@
             <div class="layui-col-sm4" style="margin-left:20px">
                 <button type="button" class="layui-btn" onclick="GetKebiao()">获取课表</button>
                 <button type="button" class="layui-btn" onclick="SysStudy()">安排自习课</button>
+                <button type="button" class="layui-btn" onclick="AnpaiStuyEvning()">阶段安排晚自习</button>
             </div>
         </div>
     </form>
@@ -439,7 +440,37 @@
             });
         }
 
+        function AnpaiStuyEvning() {
+            layui.use('layer', function () {
+                layer.open({
+                    type: 2,
+                    content: '/Educational/EvningSelfStudy/GoodEvningSelfStudyView',
+                    area: ['600px', '450px'],
+                    title: '阶段安排晚自习页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            });
+             
+        }
 
+        function Myopen(str) {
+            var layer = layui.layer;
+            //示范一个公告层
+            layer.open({
+                type: 1
+                , title: false //不显示标题栏
+                , closeBtn: false
+                , area: ['600px', '650px']
+                , skin: 'layui-layer-demo'
+                , shade: 0.8
+                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                , btn: ['知道了']
+                , moveType: 1 //拖拽模式，0或者1
+                , content: str
+            });
+        }
     </script>
 }
 

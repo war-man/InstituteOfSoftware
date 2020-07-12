@@ -1215,10 +1215,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
             List<Reconcile> listr = Reconcile_Entity.SysclassStuty(cla2,one, date);
             listr.AddRange(Reconcile_Entity.SysclassStuty(cla1, two, date));
-
+            listr = Reconcile_Entity.DeleteOrrdieData(listr);
            AjaxResult a= Reconcile_Entity.AddData(listr);
             return Json(a,JsonRequestBehavior.AllowGet);
         }
+        
         
         /// <summary>
         /// 安排自习页面

@@ -99,12 +99,13 @@
                 });
                 var data1 = form.val("sysStudyform");
                 data1.grands = str;
- 
+               var myindexsof= layer.load(1);
                 $.ajax({
                     url: '/Educational/Reconcile/SystemMyseltStudey',
                     type: 'POST',
                     data:data1,
                     success: function (suc) {
+                        layer.close(myindexsof);
                         if (suc.Success == true) {
                             layer.msg(suc.Msg, { icon: 1 });
                             window.parent.GetKebiao();
