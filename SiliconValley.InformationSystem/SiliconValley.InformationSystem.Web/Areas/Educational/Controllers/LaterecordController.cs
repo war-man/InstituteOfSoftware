@@ -12,10 +12,11 @@ using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
+    [CheckLogin]
     public class LaterecordController : Controller
     {
         private LaterecordManeger leatercord_Entity = new LaterecordManeger();
-        // GET: Educational/Laterecord
+        // GET: Educational/Laterecord/LaterecordIndex
         public ActionResult LaterecordIndex()
         {
             return View();
@@ -41,7 +42,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 Reak=l.Reak,
             });
 
-            return null;
+            var jsondata = new { code=0,data=data,count=list.Count};
+            return Json(jsondata,JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult insertView()

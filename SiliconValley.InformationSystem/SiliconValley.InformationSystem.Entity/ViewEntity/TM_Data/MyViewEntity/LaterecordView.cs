@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
         /// <summary>
         /// --班级名称
         /// </summary>
-        public bool ClassNumber { get; set; }
+        public string ClassNumber { get; set; }
         /// <summary>
         /// --班主任是否到场
         /// </summary>

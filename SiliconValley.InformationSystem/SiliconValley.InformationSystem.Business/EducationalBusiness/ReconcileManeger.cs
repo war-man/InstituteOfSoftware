@@ -2128,17 +2128,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 Curriculum_Id like '职素' or Curriculum_Id like '班会' or Curriculum_Id like '军事'";
             List<ReconcileView> all = this.GetListBySql<ReconcileView>(str);
             all = all.Where(a=>a.AnPaiDate==date).ToList();
-
+            List<ClassSchedule> myclass2 = new List<ClassSchedule>();
             for (int i = 0; i < myclass.Count; i++)
             {
                 //判断班级是否安排了英语，数学，语文，班会，职素，军事,如果安排了，就不需要自习了       
-                int findcount = all.Where(a => a.ClassSchedule_Id == myclass[i].id).ToList().Count;
-                if (findcount > 0)
+               List<ReconcileView> finddata = all.Where(a => a.ClassSchedule_Id == myclass[i].id).ToList();
+                if (finddata.Count <= 0)
                 {
-                    myclass.Remove(myclass[i]);
+                    myclass2.Add(myclass[i]);
                 }
             }
-            int count = myclass.Count;
+            int count = myclass2.Count;
             for (int i = 0; i < classrooms.Count; i++)
             {
                int j =i;
@@ -2147,7 +2147,7 @@ Curriculum_Id like '职素' or Curriculum_Id like '班会' or Curriculum_Id like
                     Reconcile r = new Reconcile();
                     r.AnPaiDate = date;
                     r.ClassRoom_Id = classrooms[i].ClassroomId;
-                    r.ClassSchedule_Id = myclass[j].id;
+                    r.ClassSchedule_Id = myclass2[j].id;
                     r.Curriculum_Id = "自习";
                     r.Curse_Id = classrooms[i].Time;
                     r.EmployeesInfo_Id = null;
