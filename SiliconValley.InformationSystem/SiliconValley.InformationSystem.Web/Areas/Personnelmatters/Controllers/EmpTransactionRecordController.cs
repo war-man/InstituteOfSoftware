@@ -387,53 +387,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
                     if (ajaxresult.Success)
                     {
-                        var dname = empmanage.GetDept(emp.PositionId).DeptName;
-                        var pname = empmanage.GetPosition(emp.PositionId).PositionName;
-                        if (dname.Equals("就业部"))
-                        {
-                            EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
-                            bool es = esmanage.DelEmploystaff(emp.EmployeeId);
-                            ajaxresult.Success = es;
-                        }
-                        if (dname.Equals("市场部"))
-                        {
-                            ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
-                            bool cs = csmanage.DelChannelStaff(emp.EmployeeId);
-                            ajaxresult.Success = cs;
-                        }
-                        if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && !pname.Equals("教官"))
-                        {
-                            HeadmasterBusiness hmmanage = new HeadmasterBusiness();
-                            bool hm = hmmanage.removeHeadmaster(emp.EmployeeId);
-                            ajaxresult.Success = hm;
-                        }
-                        if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官"))
-                        {
-                            InstructorListBusiness itmanage = new InstructorListBusiness();
-                            bool hm = itmanage.RemoveInstructorList(emp.EmployeeId);
-                            ajaxresult.Success = hm;
-                        }
-                        if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
-                        {
-                            ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
-                            bool s = cmanage.DeltConsultTeacher(emp.EmployeeId);
-                            ajaxresult.Success = s;
-                        }
-                        if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部") || dname.Equals("s4教学部"))
-                        {
-                            TeacherBusiness teamanage = new TeacherBusiness();
-                            bool s = teamanage.dimission(emp.EmployeeId);
-                            ajaxresult.Success = s;
-                        }
-                        if (dname.Equals("财务部"))
-                        {
-                            FinanceModelBusiness fmmanage = new FinanceModelBusiness();
-                            bool s = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
-                            ajaxresult.Success = s;
-                        }
-                        StaffAccdationBusiness sdmanae = new StaffAccdationBusiness();
-                        bool mysd = sdmanae.DelStaffacc(emp.EmployeeId);
-                        ajaxresult.Success = mysd;
+                        bool result = empmanage.DelEmpToCorrespondingDept(emp);//将对应的部门员工表状态也改变                                                                                         
+                        ajaxresult.Success = result;
                     }
 
                 }
@@ -483,7 +438,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 {
                     if (ajaxresult.Success)
                     {
-                        if (emp.PositiveDate == null)
+                        if (string.IsNullOrEmpty(emp.PositiveDate.ToString()))
                         {
                             emp.ProbationSalary = etr.PresentSalary;
                         }
@@ -511,7 +466,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             {
                                 ese.PerformancePay = 500;
                             }
-                            if (emp.PositiveDate == null)
+                            if (string.IsNullOrEmpty(emp.PositiveDate.ToString()))
                             {
                                 ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
                             }
@@ -522,12 +477,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             esemanage.Update(ese);
                             rc.RemoveCache("InRedisESEData");
                             ajaxresult = esemanage.Success();
+                            if (ajaxresult.Success) {
+                                if (etr.PreviousDept!=etr.PresentDept) {
+                                    ajaxresult.Success = empmanage.AddEmpToCorrespondingDept(emp);
+                                }
+                            }
                         }
                     }
-                } else if (mtname.Equals("加薪")) {
+                }
+                else if (mtname.Equals("加薪")) {
                     if (ajaxresult.Success) {
                         //异动添加成功后将员工表中的员工工资也改变
-                        if (emp.PositiveDate == null)
+                        if (string.IsNullOrEmpty(emp.PositiveDate.ToString()))
                         {
                             emp.ProbationSalary = etr.PresentSalary;
                         }
@@ -535,7 +496,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         {
                             emp.Salary = etr.PresentSalary;
                         }
-                        emp.PositionId = (int)etr.PresentPosition;
+
                         empmanage.Update(emp);
                         rc.RemoveCache("InRedisEmpInfoData");
                         ajaxresult = empmanage.Success();
@@ -544,11 +505,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         {
                             EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
                             var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
-                            if (emp.PositiveDate == null)
+                            if (string.IsNullOrEmpty(emp.PositiveDate.ToString()))
                             {
-                                var mysalary = emp.Salary - emp.ProbationSalary;
                                 ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary;
-                                emp.Salary = emp.ProbationSalary + mysalary;
                             }
                             else
                             {
@@ -564,7 +523,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             ajaxresult = esemanage.Success();
                         }
                     }
-                } else if (mtname.Equals("续签")) {
+                }
+                else if (mtname.Equals("续签")) {
                     
                     emp.ContractStartTime = etr.AfterContractStartTime;
                     emp.ContractEndTime = etr.AfterContractEndTime;
