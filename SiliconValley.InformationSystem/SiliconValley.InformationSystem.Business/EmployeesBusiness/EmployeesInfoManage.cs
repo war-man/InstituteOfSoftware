@@ -385,6 +385,55 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         }
 
 
+
+        /// <summary>
+        /// 员工离职将对应的部门员工状态改变(删除)
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <returns></returns>
+        public bool DelEmpToCorrespondingDept(EmployeesInfo emp) {
+            bool result = true;
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var dname = empmanage.GetDept(emp.PositionId).DeptName;
+            var pname = empmanage.GetPosition(emp.PositionId).PositionName;
+            if (dname.Equals("就业部"))
+            {
+                EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
+                result = esmanage.DelEmploystaff(emp.EmployeeId);
+            }
+            if (dname.Equals("市场部"))
+            {
+                ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
+                result = csmanage.DelChannelStaff(emp.EmployeeId);
+            }
+            if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && !pname.Equals("教官"))
+            {
+                HeadmasterBusiness hmmanage = new HeadmasterBusiness();
+                result = hmmanage.removeHeadmaster(emp.EmployeeId);
+            }
+            if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官")||dname.Equals("教导大队"))
+            {
+                InstructorListBusiness itmanage = new InstructorListBusiness();
+                result = itmanage.RemoveInstructorList(emp.EmployeeId);
+            }
+            if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
+            {
+                ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
+                result = cmanage.DeltConsultTeacher(emp.EmployeeId);
+            }
+            if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部") || dname.Equals("s4教学部"))
+            {
+                TeacherBusiness teamanage = new TeacherBusiness();
+                result = teamanage.dimission(emp.EmployeeId);
+            }
+            if (dname.Equals("财务部"))
+            {
+                FinanceModelBusiness fmmanage = new FinanceModelBusiness();
+                result = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
+            }
+            return result;
+        }
+
         /// <summary>
         /// 将导过来的excel数据赋给考勤视图类中
         /// </summary>
@@ -942,10 +991,10 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                 etrview.AfterContractEndTime = item.AfterContractEndTime;
 
                 etrview.Transactionname = mtmanage.GetEntity(item.TransactionType).MoveTypeName;
-                etrview.beforedname = this.GetDeptById((int)item.PreviousDept).DeptName;
-                etrview.beforepname = this.GetPobjById((int)item.PreviousPosition).PositionName;
-                etrview.afterdname = this.GetDeptById((int)item.PresentDept).DeptName;
-                etrview.afterpname = this.GetPobjById((int)item.PresentPosition).PositionName;
+                etrview.beforedname =item.PreviousDept==null?null:this.GetDeptById((int)item.PreviousDept).DeptName;
+                etrview.beforepname =item.PreviousPosition==null?null:this.GetPobjById((int)item.PreviousPosition).PositionName;
+                etrview.afterdname =item.PresentDept==null?null:this.GetDeptById((int)item.PresentDept).DeptName;
+                etrview.afterpname =item.PresentPosition==null?null: this.GetPobjById((int)item.PresentPosition).PositionName;
                 etrview.ename = this.GetInfoByEmpID(item.EmployeeId).EmpName;
                 etrview.EntryTime = this.GetInfoByEmpID(item.EmployeeId).EntryTime;
                 etrviewlist.Add(etrview);

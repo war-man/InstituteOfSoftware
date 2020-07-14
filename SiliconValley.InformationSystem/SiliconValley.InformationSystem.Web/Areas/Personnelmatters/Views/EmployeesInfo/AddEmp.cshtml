@@ -36,7 +36,9 @@
         .linu {
             height: 120px;
         }
-
+        .needTextColor {
+            color: red
+        }
     </style>
 </head>
 <body>
@@ -47,7 +49,7 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">姓名:</label>
+                        <label class="layui-form-label needTextColor">姓名:</label>
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.EmpName, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
                         </div>
@@ -62,7 +64,7 @@
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">钉钉工号:</label>
+                        <label class="layui-form-label needTextColor">钉钉工号:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.DDAppId, new Dictionary<string, object>() { { "lay-verify", "required|number|CheckDDNum" }, { "placeholder", "请输入员工钉钉号" }, { "class", "layui-input" } })
                         </div>
@@ -72,7 +74,7 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">所属部门:</label>
+                        <label class="layui-form-label needTextColor">所属部门:</label>
                         <div class="layui-input-block">
                             <select name="deptid" id="deptid" lay-filter="deptidfilter" lay-verify="required">
                                 <option value="-1">请选择所属部门</option>
@@ -82,7 +84,7 @@
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">所属岗位:</label>
+                        <label class="layui-form-label needTextColor">所属岗位:</label>
                         <div class="layui-input-block">
                             <select name="PositionId" id="PositionId" lay-verify="required" lay-search="">
                                 <option value="-1">请先选择所属部门</option>
@@ -101,21 +103,21 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">手机号码:</label>
+                        <label class="layui-form-label needTextColor">手机号码:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.Phone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入电话号码" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">身份证号:</label>
+                        <label class="layui-form-label needTextColor">身份证号:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.IdCardNum, new Dictionary<string, object>() { { "lay-verify", "required|myIdCardNum" }, { "placeholder", "请输入身份证号" }, { "class", "layui-input " } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">入职时间:</label>
+                        <label class="layui-form-label needTextColor">入职时间:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.EntryTime, new Dictionary<string, object>() { { "lay-verify", "required|EntryTime" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
@@ -251,7 +253,7 @@
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">转正后工资:</label>
+                        <label class="layui-form-label needTextColor">转正后工资:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.Salary, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入转正工资" }, { "class", "layui-input salary" } })
                         </div>
