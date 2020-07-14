@@ -138,7 +138,7 @@
         table.render({
             elem: '#TeacherNight_table'
             , url: '/Educational/TeacherNight/TeacherTableData'
-            , toolbar: '#toolbarDemo_Night' //开启头部工具栏，并为其绑定左侧模板
+            , toolbar: '#toolbarDemo_Night' 
             , cols: [[
                 { type: 'radio' }
                 , {
@@ -146,15 +146,10 @@
                         return TimeChange(res.OrwatchDate);
                     }
                 }
-                , { field: 'TearcherName', title: '值班老师' }
+                , { field: 'EmpName', title: '值班老师' }
                 , { field: 'ClassNumber', title: '班级' }
                 , { field: 'ClassroomName', title: '教室' }
                 , { field: 'timename', title: '值班时间段' }
-                , {
-                    field: 'AttendDate', title: '安排日期', templet: function (res) {
-                        return TimeChange(res.AttendDate);
-                    }
-                }
                 , { field: 'Rmark', title: '备注' }
                 , { fixed: 'right', title: '操作', toolbar: '#barDemo_Night', width: 150 }
             ]]

@@ -15,33 +15,31 @@
     <div style="margin-top:20px;width:90%;margin-left:auto;margin-right:auto;">
         <form class="layui-form" lay-filter="sysStudyform">
             <div class="layui-row layui-form-item">
-                <div class="layui-col-x12 layui-col-sm12 layui-col-md12">
+                <div class="layui-col-x6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
                     <div class="layui-input-block">
-                        <input name="Id" type="hidden" id="Id" value="@Model.Id"/>
+                        <input name="Id" type="hidden" id="Id" value="@Model.Id" />
                         @Html.DropDownList("grand", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grandselect" } })
                     </div>
                 </div>
-            </div>
-            <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
                     <div id="childviewcurr_div" class="layui-input-block">
                         <select id="Class_Id" name="Class_Id" class="layui-select" lay-filter="bianji"><option value="@Model.Class_Id" selected>@Model.ClassNumber</option></select>
                     </div>
                 </div>
             </div>
+             
             <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">实到人数:</label>
                     <div id="childviewcurr_div" class="layui-input-block">
-                        <input name="PctualCout" id="PctualCout" class="layui-input" value="@Model.PersonCount"/>
+                        <input name="PctualCout" id="PctualCout" class="layui-input" value="@Model.PersonCount" />
                     </div>
                 </div>
-            </div>
-            <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">班主任状态:</label>
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">班&nbsp;主&nbsp;任:</label>
                     <div id="childviewcurr_div" class="layui-input-block">
                         @{
                             if (Model.IsHavaHeadMaster == true)
@@ -52,56 +50,57 @@
                             else
                             {
                                 <input name="IsHavaHeadMaster" id="IsHavaHeadMaster" class="layui-input" type="radio" value="false" title="不在场" checked="checked" />
-                                <input name="IsHavaHeadMaster" id="IsHavaHeadMaster" class="layui-input" type="radio" value="true"  title="在场" />
+                                <input name="IsHavaHeadMaster" id="IsHavaHeadMaster" class="layui-input" type="radio" value="true" title="在场" />
                             }
                         }
 
                     </div>
                 </div>
             </div>
+            
             <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">教学老师状态:</label>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">教学老师:</label>
                     <div id="childviewcurr_div" class="layui-input-block">
                         @{
                             if (Model.IsHavaTeacher == true)
                             {
-                                <input name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" checked="checked" title="在场" value="true" />
-                                <input name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="不在场" value="false" />
+                                <input type="radio" name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" checked="checked" title="在场" value="true" />
+                                <input type="radio" name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="不在场" value="false" />
                             }
                             else
                             {
-                                <input name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="在场" value="true" />
-                                <input name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="不在场" value="false" checked="checked" />
+                                <input type="radio" name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="在场" value="true" />
+                                <input type="radio" name="IsHavaTeacher" id="IsHavaTeacher" class="layui-input" title="不在场" value="false" checked="checked" />
                             }
                         }
 
                     </div>
                 </div>
-            </div>
-            <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">是否在讲PPT:</label>
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">P&nbsp;&nbsp; P &nbsp;&nbsp;T:</label>
                     <div id="childviewcurr_div" class="layui-input-block">
                         @{
                             if (Model.IshavaPPT == true)
                             {
-                                <input name="IshavaPPT" id="IshavaPPT" class="layui-input" checked="checked" value="true" title="在讲" />
-                                <input name="IshavaPPT" id="IshavaPPT" class="layui-input"  value="false" title="不在讲" />
+                                <input type="radio" name="IshavaPPT" id="IshavaPPT" class="layui-input" checked="checked" value="true" title="在讲" />
+                                <input type="radio" name="IshavaPPT" id="IshavaPPT" class="layui-input" value="false" title="不在讲" />
                             }
                             else
                             {
-                                <input name="IshavaPPT" id="IshavaPPT" class="layui-input"   value="true" title="在讲" />
-                                <input name="IshavaPPT" id="IshavaPPT" class="layui-input" checked="checked" value="false" title="不在讲" />
+                                <input type="radio" name="IshavaPPT" id="IshavaPPT" class="layui-input" value="true" title="在讲" />
+                                <input type="radio" name="IshavaPPT" id="IshavaPPT" class="layui-input" checked="checked" value="false" title="不在讲" />
                             }
                         }
 
                     </div>
                 </div>
             </div>
+         
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="LableCss1">其他说明:</label>
+                    <label class="layui-form-label">其他说明:</label>
                     <div id="childteacher_div" class="layui-input-block">
                         <textarea class="layui-textarea" name="Reak" id="Reak">@Model.Reak</textarea>
                     </div>
@@ -111,7 +110,7 @@
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <div style="text-align:center">
                         <button type="submit" class="layui-btn" lay-submit="" lay-filter="childview_add">修改</button>
-                        <input type="button" class="layui-btn" value="关闭" onclick="Myclose()" />
+                        <input type="button" class="layui-btn" value="关闭" onclick="MyClose()" />
                     </div>
                 </div>
             </div>
@@ -119,5 +118,60 @@
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use('form', function () {
+            var form = layui.form;
+
+            //获取班级
+            form.on('select(grandselect)', function (data) {
+                $("#childviewcurr_div")[0].innerHTML = "";
+                if (data.value != "0") {
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                        success: function (sudata) {
+                            //获取班级slect
+                            var classselect = $('<select id="Class_Id" name="Class_Id" class="layui-select" lay-filter="bianji"><option value="0" selected>--请先选择阶段--</select>');
+                            for (var i = 0; i < sudata.length; i++) {
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                            }
+                            $("#childviewcurr_div").append(classselect);
+                            form.render(); //更新全部
+                        }
+                    });
+                } else {
+                    var classselect = $('<select id="Class_Id" name="Class_Id" class="layui-select" lay-filter="bianji"><option value="0" selected>--请先选择阶段--</select>');
+                    $("#childviewcurr_div").append(classselect);
+                    form.render(); //更新全部
+                }
+            });
+
+            //提交
+            form.on('submit(childview_add)', function (data) {
+                $.ajax({
+                    url: '/Educational/Laterecord/EditFuntion',
+                    type: 'POST',
+                    data: data.field,
+                    success: function (suc) {
+                        if (suc.Success == true) {
+                            layer.msg(suc.Msg, { icon: 1, shade: 0.8 }, function () {
+                                window.parent.TableFulsh();
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭   
+                            });
+
+                        } else {
+                            layer.msg(suc.Msg, { icon: 2, shade: 0.8 });
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
+        function MyClose() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+    </script>
 </body>
 </html>

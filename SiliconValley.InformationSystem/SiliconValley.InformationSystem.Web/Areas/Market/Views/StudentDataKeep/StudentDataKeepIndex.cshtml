@@ -165,10 +165,15 @@
                         </div>
                     </div>
                     <div class="layui-col-sm2">
+                        <label class="spanCss2">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 校:</label>
+                        <input name="S_School" id="S_School" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm2">
                         <label class="spanCss2">其他备注:</label>
                         <input name="S_Reack" id="S_Reack" class="inputCss1" />
                     </div>
-                    <div class="layui-col-sm6">
+
+                    <div class="layui-col-sm4">
                         <div style="text-align:right">
                             <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:108px"><i class="layui-icon">&#xe615;</i> 查询</button>
                             <button type="button" class="layui-btn" style="margin-right:45px;width:108px" onclick="LoadTable()"><i class="layui-icon">&#xe666;</i> 重新加载</button>
@@ -267,12 +272,13 @@
             var S_QQ = $("#S_QQ").val();
             var eduttion = $("#eduttion").val();
             var S_Reack = $("#S_Reack").val();
-            if (findNamevalue.length <= 0 && findPhonevalue.length <= 0 && findInformationvalue == "0" && findStartvalue.length <= 0 && findEndvalue.length <= 0 && findAreavalue == "0" && findBeanManvalue.length <= 0 && S_consultTeacher == "0" && S_status == "0" && S_intosysMan.length <= 0 && S_party.length <= 0 && S_QQ.length <= 0 && eduttion.length != "0" && S_Reack.length<=0) {
+            var S_School = $("#S_School").val();
+            if (findNamevalue.length <= 0 && findPhonevalue.length <= 0 && findInformationvalue == "0" && findStartvalue.length <= 0 && findEndvalue.length <= 0 && findAreavalue == "0" && findBeanManvalue.length <= 0 && S_consultTeacher == "0" && S_status == "0" && S_intosysMan.length <= 0 && S_party.length <= 0 && S_QQ.length <= 0 && eduttion.length != "0" && S_Reack.length <= 0 && S_School.length<=0) {
                 table.reload('tabletest1', { url: '/Market/StudentDataKeep/TableData' });
             } else {
                 table.reload('tabletest1', {
                     url: '/Market/StudentDataKeep/GetTableData'
-                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue, "S_consultTeacher": S_consultTeacher, "S_status": S_status, "S_party": S_party, "S_intosysMan": S_intosysMan, "S_QQ": S_QQ, "eduttion": eduttion, "S_Reack": S_Reack } //设定异步数据接口的额外参数
+                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue, "S_consultTeacher": S_consultTeacher, "S_status": S_status, "S_party": S_party, "S_intosysMan": S_intosysMan, "S_QQ": S_QQ, "eduttion": eduttion, "S_Reack": S_Reack, "S_School": S_School} //设定异步数据接口的额外参数
                 });
             }
             

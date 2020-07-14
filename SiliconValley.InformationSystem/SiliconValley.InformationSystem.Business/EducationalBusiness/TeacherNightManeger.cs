@@ -13,6 +13,10 @@ using SiliconValley.InformationSystem.Business.Employment;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+    using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
+
     public class TeacherNightManeger : BaseBusiness<TeacherNight>
     {
         RedisCache Redis = new RedisCache();
@@ -31,7 +35,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             Redis.RemoveCache("TeacherNight");
             List<TeacherNight> teacherNights = new List<TeacherNight>();
             teacherNights = Redis.GetCache<List<TeacherNight>>("TeacherNight");
-            
+
             if (teacherNights == null || teacherNights.Count <= 0)
             {
                 teacherNights = this.GetIQueryable().ToList();
@@ -112,7 +116,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     else
                     {
                         this.Insert(new_data);
-                        TeacherNightandEvningStudet.SetEvningStudentData(new_data.OrwatchDate,Convert.ToInt32( new_data.ClassSchedule_Id),new_data.Tearcher_Id);
+                        TeacherNightandEvningStudet.SetEvningStudentData(new_data.OrwatchDate, Convert.ToInt32(new_data.ClassSchedule_Id), new_data.Tearcher_Id);
                     }
 
                 }
@@ -146,7 +150,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
             AjaxResult a = new AjaxResult();
             BeOnDuty_Entity = new BeOnDutyManeger();
-            BeOnDuty finfb= BeOnDuty_Entity.GetSingleBeOnButy("教员晚自习", false);
+            BeOnDuty finfb = BeOnDuty_Entity.GetSingleBeOnButy("教员晚自习", false);
             List<ClassSchedule> Class_All = Reconcile_Com.GetClass();//获取所有有效班级
 
             EvningSelfStudent_Entity = new EvningSelfStudyManeger();
@@ -198,7 +202,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             List<TeacherNight> all = this.GetAllTeacherNight();    //判断在这期间是否已安排晚自习值班
             for (int i = 0; i < list_new.Count; i++)
             {
-                int count = this.GetTimeClassNight(starTime, endTime,Convert.ToInt32( list_new[i].ClassSchedule_Id));
+                int count = this.GetTimeClassNight(starTime, endTime, Convert.ToInt32(list_new[i].ClassSchedule_Id));
                 if (count > 0)
                 {
                     //删除
@@ -363,7 +367,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
-        
 
         public AjaxResult Add_masterdata(List<TeacherNight> list)
         {
@@ -373,7 +376,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 foreach (TeacherNight i in list)
                 {
                     int overridecount = this.GetIQueryable().Where(t => t.Tearcher_Id == i.Tearcher_Id && t.OrwatchDate == i.OrwatchDate).ToList().Count;
-                    if (overridecount<=0)
+                    if (overridecount <= 0)
                     {
                         this.Insert(i);
                     }
@@ -398,11 +401,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public List<EmployeesInfo> GEThEADmASTER()
         {
             HeadmasterBusiness headmaster = new HeadmasterBusiness();
-           
+
 
             EmploymentStaffBusiness employmentStaff = new EmploymentStaffBusiness();
 
-            List<EmploymentStaff> list2=  employmentStaff.GetIQueryable().ToList();
+            List<EmploymentStaff> list2 = employmentStaff.GetIQueryable().ToList();
 
             EmployeesInfoManage emp = new EmployeesInfoManage();
 
@@ -412,14 +415,14 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             list.ForEach(h =>
             {
                 EmployeesInfo e = emp.GetEntity(h.informatiees_Id);
-                if (e!=null)
+                if (e != null)
                 {
                     result.Add(e);
                 }
             }
             );
 
-            list2.ForEach(f=> {
+            list2.ForEach(f => {
                 EmployeesInfo e = emp.GetEntity(f.EmployeesInfo_Id);
                 if (e != null)
                 {
@@ -429,5 +432,126 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return result;
         }
+
+        /// <summary>
+        /// 是否显示所有数据0--数据全部显示，1--教学主任或副主任,2--教质主任或副主任,3--就业主任或副主任,4--就业班主任/班主任/XX老师
+        /// </summary>
+        /// <returns></returns>
+        public int IsShowData(string emp)
+        {
+            int i = 0;
+            EmployeesInfoManage emp_Entity = new EmployeesInfoManage();
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            Position position = emp_Entity.GetPositionByEmpid(UserName.EmpNumber);
+            if (position.PositionName == "教学副主任" || position.PositionName == "教学主任")
+            {
+                //说明
+                i = 1;
+            } else if (position.PositionName == "教质主任" || position.PositionName == "教质副主任")
+            {
+                i = 2;
+            } else if (position.PositionName == "就业主任" || position.PositionName == "就业副主任")
+            {
+                i = 3;
+            }
+            else if (position.PositionName == "就业班主任" || position.PositionName == "班主任" || position.PositionName.Contains("老师"))
+            {
+                i = 4;
+            }
+
+            return i;
+        }
+
+
+        /// <summary>
+        /// 获取属于登录人的数据
+        /// </summary>
+        /// <param name="s">true--匹配与登录人值班的数据，false--获取所有数据</param>
+        /// <param name="emp"></param>
+        /// <param name="typeid">值班类型</param>
+        /// <returns></returns>
+        public List<TeacherNightView> AccordingtoEmpGetData(bool s, string emp, int typeid)
+        {
+            StringBuilder sb = new StringBuilder("select * from TeacherNightView where 1=1");
+            if (!s)
+            {
+                sb.Append(" and BeOnDuty_Id=" + typeid);
+            }
+            else
+            {
+                sb.Append(" and BeOnDuty_Id=" + typeid + " and Tearcher_Id='" + emp + "'");
+            }
+            return this.GetListBySql<TeacherNightView>(sb.ToString());
+        }
+
+        /// <summary>
+        /// 获取属于班主任值班的数据
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <param name="typeid1"></param>
+        /// <param name="typeid2"></param>
+        /// <returns></returns>
+        public List<TeacherNightView> AccordingtoEmpGetData(string emp, int typeid1,int typeid2)
+        {
+            StringBuilder sb = new StringBuilder("select * from TeacherNightView where Tearcher_Id='"+ emp + "' and (BeOnDuty_Id="+ typeid1 + " or BeOnDuty_Id="+ typeid2 + ")");
+
+            return this.GetListBySql<TeacherNightView>(sb.ToString());
+        }
+
+        /// <summary>
+        /// 获取这个部门的所有值班数据
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public List<TeacherNightView> AccordingtoDepartMentData(List<EmployeesInfo> list,int type) {
+            List<TeacherNightView> all = this.GetListBySql<TeacherNightView>("select * from TeacherNightView where BeOnDuty_Id="+type);
+
+            List<TeacherNightView> list_v = new List<TeacherNightView>();
+            foreach (EmployeesInfo item in list)
+            {
+                list_v.AddRange( all.Where(a => a.Tearcher_Id == item.EmployeeId).ToList());
+            }
+
+            return list_v;
+        }
+
+        public List<TeacherNightView> AccordingtoDepartMentData(List<EmployeesInfo> list, int type1,int type2)
+        {
+            List<TeacherNightView> all = this.GetListBySql<TeacherNightView>("select * from TeacherNightView where BeOnDuty_Id=" + type1+ " or BeOnDuty_Id="+type2);
+
+            List<TeacherNightView> list_v = new List<TeacherNightView>();
+            foreach (EmployeesInfo item in list)
+            {
+                list_v.AddRange(all.Where(a => a.Tearcher_Id == item.EmployeeId).ToList());
+            }
+
+            return list_v;
+        }
+        /// <summary>
+        /// 获取与登录人同部门的员工
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <returns></returns>
+        public List<EmployeesInfo> AccordingtoEmplyess(string emp)
+        {
+            EmployeesInfoManage emp_Entity = new EmployeesInfoManage();
+            EmployeesInfo employees= emp_Entity.FindEmpData(emp,true);
+            Position position = emp_Entity.GetPobjById(employees.PositionId);
+            return emp_Entity.GetEmpsByDeptid(position.DeptId);
+        }
+
+        /// <summary>
+        /// 获取所有班主任的值班数据
+        /// </summary>
+        /// <param name="typeid1"></param>
+        /// <param name="typeid2"></param>
+        /// <returns></returns>
+        public List<TeacherNightView> GetHeadMasterAll(int typeid1, int typeid2)
+        {
+            StringBuilder sb = new StringBuilder("select * from TeacherNightView where BeOnDuty_Id=" + typeid1 + " or BeOnDuty_Id=" + typeid2 + "");
+            return this.GetListBySql<TeacherNightView>(sb.ToString());
+        }
+         
+        
     }
 }

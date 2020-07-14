@@ -7,13 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+ 
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+
     /// <summary>
     /// 迟到记录表
     /// </summary>
-   public class LaterecordManeger:BaseBusiness<Laterecord>
+    public class LaterecordManeger:BaseBusiness<Laterecord>
     {
 
         /// <summary>
@@ -72,6 +75,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 this.Update(data);
                 a.Success = true;
+                a.Msg = "操作成功！！";
             }
             catch (Exception )
             {
@@ -81,7 +85,33 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return a;
         }
-        
+
+        /// <summary>
+        /// 根据Id获取视图数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public LaterecordView FindSingData(int id)
+        {
+           List<LaterecordView> findata= this.GetListBySql<LaterecordView>("select * from LaterecordView where Id=" + id);
+
+            return findata.Count > 0 ? findata[0] : null;
+        }
+        /// <summary>
+        /// 是否展示所有数据
+        /// </summary>
+        /// <returns>true--可以展示所有数据,false--不可以</returns>
+        public bool IsShowAll(string emp)
+        {
+            bool s = false;
+            EmployeesInfoManage emp_Entity = new EmployeesInfoManage();
+            Department findata_d= emp_Entity.GetDeptByEmpid(emp);
+            if (!findata_d.DeptName.Contains("教学部"))
+            {
+                s = true;
+            }
+            return s;
+        }
     }
 
 

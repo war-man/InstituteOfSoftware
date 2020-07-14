@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "EmpZhibanData";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .Liu
+    {
+        width: 120px;
+        display: inline-block;
+    }
+</style>
+<form id="S_form" class="layui-form">
+    <label>开始日期:</label>
+    <input type="text" name="Stardate" id="Stardate" class="layui-input Liu"/>
+    <label>结束日期:</label>
+    <input type="text" name="Enddate" id="Enddate" class="layui-input Liu"/>
+    <button type="button" class="layui-btn" onclick="Sercher()">查找</button>
+</form>
+<table id="headmaster_tables" lay-filter="headmaster_tables"></table>
+<script>
+    layui.use(['table','laydate'], function () {
+        var table = layui.table;
+        var laydate = layui.laydate;
+        table.render({
+            elem: '#headmaster_tables'
+            , url: '/Educational/TeacherNight/TaableData'
+            , cols: [[
+                { type: 'radio' }
+                , { field: 'OrwatchDate', title: '值班日期', templet: function (res) { return TimeChange(res.OrwatchDate); } }
+                , { field: 'EmpName', title: '值班老师' }
+                , { field: 'TypeName', title: '值班类型' }
+            ]]
+            , page: true
+            , limits: [20, 40, 60, 80, 100]
+            , limit: 20
+        });
+
+        //时间初始化
+        laydate.render({
+            elem: '#Stardate'
+            , theme: 'molv'
+            , click: 'tiggle'
+        });
+
+        laydate.render({
+            elem: '#Enddate'
+            , theme: 'molv'
+            , click: 'tiggle'
+        });
+    });
+
+    function Sercher() {
+        var d1 = $("#Stardate").val();
+        var d2 = $("#Enddate").val();
+        
+        layui.use('table', function(){
+            var table = layui.table;
+            if (d1.length <= 0 && d2.length <= 0) {
+                table.reload('headmaster_tables', {
+                    url: '/Educational/TeacherNight/TaableData'
+                    , where: { 'd1': null, 'd2': nulls }
+                });
+            } else {
+                table.reload('headmaster_tables', {
+                    url: '/Educational/TeacherNight/TaableData'
+                    , where: { 'd1': d1, 'd2': d2 }
+                });
+            }
+             
+        });
+    }
+</script>
+ 
+

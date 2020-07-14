@@ -170,6 +170,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 string qq = Request.QueryString["S_QQ"].Trim();//QQ
                 string edution = Request.QueryString["eduttion"];//学历
                 string reack = Request.QueryString["S_Reack"];//其他说明
+                string S_School = Request.QueryString["S_School"];//学校
                 if (!string.IsNullOrEmpty(findNamevalue))
                 {
                     sb1.Append("and  StuName like  '" + findNamevalue + "%'");
@@ -251,6 +252,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     sb1.Append(" and Reak like '" + reack + "%'");
                     sb2.Append(" and Remark like '" + reack + "%'");
+                }
+
+                if (!string.IsNullOrEmpty(S_School))
+                {
+                    sb1.Append(" and StuSchoolName like '%" + S_School + "%'");
+                    sb2.Append(" and School like '%" + S_School + "%'");
                 }
                 #endregion               
 

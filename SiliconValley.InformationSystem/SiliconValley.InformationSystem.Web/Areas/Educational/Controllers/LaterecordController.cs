@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data;
+using System.Text;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
@@ -16,9 +17,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     public class LaterecordController : Controller
     {
         private LaterecordManeger leatercord_Entity = new LaterecordManeger();
-        // GET: Educational/Laterecord/LaterecordIndex
+        // GET: /Educational/Laterecord/EditView
         public ActionResult LaterecordIndex()
         {
+            List<SelectListItem> g_list = new List<SelectListItem>() { new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true } };
+            g_list.AddRange(Reconcile_Com.GetGrand_Id().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList());
+
+            ViewBag.grandlist_S = g_list;
             return View();
         }
 
@@ -26,9 +31,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         public ActionResult GetTableData(int limit,int page)
         {
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
-
-            List<LaterecordView> list= leatercord_Entity.GetallView().Where(l=>l.CreateUser==UserName.EmpNumber).OrderByDescending(l=>l.Id).ToList();
-
+            List<LaterecordView> list = leatercord_Entity.GetallView();
+            if (!leatercord_Entity.IsShowAll(UserName.EmpNumber))
+            {
+                list = list.Where(l => l.CreateUser == UserName.EmpNumber).OrderByDescending(l => l.Id).ToList();
+            }
+              
             var data = list.Skip((page - 1) * limit).Take(limit).Select(l => new {
                 Id = l.Id,
                 IsHavaHeadMaster = l.IsHavaHeadMaster == true ? "是" : "否",
@@ -46,10 +54,66 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(jsondata,JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 用于模糊查询
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public ActionResult SercherData(int limit, int page)
+        {
+            string class_S = Request.QueryString["class_S"];
+            string SatrTime = Request.QueryString["SatrTime"];
+            string EndTime = Request.QueryString["EndTime"];
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            StringBuilder sb = new StringBuilder("select * from LaterecordView where 1=1");
+            if (!leatercord_Entity.IsShowAll(UserName.EmpNumber))
+            {
+                sb.Append(" and CreateUser='"+ UserName.EmpNumber + "'");
+            }
+                 
+            if (!string.IsNullOrEmpty(class_S) && class_S!="0")
+            {
+                sb.Append(" and Class_Id="+class_S);
+            }
+
+            if (!string.IsNullOrEmpty(SatrTime))
+            {
+                DateTime da1 = Convert.ToDateTime(SatrTime);
+                sb.Append(" and CreateDate>=" + da1);
+            }
+
+            if (!string.IsNullOrEmpty(EndTime))
+            {
+                DateTime da1 = Convert.ToDateTime(EndTime);
+                sb.Append(" and CreateDate<=" + da1);
+            }
+
+            List<LaterecordView> list= leatercord_Entity.GetListBySql<LaterecordView>(sb.ToString());
+
+            var data = list.Skip((page - 1) * limit).Take(limit).Select(l => new {
+                Id = l.Id,
+                IsHavaHeadMaster = l.IsHavaHeadMaster == true ? "是" : "否",
+                IshavaPPT = l.IshavaPPT == true ? "是" : "否",
+                IsHavaTeacher = l.IsHavaTeacher == true ? "是" : "否",
+                PersonCount = l.PersonCount,
+                PctualCout = l.PctualCout,
+                Createdate = l.Createdate,
+                EmpName = l.EmpName,
+                ClassNumber = l.ClassNumber,
+                Reak = l.Reak,
+            });
+
+            var jsondata = new { code = 0, data = data, count = list.Count };
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult insertView()
         {
             //加载阶段
-            List<SelectListItem> g_list = Reconcile_Com.GetGrand_Id().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            List<SelectListItem> g_list = new List<SelectListItem>() { new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true } };
+            g_list.AddRange(Reconcile_Com.GetGrand_Id().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList());
+
             ViewBag.grandlist = g_list;
             return View();
         }
@@ -83,9 +147,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         }
 
 
-        public ActionResult EditView()
+        public ActionResult EditView(int id)
         {
-            return View();
+
+            //加载阶段
+            List<SelectListItem> g_list = new List<SelectListItem>() { new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true } };
+            g_list.AddRange(Reconcile_Com.GetGrand_Id().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList());
+
+            ViewBag.grandlist = g_list;
+            LaterecordView findata= leatercord_Entity.FindSingData(id);
+            return View(findata);
         }
 
         /// <summary>

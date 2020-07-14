@@ -3,8 +3,40 @@
     ViewBag.Title = "LaterecordIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<table class="layui-table" id="Latercordtable"> </table>
+<style>
+    .DivCss{
+        display:inline-block;
+    }
+    .Liu{
+    width:120px;
+    display:inline-block;
+    }
+    .layui-unselect
+    {
+        width:120px;
+    }
+</style>
+<form id="Leacher_From" class="layui-form" lay-filter="Leacher_From">
+    <div class="layui-row">
+        <label>阶段:</label>
+        <div class="DivCss">
+            @Html.DropDownList("grand_S", ViewBag.grandlist_S as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grandSerch" } })
+        </div>
+        <label>班级:</label>
+        <div id="ClassDiv" class="DivCss">
+            <select id="class_S" name="class_S" class="layui-select"><option value="0" selected>--请选择--</select>
+        </div>
+        <label>开始日期:</label>
+        <input type="text" name="SatrTime" id="SatrTime" class="layui-input Liu"/>
+        <label>结束日期:</label>
+        <input type="text" name="EndTime" id="EndTime" class="layui-input Liu"/>
+        
+        <button type="button" class="layui-btn" onclick="Serch()">查询</button>
+         
+    </div>
+</form>
+<table class="layui-table" id="Latercordtable" lay-filter="Latercordtable"> </table>
+ 
 <script type="text/html" id="Late_barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="ser">查看详情</a>
@@ -31,43 +63,36 @@
         var form = layui.form;
         var laydate = layui.laydate;
         var table = layui.table;
+
         //获取班级
-        //form.on('select(Re_grand)', function (data) {
-        //    $("#Re_class")[0].innerHTML = "";
-        //    $.ajax({
-        //        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
-        //        success: function (sudata) {
-        //            //获取班级slect
-        //            var classselect = $('<select id="class_select" name="class_select1" class="layui-select"><option value="0" selected>--请选择--</select>');
-        //            for (var i = 0; i < sudata.length; i++) {
-        //                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
-        //            }
-        //            $("#Re_class")[0].innerHTML = "";
-        //            $("#Re_class").append(classselect);
-        //            form.render(); //更新全部
-        //        }
-        //    });
-        //});
+        form.on('select(grandSerch)', function (data) {
+            $("#ClassDiv")[0].innerHTML = "";
+            $.ajax({
+                url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                success: function (sudata) {
+                    //获取班级slect
+                    var classselect = $('<select id="class_S" name="class_S" class="layui-select"><option value="0" selected>--请选择--</select>');
+                    for (var i = 0; i < sudata.length; i++) {
+                        $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                    }
+                    $("#ClassDiv").append(classselect);
+                    form.render(); //更新全部
+                }
+            });
+        });
         //时间初始化
-        //laydate.render({
-        //    elem: '#starTime'
-        //    , theme: 'molv'
-        //});
+        laydate.render({
+            elem: '#SatrTime'
+            , theme: 'molv'
+            ,click:'tiggle'
+        });
 
-        //laydate.render({
-        //    elem: '#endTime'
-        //    , theme: 'molv'
-        //});
-
-        //laydate.render({
-        //    elem: "#Time"
-        //    , theme: 'molv'
-        //});
-
-        //laydate.render({
-        //    elem: "#Time2"
-        //    , theme: 'molv'
-        //});
+        laydate.render({
+            elem: '#EndTime'
+            , theme: 'molv'
+            , click: 'tiggle'
+        });
+ 
 
         //table初始化
         table.render({
@@ -75,7 +100,7 @@
             , toolbar: '#toolbarDemo'
             , url: '/Educational/Laterecord/GetTableData'
             , cols: [[
-                { type: 'radio' }
+                { type: 'checkbox'}
                 , { field: 'ClassNumber', title: '班级' }
                 , { field: 'IsHavaHeadMaster', title: '班主任是否在场', }
                 , { field: 'IsHavaTeacher', title: '任课老师是否在场' }
@@ -129,7 +154,7 @@
             } else if (obj.event === 'edit') {
                 layer.open({
                     type: 2,
-                    content: '/Educational/Reconcile/Edit_rView/' + data.Id,
+                    content: '/Educational/Laterecord/EditView/' + data.Id,
                     area: ['800px', '500px'],
                     title: '编辑数据'
                     , shade: 0.8
@@ -140,29 +165,7 @@
         });
 
        
-        //form.on('submit(serch1)', function (data) {
-        //    var class_select1 = data.field.class_select1;
-        //    var starTime = data.field.starTime;
-        //    var endTime = data.field.endTime;
-        //    table.reload('Recon_table', {
-        //        url: '/Educational/Reconcile/GetReconAllData'
-        //        , where: { "class_select1": class_select1, "starTime": starTime, "endTime": endTime, "teachername": "", "Time2": "", "curr_select1": "" }
-        //    });
-        //    return false;
-        //});
-        //form.on('submit(serch3)', function (data) {
-        //    var teachername = data.field.teachername;
-        //    var Time2 = data.field.Time2;
-
-        //    table.reload('Latercordtable', {
-        //        url: '/Educational/Reconcile/GetReconAllData'
-        //        , where: { "teachername": teachername, "Time2": Time2, "class_select1": "", "starTime": "", "endTime": "", "curr_select1": "" }
-        //    });
-        //    return false;
-        //});
-        
-
-        //批量调课
+ 
         //头工具栏事件
         table.on('toolbar(Latercordtable)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
@@ -171,7 +174,7 @@
                     layer.open({
                         type: 2,
                         content: '/Educational/Laterecord/insertView',
-                        area: ['680px', '400px'],
+                        area: ['780px', '530px'],
                         title:'迟到登记页面'
                         , shade: 0.8
                         , anim: 4
@@ -182,6 +185,27 @@
         });
 
     });
+
+    //模糊查询
+    function Serch() {
+        layui.use(['form','table'], function () {
+            var form = layui.form;
+            var data1 = form.val("Leacher_From");
+
+            var table = layui.table;
+ 
+            if (data1.grand_S == "0" && data1.class_S == "0" && data1.SatrTime.length <= 0 && data1.EndTime.length<=0) {
+                table.reload('Latercordtable');
+            } else {
+                table.reload('Latercordtable', {
+                    url: '/Educational/Laterecord/SercherData'
+                    , where: data1
+                });
+            }
+
+             
+        });
+    }
 </script>
 
 
