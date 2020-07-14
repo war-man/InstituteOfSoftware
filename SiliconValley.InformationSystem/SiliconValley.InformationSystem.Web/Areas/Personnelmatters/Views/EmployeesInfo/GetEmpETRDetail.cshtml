@@ -23,13 +23,16 @@
                 <input type="hidden" id="etrcount" value="@etrlist.Count()" />
                 foreach (var item in etrlist)
                 {
-                    <fieldset>
+                    <fieldset id="filedlist" name="filedlist">
+                        
+                        <legend>@item.Transactionname</legend>
+                        <input type="hidden" class="etrtype"  value="@item.Transactionname"/>
                         <div class="layui-row layui-form-item">
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">异动类型:</label>
                                 <div class="layui-input-inline" style="width:190px;">
-                                    <input type="text" value="@item.Transactionname" style="border:0px;" readonly class="layui-input" />
+                                    <input type="text" id="etrtype" name="etrtype" value="@item.Transactionname" style="border:0px;" readonly class="layui-input " />
                                 </div>
                             </div>
 
@@ -46,7 +49,7 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">异动时间:</label>
                                 <div class="layui-input-inline" style="width:190px;">
-                                    <input type="text" value="@item.TransactionTime" style="border:0px;" readonly class="layui-input TransactionTime" />
+                                    <input type="text" value="@item.TransactionTime" name="time" style="border:0px;" readonly class="layui-input TransactionTime" />
                                 </div>
                             </div>
 
@@ -168,46 +171,26 @@
     </div>
 
     <script>
-
         $(function () {
-            loademp();// 初始化编辑数据加载
-        });
-        function loademp() {
+            var len = $("fieldset[name='filedlist']");//获取bainame标签的个数
+            for (var index = 0; index < len.length; index++) {//创建一个du数字数组
+                var time = $(len[index]).children("input[name='time']").val();
+                time = GetYMD(time);
+                console.log("shijian:"+time);
+                var type = $(len[index]).children(".etrtype").val();
 
-            var etrlist ='@ViewBag.ETRlist';
-            var etrcount = $("#etrcount").val();
-            for (var i = 0; i < etrcount; i++) {
-                $(".TransactionTime").val(GetYMD($(".TransactionTime").val()));
+                console.log("异动类型：" + type);
+                if (type == "调岗") {
+                    $(len[index]).children(".Transferposition").css('display', 'block');
+                } else if (type === "加薪") {
+                    $(len[index]).children(".Increasesalary").css('display', 'block');
+                } else if (type === "续签") {
+                    $(len[index]).children(".Contractrenewal").css('display', 'block');
+                }
+            }
           
-                $(".Transferposition").attr('display', 'block');
-                console.log($(".Transferposition").attr('display'));
-            }
-        }
-
-      
-
-        //格式化时间
-        function GetYearAndMonth(cellval) {
-            if (cellval != null) {
-                var date;
-                if (cellval.indexOf("/Date(") >= 0) {
-                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                }
-                else {
-                    date = new Date(cellval);
-                }
-
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
-                return date.getFullYear() + "-" + month;
-            } else {
-                return "";
-            }
-        }
+        });
+       
         //显示年月日
         function GetYMD(cellval) {
             if (cellval != null) {
