@@ -44,12 +44,12 @@
                             </div>
 
                         </div>
-                        <div class="layui-row layui-form-item">
+                        <div class="layui-row layui-form-item TransactionTime1">
 
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 TransactionTime2">
                                 <label class="layui-form-label">异动时间:</label>
-                                <div class="layui-input-inline" style="width:190px;">
-                                    <input type="text" value="@item.TransactionTime" name="time" style="border:0px;" readonly class="layui-input TransactionTime" />
+                                <div class="layui-input-inline TransactionTime3" style="width:190px;">
+                                    <input type="text" value="@item.TransactionTime" name="time" style="border:0px;" readonly class="layui-input" />
                                 </div>
                             </div>
 
@@ -174,9 +174,9 @@
         $(function () {
             var len = $("fieldset[name='filedlist']");//获取bainame标签的个数
             for (var index = 0; index < len.length; index++) {//创建一个du数字数组
-                var time = $(len[index]).children("input[name='time']").val();
-                time = GetYMD(time);
-                console.log("shijian:"+time);
+                var time = $(len[index]).children(".TransactionTime1").children(".TransactionTime2").children(".TransactionTime3").children("input[name='time']");
+                $(len[index]).children(".TransactionTime1").children(".TransactionTime2").children(".TransactionTime3").children("input[name='time']").val(GetYMD(time.val()));
+              
                 var type = $(len[index]).children(".etrtype").val();
 
                 console.log("异动类型：" + type);
