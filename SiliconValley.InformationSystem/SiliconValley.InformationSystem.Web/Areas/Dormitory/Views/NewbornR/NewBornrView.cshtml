@@ -188,7 +188,8 @@
         }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
             var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table;
 
-            var jstungid, jsfloorid, jsstudentdata, jsdatatype;
+            var jstungid, jsfloorid, jsstudentdata;
+            var jsdatatype = "student";
 
 
             var jsstudentdata = {
@@ -353,7 +354,7 @@
 
             //发送请求获取未居住的床位
             function getUninhabitedBeddata(data, dorminfo) {
-                //console.log("发送请求获取未居住的床位" + data);
+                console.log(jsdatatype +".................");
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/BedInfo',
                     type: 'GET',

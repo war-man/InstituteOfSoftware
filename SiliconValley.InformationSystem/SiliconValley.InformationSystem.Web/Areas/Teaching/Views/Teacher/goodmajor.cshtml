@@ -266,8 +266,6 @@
 
                         //创建一个按钮
 
-                        
-
                         var btn = $('<button style="margin-top:20px;" class="layui-btn layui-btn-primary currbtn"></button>');
 
 
@@ -275,19 +273,12 @@
 
                         btn.attr("currId", result.Data[i].CurriculumID);
 
-
-
                         $(document).off("click", ".currbtn").on('click', '.currbtn', function () {
                             $(this).toggleClass("select");
 
                         });
-
-                       
                         $("#muban1").append(btn);
-
                     }
-
-
                     var html = $("#muban1").html();
 
                     //弹出层

@@ -517,7 +517,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             return View();
         }
 
-        public ActionResult ClassCourseArrangementData(int page)
+        public ActionResult ClassCourseArrangementData(int page, int limit)
         {
 
         
@@ -530,7 +530,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             BaseBusiness<ClassTeacher> dbclassTeacher = new BaseBusiness<ClassTeacher>();
 
             var list = dbclassTeacher.GetList();
-            var skiplist = list.Skip((page - 1) * 8).Take(8).ToList();
+            var skiplist = list.Skip((page - 1) * 8).Take(limit).ToList();
 
             list.ForEach(d=>
             {
@@ -542,25 +542,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             var objresult = new
             {
 
-                status = 0,
-                message = "成功",
-                total = list.Count,
-                data = resultlist
+                code = 0,
+                msg = "成功",
+                count = list.Count,
+                data = resultlist.OrderByDescending(d => d.BeginDate).ToList()
 
             };
             return Json(objresult, JsonRequestBehavior.AllowGet);
 
         }
 
-        public ActionResult SearchClassCourseArrangementData(int page, string classid, bool status)
+        public ActionResult SearchClassCourseArrangementData(int page, int limit, string classid, bool status)
         {
-
            
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
             List<ClassCourseView> resultlist = new List<ClassCourseView>();
-
-           
 
 
            var classsc = dbteacherclass.AllClassSchedule().Where(d => d.id == int.Parse(classid)).FirstOrDefault();
@@ -582,10 +579,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             var objresult = new
             {
 
-                status = 0,
-                message = "成功",
-                total = resultlist.Count,
-                data = resultlist
+                code = 0,
+                msg = "成功",
+                count = resultlist.Count,
+                data = resultlist.OrderByDescending(d => d.BeginDate).ToList()
 
             };
 
@@ -787,13 +784,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         /// <param name="status">状态 true：启用  false：禁用</param>
         /// <param name="classteacherid"></param>
         /// <returns></returns>
-        public ActionResult UsingOrProhibit(string status, int classteacherid, string date)
+        public ActionResult UsingOrProhibit( int classteacherid, string date)
         {
             AjaxResult result = new AjaxResult();
 
             try
             {
-                db_course.UsingOrProhibit(status, classteacherid, DateTime.Parse(date));
+                db_course.UsingOrProhibit(classteacherid, DateTime.Parse(date));
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";
