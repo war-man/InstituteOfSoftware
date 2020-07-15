@@ -67,8 +67,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-
-
         #region 安排晚自习
         public ActionResult AnPaiEvningSelfStudyView()
         {
