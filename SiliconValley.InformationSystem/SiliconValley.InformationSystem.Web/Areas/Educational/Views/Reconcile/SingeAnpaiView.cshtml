@@ -1,0 +1,384 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SingeAnpaiView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+
+        .linu
+        {
+            width: 100%;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+
+        .layui-unselect
+        {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .DivCss1
+        {
+            width: 90%;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .CssHide
+        {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="DivCss1">
+        <form class="layui-form" lay-filter="Reconcileindexform">
+            <div class="layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">阶&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段:</label>
+                    <div class="layui-input-block">
+                        @Html.DropDownList("mygrand", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }, { "lay-filter", "grandselect" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级:</label>
+                    <div id="myclass" class="layui-input-block">
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业:</label>
+                    <div id="marjon" class="layui-input-block">
+                        <input type="text" disabled="disabled" class="layui-input linu" readonly="readonly" id="Marjon">
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">上课时间:</label>
+                    <div class="layui-input-block">
+                        <input style="color:black; " class="layui-input linu" type="text" name="time" id="time" readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">课&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;程:</label>
+                    <div id="currr_div" class="layui-input-block">
+
+                    </div>
+
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期:</label>
+                    <div class="layui-input-block">
+                        <input id="startTime" name="startTime" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="LableCss1">校&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;区:</label>
+                    <div class="layui-input-block" id="div_time">
+                        @Html.DropDownList("schoolAddress", ViewBag.Schooladdress as List<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }, { "lay-filter", "schoolAddress" } })
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">教&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室:</label>
+                    <div class="layui-input-block">
+                        <div class="layui-collapse" lay-accordion>
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,1)">教室选择区:</h2>
+                                <div class="layui-colla-content" id="classroom_div">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="LableCss1">专业老师:</label>
+                    <div class="layui-input-block">
+                        <div class="layui-collapse" lay-accordion>
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,1)">老师选择区:</h2>
+                                <div class="layui-colla-content">
+                                    @{
+                                        List<SelectListItem> select = ViewBag.Teacher as List<SelectListItem>;
+                                        foreach (SelectListItem se in select)
+                                        {
+                                            <input type="radio" value="@se.Value" title="@se.Text" name="teachersele" id="teachersele" />
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="NoMainDiv" class="layui-form-item CssHide">
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <label class="LableCss1">语文老师:</label>
+                    <div id="yuwenDiv" class="layui-input-block">
+
+                    </div>
+                </div>
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <label class="LableCss1">数学老师:</label>
+                    <div id="shuxuenDiv" class="layui-input-block">
+
+                    </div>
+                </div>
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <label class="LableCss1">英语老师:</label>
+                    <div id="yingyuDiv" class="layui-input-block">
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <div style="width:54%;text-align:right;margin-top:20px;">
+                        <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="IsTrue" value="确定排课" />
+                        <input type="button" class="layui-btn" value="取消关闭" onclick="Myclose()" />
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
+    <script>
+
+        layui.use(['form', 'laydate', 'table','element'], function () {
+                var form = layui.form;
+                var laydate = layui.laydate;
+            var element = layui.element;
+            var layer = layui.layer;
+                //日期
+                laydate.render({
+                    elem: '#startTime'
+                });
+                //获取班级/语文、数学、英语老师
+            form.on('select(grandselect)', function (data) {
+                var grand = $(":checked")[0].innerText;//获取选中的阶段
+                if (grand == "Y1" || grand == "y1") {
+                    $("#NoMainDiv").removeClass("CssHide");
+                    //加载语数英老师
+                    $.ajax({
+                        url: 'GetOrtherTeacher',
+                        type:'POST',
+                        success: function (suc) {
+                            console.log(suc);
+                            if (suc.length>0) {
+                                for (var i = 0; i < suc.length; i++) {
+                                    if (suc[i].Grand_Name == "语文老师") {
+                                        var select1 = $('<select class="layui-select" id="yuwen" name="yuwen"><select/>');
+                                        for (var j = 0; j < suc[i].Class_list.length; j++) {
+                                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
+                                        }
+                                        select1.appendTo("#yuwenDiv");
+                                    } else if (suc[i].Grand_Name == "数学老师") {
+                                        var select1 = $('<select class="layui-select" id="shuxue" name="shuxue"><select/>');
+                                        for (var j = 0; j < suc[i].Class_list.length; j++) {
+                                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
+                                        }
+                                        select1.appendTo("#shuxuenDiv");
+                                    } else if (suc[i].Grand_Name == "英语老师") {
+                                        var select1 = $('<select class="layui-select" id="yingyu" name="yingyu" ><select/>');
+                                        for (var j = 0; j < suc[i].Class_list.length; j++) {
+                                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
+                                        }
+                                        select1.appendTo("#yingyuDiv");
+                                    }
+                                }
+                                form.render();
+                            }
+                        }
+                    });
+                } else {
+                    $("#NoMainDiv").addClass("CssHide");
+                }
+
+                    $("#myclass")[0].innerHTML = "";//清空班级DIV
+
+                    $("#currr_div")[0].innerHTML = "";//清空课程DIV
+
+                    $("#Marjon")[0].value = null;//清空专业INPUT
+
+                    $("#time")[0].value = null;//清空上课时间INPUT
+                    form.val("Reconcileindexform", { "schoolAddress": "0" });   //将下拉框改为初始值
+                    if (data.value != "0") {
+                        $.ajax({
+                            url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                            success: function (sudata) {
+                                //获取班级slect
+                                var classselect = $('<select id="class_select" name="class_select" class="layui-select" lay-filter="bianji"><option value="0" selected>--请选择--</select>');
+                                for (var i = 0; i < sudata.length; i++) {
+                                    $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                                }
+                                $("#myclass").append(classselect);
+                                form.render(); //更新全部
+                            }
+                        });
+                    }
+                });
+                //获取课程
+                form.on('select(bianji)', function (data) {
+                    $("#currr_div")[0].innerHTML = "";
+                    if (data.value != "0") {
+                        $.ajax({
+                            url: '/Educational/Reconcile/GetClassDate/' + data.value,
+                            success: function (sucdata) {
+                                if (sucdata.stataus == "true") {
+                                    var myselect_c = $("<select name='kecheng' id='kecheng'></select>");
+                                    for (var i = 0; i < sucdata.c_list.length; i++) {
+                                        $("<option value=" + sucdata.c_list[i].CurriculumID + ">" + sucdata.c_list[i].CourseName + "<option>").appendTo(myselect_c);
+                                    }
+                                    $("#currr_div").append(myselect_c);
+
+                                    $("#time")[0].value = sucdata.classData.ClassDate; //上课时间
+                                    $("#Marjon")[0].value = sucdata.classData.marjoiName.length > 0 ? sucdata.classData.marjoiName:"无";//专业
+                                    form.render(); //更新全部
+                                } else {
+                                    layer.msg('班级名称错误！！！', { icon: 2 });
+                                }
+
+                            }
+                        });
+                    }
+                });
+                //根据校区获取空教室
+                form.on('select(schoolAddress)', function (data) {
+                    $("#classroom_div")[0].innerHTML = "";
+                    if (data.value == "0") {
+                        layer.msg('请先有效的校区!!!', { icon: 2 });
+                    } else {
+                        var MY = { "schooldaddressval": data.value };
+
+                        //加载教室
+                        $.ajax({
+                            url: '/Educational/Reconcile/GetSchoolEmptyRoom',
+                            type: 'POST',
+                            data: MY,
+                            success: function (suc) {
+                                if (suc.Data.length > 0) {
+                                    for (var i = 0; i < suc.Data.length; i++) {
+                                        $('<input type="radio" name="myclassroom" id="myclassroom" value=' + suc.Data[i].Value + ' title= ' + suc.Data[i].Text + ' />').appendTo($("#classroom_div"));
+                                    }
+                                    form.render(); //更新全部
+                                } else {
+                                    layer.msg('该校区没有教室!!', { icon: 2, shade: 0.8 });
+                                }
+                            }
+                        });
+                    }
+
+                });
+                //排课
+                form.on('submit(IsTrue)', function (data) {
+                    var mydata = data.field;
+                    if (mydata.class_select == "0") {
+                        layer.msg('请选择有效的班级！！！', { icon: 2 });
+                    } else if (mydata.startTime == "") {
+                        layer.msg('请选择排课日期！！！', { icon: 2 });
+                    } else if (mydata.myclassroom == undefined || mydata.myclassroom == 0) {
+                        layer.msg('请选择教室！！！', { icon: 2 });
+                    } else if (mydata.teachersele == undefined ) {
+                        layer.msg('请选择任课老师！！！', { icon: 2 });
+                    } else {
+
+                        if (mydata.mygrand == "0") {
+                            layer.msg('请选择班级！！！', { icon: 2 });
+                        } else if (mydata.myclassroom == undefined) {
+                            layer.msg('请选择教室！！！', { icon: 2 });
+                        } else {
+                            var myindexof = layer.load(1);
+                             $.ajax({
+                                 url: '/Educational/Reconcile/PaikeFunction2',
+                            type: 'POST',
+                            data: mydata,
+                                 success: function (Sucdata) {
+                                     layer.close(myindexof);
+                                     if (Sucdata.Success == true) {
+                                         layer.msg(Sucdata.Msg, { icon: 1, shade: 0.8 }, function () {
+                                         });
+                                } else {
+                                    layer.msg(Sucdata.Msg, { icon: 2, shade: 0.8 });
+                                }
+                            }
+                        });
+                        }
+
+                    }
+                    return false;
+                });
+            });
+
+
+        $(function () {
+            layui.use(['form'], function () {
+                var form = layui.form;
+                form.val("Reconcileindexform", { "schoolAddress": "0" });   //将下拉框改为初始值
+            });
+        });
+        //关闭弹出层
+        function Myclose() {
+            var layer = layui.layer;
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+        }
+    </script>
+</body>
+</html>

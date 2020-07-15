@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
@@ -33,7 +34,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
         public ActionResult EvningTableData(int page, int limit)
         {
-            List<EvningSelfStudy> Evn_list = EvningSelefstudy_Entity.EvningSelfStudyGetAll().OrderByDescending(e => e.id).ToList();//获取所有晚自习排课数据
+            List<EvningSelfStudyView> Evn_list = EvningSelefstudy_Entity.GetAllView().OrderByDescending(e => e.Anpaidate).ToList();//获取所有晚自习排课数据
             List<Grand> glist = Reconcile_Com.GetGrand_Id();
 
             string c_id = Request.QueryString["class_selectone"];
@@ -60,16 +61,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 int grand_id = Convert.ToInt32(grandid);
                 Evn_list = Evn_list.Where(e => Reconcile_Com.ClassSchedule_Entity.GetEntity(e.ClassSchedule_id).grade_Id == grand_id).ToList();
             }
-            var data = Evn_list.Skip((page - 1) * limit).Take(limit).Select(e => new
-            {
-                Id = e.id,
-                EmpName = string.IsNullOrEmpty(e.emp_id) == true ? null : Reconcile_Com.Employees_Entity.GetEntity(e.emp_id).EmpName,
-                Anpaidate = e.Anpaidate,
-                ClassroomName = Reconcile_Com.Classroom_Entity.GetEntity(e.Classroom_id).ClassroomName,
-                ClassSchedule_id = Reconcile_Com.ClassSchedule_Entity.GetEntity(e.ClassSchedule_id).ClassNumber,
-                curd_name = e.curd_name,
-                Rmark = e.Rmark
-            });
+            var data = Evn_list.Skip((page - 1) * limit).Take(limit).ToList();
 
             var jsonData = new { code = 0, msg = "", data = data, count = Evn_list.Count };
             return Json(jsonData, JsonRequestBehavior.AllowGet);
@@ -369,6 +361,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             int shcooldrees_id = Convert.ToInt32(Request.Form["schooladdres"]);//校区编号
             List<Classroom> list = EvningSelefstudy_Entity.GetEmptyClassrooms(timename, time, shcooldrees_id);
             return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 根据登录的老师获取属于他们的班级晚自习数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ShowTeacher()
+        {
+            return View(); 
         }
     }
 }

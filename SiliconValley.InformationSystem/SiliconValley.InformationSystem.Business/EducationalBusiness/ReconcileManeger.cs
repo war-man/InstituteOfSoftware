@@ -1500,8 +1500,18 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             foreach (Curriculum cur in find_curr_list)
             {
-                int Sumcout = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(cur.CourseCount / 4.0))); //获取总节数
-
+                int Sumcout = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(cur.CourseCount / 4.0))); //获取总节数,不算考试在内
+                if (!cur.CourseName.Contains("STB") && cur.Grand_Id!=3 && cur.Grand_Id != 4)//StB不需要考试，S3,S4不需要课程考试，需要项目答辩
+                {
+                    Sumcout = Sumcout + 1;
+                }else if (cur.Grand_Id == 3 || cur.Grand_Id == 4)
+                {
+                    if (this.IsEndCurr(cur.CourseName))
+                    {
+                        Sumcout = Sumcout + 1;
+                    }
+                }
+                
                 int index = 0;
                 for (int i = 0; i < Sumcout; i++)
                 {
@@ -1537,6 +1547,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     new_R.EmployeesInfo_Id = empNo;
                     new_R.NewDate = DateTime.Now;
                     new_R.IsDelete = false;
+                    new_R.Curriculum_Id = cur.CourseName;
                     if (index == Sumcout)
                     {
                         if (this.IsEndCurr(cur.CourseName))
@@ -1546,15 +1557,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         }
                         else
                         {
-                            new_R.Curriculum_Id = cur.CourseName + "考试";
-                            new_R.EmployeesInfo_Id = null;
+                            //如果是STB则不需要考试，如果是S3、S4的课程，不需要处理
+                            if (!cur.CourseName.Contains("STB") && cur.Grand_Id!=3 && cur.Grand_Id != 4)
+                            {
+                                new_R.Curriculum_Id = cur.CourseName + "考试";
+                                new_R.EmployeesInfo_Id = null;
+                            }
+                             
                         }
 
                     }
-                    else
-                    {
-                        new_R.Curriculum_Id = cur.CourseName;
-                    }
+                    
                     r_list.Add(new_R);
                     time = time.AddDays(1);
 
@@ -1734,6 +1747,285 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     r_list.Add(mycc);
                 }
             }
+
+            return r_list;
+        }
+        
+        /// <summary>
+        /// 高中生单个课程数据安排
+        /// </summary>
+        /// <param name="getYear"></param>
+        /// <param name="curNo"></param>
+        /// <param name="time"></param>
+        /// <param name="timename"></param>
+        /// <param name="classroomid"></param>
+        /// <param name="empNo"></param>
+        /// <param name="classNo"></param>
+        /// <param name="grand"></param>
+        /// <param name="marjion_id"></param>
+        /// <returns></returns>
+        public List<Reconcile> HeghtStudent_SingCurs(GetYear getYear, int curNo, DateTime time, string timename, int classroomid, string empNo, int classNo, int grand, int marjion_id)
+        {
+               Curriculum find_curdata = Reconcile_Com.Curriculum_Entity.GetEntity(curNo);   //获取课程
+             
+
+                List<Reconcile> r_list = new List<Reconcile>();
+
+             
+                int Sumcout = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(find_curdata.CourseCount / 4.0))); //获取总节数,不算考试在内
+                
+                for (int i = 0; i < Sumcout; i++)
+                {                   
+                    if (time.Month <= getYear.EndmonthName && time.Month >= getYear.StartmonthName) //单休
+                    {
+                        if (this.IsSaturday(time) == 2)
+                        {
+                            time = time.AddDays(1);
+                            Sumcout++;
+                            
+                            i++;
+                        }
+                    }
+                    else //双休
+                    {
+
+                        if (this.IsSaturday(time) == 1)
+                        {
+                            Sumcout = Sumcout + 2;
+                            
+                            i = i + 2;
+                            time = time.AddDays(2);
+                        }
+
+                    }
+                    Reconcile new_R = new Reconcile();
+                    new_R.AnPaiDate = time;
+                    new_R.Curse_Id = timename;
+                    new_R.ClassRoom_Id = classroomid;
+                    new_R.ClassSchedule_Id = classNo;
+                    new_R.EmployeesInfo_Id = empNo;
+                    new_R.NewDate = DateTime.Now;
+                    new_R.IsDelete = false;
+                    new_R.Curriculum_Id = find_curdata.CourseName;
+                    
+
+                    r_list.Add(new_R);
+                    time = time.AddDays(1);
+
+                    
+                }
+
+           
+                if (this.IsEndCurr(find_curdata.CourseName))
+                {
+                        Reconcile new_R = new Reconcile();
+                        new_R.AnPaiDate = time;
+                        new_R.Curse_Id = timename;
+                        new_R.ClassRoom_Id = classroomid;
+                        new_R.ClassSchedule_Id = classNo;
+                        new_R.EmployeesInfo_Id = empNo;
+                        new_R.NewDate = DateTime.Now;
+                        new_R.IsDelete = false;
+                        new_R.Curriculum_Id = find_curdata.CourseName;
+                        new_R.Curriculum_Id = "升学考试";
+                        new_R.EmployeesInfo_Id = null;
+                        r_list.Add(new_R);
+                }
+                else
+                {
+                    //如果是STB则不需要考试，如果是S3、S4的课程，不需要处理
+                    if (!find_curdata.CourseName.Contains("STB") && find_curdata.Grand_Id != 3 && find_curdata.Grand_Id != 4)
+                    {
+                        Reconcile new_R = new Reconcile();
+                        new_R.AnPaiDate = time;
+                        new_R.Curse_Id = timename;
+                        new_R.ClassRoom_Id = classroomid;
+                        new_R.ClassSchedule_Id = classNo;
+                        new_R.EmployeesInfo_Id = empNo;
+                        new_R.NewDate = DateTime.Now;
+                        new_R.IsDelete = false;
+                        new_R.Curriculum_Id = find_curdata.CourseName;
+                        new_R.Curriculum_Id = find_curdata.CourseName + "考试";
+                        new_R.EmployeesInfo_Id = null;
+                        r_list.Add(new_R);
+                    }
+
+                }
+
+            
+            return r_list;
+        }
+      
+        /// <summary>
+        /// 初中生单个课程数据安排
+        /// </summary>
+        /// <param name="doublecease"></param>
+        /// <param name="curNo"></param>
+        /// <param name="time"></param>
+        /// <param name="timename"></param>
+        /// <param name="classroomid"></param>
+        /// <param name="empNo"></param>
+        /// <param name="classNo"></param>
+        /// <param name="grandid"></param>
+        /// <param name="yuwen"></param>
+        /// <param name="shuxue"></param>
+        /// <param name="yingyu"></param>
+        /// <returns></returns>
+        public List<Reconcile> MiddleStudent_SingCurs(GetYear doublecease, int curNo, DateTime time, string timename, int classroomid, string empNo, int classNo, int grandid, string yuwen, string shuxue, string yingyu)
+        {
+            Curriculum find_curdata = Reconcile_Com.Curriculum_Entity.GetEntity(curNo);   //获取课程
+
+           
+
+            List<Reconcile> r_list = new List<Reconcile>();
+
+            bool IsMargin = true;//true--安排专业课，false--安排语数英
+
+            string[] strcurr = new string[] { "语文,数学", "数学,英语", "英语,语文" };
+
+            string[] strtimename = new string[] { "上午12节,上午34节", "下午12节,下午34节" };
+
+            
+                int Sumcout = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(find_curdata.CourseCount / 4.0))); //获取总节数
+                int nomargin = 0;
+                for (int i = 0; i < Sumcout; i++)
+                {
+
+                    Reconcile r = new Reconcile();
+                    //判断是否是单休
+
+                    if (time.Month >= doublecease.StartmonthName && time.Month <= doublecease.EndmonthName)
+                    {
+                        //单休
+                        if (this.IsSaturday(time) == 2)
+                        {
+                            //如果是周日
+
+                            time = time.AddDays(1);
+                            i++;
+                            Sumcout++;
+                        }
+
+                    }
+                    else
+                    {
+                        //双休
+                        if (this.IsSaturday(time) == 1)
+                        {
+                            //如果是周六
+                            // r.AnPaiDate = time.AddDays(i + 2);
+                            time = time.AddDays(2);
+                            i = i + 2;
+                            Sumcout = Sumcout + 2;
+                        }
+                    }
+                    r.AnPaiDate = time;
+                    r.ClassRoom_Id = classroomid;
+                    r.ClassSchedule_Id = classNo;
+
+                    if (IsMargin == true)
+                    {
+                        r.EmployeesInfo_Id = empNo;
+                        r.Curse_Id = timename;
+                        r.Curriculum_Id = find_curdata.CourseName;
+                        r.Curse_Id = timename;
+                        r.NewDate = DateTime.Now;
+                        r.IsDelete = false;
+                        r_list.Add(r);
+                    }
+                    else
+                    {
+                        Sumcout++;
+                        string[] currname1 = strcurr[nomargin].Split(',');
+
+                        //安排语数英
+                        if (timename == "上午")
+                        {
+                            string[] timename1 = strtimename[0].Split(',');
+
+                            for (int j = 0; j < timename1.Length; j++)
+                            {
+                                Reconcile cc1 = new Reconcile();
+                                cc1.AnPaiDate = r.AnPaiDate;
+                                cc1.ClassRoom_Id = classroomid;
+                                cc1.ClassSchedule_Id = classNo;
+                                cc1.Curriculum_Id = currname1[j];
+                                cc1.Curse_Id = timename1[j];
+                                cc1.NewDate = DateTime.Now;
+                                cc1.IsDelete = false;
+                                if (currname1[j] == "语文")
+                                {
+                                    cc1.EmployeesInfo_Id = yuwen == null ? null : yuwen;
+                                }
+                                else if (currname1[j] == "数学")
+                                {
+                                    cc1.EmployeesInfo_Id = shuxue == null ? null : shuxue;
+                                }
+                                else if (currname1[j] == "英语")
+                                {
+                                    cc1.EmployeesInfo_Id = yingyu == null ? null : yingyu;
+                                }
+                                r_list.Add(cc1);
+                            }
+
+                        }
+                        else if (timename == "下午")
+                        {
+                            string[] timename1 = strtimename[1].Split(',');
+
+                            for (int j = 0; j < timename1.Length; j++)
+                            {
+                                Reconcile cc1 = new Reconcile();
+                                cc1.AnPaiDate = r.AnPaiDate;
+                                cc1.ClassRoom_Id = classroomid;
+                                cc1.ClassSchedule_Id = classNo;
+                                cc1.Curriculum_Id = currname1[j];
+                                cc1.Curse_Id = timename1[j];
+                                cc1.NewDate = DateTime.Now;
+                                cc1.IsDelete = false;
+                                cc1.EmployeesInfo_Id = null;
+                                if (currname1[j] == "语文")
+                                {
+                                    cc1.EmployeesInfo_Id = yuwen == null ? null : yuwen;
+                                }
+                                else if (currname1[j] == "数学")
+                                {
+                                    cc1.EmployeesInfo_Id = shuxue == null ? null : shuxue;
+                                }
+                                else if (currname1[j] == "英语")
+                                {
+                                    cc1.EmployeesInfo_Id = yingyu == null ? null : yingyu;
+                                }
+                                r_list.Add(cc1);
+                            }
+                        }
+
+                        if (nomargin < 2)
+                        {
+                            nomargin++;//用于判断语数英
+                        }
+                        else
+                        {
+                            nomargin = 0;
+                        }
+                    }
+                    IsMargin = IsMargin ? false : true;
+                    time = time.AddDays(1);
+                }
+
+                if (find_curdata.IsEndCurr == true)
+                {
+                    Reconcile mycc = new Reconcile();
+                    mycc.AnPaiDate = time.AddDays(1);
+                    mycc.ClassRoom_Id = classroomid;
+                    mycc.ClassSchedule_Id = classNo;
+                    mycc.Curriculum_Id = "升学考试";
+                    mycc.Curse_Id = timename;
+                    mycc.NewDate = DateTime.Now;
+                    mycc.IsDelete = false;
+                    r_list.Add(mycc);
+                }
+            
 
             return r_list;
         }
@@ -2035,7 +2327,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
         #endregion
       
-
         /// <summary>
         /// 获取空教室
         /// </summary>

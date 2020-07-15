@@ -339,6 +339,106 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             string time = Reconcile_Com.ClassSchedule_Entity.GetClassTime(find_c.id);//上课时间类型
             return Json(time, JsonRequestBehavior.AllowGet);
         }
+        
+        /// <summary>
+        /// 单个课程排课页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SingeAnpaiView()
+        {
+            //加载阶段
+            List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.grandlist = g_list;
+            //加载校区
+            BaseDataEnumManeger baseDataEnum_Entity = new BaseDataEnumManeger();
+            List<SelectListItem> schooladdress = baseDataEnum_Entity.GetsameFartherData("校区地址").Select(s => new SelectListItem() { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            schooladdress.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.Schooladdress = schooladdress;
+            //加载专业老师
+            ViewBag.Teacher = Reconcile_Entity.GetTeacherAll().Select(r => new SelectListItem() { Text = r.EmpName, Value = r.EmployeeId }).ToList();
+            return View();
+        }
+
+        /// <summary>
+        /// 系统单个课程排课方法
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult PaikeFunction2()
+        {
+            AjaxResult a = new AjaxResult();
+            StringBuilder db = new StringBuilder();
+            try
+            {
+                TeacherClassBusiness TeacherClass_Entity = new TeacherClassBusiness();
+                int y1_id = Reconcile_Com.GetGrand_Id().Where(c => c.GrandName.Equals("Y1", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault().Id; //获取Y1阶段Id               
+                string grand_Id = Request.Form["mygrand"];//获取班级阶段
+                int class_Id = Convert.ToInt32(Request.Form["class_select"]);//获取班级
+                int classroom_Id = Convert.ToInt32(Request.Form["myclassroom"]);//获取教室
+                int kengcheng = Convert.ToInt32(Request.Form["kecheng"]);//获取课程编号
+                string ke = Reconcile_Com.Curriculum_Entity.GetEntity(kengcheng).CourseName;//获取课程名称
+                string time = Request.Form["time"];//获取上课时间
+                string techar = Request.Form["teachersele"];//获取任课老师
+                DateTime startTime = Convert.ToDateTime(Request.Form["startTime"]);//获取排课日期
+
+                //开始排课
+                Curriculum find_c = Reconcile_Com.Curriculum_Entity.GetEntity(kengcheng);
+                //查看这个课程的课时数
+                int Kcount = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(find_c.CourseCount / 4.0)));
+                //判断该班级这个课程是否已排完课
+                int count = Reconcile_Entity.GetList().Where(r => r.Curriculum_Id == ke && r.ClassSchedule_Id == class_Id).ToList().Count;
+                if (count > 0)
+                {
+                    a.Msg = Reconcile_Com.ClassSchedule_Entity.GetEntity(class_Id).ClassNumber + "的" + ke + "已有排课数据，为了避免重复，请删除之后再操作！！";
+                    a.Success = false;
+                }
+                else if (count == Kcount)
+                {
+                    a.Msg = Reconcile_Com.ClassSchedule_Entity.GetEntity(class_Id).ClassNumber + "的" + ke + "已有排课数据,请安排其他课程！！";
+                    a.Success = false;
+                }
+                else
+                {
+
+                    GetYear find_g = Reconcile_Entity.MyGetYear(startTime.Year.ToString(), Server.MapPath("~/Xmlconfigure/Reconcile_XML.xml")); //获取单休双休月份
+
+                    List<Reconcile> new_list = new List<Reconcile>();
+
+                    if (y1_id.ToString() == grand_Id) //判断是否是Y1的班级
+                    {
+
+                        #region 初中生
+                        string yuwen = Request.Form["yuwen"]; //获取语文老师
+                        string shuxue = Request.Form["shuxue"]; //获取数学老师
+                        string yingyu = Request.Form["yingyu"]; //获取英语老师
+                        List<Reconcile> get_new_data = Reconcile_Entity.MiddleStudent_SingCurs(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, y1_id, yuwen, shuxue, yingyu);
+                        a = Reconcile_Entity.Inser_list(get_new_data);
+                        #endregion
+                    }
+                    else
+                    {
+
+                        #region 高中生
+                        ClassSchedule find_class = Reconcile_Com.ClassSchedule_Entity.GetEntity(class_Id);
+                        int marjoin = Convert.ToInt32(find_class.Major_Id);
+                        int grand = find_class.grade_Id;
+                        List<Reconcile> get_new_data = Reconcile_Entity.HeghtStudent_SingCurs(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, grand, marjoin);
+                        a = Reconcile_Entity.Inser_list(get_new_data);
+                        #endregion
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                a.Msg = "系统异常，请刷新重试";
+                a.Success = false;
+            }
+
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
 
         #region 手动排课

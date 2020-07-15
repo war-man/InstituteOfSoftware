@@ -31,6 +31,16 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return EvningSelfStudy_list;
         }
+       
+        /// <summary>
+        /// 获取所有晚自习数据
+        /// </summary>
+        /// <returns></returns>
+        public List<EvningSelfStudyView> GetAllView()
+        {
+            return this.GetListBySql<EvningSelfStudyView>("select * from EvningSelfStudyView");
+        }
+        
         /// <summary>
         /// 添加单个数据
         /// </summary>
