@@ -121,9 +121,9 @@
 
     </div>
     <div id="mycontent">
-        <form class="layui-form"></form>
+        @*<form class="layui-form"></form>*@
 
-
+        <table class="layui-hide" id="test" lay-filter="test"></table>
     </div>
 
 </div>
@@ -163,17 +163,21 @@
     </div>
    
 </script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="switchBtn">启用/禁用</a>
+</script>
 @section script{
     <script src="~/Areas/Teaching/Scripts/util.js"></script>
 
     <script src="~/Scripts/underscore.js"></script>
     <script>
-        layui.use(['layer', 'flow', 'form','laydate'], function () {
+        layui.use(['layer', 'flow', 'form','laydate','table'], function () {
             var form = layui.form;
             var layer = layui.layer;
             var flow = layui.flow;
             var laydate = layui.laydate;
-
+            var table = layui.table;
             var TOPLAYER = undefined;
            
 
@@ -211,55 +215,155 @@
             });
             layui.form.render("select");
 
-            flow.load({
-                elem: '#mycontent' //指定列表容器
-                , isAuto: true
-                , done: function (page, next) {
-                    var lis = [];
+            //flow.load({
+            //    elem: '#mycontent' //指定列表容器
+            //    , isAuto: true
+            //    , done: function (page, next) {
+            //        var lis = [];
 
-                    $.get('/CourseSyllabus/Course/ClassCourseArrangementData?page=' + page, function (res) {
+            //        $.get('/CourseSyllabus/Course/ClassCourseArrangementData?page=' + page, function (res) {
 
-                        layui.each(res.data, function (index, item) {
-                            console.log(item);
-                            var status; var beginDate; var checked = "";
+            //            layui.each(res.data, function (index, item) {
+            //                console.log(item);
+            //                var status; var beginDate; var checked = "";
 
-                            if (item.IsDel == false) {
-                                status = "正常";
-                                checked = "checked";
-                            }
-                            else {
-                                status: "过去式";
-                            }
+            //                if (item.IsDel == false) {
+            //                    status = "正常";
+            //                    checked = "checked";
+            //                }
+            //                else {
+            //                    status: "过去式";
+            //                }
 
-                            var dateutc = item.BeginDate.substr(item.BeginDate.indexOf('(') + 1, 13);
-                            beginDate = formaDateUtc(dateutc);
+            //                var dateutc = item.BeginDate.substr(item.BeginDate.indexOf('(') + 1, 13);
+            //                beginDate = formaDateUtc(dateutc);
 
-                            var enddate = "未结束"
+            //                var enddate = "未结束"
 
-                            if (item.EndDate != undefined && item.EndDate != null) {
+            //                if (item.EndDate != undefined && item.EndDate != null) {
                               
-                                var enddateutc = item.EndDate.substr(item.EndDate.indexOf('(') + 1, 13);
-                                enddate = formaDateUtc(enddateutc);
-                            }
+            //                    var enddateutc = item.EndDate.substr(item.EndDate.indexOf('(') + 1, 13);
+            //                    enddate = formaDateUtc(enddateutc);
+            //                }
                            
 
-                            var template = _.template($("#muban").html());
-                            var templateData = template({ classteacherid: item.ID, EndDate: enddate, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
-                            $("#mycontent form").append(templateData);
+            //                var template = _.template($("#muban").html());
+            //                var templateData = template({ classteacherid: item.ID, EndDate: enddate, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
+            //                $("#mycontent form").append(templateData);
 
-                        });
-                        form.render();
+            //            });
+            //            form.render();
 
-                        next(lis.join(''), page < res.total);
-                    });
+            //            next(lis.join(''), page < res.total);
+            //        });
+            //    }
+            //});
+            var UsingData = undefined;
+
+            function setColor(tableClassName) {
+                var $table = $(tableClassName).eq(1);
+               
+                if ($table.length > 0) {
+                    //遍历所有行
+                    $table.find('tr').each(function () {
+                        var open = $($(this).children('td')[8]).text();
+                        console.log(open);
+                        if (open == "未结束") {   //给状态为2的数据行设置背景色
+                            $(this).attr('style', "background:green;color:#000");
+                        }
+                     
+
+                        
+                    })
                 }
+            }
+          
+            var IsUsing = undefined;
+            table.render({
+                elem: '#test'
+                , id:"idTest"
+                , url: '/CourseSyllabus/Course/ClassCourseArrangementData'
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'ID', title: 'ID', width: 80, hide: true, fixed: 'left', unresize: true, sort: true }
+                    , {
+                        field: 'classid', title: '班级id',hide: true, width: 120, templet: function (res) { return res.ClassNumber.id;}
+                    }
+                    , { field: 'ClassNumber', title: '班级', width: 150, templet: function (res) { return res.ClassNumber.ClassNumber; }}
+                    , {
+                        field: 'CourseName', title: '课程', width: 80, templet: function (res) { return res.Skill.CourseName; }
+                    }
+                    , { field: 'TeacherName', title: '老师', width: 100, templet: function (res) { return res.Teacher.EmpName; } }
+                    , {
+                        field: 'BeginDate', title: '开始时间', templet: function (res) {
+                            var dateutc = res.BeginDate.substr(res.BeginDate.indexOf('(') + 1, 13);
+                            beginDate = formaDateUtc(dateutc); return beginDate;
+                        }
+                    }
+                    , {
+                        field: 'status', title: '状态', width: 80, templet: function (res) {
+
+                            var status; 
+
+                            if (res.IsDel == false) {
+
+                                status = "正常";
+                                
+                            }
+                            else {
+                                status= "过去式";
+                            }
+
+                            return status
+                        }
+                    }
+                    , { field: 'EndDate', title: '结束时间', width: 120, templet: function (res) {
+                        var enddate = "未结束"
+
+                        if (res.EndDate != undefined && res.EndDate != null) {
+
+                            var enddateutc = res.EndDate.substr(res.EndDate.indexOf('(') + 1, 13);
+                            enddate = formaDateUtc(enddateutc);
+                        }
+                        return enddate;
+
+                    }
+                    }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+                    
+                 
+                ]]
+                , page: true
+                //, done: function (res, curr, count) {
+                //    console.log("zzzzzzz");
+                //    setColor('.layui-table');
+                //}
             });
 
+            //监听行工具事件
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'switchBtn') {
 
-            //$(document).off("mouseover", '.item').on('mouseover', '.item', function () {
+                    UsingData = data;
+                    //IsUsing = this.checked ? "true" : "false";
 
-            //    $(this).find(".courseItem").css("background-color", 'gray');
-            //});
+                    //选择时间
+                    TOPLAYER = layer.open({
+                        type: 1,
+                        title: "选择日期",
+                        area: ["300px", "400px"],
+                        content: $("#selectDate").html(),
+                        end: function () {
+                            UsingData = undefined;
+                            //IsUsing = undefined;
+                        }
+                    });
+                } 
+            });
 
             $(document).off("mouseout", '.item').on('mouseout', '.item', function () {
 
@@ -305,9 +409,7 @@
 
             });
 
-            var UsingData = undefined;
-
-            var IsUsing = undefined;
+          
             //监听指定开关
             form.on('switch(IsUsing)', function (data) {
                 UsingData = data;
@@ -342,15 +444,11 @@
 
                 }
 
-                if (UsingData == undefined || IsUsing == undefined) {
-                    layer.msg("请刷新", { icon: 2 });
-                    return;
-                }
-
+                
                 var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒
                
-                var classteacherid = $(UsingData.elem).parent().parent().parent().attr("classteacherid");
-                $.post("/CourseSyllabus/Course/UsingOrProhibit", { status: IsUsing, classteacherid: classteacherid, date: selectDate }, function (result) {
+                var classteacherid = UsingData.ID;
+                $.post("/CourseSyllabus/Course/UsingOrProhibit", {classteacherid: classteacherid, date: selectDate }, function (result) {
 
                     if (result.ErrorCode == 200) {
                         layer.msg('操作成功', { icon: 1 }, function () {
@@ -380,51 +478,15 @@
                 if (field.open == "on") {
                     status = true;
                 }
-                $("#mycontent form").html("");
-
-                flow.load({
-                    elem: '#mycontent' //指定列表容器
-                    , isAuto: true
-                    , done: function (page, next) {
-                        var lis = [];
-
-                        $.get('/CourseSyllabus/Course/SearchClassCourseArrangementData?page=' + page + "&classid=" + field.classnumber + "&status=" + status, function (res) {
-
-                            layui.each(res.data, function (index, item) {
-                                console.log(item);
-                                var status; var beginDate; var checked = "";
-
-                                if (item.IsDel == false) {
-                                    status = "正常";
-                                    checked = "checked";
-                                }
-                                else {
-                                    status: "过去式";
-                                }
-
-                                var dateutc = item.BeginDate.substr(item.BeginDate.indexOf('(') + 1, 13);
-                                beginDate = formaDateUtc(dateutc);
-                                var enddate = "未结束"
-
-                                if (item.EndDate != undefined && item.EndDate != null) {
-
-                                    var enddateutc = item.EndDate.substr(item.EndDate.indexOf('(') + 1, 13);
-                                    enddate = formaDateUtc(enddateutc);
-                                }
-
-                                var template = _.template($("#muban").html());
-                                var templateData = template({ classteacherid: item.ID,EndDate:enddate, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
-                                $("#mycontent form").append(templateData);
-
-                            });
-                            form.render();
-
-                            next(lis.join(''), page < res.total);
-                        });
-                    }
+              
+                table.reload('idTest', {
+                    url: '/CourseSyllabus/Course/SearchClassCourseArrangementData'
+                    , where: {
+                        classid: field.classnumber,
+                        status: status
+                    } 
+                    
                 });
-
-
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
 

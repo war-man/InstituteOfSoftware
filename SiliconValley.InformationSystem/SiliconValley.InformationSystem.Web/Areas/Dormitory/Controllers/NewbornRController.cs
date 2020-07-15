@@ -228,7 +228,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         {
             AjaxResult ajaxResult = new AjaxResult();
             dbacc = new AccdationinformationBusiness();
-            Accdationinformation accdationinformation = new Accdationinformation();
+
+            //判断是否已经有入住信息，有-修改，无-添加
+
+            var isHave = true;
+            Accdationinformation accdationinformation = dbacc.GetAccdationByStudentNumber(resultdata);
+
+            if (accdationinformation == null)
+            {
+                isHave = false;
+                accdationinformation = new Accdationinformation();
+            }
+
             accdationinformation.CreationTime = DateTime.Now;
             accdationinformation.IsDel = false;
             accdationinformation.Remark = string.Empty;
@@ -236,7 +247,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             accdationinformation.BedId = BedId;
             accdationinformation.DormId = DormId;
             accdationinformation.Studentnumber = resultdata;
-            ajaxResult.Success = dbacc.AddAcc(accdationinformation);
+
+            if (isHave)
+            {
+                try
+                {
+                    dbacc.Update(accdationinformation);
+                    ajaxResult.Success = true;
+                }
+                catch (Exception ex)
+                {
+
+                    ajaxResult.Success = false;
+                }
+                
+            }
+            else
+            {
+                ajaxResult.Success = dbacc.AddAcc(accdationinformation);
+            }
+
+           
+
+
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
 

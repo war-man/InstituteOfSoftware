@@ -277,13 +277,13 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
 
         }
 
-        public void UsingOrProhibit(string status, int classteacherid, DateTime date)
+        public void UsingOrProhibit(int classteacherid, DateTime date)
         {
             var classteacher = db_classteacher.GetIQueryable().Where(d => d.ID == classteacherid).FirstOrDefault();
 
             //如果为启用  则要禁用掉其他的 
 
-            if (status == "true")
+            if (classteacher.IsDel==false)
             {
                 var templist = db_classteacher.GetIQueryable().Where(d => d.ClassNumber == classteacher.ClassNumber && d.IsDel == false).ToList();
 
