@@ -18,23 +18,23 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int Id { get; set; }
-        public Nullable<int> Pid { get; set; }
-        public Nullable<int> PlanRecruitNum { get; set; }
-        public Nullable<int> ResumeSum { get; set; }
-        public Nullable<int> OutboundCallSum { get; set; }
-        public Nullable<int> InstantInviteSum { get; set; }
-        public Nullable<int> InstantToFacesSum { get; set; }
-        public Nullable<int> InstantRetestSum { get; set; }
-        public Nullable<int> InstantRetestPassSum { get; set; }
-        public Nullable<int> InstantEntryNum { get; set; }
-        public Nullable<decimal> InstantToFacesRate { get; set; }
-        public Nullable<decimal> InstantInviteRate { get; set; }
-        public Nullable<decimal> InstantRetestPassrate { get; set; }
-        public Nullable<decimal> EntryRate { get; set; }
-        public Nullable<decimal> RecruitPercentage { get; set; }
-        public string Remark { get; set; }
+        public Nullable<int> Pid { get; set; }//岗位
+        public Nullable<int> PlanRecruitNum { get; set; }//计划招聘人数
+        public Nullable<int> ResumeSum { get; set; }//简历总数
+        public Nullable<int> OutboundCallSum { get; set; }//电话呼出总数
+        public Nullable<int> InstantInviteSum { get; set; }//当月邀约总数
+        public Nullable<int> InstantToFacesSum { get; set; }//当月到面总数
+        public Nullable<int> InstantRetestSum { get; set; }//当月复试总数
+        public Nullable<int> InstantRetestPassSum { get; set; }//当月复试通过总数
+        public Nullable<int> InstantEntryNum { get; set; }//当月入职人数
+        public Nullable<decimal> InstantToFacesRate { get; set; }//当月到面率
+        public Nullable<decimal> InstantInviteRate { get; set; }//当月邀约率
+        public Nullable<decimal> InstantRetestPassrate { get; set; }//当月复试通过率
+        public Nullable<decimal> EntryRate { get; set; }//入职率
+        public Nullable<decimal> RecruitPercentage { get; set; }//招聘完成率
+        public string Remark { get; set; }// 备注
         public Nullable<bool> IsDel { get; set; }
-    public Nullable<System.DateTime> YearAndMonth { get; set; }
+    public Nullable<System.DateTime> YearAndMonth { get; set; }//年月份
         
     }
 }

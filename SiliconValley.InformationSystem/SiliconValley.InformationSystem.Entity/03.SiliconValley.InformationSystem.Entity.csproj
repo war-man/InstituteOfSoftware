@@ -407,6 +407,7 @@
     <Compile Include="ViewEntity\MessagenotificationView.cs" />
     <Compile Include="ViewEntity\NetClientRecordView.cs" />
     <Compile Include="ViewEntity\PutStudentDataView.cs" />
+    <Compile Include="ViewEntity\RecruitPhoneTraceView.cs" />
     <Compile Include="ViewEntity\Refunditemsview.cs" />
     <Compile Include="ViewEntity\SatisficingConfigDataView.cs" />
     <Compile Include="ViewEntity\ScheduleForTraineesview.cs" />

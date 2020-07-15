@@ -112,17 +112,17 @@
                       { field: 'Name', title: '姓名', sort: true, width: 90 }
                     , { field: 'pname', title: '应聘岗位', sort: true, width: 120 }
                     , { field: 'PhoneNumber', title: '手机号', width: 96, sort: true }
-                    , { field: 'TraceTime', title: '追踪时间', width: 108, sort: true, templet: function (d) { return GetYMD(d.TraceTime); } }
+                    , { field: 'TraceTime', title: '联系时间', width: 108, sort: true, templet: function (d) { return GetYMD(d.TraceTime); } }
                     , { field: 'Channel', title: '渠道', width: 95, sort: true }
                     , { field: 'ResumeType', title: '简历类型', sort: true, width: 110 }
-                    , { field: 'PhoneCommunicateResult', title: '电话沟通结果', width: 120 }
-                    , { field: 'FirstInterviewDate', title: '初试日期', width: 100, templet: function (d) { return GetYMD(d.FirstInterviewDate); } }
-                    , { field: 'IsInterview', title: '是否面试', width: 100, templet: '#switchTp3', unresize: true }
-                    , { field: 'FirstInterviewResult', title: '初试结果', width: 100 }
-                    , { field: 'RetestDate', title: '复试日期', width: 100, templet: function (d) { return GetYMD(d.RetestDate); } }
-                    , { field: 'RetestResult', title: '复试结果', width: 100, templet: '#result' }
-                    , { field: 'OfferGiveTime', title: 'offer时间', width: 100, templet: function (d) { return changeDateTimeFormat(d.OfferGiveTime); } }
-                    , { field: 'PlanEntryTime', title: '预计入职时间', width: 120, templet: function (d) { return GetYMD(d.PlanEntryTime); } }
+                    , { field: 'PhoneCommunicateResult', title: '联系结果', width: 120 }
+                    //, { field: 'FirstInterviewDate', title: '初试日期', width: 100, templet: function (d) { return GetYMD(d.FirstInterviewDate); } }
+                    //, { field: 'IsInterview', title: '是否面试', width: 100, templet: '#switchTp3', unresize: true }
+                    //, { field: 'FirstInterviewResult', title: '初试结果', width: 100 }
+                    //, { field: 'RetestDate', title: '复试日期', width: 100, templet: function (d) { return GetYMD(d.RetestDate); } }
+                    //, { field: 'RetestResult', title: '复试结果', width: 100, templet: '#result' }
+                    //, { field: 'OfferGiveTime', title: 'offer时间', width: 100, templet: function (d) { return changeDateTimeFormat(d.OfferGiveTime); } }
+                    //, { field: 'PlanEntryTime', title: '预计入职时间', width: 120, templet: function (d) { return GetYMD(d.PlanEntryTime); } }
                     , { field: 'IsEntry', title: '是否入职', width: 100, templet: '#switchTp2', unresize: true }
                     , { field: 'Remark', title: '备注', sort: true, width: 90 }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo' }

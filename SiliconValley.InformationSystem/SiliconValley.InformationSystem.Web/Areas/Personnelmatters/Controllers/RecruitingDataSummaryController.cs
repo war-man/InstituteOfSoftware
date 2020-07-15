@@ -20,6 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.Common;
     using SiliconValley.InformationSystem.Entity.Base_SysManage;
     using System.Data;
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
 
     public class RecruitingDataSummaryController : Controller
     {
@@ -33,37 +34,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult GetTraceData(int page, int limit)
         {  
             RecruitPhoneTraceManage rptmanage = new RecruitPhoneTraceManage();
-            var rdslist = rptmanage.GetList();
-            var myrdslist = rdslist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
-            var newlist = from rds in myrdslist
-                          select new
-                          {
-                              #region 赋值
-                              rds.Id,
-                              rds.Name,
-                              pname = GetPosition((int)rds.Pid).PositionName,
-                              rds.PhoneNumber,
-                              rds.TraceTime,
-                              rds.Channel,
-                              rds.ResumeType,
-                              rds.PhoneCommunicateResult,
-                              rds.FirstInterviewDate,
-                              rds.IsInterview,
-                              rds.FirstInterviewResult,
-                              rds.RetestDate,
-                              rds.RetestResult,
-                              rds.OfferGiveTime,
-                              rds.PlanEntryTime,
-                              rds.IsEntry,
-                              rds.Remark
-                              #endregion
-                          };
+            List<RecruitPhoneTraceView> rptviewlist = new List<RecruitPhoneTraceView>();
+            EmployeesInfoManage empmanagee = new EmployeesInfoManage();
+            var rdslist = rptmanage.GetList().Where(s=>s.IsDel==false).ToList();         
+            foreach (var item in rdslist)
+            {
+                RecruitPhoneTraceView rptview = new RecruitPhoneTraceView();
+                rptview.Id = item.Id;
+                rptview.Name = item.Name;
+                rptview.PhoneNumber = item.PhoneNumber;
+                rptview.TraceTime = item.TraceTime;
+                rptview.Channel = item.Channel;
+                rptview.ResumeType = item.ResumeType;
+                rptview.PhoneCommunicateResult = item.PhoneCommunicateResult;
+                rptview.IsEntry = item.IsEntry;
+                rptview.Remark = item.Remark;
+                rptview.IsDel = item.IsDel;
+                rptview.Pid = item.Pid;
+                rptview.Pname = empmanagee.GetPobjById((int)item.Pid).PositionName;
+                rptview.Dname = empmanagee.GetDeptByPid((int)item.Pid).DeptName;
+                rptviewlist.Add(rptview);
+            }
+            var myrdslist = rptviewlist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var newobj = new
             {
                 code = 0,
                 msg = "",
-                count = rdslist.Count(),
-                data = newlist
+                count = rptviewlist.Count(),
+                data = myrdslist
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
@@ -134,6 +132,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
+        #region 获取某个部门或岗位
+       
         /// <summary>
         /// 获取部门对象
         /// </summary>
@@ -177,6 +177,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var pid = pmanage.GetList().Where(p => p.PositionName == name).FirstOrDefault().Pid;
             return pid;
         }
+        #endregion
         /// <summary>
         /// 根据员名称获取员工编号
         /// </summary>
@@ -250,7 +251,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
                 var rpt = rmanage.GetEntity(id);
-                rpt.IsInterview = isdel;
+                //rpt.IsInterview = isdel;
                 rmanage.Update(rpt);
                 AjaxResultxx = rmanage.Success();
 
@@ -325,10 +326,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                position = g.Key.Pid,//岗位
                                resumenum = g.Count(),//简历总数
                                PhoneCommunicatenum= g.Count(t=>t.PhoneCommunicateResult != null),//电话呼出总数
-                               invitednum=g.Count(t=>t.FirstInterviewDate!=null),//邀约总数
-                               Facednum=g.Count(t=>t.IsInterview==true),//当月到面总数
-                               Refacednum=g.Count(t=>t.RetestResult!="-1"),//当月复试总数
-                               Refacepassednum=g.Count(t=>t.RetestResult=="通过"),//当月复试通过总数
+                               //invitednum=g.Count(t=>t.FirstInterviewDate!=null),//邀约总数
+                               //Facednum=g.Count(t=>t.IsInterview==true),//当月到面总数
+                               //Refacednum=g.Count(t=>t.RetestResult!="-1"),//当月复试总数
+                               //Refacepassednum=g.Count(t=>t.RetestResult=="通过"),//当月复试通过总数
                                Entrynum=g.Count(t=>t.IsEntry==true)//当月入职人数
                            };
                 List<RecruitingDataSummary> rlist = new List<RecruitingDataSummary>();
@@ -340,27 +341,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     item.Pid = s.position;
                     item.ResumeSum = s.resumenum;
                     item.OutboundCallSum = s.PhoneCommunicatenum;
-                    item.InstantInviteSum = s.invitednum;
-                    item.InstantToFacesSum = s.Facednum;
-                    item.InstantRetestSum = s.Refacednum;
-                    item.InstantRetestPassSum = s.Refacepassednum;
+                    //item.InstantInviteSum = s.invitednum;
+                    //item.InstantToFacesSum = s.Facednum;
+                    //item.InstantRetestSum = s.Refacednum;
+                    //item.InstantRetestPassSum = s.Refacepassednum;
                     item.InstantEntryNum = s.Entrynum;
-                    if (s.invitednum != 0)
-                    {
-                        item.InstantToFacesRate =Convert.ToDecimal(s.Facednum) / Convert.ToDecimal(s.invitednum);
-                    }
-                    if (s.PhoneCommunicatenum != 0)
-                    {
-                        item.InstantInviteRate = Convert.ToDecimal(s.invitednum) / Convert.ToDecimal(s.PhoneCommunicatenum);
-                    }
-                    if (s.Refacednum != 0)
-                    {
-                        item.InstantRetestPassrate = Convert.ToDecimal(s.Refacepassednum) / Convert.ToDecimal(s.Refacednum);
-                    }
-                    if (s.Refacepassednum != 0)
-                    {
-                        item.EntryRate = Convert.ToDecimal(s.Entrynum) / Convert.ToDecimal(s.Refacepassednum);
-                    }
+                    //if (s.invitednum != 0)
+                    //{
+                    //    item.InstantToFacesRate =Convert.ToDecimal(s.Facednum) / Convert.ToDecimal(s.invitednum);
+                    //}
+                    //if (s.PhoneCommunicatenum != 0)
+                    //{
+                    //    item.InstantInviteRate = Convert.ToDecimal(s.invitednum) / Convert.ToDecimal(s.PhoneCommunicatenum);
+                    //}
+                    //if (s.Refacednum != 0)
+                    //{
+                    //    item.InstantRetestPassrate = Convert.ToDecimal(s.Refacepassednum) / Convert.ToDecimal(s.Refacednum);
+                    //}
+                    //if (s.Refacepassednum != 0)
+                    //{
+                    //    item.EntryRate = Convert.ToDecimal(s.Entrynum) / Convert.ToDecimal(s.Refacepassednum);
+                    //}
                     var rds = rdsmanage.GetList().Where(a => a.Pid == item.Pid && Condition((DateTime)a.YearAndMonth, "month") == Condition((DateTime)item.YearAndMonth, "month")).FirstOrDefault();
                     if (rds != null)
                     {

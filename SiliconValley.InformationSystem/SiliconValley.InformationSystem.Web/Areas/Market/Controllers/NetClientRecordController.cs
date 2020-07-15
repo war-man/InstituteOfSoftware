@@ -44,7 +44,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             List<NetClientRecordView> ncrlist = new List<NetClientRecordView>();
-            var list = ncrmanage.GetList().Where(s=>s.IsDel==false).OrderByDescending(n=>n.Id).ToList();
+            var list = ncrmanage.GetList().Where(s=>s.IsDel==false).ToList();
             foreach (var item in list)
             {
                 #region 获取属性值 
@@ -86,7 +86,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     ncrlist = ncrlist.Where(e => e.StuStatus == status).ToList();
                 }
             }
-            var newncrlist= ncrlist.OrderBy(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var newncrlist= ncrlist.OrderByDescending(n => n.Id).Skip((page - 1) * limit).Take(limit).ToList();
            
             var newobj = new
             {
