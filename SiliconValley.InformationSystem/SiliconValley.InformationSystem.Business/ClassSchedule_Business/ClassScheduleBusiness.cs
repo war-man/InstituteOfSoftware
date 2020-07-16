@@ -202,9 +202,11 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
             foreach (var item in x)
             {
+                var stu = student.GetEntity(item.StudentID);
                 ClassStudentView classStudentView = new ClassStudentView();
-                classStudentView.Name = student.GetEntity(item.StudentID).Name;
-                classStudentView.StuNameID = student.GetEntity(item.StudentID).StudentNumber;
+                classStudentView.Name = stu.Name;
+                classStudentView.StuNameID = stu.StudentNumber;
+                classStudentView.Sex = stu.Sex;
                 if (item.CurrentClass == false)
                 {
                     var z = scheduleForTraineesBusiness.Where(a => a.StudentID == item.StudentID&&a.CurrentClass==true).FirstOrDefault();

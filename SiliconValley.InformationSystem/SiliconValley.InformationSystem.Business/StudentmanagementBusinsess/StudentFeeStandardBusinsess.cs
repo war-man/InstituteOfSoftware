@@ -327,10 +327,11 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             var costitemslist = costitemsBusiness.costitemslist().Where(a => a.Rategory == idcost&&a.IsDelete==false).ToList();
             foreach (var item in costitemslist)
             {
-                var x = studentfee.GetList().Where(a => a.IsDelete == false && a.StudenID == studentid && a.Costitemsid == item.id).FirstOrDefault();
+                var x = studentfee.GetListBySql<StudentFeeRecord>("select * from StudentFeeRecord where IsDelete='false' and StudenID='" + studentid + "' and Costitemsid=" + item.id).FirstOrDefault();
+               // studentfee.GetList().Where(a => a.IsDelete == false && a.StudenID == studentid && a.Costitemsid == item.id).FirstOrDefault();
                 if (x != null)
                 {
-                    var Paymentverid = PayviewPaymentverBusiness.GetList().Where(a => a.Payviewid == x.ID).FirstOrDefault().id;
+                  //  var Paymentverid = PayviewPaymentverBusiness.GetList().Where(a => a.Payviewid == x.ID).FirstOrDefault().id;
                     //if (PaymentverificationBusiness.GetEntity(Paymentverid).Passornot == true || PaymentverificationBusiness.GetEntity(Paymentverid).Passornot == null)
                     //{
                         countfee++;
