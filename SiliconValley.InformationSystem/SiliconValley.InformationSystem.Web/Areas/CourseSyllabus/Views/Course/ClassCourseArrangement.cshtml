@@ -475,6 +475,9 @@
 
                 var status = false;
 
+                var grandid = $("#grand").val();
+                console.log(grandid);
+
                 if (field.open == "on") {
                     status = true;
                 }
@@ -483,7 +486,8 @@
                     url: '/CourseSyllabus/Course/SearchClassCourseArrangementData'
                     , where: {
                         classid: field.classnumber,
-                        status: status
+                        status: status,
+                        grandId: grandid
                     } 
                     
                 });

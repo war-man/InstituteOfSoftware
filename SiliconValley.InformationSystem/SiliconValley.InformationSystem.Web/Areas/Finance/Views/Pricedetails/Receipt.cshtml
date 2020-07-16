@@ -103,7 +103,9 @@
 
         <div id="DaXie" style="position:absolute;left:188px;"></div>
         <div id="pricent" style="position:absolute;left:524px;"></div>
-        <div id="Remarks" style="position:absolute;left:100px;top:249px;"></div>
+        <div id="Remarks" style="position:absolute;left:100px;top:249px;">
+            <input type="text" id="Remarks" />
+        </div>
     </div>
 
 
@@ -136,7 +138,7 @@
     var ostitemsName = "";
     var Amountofmoneys = 0;
     var pricent = 0;
-    console.log("aaa");
+    console.log(Receiptdata);
     for (var i = 0; i < Receiptdata.length; i++) {
 
         pricent = pricent + parseInt(Receiptdata[i].Amountofmoney);

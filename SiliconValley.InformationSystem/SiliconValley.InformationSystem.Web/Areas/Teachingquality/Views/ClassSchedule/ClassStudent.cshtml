@@ -15,44 +15,81 @@
 
         .Mydiv {
             width: 100px;
-            height: 90px;
-            border: 1px solid red;
+            height: 140px;
             padding: 1px;
             margin-left: 21px;
             margin-top: 20px;
-            background-color: #1cc09f;
-            color: #fff;
+            color: #5309f5;
             cursor: pointer;
+            font-weight: 200;
+        }
+        .Mymale {
+            background-image: url('/Areas/Teachingquality/images/男1.png');
+            background-position-x: -10px;
+            background-position-y: -5px;
+            background-repeat: no-repeat;
+        }
+        .female {
+            background-image: url('/Areas/Teachingquality/images/女1.png');
+            background-position-x: -10px;
+            background-position-y: -5px;
+            background-repeat: no-repeat;
+        }
+        .Mymale1 {
+            background-image: url('/Areas/Teachingquality/images/男3.png');
+            background-position-x: -10px;
+            background-position-y: -5px;
+            background-repeat: no-repeat;
         }
 
+        .Myfemale1 {
+            background-image: url('/Areas/Teachingquality/images/女3.png');
+            background-position-x: -15px;
+            background-position-y: -5px;
+            background-repeat: no-repeat;
+        }
+        .N4 {
+            background-image: url('/Areas/Teachingquality/images/男4.png');
+            background-position-x: -10px;
+            background-position-y: -5px;
+            background-repeat: no-repeat;
+        }
+
+        .V4 {
+            background-image: url('/Areas/Teachingquality/images/女4.png');
+            background-position-x: -15px;
+            background-position-y: -5px;
+            background-repeat: no-repeat;
+        }
         .TiDIV {
-            width: 100px;
-            height: 90px;
-            border: 1px solid red;
+            width: 108px;
+            height: 140px;
             padding: 1px;
             margin-left: 21px;
             margin-top: 20px;
-            background-color: #C0C0C0;
-            color: #fff;
+            color: #5309f5;
+            cursor: pointer;
+            font-weight: 200;
         }
 
         .Transaction, .Scrap {
-            width: 100px;
-            height: 90px;
-            border: 1px solid red;
+            width: 108px;
+            height: 140px;
             padding: 1px;
             margin-left: 21px;
             margin-top: 20px;
-            background-color: #C0C0C0;
-            color: #fff;
+            color: #5309f5;
+            cursor: pointer;
+            font-weight: 200;
         }
 
         .Mydiv:hover {
-            background-color: burlywood;
+            box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
+     
         }
 
         .color {
-            background-color: red;
+           
         }
 
         table {
@@ -131,6 +168,7 @@
 
 
             </menu>
+       
         </li>
         <li class="menui-item">
             <button type="button" class="menui-btn">
@@ -458,17 +496,28 @@
             for (var i = 0; i < data.length; i++) {
                 if (data[i].ClassNameView == null) {
                     if (data[i].Statusname == null) {
-                        $("#MyShutdown").append($('<div class="Mydiv layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div></div>'));
+                        console.log(data[i]);
+                        var sex = data[i].Sex == true ? "Mymale" : "female";
+
+                        $("#MyShutdown").append($('<div class="Mydiv ' + sex + ' layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:120px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div></div>'));
+                        //} else {
+                        //    $("#MyShutdown").append($('<div class="Mydiv  layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:40px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div></div>'));
+                        //}
+                      
                     } else {
+                        
+                        var sex = data[i].Sex == true ? "N4" : "V4";
                         if (data[i].Statusname == "休学") {
-                            $("#MyShutdown").append($('<div class="Transaction layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div>  <div style="display:none;">' + data[i].ClassID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">状态:' + data[i].Statusname + '</div></div>'));
+
+                            $("#MyShutdown").append($('<div class="Transaction ' + sex + ' layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div>  <div style="display:none;">' + data[i].ClassID + '</div> <div style="text-align:center;margin-top:120px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">状态:' + data[i].Statusname + '</div></div>'));
                         } else {
-                            $("#MyShutdown").append($('<div class="Scrap layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div>  <div style="display:none;">' + data[i].ClassID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">状态:' + data[i].Statusname + '</div></div>'));
+                            $("#MyShutdown").append($('<div class="Scrap ' + sex + ' layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div>  <div style="display:none;">' + data[i].ClassID + '</div> <div style="text-align:center;margin-top:120px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">状态:' + data[i].Statusname + '</div></div>'));
 
                         }
                       }
                 } else {
-                    $("#MyShutdown").append($('<div class="TiDIV layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">现班级:' + data[i].ClassNameView + '</div></div>'));
+                    var sex = data[i].Sex == true ? "Mymale1" : "Myfemale1";
+                    $("#MyShutdown").append($('<div class="TiDIV  ' + sex + '  layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:120px;margin-left:-15px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;margin-left:-15px;">现班级:' + data[i].ClassNameView + '</div></div>'));
 
                 }
              //   $("#MyShutdown").innerHTML = sethtml();
@@ -648,11 +697,22 @@
 
         //点击事件
         $("body").on("click", ".Mydiv", function () {
-
+            console.log(this);
             if (!$(this).is(".color")) {
+                if (!$(this).is(".Mymale")) {
+                    $(this).css("backgroundImage", "url('/Areas/Teachingquality/images/女2.png')");
+                } else {
+                    $(this).css("backgroundImage", "url('/Areas/Teachingquality/images/男2.png')");
+                }
+               
                 $(this).addClass("color");
             }
             else {
+                if (!$(this).is(".Mymale")) {
+                    $(this).css("backgroundImage", "url('/Areas/Teachingquality/images/女1.png')");
+                } else {
+                    $(this).css("backgroundImage", "url('/Areas/Teachingquality/images/男1.png')");
+                }
                 $(this).removeClass("color");
             }
         });
@@ -671,7 +731,7 @@
         });
 
         //双击详细
-        $("body").on("dblclick", ".Mydiv,.TiDIV,.Transaction", function () {
+        $("body").on("dblclick", ".Mydiv,.TiDIV,.Scrap,.Transaction", function () {
 
             var stuid = $($(this).children()[0]).text();
             window.location = "/Teachingquality/Stuportfolio/Index/" + stuid;
