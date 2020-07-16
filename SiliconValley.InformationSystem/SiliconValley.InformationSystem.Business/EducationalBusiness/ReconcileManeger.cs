@@ -38,6 +38,18 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         }
        
         /// <summary>
+        /// 根据班级获取某个时间之后的排课数据
+        /// </summary>
+        /// <param name="class_id"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public List<Reconcile> Class_Date(int class_id ,DateTime date)
+        {
+            string sql = "select * from Reconcile where ClassSchedule_Id=" + class_id + " and AnPaiDate>='" + date+"'";
+           return this.GetListBySql<Reconcile>(sql);
+        }
+
+        /// <summary>
         /// 条件查询
         /// </summary>
         /// <param name="date"></param>
@@ -89,6 +101,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
            return this.GetListBySql<Reconcile>("select * from  Reconcile");
         }
         /// <summary>
+        /// 根据iD获取排课数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Reconcile FindId(int id)
+        {
+            List<Reconcile> list = this.GetListBySql<Reconcile>("select * from  Reconcile where Id="+id);
+            return list.Count > 0 ? list[0] : null;
+        }
+
+        /// <summary>
         /// 获取单条数据
         /// </summary>
         /// <param name="id"></param>
@@ -114,10 +137,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 {
                     this.Insert(r);
                     s = true;
+                     
                 }
                 else
                 {
+                    if (r.Curriculum_Id.Contains("项目答辩"))
+                    {
+                        this.Insert(r);
+                    }
+
                     s = true;
+
                 }
             }
             catch (Exception ex)
@@ -295,23 +325,19 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
-        public AjaxResult Update_date3(List<ReconcileView> r, string emp)
+        public AjaxResult Update_date(List<Reconcile> r)
         {
             AjaxResult a = new AjaxResult();
             try
             {
-                foreach (ReconcileView item in r)
-                {
-                    item.EmployeesInfo_Id = emp;
-                    this.Update(ReconcileView.ToModel(item));
-                }
+                this.Update(r);    
                 a.Success = true;
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 a.Success = false;
-                a.Msg = ex.Message;
+                a.Msg = "系统异常！！！";
             }
             return a;
         }
@@ -336,8 +362,27 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
 
         }
+        /// <summary>
+        /// 大批量删除
+        /// </summary>
+        /// <returns></returns>
+        public AjaxResult Delete_More(List<Reconcile> list)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Delete(list);
+                a.Success = true;
+                a.Msg = "操作成功！！！";
+            }
+            catch (Exception)
+            {
+                a.Success = false;
+                a.Msg = "系统异常，请重试！！！";
+            }
 
-
+            return a;
+        }
         /// <summary>
         /// 判断日期是否可以排课（true--可以排课，false--不可以排课）
         /// </summary>
@@ -741,7 +786,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 ReconcileView find_r = SQLGetReconcileDate().Where(rs => rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curriculum_Id == r.Curriculum_Id && rs.AnPaiDate == r.AnPaiDate && rs.Curse_Id == r.Curse_Id).FirstOrDefault();
                 if (find_r != null)
                 {
-                    s = true;
+                    if (!find_r.Curriculum_Id.Contains("项目答辩"))
+                    {
+                        s = true;
+                    }
+                   
                 }
             }
             else

@@ -19,18 +19,18 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// 从缓存中获取所有数据
         /// </summary>
         /// <returns></returns>
-        public List<EvningSelfStudy> EvningSelfStudyGetAll()
-        {
-            EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
-            List<EvningSelfStudy> EvningSelfStudy_list = new List<EvningSelfStudy>();
-            EvningSelfStudy_list = EvningSelfStudyManeger.redisCache.GetCache<List<EvningSelfStudy>>("EvningSelfStudyList");
-            if (EvningSelfStudy_list == null || EvningSelfStudy_list.Count == 0)
-            {
-                EvningSelfStudy_list = this.GetIQueryable().ToList();
-                Reconcile_Com.redisCache.SetCache("EvningSelfStudyList", EvningSelfStudy_list);
-            }
-            return EvningSelfStudy_list;
-        }
+        //public List<EvningSelfStudy> EvningSelfStudyGetAll()
+        //{
+        //    EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
+        //    List<EvningSelfStudy> EvningSelfStudy_list = new List<EvningSelfStudy>();
+        //    EvningSelfStudy_list = EvningSelfStudyManeger.redisCache.GetCache<List<EvningSelfStudy>>("EvningSelfStudyList");
+        //    if (EvningSelfStudy_list == null || EvningSelfStudy_list.Count == 0)
+        //    {
+        //        EvningSelfStudy_list = this.GetIQueryable().ToList();
+        //        Reconcile_Com.redisCache.SetCache("EvningSelfStudyList", EvningSelfStudy_list);
+        //    }
+        //    return EvningSelfStudy_list;
+        //}
        
         /// <summary>
         /// 获取所有晚自习数据
@@ -51,7 +51,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                int count = EvningSelfStudyGetAll().Where(e1 => e1.Classroom_id == e.Classroom_id && e1.ClassSchedule_id == e.ClassSchedule_id && e1.curd_name == e.curd_name && e1.Anpaidate == e.Anpaidate).ToList().Count;
+                int count = GetAllView().Where(e1 => e1.Classroom_id == e.Classroom_id && e1.ClassSchedule_id == e.ClassSchedule_id && e1.curd_name == e.curd_name && e1.Anpaidate == e.Anpaidate).ToList().Count;
                 if (count <= 0)
                 {
                     this.Insert(e);
@@ -115,7 +115,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     int index = 0;
                     foreach (EvningSelfStudy new_e in e_list)
                     {
-                        int count = EvningSelfStudyGetAll().Where(e1 => e1.Classroom_id == new_e.Classroom_id && e1.ClassSchedule_id == new_e.ClassSchedule_id && e1.curd_name == new_e.curd_name && e1.Anpaidate == new_e.Anpaidate).ToList().Count;
+                        int count = GetAllView().Where(e1 => e1.Classroom_id == new_e.Classroom_id && e1.ClassSchedule_id == new_e.ClassSchedule_id && e1.curd_name == new_e.curd_name && e1.Anpaidate == new_e.Anpaidate).ToList().Count;
                         if (count <= 0)
                         {
                             ore.Add(new_e);
@@ -150,6 +150,18 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         }
 
         /// <summary>
+        /// 根据Id获取晚自习数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public EvningSelfStudy FindId(int id)
+        {
+           List<EvningSelfStudy> list= this.GetListBySql<EvningSelfStudy>("select * from EvningSelfStudy where  id=" + id);
+
+            return list.Count > 0 ? list[0] : null;
+        }
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="eid"></param>
@@ -176,6 +188,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 a.Msg = ex.Message;
                 a.Success = false;
+            }
+            return a;
+        }
+      
+        public AjaxResult Delete_Data(List<EvningSelfStudy> ids)
+        {
+            AjaxResult a = new AjaxResult();
+
+            try
+            {
+                this.Delete(ids);
+                a.Success = true;
+            }
+            catch (Exception)
+            {
+                a.Success = false;
+                a.Msg = "系统错误，请刷新重试!!!";
             }
             return a;
         }
@@ -238,7 +267,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public bool IsAlreadAnpai(DateTime time, int class_id)
         {
-            int count = EvningSelfStudyGetAll().Where(e => e.Anpaidate == time && e.ClassSchedule_id == class_id).Count();
+            int count = GetAllView().Where(e => e.Anpaidate == time && e.ClassSchedule_id == class_id).Count();
             return count > 0 ? true : false;
         }
         /// <summary>
@@ -273,7 +302,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public EvningSelfStudy GetNving(DateTime time, int class_id)
         {
-            return EvningSelfStudyGetAll().Where(e => e.Anpaidate == time && e.ClassSchedule_id == class_id).FirstOrDefault();
+            string sql = "select * from EvningSelfStudy where AnpaiDate='"+time+"' and ClassSchedule_id="+class_id+"";
+            List<EvningSelfStudy> list = this.GetListBySql<EvningSelfStudy>(sql);
+            return list.Count > 0 ? list[0] : null;
         }
         /// <summary>
         /// 获取晚自习在XX教室上课的班级
@@ -283,7 +314,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<EvningSelfStudy> GetOnCurrClass(DateTime dateTime, int classoom_id)
         {
-            return EvningSelfStudyGetAll().Where(e => e.Anpaidate == dateTime && e.Classroom_id == classoom_id).ToList();
+               string sql = "select * from EvningSelfStudy where AnpaiDate='" + dateTime + "' and Classroom_id=" + classoom_id + "";
+               return   this.GetListBySql<EvningSelfStudy>(sql);
+          
         }
         /// <summary>
         /// 获取空教室
@@ -296,7 +329,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             ClassRoom_AddCourse result = new ClassRoom_AddCourse();
             BaseDataEnum_Entity = new BaseDataEnumManeger();
-            List<EvningSelfStudy> getlist = EvningSelfStudyGetAll().Where(e => e.Anpaidate == dateTime).ToList();
+            List<EvningSelfStudy> getlist = GetEmpClass(dateTime,true);
             int base_id = 0;
             if (old)
             {
@@ -396,7 +429,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<EvningSelfStudy> GetConditionEvningData(DateTime starTime, DateTime endTime, int class_id)
         {
-            return EvningSelfStudyGetAll().Where(e => e.Anpaidate >= starTime && e.Anpaidate <= e.Anpaidate && e.ClassSchedule_id == class_id).ToList();
+            string sql = "select * from EvningSelfStudy where Anpaidate>='"+ starTime + "' and Anpaidate<='"+ endTime + "' and ClassSchedule_id="+ class_id + "";
+            return this.GetListBySql<EvningSelfStudy>(sql);
         }
 
         /// <summary>
@@ -538,7 +572,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             List<EmptyClass> emotylist = new List<EmptyClass>();
 
 
-            List<EvningSelfStudy> All = EvningSelfStudyGetAll();
+            List<EvningSelfStudyView> All = GetAllView();
 
             string time = "晚一";
             int count = (e_time - s_time).Days;
@@ -554,7 +588,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         string time2 = null;
                         if (list.Count > 0)
                         {
-                           List<EvningSelfStudy>find_e= All.Where(a => a.Anpaidate == s_time && a.Classroom_id == list[0].ClassRoom_Id).ToList();
+                        int classroomid =Convert.ToInt32( list[0].ClassRoom_Id);
+                           List<EvningSelfStudy>find_e= GetOnCurrClass(s_time, classroomid);
                             if (find_e.Count<=0)
                             {
                                 if (evlist.Count>0)
@@ -635,7 +670,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             Recon_all.AddRange(Reconcile_Entity.SQLGetReconcileDate().Where(r => r.AnPaiDate == s_time && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) == null).ToList());
 
             DateTime time = s_time.AddDays(-1);
-            List<EvningSelfStudy> All = EvningSelfStudyGetAll().Where(a=>a.Anpaidate==time).ToList();
+            List<EvningSelfStudy> All = GetEmpClass(time,true);
             StringBuilder sb = new StringBuilder();
             EmptyClass empty = new EmptyClass();
             empty.date = s_time;
@@ -750,7 +785,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<Classroom> GetEmptyClassrooms(string timename, DateTime time, int shcooladrees_id)
         {
-            var classroomid = this.EvningSelfStudyGetAll().Where(e => e.Anpaidate == time && e.curd_name == timename).ToList().Select(e => e.Classroom_id).ToList();//获取被安排的教室id
+            var classroomid = this.GetAllView().Where(e => e.Anpaidate == time && e.curd_name == timename).ToList().Select(e => e.Classroom_id).ToList();//获取被安排的教室id
 
             List<Classroom> list = Reconcile_Com.Classroom_Entity.GetAddreeClassRoom(shcooladrees_id);//获取校区的有效教室
 
@@ -773,8 +808,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="time"></param>
         /// <returns></returns>
         public List<EvningSelfStudy> GetTimeData(DateTime time)
-        {
-           return EvningSelfStudyGetAll().Where(e => e.Anpaidate == time).ToList();
+        {            
+           return  this.GetListBySql<EvningSelfStudy>("select * from EvningSelfStudy where AnpaiDate='" + time + "'");
         }
 
         /// <summary>
@@ -798,5 +833,30 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a_list;
         }
         
+        /// <summary>
+        /// 根据日期获取晚自习数据(默认等于输入时间)
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public List<EvningSelfStudy> GetEmpClass(DateTime date,bool s)
+        {
+            StringBuilder sb = new StringBuilder("select * from EvningSelfStudy where AnpaiDate='" + date + "'");
+            
+            if (s==false)
+            {
+                sb.Replace("select * from EvningSelfStudy where AnpaiDate='" + date + "'", "select * from EvningSelfStudy where AnpaiDate>='" + date + "'");
+            }
+            return this.GetListBySql<EvningSelfStudy>(sb.ToString());
+        }
+
+        public List<EvningSelfStudy> AcctoingDate(DateTime time,int classid)
+        {
+            string sql = "select * from EvningSelfStudy where AnpaiDate>='"+time+ "' and ClassSchedule_id= "+ classid + "";
+
+            return this.GetListBySql<EvningSelfStudy>(sql);
+        }
+
+
     }
 }

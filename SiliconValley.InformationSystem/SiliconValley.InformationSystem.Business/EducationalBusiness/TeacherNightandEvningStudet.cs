@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity;
 using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
@@ -113,8 +114,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public static AjaxResult SetEvningStudentData(DateTime date,int classid,string teacherid)
         {
             AjaxResult a = new AjaxResult();
-            EvningSelfStudy findata= evningSelfStudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == date && e.ClassSchedule_id == classid).FirstOrDefault();
-
+            EvningSelfStudyView findata1= evningSelfStudy_Entity.GetAllView().Where(e => e.Anpaidate == date && e.ClassSchedule_id == classid).FirstOrDefault();
+            EvningSelfStudy findata = findata1.ToModel(findata1);
             if (findata!=null)
             {
                 if (teacherid==null)
@@ -128,7 +129,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 try
                 {
                     evningSelfStudy_Entity.Update(findata);
-                    evningSelfStudy_Entity.DeleteRedis();
+                    //evningSelfStudy_Entity.DeleteRedis();
                     a.Success = true;
                     a.Msg = "编辑成功";
                 }
@@ -155,7 +156,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public static bool IsUpdateTeacherNightData(DateTime date,int classid)
         {
-           EvningSelfStudy findata= evningSelfStudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == date && e.ClassSchedule_id == classid).FirstOrDefault();
+           EvningSelfStudyView findata= evningSelfStudy_Entity.GetAllView().Where(e => e.Anpaidate == date && e.ClassSchedule_id == classid).FirstOrDefault();
             if (findata!=null)
             {
                 return true;
@@ -175,7 +176,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public static EvningSelfStudy GetEvningData(DateTime date,int classid)
         {
-           return  evningSelfStudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == date && e.ClassSchedule_id == classid).FirstOrDefault();
+            string sql = "select * from EvningSelfStudy where AnpaiDate='"+ date + "' and ClassSchedule_id="+classid+"";
+            List<EvningSelfStudy> list = evningSelfStudy_Entity.GetListBySql<EvningSelfStudy>(sql);
+            // return  evningSelfStudy_Entity.GetAllView().Where(e => e.Anpaidate == date && e.ClassSchedule_id == classid).FirstOrDefault();
+
+            return list.Count>0?list[0]:null;
         }
 
         /// <summary>

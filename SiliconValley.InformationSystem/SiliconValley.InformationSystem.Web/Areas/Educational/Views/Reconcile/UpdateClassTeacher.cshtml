@@ -13,7 +13,7 @@
     <style>
         .DivCss1
         {
-            margin-top: 20px;
+            margin-top: 80px;
             margin-left: auto;
             margin-right: auto;
             width: 90%;
@@ -69,14 +69,7 @@
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="LableCss1">任课老师:</label>
                     <div class="layui-input-block">
-                        <div class="layui-collapse">
-                            <div class="layui-colla-item">
-                                <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,0.2)">老师选择区:</h2>
-                                <div class="layui-colla-content" id="div_teavher12">
-
-                                </div>
-                            </div>                            
-                        </div>
+                        <input type="text" name="teacher_id" id="teacher_id" class="layui-input" lay-verify="required" />
                     </div>
                 </div>
 
@@ -94,7 +87,7 @@
     <script>
         layui.use(['form','laydate','element'], function () {
             var form = layui.form;
-            var s = true;
+ 
             var laydate = layui.laydate;
             var element = layui.element;
             laydate.render({
@@ -118,40 +111,12 @@
                     });
                 }
             });
-            //获取任课老师
-            form.on('select(bianji2)', function (data) {
-                var indexx = layer.load(1);
-                $("#div_teavher12")[0].innerHTML = "";
-                if (data.value != "0") {
-                    $.ajax({
-                        url: '/Educational/Reconcile/GetTecherAll/' + data.value,
-                        success: function (sucdata) {                                                                         
-                            if (sucdata.t_id == "0") {
-                                s = false;
-                                layer.msg('该班级没有安排老师上专业课！！！', { icon: 2, shade: 0.8 }, function () {
-                                    layer.close(indexx);
-                                });
-                            } else {
-                                for (var i = 0; i < sucdata.list_teacher.length; i++) {
-                                    $('<input type="radio" value=' + sucdata.list_teacher[i].Teacher_id + ' title=' + sucdata.list_teacher[i].Name + ' name="teacher_id" id="teacher_id" />').appendTo($("#div_teavher12"));
-                                } 
-                                //给表单赋值
-                                form.val("form_classTeacherData", {
-                                    "teacher_id": sucdata.t_id.toString()
-                                });
-                                layer.close(indexx);
-                            }
-                            form.render();
-                        }
-                    });
-                }
-            })
+             
             //监听提交
             form.on('submit(Update_clasTacher)', function (data) {
-                if (data.field.class_select == "0") {
+                if (data.field.class_select == "0" || data.field.class_select == undefined) {
                     layer.msg('请选择班级！！', { icon: 2 });
-                } else {
-                    if (s == true) {
+                } else {                                        
                         var indexfo = layer.load(1);
                         $.ajax({
                             url: '/Educational/Reconcile/UpdateClassTeacherFuntion',
@@ -170,10 +135,7 @@
                                 }
                             }
                         });
-                    } else {
-                        layer.msg('该班级没有安排任课老师，不能修改', {icon:2,shade:0.8});
-                    }
-                     
+                    
                 }
 
                 return false;

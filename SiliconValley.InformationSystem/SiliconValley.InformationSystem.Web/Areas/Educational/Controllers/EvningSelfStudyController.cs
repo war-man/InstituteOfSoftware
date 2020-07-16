@@ -261,7 +261,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime endtime = Convert.ToDateTime(Request.Form["endtime"]);
             var days = endtime.Subtract(startime);
             int count = days.Days;
-            List<EvningSelfStudy> e_list = EvningSelefstudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate >= startime).ToList();//获取这个日期之后的所有数据
+            List<EvningSelfStudy> e_list = EvningSelefstudy_Entity.GetEmpClass(startime,false);//获取这个日期之后的所有数据
             AjaxResult a = EvningSelefstudy_Entity.ALLDataADI(count, e_list);
             return Json(a, JsonRequestBehavior.AllowGet);
         }
@@ -289,7 +289,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             {
                 if (!string.IsNullOrEmpty(id))
                 {
-                    List<EvningSelfStudy> updatedata = EvningSelefstudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate >= startime && e.ClassSchedule_id == Convert.ToInt32(id)).ToList();
+                    List<EvningSelfStudy> updatedata = EvningSelefstudy_Entity.AcctoingDate(startime,Convert.ToInt32(id));
                     e_list.AddRange(updatedata);
                 }
             }
@@ -311,7 +311,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime endtime = Convert.ToDateTime(Request.Form["endtime"]);//获取更改的日期
 
 
-            List<EvningSelfStudy> find_e = EvningSelefstudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == startime).ToList();//获取原来日期的晚自习安排数据
+            List<EvningSelfStudy> find_e = EvningSelefstudy_Entity.GetEmpClass(startime,true);//获取原来日期的晚自习安排数据
 
             AjaxResult a = EvningSelefstudy_Entity.ChangDate(find_e, endtime);
             return Json(a, JsonRequestBehavior.AllowGet);
@@ -338,7 +338,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             {
                 if (!string.IsNullOrEmpty(id))
                 {
-                    List<EvningSelfStudy> update_data = EvningSelefstudy_Entity.EvningSelfStudyGetAll().Where(e => e.ClassSchedule_id == Convert.ToInt32(id) && e.Anpaidate == startime).ToList();
+                    List<EvningSelfStudy> update_data = EvningSelefstudy_Entity.GetEmpClass(startime,true).Where(e => e.ClassSchedule_id == Convert.ToInt32(id)).ToList();
                     find_e.AddRange(update_data);
                 }
             }
@@ -368,6 +368,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         public ActionResult ShowTeacher()
         {
             return View(); 
+        }
+
+        [HttpPost]
+        public ActionResult DeleteFunction()
+        {
+  
+           string[] str= Request.Form["str"].Split(',');
+            List<EvningSelfStudy> list = new List<EvningSelfStudy>();
+            foreach (string item in str)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    int id = Convert.ToInt32(item);
+                    list.Add(EvningSelefstudy_Entity.FindId(id));
+                }
+            }
+
+           AjaxResult a =  EvningSelefstudy_Entity.Delete_Data(list);
+            return Json(a,JsonRequestBehavior.AllowGet);
         }
     }
 }

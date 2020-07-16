@@ -141,14 +141,15 @@
     <table id="Recon_table" lay-filter="Recon_table"></table>
     <script type="text/html" id="Recon_toolbarDemo">
         <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe642;</i>全体推迟、提前课程</button>
+            @*<button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe642;</i>全体推迟、提前课程</button>*@
             <button class="layui-btn layui-btn-sm" lay-event="changGrand"><i class="layui-icon">&#xe642;</i>阶段推迟、提前课程</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData"><i class="layui-icon">&#xe642;</i>班级推迟、提前课程</button>
-            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData2"><i class="layui-icon">&#xe642;</i>全体上课日期调换</button>
+            @*<button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData2"><i class="layui-icon">&#xe642;</i>全体上课日期调换</button>*@
             <button class="layui-btn layui-btn-sm" lay-event="grand_getCheckData"><i class="layui-icon">&#xe642;</i>阶段上课日期调换</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData3"><i class="layui-icon">&#xe642;</i>班级上课日期调换</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData"><i class="layui-icon">&#xe642;</i>修改班级上专业课时间段</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData2"><i class="layui-icon">&#xe642;</i>修改班级上专业课老师</button>
+            <button class="layui-btn layui-btn-sm" lay-event="More_Delets"><i class="layui-icon">&#xe642;</i>批量删除</button>
         </div>
     </script>
 </div>
@@ -231,7 +232,7 @@
             , toolbar: '#Recon_toolbarDemo'
             , url: '/Educational/Reconcile/GetReconAllData'
             , cols: [[
-                { type: 'radio' }
+                { type: 'checkbox' }
                 , { field: 'ClassNumber', title: '班级' }
                 , { field: 'ClassroomName', title: '教室', }
                 , { field: 'Curriculum_Id', title: '课程' }
@@ -330,17 +331,17 @@
             var checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
                 //全体调课
-                case 'getCheckData':
-                    layer.open({
-                        type: 2,
-                        content: '/Educational/Reconcile/BigDataUpdate',
-                        area: ['680px', '400px'],
-                        title: '全体数据修改'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                    break;
+                //case 'getCheckData':
+                //    layer.open({
+                //        type: 2,
+                //        content: '/Educational/Reconcile/BigDataUpdate',
+                //        area: ['680px', '400px'],
+                //        title: '全体数据修改'
+                //        , shade: 0.8
+                //        , anim: 4
+                //        , skin: 'demo-class'
+                //    });
+                //    break;
                 //阶段调课
                 case 'changGrand':
                     layer.open({
@@ -421,6 +422,40 @@
                         , anim: 4
                         , skin: 'demo-class'
                     });
+                    break;
+                case 'More_Delets':
+                    var checkStatus = table.checkStatus('Recon_table');
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('是否真的删除？', function (heindex) {
+
+                            var indexm = layer.load(1);
+                            var str = "";
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                str = str + checkStatus.data[i].Id + ",";
+                            }
+
+                            $.ajax({
+                                url: '/Educational/Reconcile/DeleteMore',
+                                type: 'POST',
+                                data: { "str": str },
+                                success: function (suc) {
+                                    layer.close(indexm);
+                                    if (suc.Success == true) {
+                                        layer.msg('操作成功', { icon: 1, shade: 0.8 }, function () {
+                                            table.reload('Recon_table');
+                                        })
+                                    } else {
+                                        layer.msg(suc.Mag, { icon: 2, shade: 0.8 })
+                                    }
+                                }
+                            });
+                            layer.close(heindex);
+                        });
+                    } else {
+                        layer.msg("至少选择一条数据！！！", { icon: 2, shade: 0.8 })
+                    }
+
+
                     break;
             };
         });
