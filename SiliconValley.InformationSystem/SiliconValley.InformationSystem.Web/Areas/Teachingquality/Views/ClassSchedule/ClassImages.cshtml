@@ -27,15 +27,9 @@
                 <div class="layui-upload-list">
 
                     @{
-                        if (Model.ClassImage != null)
-                        {
-
-                            <img class="layui-upload-img" style="width:255px;height:227px;" id="demo1" src="~/Areas/Teachingquality/ClassImages/@Model.ClassImage">
-                        }
-                        else
-                        {
-                            <img class="layui-upload-img" style="width:255px;height:227px;" id="demo1" src="~/Areas/Teachingquality/ClassImages/ClassImages.jpg">
-                        }
+                      
+                            <img class="layui-upload-img" style="width:255px;height:227px;" id="demo1" src="@Model.ClassImage">
+                      
                     }
                 </div>
             </div>

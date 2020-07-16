@@ -259,6 +259,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 {
                     classSchedule.ClassStatus = false;
                     classSchedule.IsDelete = false;
+                    classSchedule.ClassImage = "ClassImages.jpg";
                     dbtext.Insert(classSchedule);
                   
                     retus = new SuccessResult();
@@ -923,7 +924,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 ClassRemarks = a.ClassRemarks,
                 ClassStatus = a.ClassStatus,
                 IsDelete = a.IsDelete,
-                ClassImage= cloudstorageBusiness.ImagesFine("xinxihua", "ClassImages", a.ClassImage,20),
+                ClassImage= cloudstorageBusiness.ImagesFine("xinxihua", "ClassImages", a.ClassImage,2),
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 
             //Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
@@ -938,7 +939,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <returns></returns>
         public ActionResult ClassImages(int id)
         {
-            return View(dbtext.GetEntity(id));
+            var a = dbtext.GetEntity(id);
+           a.ClassImage= cloudstorageBusiness.ImagesFine("xinxihua", "ClassImages", a.ClassImage, 2);
+            return View(a);
         }
         /// <summary>
         /// 更新班级照片
