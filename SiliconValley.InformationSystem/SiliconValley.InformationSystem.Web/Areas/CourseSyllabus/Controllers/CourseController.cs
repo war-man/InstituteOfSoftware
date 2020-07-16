@@ -18,6 +18,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
     using SiliconValley.InformationSystem.Business;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+    using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
     [CheckLogin]
     public class CourseController : Controller
@@ -519,13 +520,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
         public ActionResult ClassCourseArrangementData(int page, int limit)
         {
-
+            ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
         
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
             List<ClassCourseView> resultlist = new List<ClassCourseView>();
 
-            var allclasslist = dbteacherclass.AllClassSchedule();
+            var allclasslist = dbclass.ClassList();
 
             BaseBusiness<ClassTeacher> dbclassTeacher = new BaseBusiness<ClassTeacher>();
 
@@ -552,18 +553,49 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
         }
 
-        public ActionResult SearchClassCourseArrangementData(int page, int limit, string classid, bool status)
+        public ActionResult SearchClassCourseArrangementData(int page, int limit, string classid, bool status,string grandId)
         {
-           
+            ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
             List<ClassCourseView> resultlist = new List<ClassCourseView>();
 
+            List<ClassSchedule> classlist = new List<ClassSchedule>();
 
-           var classsc = dbteacherclass.AllClassSchedule().Where(d => d.id == int.Parse(classid)).FirstOrDefault();
+            if (string.IsNullOrEmpty(classid) && !string.IsNullOrEmpty(grandId))
+            {
+                var templist = dbclass.ClassList().Where(d => d.grade_Id == int.Parse(grandId)).ToList();
 
-           var list = dbteacherclass.GetIQueryable().Where(d => d.ClassNumber == classsc.id && d.IsDel == status).ToList();
-            var skiplist = list.Skip((page - 1) * 8).Take(8).ToList();
+                if (templist != null) classlist.AddRange(templist);
+            }
+
+            if (!string.IsNullOrEmpty(classid) && !string.IsNullOrEmpty(grandId))
+            {
+                var templist = dbclass.ClassList().Where(d => d.grade_Id == int.Parse(grandId) && d.id==int.Parse(classid)).ToList();
+                if (templist != null) classlist.AddRange(templist);
+            }
+
+            if (!string.IsNullOrEmpty(classid) && string.IsNullOrEmpty(grandId))
+            {
+                var templist = dbclass.ClassList().Where(d => d.id == int.Parse(classid)).ToList();
+                if (templist != null) classlist.AddRange(templist);
+            }
+
+            if (string.IsNullOrEmpty(classid) && string.IsNullOrEmpty(grandId))
+            {
+                var templist = dbclass.ClassList();
+                if (templist != null) classlist.AddRange(templist);
+            }
+
+         
+            List<ClassTeacher> classteacherlist = new List<ClassTeacher>();
+
+            classlist.ForEach(d=>
+            {
+                var templist = dbteacherclass.GetIQueryable().Where(c => c.ClassNumber == d.id && c.IsDel == status).ToList();
+                if (templist != null) classteacherlist.AddRange(templist);
+            });
+            var skiplist = classteacherlist.Skip((page - 1) * 8).Take(8).ToList();
 
             foreach (var item in skiplist)
             {
@@ -848,8 +880,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
         public ActionResult ClassDataByGrand(string grandid)
         {
-            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
-            var allclasslist = dbteacherclass.AllClassSchedule().Where(d => d.grade_Id == int.Parse(grandid)).ToList();
+            ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
+            var allclasslist = dbclass.ClassList().Where(d => d.grade_Id == int.Parse(grandid)).ToList();
 
             return Json(allclasslist, JsonRequestBehavior.AllowGet);
         }
@@ -860,8 +892,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
             try
             {
-                TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
-                var allclasslist = dbteacherclass.AllClassSchedule().Where(d => d.grade_Id == int.Parse(grandid)).ToList();
+                ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
+               
+                var allclasslist = dbclass.ClassList().Where(d => d.grade_Id == int.Parse(grandid)).ToList();
                 result.ErrorCode = 200;
                 result.Msg = "成功";
                 result.Data = allclasslist;

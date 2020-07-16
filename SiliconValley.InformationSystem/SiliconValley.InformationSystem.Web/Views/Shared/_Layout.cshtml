@@ -313,7 +313,7 @@
                 <input type="text" id="EmpDeptName" style="display:none" />
                 <ul>
                     <li><a class="tooltips" href="#" id="EmpClass"><span style="color:aqua">信息更改</span><i class="lnr lnr-user"></i></a></li>
-                    <li><a class="tooltips" href="#"><span style="color:aqua">开发中</span><i class="lnr lnr-cog"></i></a></li>
+                    <li><a class="tooltips" href="#" id="setup"><span style="color:aqua">开发中</span><i class="lnr lnr-cog"></i></a></li>
                     <li><a class="tooltips" id="logins"><span style="color:aqua">退出登录</span><i class="lnr lnr-power-switch"></i></a></li>
                 </ul>
             </div>
@@ -522,12 +522,22 @@
                 type: 2,
                 area: ['500px', '550px']
                 , content: "/Personnelmatters/EmployeesInfo/EditEmpAttr/" + $("#EmployeeId").text()
-                , end: function () { empdate();}
+                , end: function () { empdate(); }
                 , anim: 1
-              
+
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
-        })
+        });
+        $("#setup").click(function () {
+
+            layer.open({
+                type: 2,
+                title: "设置",
+                area: ['30%', '40%'],
+                content:"/BaseSysManage/Base_UserRole/SetUp"
+            })
+
+        });
         $("#logins").click(function () {
             location.replace("/Login/LoginIndex");
           //  window.location.href = "/Login/LoginIndex?act=logout";

@@ -783,6 +783,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
         }
 
+        public ActionResult SetUp()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 获取用户绑定的微信号信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UserWeixinInfo()
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var currentUser = Base_UserBusiness.GetCurrentUser();
+
+                if (currentUser.WX_Unionid != null) result.Data = "1";
+                else result.Data = "0";
+                result.Success = true;
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                   
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Data = null;
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
 
     }
 }
