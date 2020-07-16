@@ -164,66 +164,83 @@
                     Grand_id: data.value,
                     studentid: $("#StudentNumber").text()
                 };
-                $.post("/Finance/Pricedetails/Studentfeepayment", dbase, function (da) {
-                    var price = 0;
-                  
-                    $.each(da, function (i, item) {
-                        if (item.Rategory == "学杂费" && item.countfee<1) {
-                            price = price + item.Amountofmoney;
-                        }
-                    });
-                    //总金额
-                    var Totalsum = 0;
-                    var optionstring = "学杂费总金额:<label id='price'>" + price+"</label>元"+"<br/> ";
-                    var count = 0;
-                  
-                    $.each(da, function (i, item) {
-                      
-                        if (item.Rategory == "学杂费" && item.countfee<1) {
-                            Totalsum = Totalsum + item.Amountofmoney;
-                            var obj = {};
-                            obj.Costitemsid = item.id;
-                            obj.Amountofmoney = item.Amountofmoney;
-                            obj.StudenID = $("#StudentNumber").text();
-                         
-                            list.push(obj);
+                $.ajax({
+                    url: "/Finance/Pricedetails/Studentfeepayment",
+                    type: 'POST',
+                    async: true,
+                    cache: false,
 
-                            optionstring += '<button type="button"  class="layui-btn layui-btn-normal layui-btn-radius">' + item.Name + '(' + item.Amountofmoney + ')</button> ';
-
-                            count++;
-                            if (count > 2) {
-                                count = 0;
-                                optionstring += "<div style='height:10px;'></div>";
+                    data: dbase,
+                    beforeSend: function () {//执行中
+                        i = showLoad();
+                    },
+                    success: function (da) {//执行成功
+                        closeLoad(i);
+                        var price = 0;
+                        console.log(da);
+                        $.each(da, function (i, item) {
+                            if (item.Rategory == "学杂费" && item.countfee < 1) {
+                                price = price + item.Amountofmoney;
                             }
-                        } else if (item.Name == "学费") {
-                            $("#Amountofmoney").val(item.Amountofmoney);
-                            Totalsum = Totalsum + item.Amountofmoney;
-                            $("#Amountofmoney1").val(item.id);
-                        } else if (item.Name == "食宿费") {
-                           
-                            $("#Amountofmoneys1").val(item.id);
-                            $("#Amountofmoneys").val(item.Amountofmoney);
-                            Totalsum = Totalsum + item.Amountofmoney;
-                        }
+                        });
+                        //总金额
+                        var Totalsum = 0;
+                        var optionstring = "学杂费总金额:<label id='price'>" + price + "</label>元" + "<br/> ";
+                        var count = 0;
 
-                    });
-                    if (price > 0) {
-                        $("#zafei").css("display", "block");
-                    } else {
-                        $("#zafei").css("display", "none");
+                        $.each(da, function (i, item) {
+
+                            if (item.Rategory == "学杂费" && item.countfee < 1) {
+                                Totalsum = Totalsum + item.Amountofmoney;
+                                var obj = {};
+                                obj.Costitemsid = item.id;
+                                obj.Amountofmoney = item.Amountofmoney;
+                                obj.StudenID = $("#StudentNumber").text();
+
+                                list.push(obj);
+
+                                optionstring += '<button type="button"  class="layui-btn layui-btn-normal layui-btn-radius">' + item.Name + '(' + item.Amountofmoney + ')</button> ';
+
+                                count++;
+                                if (count > 2) {
+                                    count = 0;
+                                    optionstring += "<div style='height:10px;'></div>";
+                                }
+                            } else if (item.Name == "学费") {
+                                $("#Amountofmoney").val(item.Amountofmoney);
+                                Totalsum = Totalsum + item.Amountofmoney;
+                                $("#Amountofmoney1").val(item.id);
+                            } else if (item.Name == "食宿费") {
+
+                                $("#Amountofmoneys1").val(item.id);
+                                $("#Amountofmoneys").val(item.Amountofmoney);
+                                Totalsum = Totalsum + item.Amountofmoney;
+                            }
+
+                        });
+                        if (price > 0) {
+                            $("#zafei").css("display", "block");
+                        } else {
+                            $("#zafei").css("display", "none");
+                        }
+                        // zafei
+                        $("#Unitpricename").html(optionstring);
+
+
+                        if (Amountofmoney > 0) {
+                            Totalsum = Totalsum - Amountofmoney;
+                            $("#Tuitionrefund").css("display", "block");
+                            $("#Tuitionrefund").text("已扣除预入费" + Amountofmoney + "元");
+                        }
+                        $("#Totalsum").text(Totalsum)
+                        form.render();
                     }
-                    // zafei
-                    $("#Unitpricename").html(optionstring);
-                  
-                    
-                    if (Amountofmoney>0) {
-                        Totalsum = Totalsum - Amountofmoney;
-                        $("#Tuitionrefund").css("display", "block");
-                        $("#Tuitionrefund").text("已扣除预入费" + Amountofmoney+"元");
+                    , error: function (xmlhttprequest, textstatus, message) {
+                        closeLoad(i);
+
                     }
-                    $("#Totalsum").text(Totalsum)
-                    form.render();
                 });
+              
             } else {
                 $("#zafei").css("display", "none");
             }

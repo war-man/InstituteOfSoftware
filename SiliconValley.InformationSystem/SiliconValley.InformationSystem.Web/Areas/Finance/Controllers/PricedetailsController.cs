@@ -674,6 +674,373 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             return Json(dbtext.ReentryfeeOddNumbers(id, OddNumbers, typez), JsonRequestBehavior.AllowGet);
         }
 
+        public class te
+        {
+            public string x1 { get; set; }
+            public string x2 { get; set; }
+            public string x3 { get; set; }
+            public string x4 { get; set; }
+            public string x5 { get; set; }
+            public string x6 { get; set; }
+            public string x7 { get; set; }
+            public string x8 { get; set; }
+            public string x9 { get; set; }
+        }
+        /// <summary>
+        /// 学费食宿费缴纳
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult text1()
+        {
+            //阶段表
+            BaseBusiness<Grand> geand = new BaseBusiness<Grand>();
+            List<te> telist = new List<te>();
+            // List<MyExcelClass> myExcelClasses
+            string finame = Server.MapPath(@"\Areas\Finance\images\2020年5月学生学费明细表.xlsx");
+            AsposeOfficeHelper asposeOfficeHelper = new AsposeOfficeHelper();
+         System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(finame, false);
+            for (int i = 2; i < t.Rows.Count; i++)
+            {
+                te te = new te();
 
+                if (t.Rows[i][1].ToString()!="")
+                {
+                   
+                    if (t.Rows[i][2].ToString() != "")
+                    {
+                        te.x2 = t.Rows[i][1].ToString();
+                        te.x3 = t.Rows[i][2].ToString();
+                        te.x4 = t.Rows[i][3].ToString();
+                        te.x5 = t.Rows[i][4].ToString();
+                        te.x6 = t.Rows[i][5].ToString();
+                        te.x7 = t.Rows[i][6].ToString();
+                        te.x8 = t.Rows[i][7].ToString();
+                        te.x9 = t.Rows[i][12].ToString();
+                        telist.Add(te);
+                    }
+                 
+                }
+              
+              
+
+            }
+
+            List<te> db = new List<te>();
+            //学员信息
+            StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+            //foreach (var item in telist)
+            //{
+            //    if(studentInformationBusiness.GetList().Where(a => a.identitydocument == item.x3).Count() <1)
+            //    {
+            //        te te = new te();
+            //        te.x1 = item.x3;
+            //        db.Add(te);
+            //    }
+            //}
+            List<StudentFeeRecord> StudentFeeRecordlist = new List<StudentFeeRecord>();
+            foreach (var item in telist)
+            {
+                //明目类型
+                BaseBusiness<Costitems> costitemss = new BaseBusiness<Costitems>();
+                var Grand_id = geand.GetList().Where(a => a.GrandName == item.x4).FirstOrDefault().Id;
+                StudentFeeRecord studentFeeRecord = new StudentFeeRecord();
+                studentFeeRecord.StudenID= studentInformationBusiness.GetEntity(item.x3).StudentNumber;
+                studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 8 && a.Grand_id == Grand_id).FirstOrDefault().id;//学费
+                studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x6);
+                studentFeeRecord.AddDate = Convert.ToDateTime(item.x5);
+                studentFeeRecord.Remarks = item.x9;
+                studentFeeRecord.IsDelete = false;
+                studentFeeRecord.FinanceModelid = 8;
+                StudentFeeRecordlist.Add(studentFeeRecord);
+                if (item.x7!="")
+                {
+                    studentFeeRecord = new StudentFeeRecord();
+                    studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x3).StudentNumber;
+                    studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 12 && a.Grand_id == Grand_id).FirstOrDefault().id;//食宿费
+                    studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x7);
+                    studentFeeRecord.AddDate = Convert.ToDateTime(item.x5);
+                    studentFeeRecord.IsDelete = false;
+                    studentFeeRecord.FinanceModelid = 8;
+                    StudentFeeRecordlist.Add(studentFeeRecord);
+                }
+              
+                
+            }
+            //学员费用
+            BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
+            studentfee.Insert(StudentFeeRecordlist);
+            return null;
+        }
+
+        //缴学杂费
+        public ActionResult text2()
+        {
+            //学员信息
+            StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+            //阶段表
+            BaseBusiness<Grand> geand = new BaseBusiness<Grand>();
+            List<te> telist = new List<te>();
+            // List<MyExcelClass> myExcelClasses
+            string finame = Server.MapPath(@"\Areas\Finance\images\2020年5月学生学费明细表.xlsx");
+            AsposeOfficeHelper asposeOfficeHelper = new AsposeOfficeHelper();
+            System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(finame, false);
+            for (int i = 2; i < t.Rows.Count; i++)
+            {
+                te te = new te();
+
+                if (t.Rows[i][1].ToString() != "")
+                {
+
+                    if (t.Rows[i][2].ToString() != "")
+                    {
+                        te.x1 = t.Rows[i][1].ToString();
+                        te.x2 = t.Rows[i][2].ToString();//身份证
+                        te.x3 = t.Rows[i][3].ToString();//阶段
+                        te.x4 = t.Rows[i][4].ToString();//缴费日期
+                        te.x5 = t.Rows[i][7].ToString();//军训费
+                        te.x6 = t.Rows[i][8].ToString();//校服费
+                        te.x7 = t.Rows[i][9].ToString();//体检，一卡通
+                        te.x8 = t.Rows[i][10].ToString();//宿舍押金
+                        te.x9 = t.Rows[i][11].ToString();
+                        telist.Add(te);
+                    }
+
+                }
+            }
+
+            List<StudentFeeRecord> StudentFeeRecordlist = new List<StudentFeeRecord>();
+            foreach (var item in telist)
+            {
+                //明目类型
+                BaseBusiness<Costitems> costitemss = new BaseBusiness<Costitems>();
+                var Grand_id = geand.GetList().Where(a => a.GrandName == item.x3).FirstOrDefault().Id;
+                StudentFeeRecord studentFeeRecord = new StudentFeeRecord();
+                if (item.x5 != "")//军训服
+                {
+                    studentFeeRecord = new StudentFeeRecord();
+                    studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x2).StudentNumber;
+                    studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 10 && a.Grand_id == Grand_id && a.Name == "军训费").FirstOrDefault().id;//学杂
+                    studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x5);
+                    studentFeeRecord.AddDate = Convert.ToDateTime(item.x4);
+                    studentFeeRecord.IsDelete = false;
+                    studentFeeRecord.FinanceModelid = 8;
+                    StudentFeeRecordlist.Add(studentFeeRecord);
+                }
+                if (item.x7 != "")//校服
+                {
+                    if (Convert.ToDecimal(item.x7) > 50)
+                    {
+                        studentFeeRecord = new StudentFeeRecord();
+                        studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x2).StudentNumber;
+                        studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 10 && a.Grand_id == Grand_id && a.Name == "体检费" && a.IsDelete == false).FirstOrDefault().id;//学杂
+                        studentFeeRecord.Amountofmoney = 50;
+                        studentFeeRecord.AddDate = Convert.ToDateTime(item.x4);
+                        studentFeeRecord.IsDelete = false;
+                        studentFeeRecord.FinanceModelid = 8;
+                        StudentFeeRecordlist.Add(studentFeeRecord);
+                        studentFeeRecord = new StudentFeeRecord();
+                        studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x2).StudentNumber;
+                        studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 10 && a.Grand_id == Grand_id && a.Name == "一卡通" && a.IsDelete == false).FirstOrDefault().id;//学杂
+                        studentFeeRecord.Amountofmoney = 50;
+                        studentFeeRecord.AddDate = Convert.ToDateTime(item.x4);
+                        studentFeeRecord.IsDelete = false;
+                        studentFeeRecord.FinanceModelid = 8;
+                        StudentFeeRecordlist.Add(studentFeeRecord);
+                    }
+                    else
+                    {
+                        studentFeeRecord = new StudentFeeRecord();
+                        studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x2).StudentNumber;
+                        studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 10 && a.Grand_id == Grand_id && a.Name == "体检费" && a.IsDelete == false).FirstOrDefault().id;//学杂
+                        studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x7);
+                        studentFeeRecord.AddDate = Convert.ToDateTime(item.x4);
+                        studentFeeRecord.IsDelete = false;
+                        studentFeeRecord.FinanceModelid = 8;
+                        StudentFeeRecordlist.Add(studentFeeRecord);
+                    }
+
+                }
+                if (item.x6 != "")//体检，一卡通
+                {
+                    studentFeeRecord = new StudentFeeRecord();
+                    studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x2).StudentNumber;
+                    studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 10 && a.Grand_id == Grand_id && a.Name.Contains("校服") && a.IsDelete == false).FirstOrDefault().id;//学杂
+                    studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x6);
+                    studentFeeRecord.AddDate = Convert.ToDateTime(item.x4);
+                    studentFeeRecord.IsDelete = false;
+                    studentFeeRecord.FinanceModelid = 8;
+                    StudentFeeRecordlist.Add(studentFeeRecord);
+                }
+                if (item.x8 != "")//宿舍押金
+                {
+                    studentFeeRecord = new StudentFeeRecord();
+                    studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x2).StudentNumber;
+                    studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 10 && a.Grand_id == Grand_id && a.Name == "宿舍押金" && a.IsDelete == false).FirstOrDefault().id;//学杂
+                    studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x8);
+                    studentFeeRecord.AddDate = Convert.ToDateTime(item.x4);
+                    studentFeeRecord.IsDelete = false;
+                    studentFeeRecord.FinanceModelid = 8;
+                    StudentFeeRecordlist.Add(studentFeeRecord);
+                }
+            }
+            //学员费用
+            BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
+            studentfee.Insert(StudentFeeRecordlist);
+            return null;
+        }
+        //s3缴费
+        public ActionResult text3()
+        {
+            //学员信息
+            StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+            //阶段表
+            BaseBusiness<Grand> geand = new BaseBusiness<Grand>();
+            List<te> telist = new List<te>();
+            // List<MyExcelClass> myExcelClasses
+            string finame = Server.MapPath(@"\Areas\Finance\images\2020年5月学生学费明细表.xlsx");
+            AsposeOfficeHelper asposeOfficeHelper = new AsposeOfficeHelper();
+            System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(finame, false);
+            for (int i = 2; i < t.Rows.Count; i++)
+            {
+                te te = new te();
+
+                if (t.Rows[i][1].ToString() != "")
+                {
+
+                    if (t.Rows[i][2].ToString() != "")
+                    {
+                        te.x2 = t.Rows[i][1].ToString();
+                        te.x3 = t.Rows[i][2].ToString();//身份证
+                        te.x4 = t.Rows[i][3].ToString();//阶段
+                        te.x5 = t.Rows[i][4].ToString();//缴费日期
+                        te.x6 = t.Rows[i][5].ToString();//学费
+                    
+                        te.x8 = t.Rows[i][7].ToString();//食宿费
+                        te.x9 = t.Rows[i][10].ToString();//备注
+                        telist.Add(te);
+                    }
+
+                }
+
+            }
+            List<StudentFeeRecord> StudentFeeRecordlist = new List<StudentFeeRecord>();
+            foreach (var item in telist)
+            {
+                //明目类型
+                BaseBusiness<Costitems> costitemss = new BaseBusiness<Costitems>();
+                var Grand_id = geand.GetList().Where(a => a.GrandName == item.x4).FirstOrDefault().Id;
+                StudentFeeRecord studentFeeRecord = new StudentFeeRecord();
+                studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x3).StudentNumber;
+                studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 8 && a.Grand_id == Grand_id).FirstOrDefault().id;//学费
+                studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x6);
+                studentFeeRecord.AddDate = Convert.ToDateTime(item.x5);
+                studentFeeRecord.Remarks = item.x9;
+                studentFeeRecord.IsDelete = false;
+                studentFeeRecord.FinanceModelid = 8;
+                StudentFeeRecordlist.Add(studentFeeRecord);
+                if (item.x8 != "")
+                {
+                    studentFeeRecord = new StudentFeeRecord();
+                    studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x3).StudentNumber;
+                    studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 12 && a.Grand_id == Grand_id).FirstOrDefault().id;//食宿费
+                    studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x8);
+                    studentFeeRecord.AddDate = Convert.ToDateTime(item.x5);
+                    studentFeeRecord.IsDelete = false;
+                    studentFeeRecord.FinanceModelid = 8;
+                    StudentFeeRecordlist.Add(studentFeeRecord);
+                }
+
+
+            }
+            //学员费用
+            BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
+            studentfee.Insert(StudentFeeRecordlist);
+            return null;
+        }
+
+        public ActionResult text4()
+        {
+            //学员信息
+            StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+            //阶段表
+            BaseBusiness<Grand> geand = new BaseBusiness<Grand>();
+            List<te> telist = new List<te>();
+            // List<MyExcelClass> myExcelClasses
+            string finame = Server.MapPath(@"\Areas\Finance\images\2020年5月学生学费明细表.xlsx");
+            AsposeOfficeHelper asposeOfficeHelper = new AsposeOfficeHelper();
+            System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(finame, false);
+            for (int i = 2; i < t.Rows.Count; i++)
+            {
+                te te = new te();
+
+                if (t.Rows[i][1].ToString() != "")
+                {
+
+                    if (t.Rows[i][2].ToString() != "")
+                    {
+                        te.x2 = t.Rows[i][1].ToString();
+                        te.x3 = t.Rows[i][2].ToString();//身份证
+                        te.x4 = t.Rows[i][3].ToString();//阶段
+                        te.x5 = t.Rows[i][4].ToString();//缴费日期
+                        te.x6 = t.Rows[i][5].ToString();//学费
+
+                        te.x8 = t.Rows[i][6].ToString();//食宿费
+                        te.x9 = t.Rows[i][9].ToString();//备注
+                        telist.Add(te);
+                    }
+
+                }
+
+            }
+            List<te> db = new List<te>();
+            te tec = new te();
+            foreach (var item in telist)
+            {
+                if (studentInformationBusiness.GetList().Where(a => a.identitydocument == item.x3).Count() < 1)
+                {
+                    
+                    tec.x1 = tec.x1+","+ item.x2;
+                    
+                }
+            }
+            db.Add(tec);
+            List<StudentFeeRecord> StudentFeeRecordlist = new List<StudentFeeRecord>();
+            //foreach (var item in telist)
+            //{
+            //    //明目类型
+            //    BaseBusiness<Costitems> costitemss = new BaseBusiness<Costitems>();
+            //    var Grand_id = geand.GetList().Where(a => a.GrandName == item.x4).FirstOrDefault().Id;
+            //    StudentFeeRecord studentFeeRecord = new StudentFeeRecord();
+            //    studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x3).StudentNumber;
+            //    studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 8 && a.Grand_id == Grand_id).FirstOrDefault().id;//学费
+            //    studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x6);
+            //    studentFeeRecord.AddDate = Convert.ToDateTime(item.x5);
+            //    studentFeeRecord.Remarks = item.x9;
+            //    studentFeeRecord.IsDelete = false;
+            //    studentFeeRecord.FinanceModelid = 8;
+            //    StudentFeeRecordlist.Add(studentFeeRecord);
+            //    if (item.x8 != "")
+            //    {
+            //        studentFeeRecord = new StudentFeeRecord();
+            //        studentFeeRecord.StudenID = studentInformationBusiness.GetEntity(item.x3).StudentNumber;
+            //        studentFeeRecord.Costitemsid = costitemss.GetList().Where(a => a.Rategory == 12 && a.Grand_id == Grand_id).FirstOrDefault().id;//食宿费
+            //        studentFeeRecord.Amountofmoney = Convert.ToDecimal(item.x8);
+            //        studentFeeRecord.AddDate = Convert.ToDateTime(item.x5);
+            //        studentFeeRecord.IsDelete = false;
+            //        studentFeeRecord.FinanceModelid = 8;
+            //        StudentFeeRecordlist.Add(studentFeeRecord);
+            //    }
+
+
+            //}
+            return null;
+        }
+
+        public ActionResult text5() {
+            //学员费用
+            BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
+           var x= studentfee.GetList().Where(a => a.Costitemsid == 10 || a.Costitemsid == 11).ToList();
+            return null;
+        }
     } 
 }

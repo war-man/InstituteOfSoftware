@@ -40,7 +40,7 @@
                             Total += Convert.ToInt32(item1.Amountofmoney);
 
                         }
-                        <h3 class="layui-timeline-title">@item.Date (@db)</h3>
+                        <h3 class="layui-timeline-title">@item.Date (@db.ToString().Substring(0,db.ToString().Length-2))</h3>
 
                         @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
                         {
@@ -50,7 +50,7 @@
                                 if (item1.Rategory == s)
                                 {
                                     <ul>
-                                        <li>@item1.GrandName @item1.CostitemName,缴纳: @item1.Amountofmoney</li>
+                                        <li>@item1.GrandName @item1.CostitemName,缴纳: @item1.Amountofmoney.ToString().Substring(0, @item1.Amountofmoney.ToString().Length-2)</li>
                                     </ul>
                                 }
                             }
@@ -96,7 +96,7 @@
                                 if (item1.Rategory == s)
                                 {
                                     <ul>
-                                        <li>@item1.GrandName @item1.CostitemName,退款: @item1.Amountofmoney</li>
+                                        <li>@item1.GrandName @item1.CostitemName,退款: @item1.Amountofmoney.ToString().Substring(0, item1.Amountofmoney.ToString().Length - 2)</li>
                                     </ul>
                                 }
                             }
