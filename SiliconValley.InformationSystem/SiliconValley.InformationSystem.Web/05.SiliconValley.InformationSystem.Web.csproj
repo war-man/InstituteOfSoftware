@@ -1876,7 +1876,6 @@
     <Content Include="Areas\Educational\Views\Laterecord\EditView.cshtml" />
     <Content Include="Areas\Educational\Views\Laterecord\insertView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\UpDataStudentName.cshtml" />
-    <Content Include="Areas\Finance\images\2020年5月学生学费明细表.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
