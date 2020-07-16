@@ -502,11 +502,13 @@
     <Content Include="Areas\Teachingquality\images\女1.png" />
     <Content Include="Areas\Teachingquality\images\女2.png" />
     <Content Include="Areas\Teachingquality\images\女3.png" />
+    <Content Include="Areas\Teachingquality\images\女4.png" />
     <Content Include="Areas\Teachingquality\images\审批.png" />
     <Content Include="Areas\Teachingquality\images\无数据.jpg" />
     <Content Include="Areas\Teachingquality\images\男1.png" />
     <Content Include="Areas\Teachingquality\images\男2.png" />
     <Content Include="Areas\Teachingquality\images\男3.png" />
+    <Content Include="Areas\Teachingquality\images\男4.png" />
     <Content Include="Areas\Teachingquality\js\priceview.js" />
     <Content Include="Areas\Teachingquality\js\Print.js" />
     <Content Include="Areas\Teachingquality\studentImg\20031998063000011.jpg" />
@@ -1876,7 +1878,6 @@
     <Content Include="Areas\Educational\Views\Laterecord\EditView.cshtml" />
     <Content Include="Areas\Educational\Views\Laterecord\insertView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\UpDataStudentName.cshtml" />
-    <Content Include="Areas\Finance\images\2020年5月学生学费明细表.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
