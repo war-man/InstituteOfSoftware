@@ -1858,6 +1858,7 @@
     <Content Include="Areas\Teachingquality\Views\Messagenotification\Release.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\GetEmpETRDetail.cshtml" />
     <Content Include="Areas\Dormitory\Views\NewbornR\NewBornrView.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\SetUp.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

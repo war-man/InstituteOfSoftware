@@ -1,0 +1,101 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SetUp</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+
+        ul {
+            list-style-type:none;
+            margin-top:20px;
+            margin-left:50px;
+        }
+
+        .label {
+            font-weight:400;
+            font-size:16px;
+        }
+        ul li {
+            margin-top:10px;
+            text-align:left;
+        }
+        .span {
+            margin-left:50px;
+            font-weight:100;
+            font-size:14px;
+            color:gray;
+            cursor:pointer;
+        }
+            .span:hover {
+            
+                color:red;
+            
+            }
+    </style>
+</head>
+<body>
+    <div>
+
+        <form class="layui-form">
+
+            <ul>
+                <li id="bindweixinli">
+
+                    <label class="label">微信绑定：</label><span class="span">未绑定</span>
+
+                </li>
+
+            </ul>
+
+        </form>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+
+        function loadWeixinInfo() {
+
+            $.get("/BaseSysManage/Base_UserRole/UserWeixinInfo", function (data) {
+
+                if (data.ErrorCode = 200) {
+
+                    if (data.Data == "1") {
+
+                        $("#bindweixinli .span").text("已绑定");
+
+                    }
+
+                    if (data.Data == "0") {
+
+                        $("#bindweixinli .span").text("去绑定");
+                    }
+
+                }
+            });
+
+        }
+        loadWeixinInfo();
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+            var url = window.parent.location.pathname + window.parent.location.search + window.parent.location.hash; 
+            
+            $("#bindweixinli .span").click(function () {
+
+                location.href = "/WeiXin/BindingWX?redirectUrl=" + url;
+            });
+        });
+
+    </script>
+</body>
+</html>

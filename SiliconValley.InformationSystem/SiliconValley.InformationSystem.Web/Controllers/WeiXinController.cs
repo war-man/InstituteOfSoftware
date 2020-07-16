@@ -67,10 +67,12 @@ namespace SiliconValley.InformationSystem.Web.Controllers
      
         
         [HttpGet]
-        public ActionResult BindingWX()
+        public ActionResult BindingWX(string redirectUrl)
         {
-
+            SessionHelper.Session["BindWXRedirectUrl"] = redirectUrl;
+           
             return View();
+            
         }
 
         
@@ -85,15 +87,14 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 
             Base_User user = db_account.GetEntity(currentUser.Id);
 
+            //if (!string.IsNullOrEmpty(user.WX_Unionid))
+            //{
+            //    errorMsg errorMsg = new errorMsg();
 
-            if (!string.IsNullOrEmpty(user.WX_Unionid))
-            {
-                errorMsg errorMsg = new errorMsg();
+            //    errorMsg.errorCode = "binding402";
 
-                errorMsg.errorCode = "binding402";
-
-                return View("WXLoginError", errorMsg);
-            }
+            //    return View("WXLoginError", errorMsg);
+            //}
 
 
             //存入信息
@@ -102,8 +103,8 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             db_account.Update(user);
 
             //跳转登录
-
-            return RedirectToAction("LoginIndex","Login");
+            var redirectUrl = SessionHelper.Session["BindWXRedirectUrl"].ToString();
+            return Redirect(redirectUrl);
 
         }
 
