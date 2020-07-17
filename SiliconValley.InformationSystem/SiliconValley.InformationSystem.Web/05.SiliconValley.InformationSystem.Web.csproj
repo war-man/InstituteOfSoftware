@@ -490,6 +490,8 @@
     <Content Include="Areas\Teachingquality\ClassImages\1.jpg" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
     <Content Include="Areas\Teachingquality\ClassImages\ClassImages.jpg" />
+    <Content Include="Areas\Teachingquality\ClassImages\CLassName.jpg" />
+    <Content Include="Areas\Teachingquality\ClassImages\LiShiClass.jpg" />
     <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051991032300041back.jpg" />
     <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997080200010back.jpg" />
     <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.jpg" />
@@ -503,12 +505,14 @@
     <Content Include="Areas\Teachingquality\images\女2.png" />
     <Content Include="Areas\Teachingquality\images\女3.png" />
     <Content Include="Areas\Teachingquality\images\女4.png" />
+    <Content Include="Areas\Teachingquality\images\女6.png" />
     <Content Include="Areas\Teachingquality\images\审批.png" />
     <Content Include="Areas\Teachingquality\images\无数据.jpg" />
     <Content Include="Areas\Teachingquality\images\男1.png" />
     <Content Include="Areas\Teachingquality\images\男2.png" />
     <Content Include="Areas\Teachingquality\images\男3.png" />
     <Content Include="Areas\Teachingquality\images\男4.png" />
+    <Content Include="Areas\Teachingquality\images\男6.png" />
     <Content Include="Areas\Teachingquality\js\priceview.js" />
     <Content Include="Areas\Teachingquality\js\Print.js" />
     <Content Include="Areas\Teachingquality\studentImg\20031998063000011.jpg" />

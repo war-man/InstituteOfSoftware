@@ -25,5 +25,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string ClassName { get; set; }
 
         public string Headmasters { get; set; }
+
+        public int StudentPutOnRecord_Id { get; set; }
     }
 }

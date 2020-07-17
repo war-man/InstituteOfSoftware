@@ -43,7 +43,14 @@
             width: 100px;
             height: 100px;
         }
-
+        #Remarks {
+            overflow: auto;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            border-style: solid;
+            border-color: #FFFFFF;
+            resize: none;
+        }
         table {
             font-size: 10pt;
         }
@@ -103,8 +110,9 @@
 
         <div id="DaXie" style="position:absolute;left:188px;"></div>
         <div id="pricent" style="position:absolute;left:524px;"></div>
-        <div id="Remarks" style="position:absolute;left:100px;top:249px;">
-            <input type="text" id="Remarks" />
+        <div style="position:absolute;left:100px;top:249px;">
+            <textarea id="Remarks" style="height:42px;width:190px;"></textarea>
+         
         </div>
     </div>
 
