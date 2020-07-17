@@ -151,7 +151,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
           
                 //职业素养课，语数外 体育 课时
            resultObj.otherTeaccher_count = teachingitems(empObj, date, "other");
-         
+            
     
             //内训课时
             resultObj.InternalTraining_Count = InternalTraining_Count(empObj);
@@ -657,23 +657,44 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             {
                                 if (type == "skill")
                                 {
-                                    item1.NodeNumber += 4;
+                                    
+
+                                    if (item.Curse_Id.Contains("12") || item.Curse_Id.Contains("34")) item1.NodeNumber += 2;
+
+                                    else item1.NodeNumber += 4;
+
+
                                 }
                                 else
                                 {
                                     item1.NodeNumber += 2;
-                                }
-                                
+
+
+                                } 
                             }
                         }
                     }
 
                     else
                     {
-                        //创建新的
                         TeachingItem teachingItem = new TeachingItem();
                         teachingItem.Course = course.CurriculumID;
-                        teachingItem.NodeNumber = 4;
+                        
+
+                        if (type == "skill")
+                        {
+
+                            if (item.Curse_Id.Contains("12") || item.Curse_Id.Contains("34")) teachingItem.NodeNumber += 2;
+
+                            else teachingItem.NodeNumber += 4;
+
+                        }
+                        else
+                        {
+                            teachingItem.NodeNumber += 2;
+                        }
+                        //创建新的
+                       
 
                         result.Add(teachingItem);
                     }
@@ -1742,6 +1763,29 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
 
         }
+
+
+        /// <summary>
+        /// 对质素课数据可进行处理
+        /// </summary>
+        /// <returns></returns>
+        public List<TeachingItem> Qualityclass(List<TeachingItem> datas)
+        {
+            CourseBusiness dbcourse = new CourseBusiness();
+            datas.ForEach(d =>
+                {
+                    var courseobj = dbcourse.GetEntity(d.Course);
+
+                    if (courseobj.CourseName.Contains("职素"))
+                    {
+                        //if(d.)
+                    }
+                });
+
+            return null;
+        }
+
+
 
     }
 }
