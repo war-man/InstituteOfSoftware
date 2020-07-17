@@ -1177,40 +1177,44 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool AidAllData(int days, GetYear year, List<Reconcile> reconciles)
         {
             bool s = false;
+            days = days - 1;
             try
-            {
-                 
+            {                
                 List<Reconcile> Recon = new List<Reconcile>();
-                foreach (Reconcile re in reconciles)
+                for (int i = 0; i < days; i++)
                 {
-                    if (re.AnPaiDate.Month>=year.StartmonthName && re.AnPaiDate.Month <= year.EndmonthName)
+                    foreach (Reconcile re in reconciles)
                     {
-                        //单休
-                        if (this.IsSaturday(re.AnPaiDate) == 1)
+                        if (re.AnPaiDate.Month >= year.StartmonthName && re.AnPaiDate.Month <= year.EndmonthName)
                         {
-                            re.AnPaiDate = re.AnPaiDate.AddDays((days + 1));
+                            //单休
+                            if (this.IsSaturday(re.AnPaiDate) == 1)
+                            {
+                                re.AnPaiDate = re.AnPaiDate.AddDays((2));
+                            }
+                            else
+                            {
+                                re.AnPaiDate = re.AnPaiDate.AddDays(1);
+                            }
                         }
                         else
                         {
-                            re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                            //双休
+                            DayOfWeek week = re.AnPaiDate.DayOfWeek;
+                            if (week == DayOfWeek.Friday)
+                            {
+                                re.AnPaiDate = re.AnPaiDate.AddDays((2));
+                            }
+                            else
+                            {
+                                re.AnPaiDate = re.AnPaiDate.AddDays(1);
+                            }
                         }
+                        Recon.Add(re);
                     }
-                    else
-                    {
-                        //双休
-                        DayOfWeek week = re.AnPaiDate.DayOfWeek;
-                        if (week== DayOfWeek.Friday)
-                        {
-                            re.AnPaiDate = re.AnPaiDate.AddDays((days + 2));
-                        }
-                        else
-                        {
-                            re.AnPaiDate = re.AnPaiDate.AddDays(days);
-                        }
-                    }                                                        
-                    Recon.Add(re);
+                    this.Update(Recon);
                 }
-                this.Update(Recon);
+                
 
                  
                 s = true;
@@ -1234,43 +1238,47 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool AidClassData(DateTime date, int days, int class_id,GetYear YearMon)
         {
             bool s = false;
-
+            days = days - 1;
             try
             {
                 List<Reconcile> recon = new List<Reconcile>();
                 List<Reconcile> reconciles = GetReconcileDate(date,true).Where(r =>r.ClassSchedule_Id == class_id).ToList();
-                foreach (Reconcile re in reconciles)
+                for (int i = 0; i < days; i++)
                 {
-                    if (re.AnPaiDate.Month >= YearMon.StartmonthName && re.AnPaiDate.Month <= YearMon.EndmonthName)
+                    foreach (Reconcile re in reconciles)
                     {
-                        //单休
-                        if (this.IsSaturday(re.AnPaiDate) == 1)
+                        if (re.AnPaiDate.Month >= YearMon.StartmonthName && re.AnPaiDate.Month <= YearMon.EndmonthName)
                         {
-                            re.AnPaiDate = re.AnPaiDate.AddDays((days + 1));
+                            //单休
+                            if (this.IsSaturday(re.AnPaiDate) == 1)
+                            {
+                                re.AnPaiDate = re.AnPaiDate.AddDays((days + 1));
+                            }
+                            else
+                            {
+                                re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                            }
                         }
                         else
                         {
-                            re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                            //双休
+                            DayOfWeek week = re.AnPaiDate.DayOfWeek;
+                            if (week == DayOfWeek.Friday)
+                            {
+                                re.AnPaiDate = re.AnPaiDate.AddDays((days + 2));
+                            }
+                            else
+                            {
+                                re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                            }
                         }
-                    }
-                    else
-                    {
-                        //双休
-                        DayOfWeek week = re.AnPaiDate.DayOfWeek;
-                        if (week == DayOfWeek.Friday)
-                        {
-                            re.AnPaiDate = re.AnPaiDate.AddDays((days + 2));
-                        }
-                        else
-                        {
-                            re.AnPaiDate = re.AnPaiDate.AddDays(days);
-                        }
-                    }
-                   
-                    recon.Add(re);
 
-                }                 
-                this.Update(recon);
+                        recon.Add(re);
+
+                    }
+                    this.Update(recon);
+                }
+                 
                 s = true;
             }
             catch (Exception)
@@ -2524,6 +2532,9 @@ Curriculum_Id like '职素' or Curriculum_Id like '班会' or Curriculum_Id like
             return newdata;
         }
         #endregion
+
+
+
     }
 }
 

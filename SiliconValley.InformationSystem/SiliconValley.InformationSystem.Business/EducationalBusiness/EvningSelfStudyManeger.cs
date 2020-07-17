@@ -195,13 +195,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public AjaxResult Delete_Data(List<EvningSelfStudy> ids)
         {
             AjaxResult a = new AjaxResult();
-
             try
             {
                 this.Delete(ids);
                 a.Success = true;
+                a.Msg = "操作成功！！";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 a.Success = false;
                 a.Msg = "系统错误，请刷新重试!!!";
@@ -834,7 +834,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         }
         
         /// <summary>
-        /// 根据日期获取晚自习数据(默认等于输入时间)
+        /// 根据日期获取晚自习数据(true等于输入时间,false大于等于输入时间)
         /// </summary>
         /// <param name="date"></param>
         /// <param name="s"></param>

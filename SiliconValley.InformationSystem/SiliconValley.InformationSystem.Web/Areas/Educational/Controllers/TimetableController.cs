@@ -69,5 +69,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational
             ViewBag.list = list;
             return View();
         }
+
     }
 }

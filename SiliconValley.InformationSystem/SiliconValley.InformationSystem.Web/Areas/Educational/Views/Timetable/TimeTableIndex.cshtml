@@ -73,6 +73,7 @@
                 <button type="button" class="layui-btn" onclick="GetKebiao()">获取课表</button>
                 <button type="button" class="layui-btn" onclick="SysStudy()">安排自习课</button>
                 <button type="button" class="layui-btn" onclick="AnpaiStuyEvning()">阶段安排晚自习</button>
+                <button type="button" class="layui-btn" onclick="DeleteStuyEvning()">阶段删除晚自习</button>
             </div>
         </div>
     </form>
@@ -85,7 +86,7 @@
     <script>
         var new_laydate;
         var dayname;
-
+         
         function TableFulsh() {
             GetKebiao();
         }
@@ -347,7 +348,25 @@
                             $(value).click(function () {
                                 var rid = $(value).attr("data-rid");
                                 //询问是否要编辑排课数据
-                                layer.confirm('需要编辑排课数据吗?', { icon: 3 }, function (index) {
+                                layer.confirm('系统温馨提示！', {
+                                    btn: ['编辑数据', '删除数据']  
+                                    , btn2: function (index, layero) {
+                                      //删除
+                                       var moreindex= layer.load(1)
+                                        $.ajax({
+                                            url: '/Educational/Reconcile/DeleteMore',
+                                            type:'POST',
+                                            data: {"str": rid },
+                                            success: function (suc) {                                                 
+                                                    layer.msg(suc.Msg, function () {
+                                                        GetKebiao();
+                                                        layer.close(moreindex);
+                                                    });                                                
+                                            }
+                                        })
+                                    }
+                                }, function (index, layero) {
+                                    //编辑
                                     var ifsingle = rid.indexOf(',');
                                     if (ifsingle == -1) {
                                         //alert('只是单个班级');
@@ -364,6 +383,7 @@
                                     }
                                     layer.close(index);
                                 });
+                                 
                             });
                         });
                         //编辑晚自习数据
@@ -371,7 +391,24 @@
                             $(val).click(function () {
                                 var rid = $(val).attr("data-rid");
                                 var leng = rid.indexOf(',');
-                                layer.confirm('需要编辑晚自习数据吗?', { icon: 3 }, function (index) {
+                                layer.confirm('系统温馨提示！', {
+                                    btn: ['编辑数据', '删除数据']  
+                                    , btn2: function (index, layero) {
+                                        var moreindex = layer.load(1)
+                                        $.ajax({
+                                            url: '/Educational/EvningSelfStudy/DeleteFunction',
+                                            type: 'POST',
+                                            data: { "str": rid },
+                                            success: function (suc) {
+                                                layer.msg(suc.Msg, function () {
+                                                    GetKebiao();
+                                                    layer.close(moreindex);
+                                                });
+                                            }
+                                        })
+                                    }
+                                }, function (index, layero) {
+                                    //编辑数据
                                     if (leng == -1) {
                                         //单条数据
                                         SetEvningValue(rid);
@@ -387,7 +424,25 @@
                                         });
                                     }
                                     layer.close(index);
+
                                 });
+                                //layer.confirm('需要编辑晚自习数据吗?', { icon: 3 }, function (index) {
+                                //    if (leng == -1) {
+                                //        //单条数据
+                                //        SetEvningValue(rid);
+                                //    } else {
+                                //        //多条数据
+                                //        layer.open({
+                                //            type: 2
+                                //            , title: '多个班级晚自习数据提示'
+                                //            , shade: 0.8
+                                //            , anim: 4
+                                //            , skin: 'demo-class'
+                                //            , content: '/Educational/Timetable/TishEvningView/' + rid,
+                                //        });
+                                //    }
+                                //    layer.close(index);
+                                //});
 
                             });
                         });
@@ -425,6 +480,7 @@
            
 
         }
+
         function SysStudy() {
             layui.use('layer', function () {
                 var layer = layui.layer;
@@ -469,6 +525,20 @@
                 , btn: ['知道了']
                 , moveType: 1 //拖拽模式，0或者1
                 , content: str
+            });
+        }
+
+        function DeleteStuyEvning() {
+            layui.use('layer', function () {
+                layer.open({
+                    type: 2,
+                    content: '/Educational/EvningSelfStudy/DeleteDateView',
+                    area: ['600px', '450px'],
+                    title: '阶段删除晚自习页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });  
             });
         }
     </script>
