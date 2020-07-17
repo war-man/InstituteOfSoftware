@@ -974,12 +974,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
             
         }
-
+        /// <summary>
+        /// 获取班主任带班历史记录
+        /// </summary>
+        /// <returns></returns>
         public ActionResult EmpHearClass()
         {
             var EmpNumber = Base_UserBusiness.GetCurrentUser().EmpNumber;
             var id = Hadmst.GetList().Where(a => a.informatiees_Id == EmpNumber && a.IsDelete == false).FirstOrDefault().ID;
-            var x = Hadmst.EmpClass(id, false).Select(a=>new {
+            var c = Hadmst.EmpClass(id, true);
+            var x = Hadmst.EmpClass(id, false);
+            foreach (var item in c)
+            {
+               var x1 = x.Where(a => a.id == item.id).ToList();
+                foreach (var item1 in x1)
+                {
+                    x.Remove(item1);
+                }
+            }
+         x .Select(a=>new {
                 ClassNumber=a.ClassNumber+"(" +Grandcontext.GetEntity(a.grade_Id).GrandName+")",
                 a.id
             }).Distinct().ToList();

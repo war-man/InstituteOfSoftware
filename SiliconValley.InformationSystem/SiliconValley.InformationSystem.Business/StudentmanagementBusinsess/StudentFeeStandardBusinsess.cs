@@ -97,9 +97,20 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 list = list.Where(a => a.identitydocument.Contains(identitydocument)).ToList();
             }
 
+            StudentDataKeepAndRecordBusiness studentDataKeepAndRecord = new StudentDataKeepAndRecordBusiness();
 
-        
-            var dataList = list.OrderByDescending(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
+            var dataList = list.Select(a => new {
+                a.ClassName,
+                a.StudentNumber,
+                a.Name,
+                a.identitydocument,
+                a.Sex,
+                a.Headmasters,
+                a.BirthDate,
+             
+                studentDataKeepAndRecord.findId(a.StudentPutOnRecord_Id.ToString()).ConsultTeacher,
+                studentDataKeepAndRecord.findId(a.StudentPutOnRecord_Id.ToString()).empName
+            }).OrderByDescending(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new
             {

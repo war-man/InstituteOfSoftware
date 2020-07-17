@@ -83,11 +83,12 @@
             font-weight: 200;
         }
 
-        .Mydiv:hover {
-            box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
-     
-        }
-
+         .Transaction:hover {
+                box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
+            }
+            .Mydiv:hover {
+                box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
+            }
         .color {
            
         }
@@ -107,19 +108,20 @@
             margin-top: 10px;
             padding: 0px;
             border: 1px solid red;
+            background-color: #305e64;
         }
         .layui-anim{margin-top:-27px;padding:19px;}
 
         .table1 td {
             height: 40px;
         }
-
+        
         .table1 {
             margin-top: 20px;
         }
 
         .layui-colla-title {
-            background-color: #1cc09f;
+            background-color: #305e64;
             color: #fff;
         }
 
@@ -129,13 +131,15 @@
         }
 
         .Lcc {
-            background-color: #1cc09f;
+            background-color: #d7b7b7;
         }
         .layui-colla-item{margin-top:-30px;}
         .TransactionColor {
-            background-color: aqua;
+            
         }
-
+        .th {
+            color: #a99d9d !important;
+        }
         #page-inner {
         }
     </style>
@@ -147,7 +151,7 @@
 <div>
     <menu class="menui">
 
-        <li class="menui-item submenui">
+        <li class="menui-item submenui" >
             <button type="button" class="menui-btn">
                 <i class="fa fa-users"></i>
                 <span class="menui-text">添加班委</span>
@@ -179,43 +183,45 @@
 
     </menu>
 </div>
-<div style="width:100%;height:150px;border:1px solid #1cc09f;background-color:#1cc09f;">
+<div style="width:100%;height:150px;border:1px solid #021F4E;background-color:#305e64;color:#fff;">
     <div>
         <div>
             <table class="teshu table1">
-                <tr>
-                    @{
-                        foreach (var item in ViewBag.ClassdetailsView as List<ClassdetailsView>)
-                        {
+
+                @{
+                    <tr>
+                        @foreach (var item in ViewBag.ClassdetailsView as List<ClassdetailsView>)
+                            {
                             <td>班级人数</td>
-                            <th>@item.count</th>
+                            <th class="th">@item.count</th>
                             if (item.QQ != null)
                             {
-                                <td>QQ群</td>
-                                <th><div id="qq">@item.QQ</div></th>
+                            <td>QQ群</td>
+                            <th><div id="qq" class="th">@item.QQ</div></th>
 
                             }
                             else
                             {
-                                <td>QQ群</td>
-                                <th><div id="qq">未记录</div></th>
+                            <td>QQ群</td>
+                            <th><div id="qq">未记录</div></th>
                             }
                             if (item.WeChat != null)
                             {
-                                <td>微信群</td>
-                                <th><div id="wechat">@item.WeChat</div></th>
+                            <td>微信群</td>
+                            <th><div id="wechat" class="th">@item.WeChat</div></th>
                             }
                             else
                             {
-                                <td>微信群</td>
-                                <th><div id="wechat">未记录</div></th>
+                            <td>微信群</td>
+                            <th><div id="wechat" class="th">未记录</div></th>
                             }
-                        }
-                    }
+                            }
+                    </tr>
+                }
 
 
 
-                </tr>
+
 
                 <tr>
 
@@ -229,9 +235,9 @@
                                 a = 0;
                                 <br />
                             }
-                            <td class="Nameofmembers">@item.Nameofmembers</td>
+                            <td class="Nameofmembers " >@item.Nameofmembers</td>
 
-                            <th class="Names">未设置</th>
+                            <th class="Names th">未设置</th>
 
                         }
 
@@ -508,7 +514,7 @@
                         
                         var sex = data[i].Sex == true ? "N4" : "V4";
                         if (data[i].Statusname == "休学") {
-
+                            console.log(data[i].ClassID);
                             $("#MyShutdown").append($('<div class="Transaction ' + sex + ' layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div>  <div style="display:none;">' + data[i].ClassID + '</div> <div style="text-align:center;margin-top:120px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">状态:' + data[i].Statusname + '</div></div>'));
                         } else {
                             $("#MyShutdown").append($('<div class="Scrap ' + sex + ' layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div>  <div style="display:none;">' + data[i].ClassID + '</div> <div style="text-align:center;margin-top:120px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">状态:' + data[i].Statusname + '</div></div>'));
@@ -694,8 +700,9 @@
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         }
-
-        //点击事件
+        
+       
+        //正常学生点击事件
         $("body").on("click", ".Mydiv", function () {
             console.log(this);
             if (!$(this).is(".color")) {
@@ -722,10 +729,20 @@
         $("body").on("click", ".Transaction", function () {
 
             if (!$(this).is(".TransactionColor")) {
+                if (!$(this).is(".V4")) {
+                    $(this).css("backgroundImage", "url('/Areas/Teachingquality/images/男6.png')");
+                } else {
+                    $(this).css("backgroundImage", "url('/Areas/Teachingquality/images/女6.png')");
+                }
                 $(".Transaction").removeClass("TransactionColor");
                 $(this).addClass("TransactionColor");
             }
             else {
+                if (!$(this).is(".Mymale")) {
+                    $(this).css("backgroundImage", "url('/Areas/Teachingquality/images/男4.png')");
+                } else {
+                    $(this).css("backgroundImage", "url('/Areas/Teachingquality/images/女4.png')");
+                }
                 $(this).removeClass("TransactionColor");
             }
         });
@@ -956,6 +973,8 @@
         $("#Resumptionofstudy").click(function () {
             if ($(".TransactionColor").length == 1) {
                 var x = $($($(".TransactionColor")[0]).children()[0]).text();
+                console.log($($($(".TransactionColor")[0]).children()[1]).text());
+                console.log($("#ClassName").text())
                 if ($($($(".TransactionColor")[0]).children()[1]).text() == $("#ClassName").text()) {
                     var url = "/Teachingquality/StudentTransaction/Resumptionofstudy?StudentID=" + x;
                     Popup(url, "复学申请", 1000, 900);

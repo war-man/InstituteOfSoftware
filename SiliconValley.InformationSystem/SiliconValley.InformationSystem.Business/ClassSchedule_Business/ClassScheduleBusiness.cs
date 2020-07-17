@@ -227,7 +227,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                         {
                             var Dyan = classDynamicsBusiness.GetList().Where(a => a.Studentnumber == classStudentView.StuNameID && a.IsaDopt == true).ToList().OrderByDescending(a => a.ID).FirstOrDefault();
                             classStudentView.Statusname = BasicdatBusiness.GetEntity(Dyan.States).Name;
-                            classStudentView.ClassID = Dyan.CurrentClass;
+                            classStudentView.ClassID = Dyan.FormerClass;
                         }
                        
                   

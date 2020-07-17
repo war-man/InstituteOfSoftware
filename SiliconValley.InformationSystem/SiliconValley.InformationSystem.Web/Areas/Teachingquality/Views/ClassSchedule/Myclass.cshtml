@@ -33,11 +33,29 @@
 
         .div1 {
             cursor: pointer;
+            background-image: url('/Areas/Teachingquality/ClassImages/ClassName.jpg');
+            background-repeat: no-repeat;
+          
+            width: 200px;
+            height: 213px;
+            float: left;
+            margin-left: 20px;
+            margin-top: 20px;
         }
 
             .div1:hover {
-                background-color: chartreuse;
+                box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
             }
+        .LiShiClass:hover {
+            box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
+        }
+        .LiShiClass {
+            border:2px solid rgba(34, 25, 25, 0.2);
+            width: 290px;
+            height: 150px;
+            margin-top:10px;
+            background-image: url('/Areas/Teachingquality/ClassImages/LiShiClass.jpg');
+        }
     </style>
     <link href="~/Areas/Teachingquality/Styles/MenuBar.css" rel="stylesheet" />
 }
@@ -95,6 +113,7 @@
             <div class="layui-colla-content">
               
             </div>
+
         </div>
        
     </div>
@@ -159,24 +178,24 @@
         //加上这个代码即可
     });
 
-    $("body").on("contextmenu", ".div1", function (e) {
-        onContextMenu(e);
-        stuid = $($(this).children()[0]).val();
+    //$("body").on("contextmenu", ".div1", function (e) {
+    //    onContextMenu(e);
+    //    stuid = $($(this).children()[0]).val();
 
-        return false;
-        document.addEventListener('contextmenu', onContextMenu, false);
-        hideMenu();
-    });
+    //    return false;
+    //    document.addEventListener('contextmenu', onContextMenu, false);
+    //    hideMenu();
+    //});
     function date() {
         $($("#classid").children()).remove();
         $.post("/Teachingquality/ClassSchedule/EmpClass", function (data) {
 
             for (var i = 0; i < data.length; i++) {
-                console.log(data[i].ClassImage);
+             
                 if (data[i].ClassImage == null) {
-                    $("#classid").append($('<div class="div1" style="width:150px;height:150px;float:left;margin-left:20px;margin-top:20px;">  <input type="text" value=' + data[i].id + ' style="display:none" /> <img  style="width:150px;height:150px;" src="/Areas/Teachingquality/ClassImages/ClassImages.jpg" /> <div style="height:30px;margin-top:-91px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div><</div>'));
+                    $("#classid").append($('<div class="div1" >  <input type="text" value=' + data[i].id + ' style="display:none" /> <div style="height:30px;margin-top:153px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div></div>'));
                 } else {
-                    $("#classid").append($('<div class="div1" style="width:150px;height:150px;float:left;margin-left:20px;margin-top:20px;">  <input type="text" value=' + data[i].id + ' style="display:none" /> <img  style="width:150px;height:150px;" src="' + data[i].ClassImage + '" /> <div style="height:30px;margin-top:-91px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div><</div>'));
+                    $("#classid").append($('<div class="div1">  <input type="text" value=' + data[i].id + ' style="display:none" />  <div style="height:30px;margin-top:153px;text-align:center;font-size:17pt;color:#00ff21;">' + data[i].ClassNumber + '<br/>' + data[i].grade_Id + '</div></div>'));
                 }
 
             }
@@ -194,19 +213,17 @@
         var layer = layui.layer;
 
         $.post("/Teachingquality/ClassSchedule/EmpHearClass", function (data) {
+         
         
             for (var i = 0; i < data.length; i++) {
-                if (i == 0) {
-                    $(".layui-colla-content").append($('<button type="button" class="layui-btn layui-btn-warm classid" value=' + data[i].id + ' style="margin-top:10px;margin-left:10px;">' + data[i].ClassNumber + '</button>'));
-                } else {
-                    $(".layui-colla-content").append($('<button type="button" class="layui-btn layui-btn-warm classid" value=' + data[i].id + ' style="margin-top:10px;">' + data[i].ClassNumber + '</button>'));
-                }
+                $(".layui-colla-content").append($(' <div class="LiShiClass"><input type="text" style="display:none" value="' + data[i].id + '" /><div style="margin-left:70px;height:20px;position:relative;top:20px;font-size:17pt;">' + data[i].ClassNumber + '</div></div>'));
 
             }
          
         })
-        $("body").on("click", ".classid",function () {
-            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $(this).val();
+        $("body").on("click", ".LiShiClass", function () {
+          
+            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
          
         })
 
