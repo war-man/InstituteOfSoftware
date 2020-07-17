@@ -226,12 +226,10 @@
                         if (checkStatus.data.length > 0) {
                             layer.confirm('是否真的删除？', function (heindex) {
 
-
                                 var str = "";
                                 for (var i = 0; i < checkStatus.data.length; i++) {
                                     str = str + checkStatus.data[i].id + ",";
                                 }
-
                                 $.ajax({
                                     url: '/Educational/EvningSelfStudy/DeleteFunction',
                                     type: 'POST',

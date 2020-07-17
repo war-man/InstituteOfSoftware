@@ -406,6 +406,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 list = list.Where(l => l.StatusName!=null).ToList();
                 list = list.Where(l => l.StatusName.Contains(statis)).ToList();
             }
+
+            StudentInformationBusiness stu = new StudentInformationBusiness();
             var mydata = list.OrderByDescending(l => l.Id).Skip((page - 1) * limit).Take(limit).Select(l => new {
                 Id = l.Id,
                 StuName = l.StuName,
@@ -428,7 +430,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 MarketType = l.MarketType,
                 StuQQ = l.StuQQ,
                 ConsultTeacher=l.ConsultTeacher,
-                CountBeanDate = CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate
+                CountBeanDate = CM_Entity.AccordingStuIdGetConsultData(Convert.ToInt32(l.Id)).ComDate,
+                Iszhuce = stu.IsRegister(l.Id)
             }).ToList();
             var data = new {data= mydata, count=list.Count,code=0,msg=""};
 
@@ -438,7 +441,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult MyFollwingInfoIndex()
         {
             ConsultTeacher = new ConsultTeacherManeger();
-        
 
             //获取当前上传的操作人
             Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
@@ -466,7 +468,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ss.AddRange(EmployandCounTeacherCoom.Studentrecond.Stustate_Entity.GetList().Select(s => new SelectListItem { Text = s.StatusName, Value = s.StatusName }).ToList());
 
             ViewBag.slist = ss;
-
             return View();
         }
 
@@ -517,8 +518,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
-
 
     }
 }

@@ -770,18 +770,28 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 if (find_s != null)
                 {
                     AjaxResult a = Stustate_Entity.GetStu("已报名");
-                    if (a.Success == true)
+                    StuStatus find_statu = a.Data as StuStatus;
+                
+                    if (find_s.StuStatus_Id!= find_statu.Id)
                     {
-                        StuStatus find_statu = a.Data as StuStatus;
-                        find_s.StuStatus_Id = find_statu.Id;
-                        find_s.StatusTime = DateTime.Now;
-                        this.Update(find_s);
-                        return true;
+                        if (a.Success == true)
+                        {
+
+                            find_s.StuStatus_Id = find_statu.Id;
+                            find_s.StatusTime = DateTime.Now;
+                            this.Update(find_s);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
-                        return false;
+                        return true;
                     }
+                     
                 }
                 else
                 {
