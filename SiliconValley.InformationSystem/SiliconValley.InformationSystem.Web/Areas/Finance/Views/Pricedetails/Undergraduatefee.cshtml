@@ -45,12 +45,19 @@
                         </div>
                     </div>
 
+                  
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">所选名目:</label>
+                            <div id="dateDiv" class="layui-input-block">
 
+                            </div>
+                        </div>
+                
 
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                        <label class="layui-form-label">费用</label>
+                        <label class="layui-form-label">合计</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" },{ "readonly", "readonly" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" }, { "readonly", "readonly" }, { "class", "layui-input " } })
 
                         </div>
                     </div>
@@ -83,11 +90,24 @@
 </html>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
+    function delet(evnt) {
+
+        var findlable = ($(evnt).parent())[0];
+        console.log(findlable);
+        var dbase = {
+            Costitemsid: $(findlable).attr("value")
+        };
+        Otherexpenses(dbase, function (ds) {
+            var Amountofmoney = Number($("#Amountofmoney").val());
+            $("#Amountofmoney").val(Amountofmoney - Number(ds));
+        });
+        $(findlable).remove();
+    }
     layui.use(['table', 'layer', 'tree', 'form'], function () {
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
-
+       
         //监听阶段下拉框
         form.on('select(Costitemsid)', function (data) {
             if (data.value != "") {
@@ -96,16 +116,37 @@
                     Costitemsid: data.value
                 };
                
-                Otherexpenses(dbase, function (ds) {
-                    $("#Amountofmoney").val(ds);
-                   
+                var name = $(this).text();
+             //   console.log(name)
+                var count = 0;
+                $(".LableCss1").each(function (index, value) {
+                    var cname = $(this).text().split('(');
+                    console.log(cname);
+                  
+                    if (cname[0]==name) {
+                        count++;
+                    }
+            
                 });
+                var datavalue = "";
+               
 
+                if (count < 1) {
+                    Otherexpenses(dbase, function (ds) {
+                        $('<label class="LableCss1"  value=' + data.value + ' style="border:1px solid #fff;border-width:1px">' + name + '(' + ds + '元)<i onclick="delet(this)" class="layui-icon" style="color: red;">&#x1006;</i></label>').appendTo($("#dateDiv"));
+
+                        var Amountofmoney = Number($("#Amountofmoney").val());
+                        $("#Amountofmoney").val(Amountofmoney + Number(ds));
+
+                    });
+                         }
+             
 
             } else {
-                $("#Amountofmoney").val("");
+                
             }
         });
+    
         //正则
         form.verify({
             Amountofmoney: function (value, item) { //value：表单的值、item：表单的DOM对象
@@ -133,7 +174,21 @@
         })
         //监听提交
         form.on('submit(demo1)', function (data) {
-            var db = data.field;
+            var student = data.field;
+         
+            var Costitemsid = "";
+            $(".LableCss1").each(function (index, value) {
+                Costitemsid = Costitemsid  + $(this).attr("value")+",";
+               
+             
+            });
+            console.log(Costitemsid);
+            var db = {
+                StudenID: student.StudenID,
+                Remarks: student.Remarks,
+                Costitemsid: Costitemsid
+            }
+          
             ajaxprice("/Finance/Pricedetails/Tuitionandfees", db, function () {
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);//关闭当前页  

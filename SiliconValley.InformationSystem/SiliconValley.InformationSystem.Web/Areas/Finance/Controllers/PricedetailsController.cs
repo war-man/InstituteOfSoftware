@@ -156,10 +156,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
        
         //接收自考本科表单数据
         [HttpPost]
-        public ActionResult Tuitionandfees(Payview studentFeeRecord)
+        public ActionResult Tuitionandfees(string StudenID,string Remarks,string Costitemsid)
         {
           
-            return Json(dbtext.Tuitionandfees(studentFeeRecord),JsonRequestBehavior.AllowGet);
+      
+            return Json(dbtext.Tuitionandfees(StudenID, Remarks, Costitemsid),JsonRequestBehavior.AllowGet);
         }
         //学员缴费页面
         [HttpGet]
