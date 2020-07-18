@@ -35,5 +35,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remark { get; set; }//备注
         public Nullable<bool> IsDel { get; set; }
         public Nullable<int> Pid { get; set; }//岗位
+        public Nullable<int> SonId { get; set; }//自编号
     }
 }

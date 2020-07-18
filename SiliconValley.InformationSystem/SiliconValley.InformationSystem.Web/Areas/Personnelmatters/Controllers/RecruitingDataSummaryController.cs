@@ -35,24 +35,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {  
             RecruitPhoneTraceManage rptmanage = new RecruitPhoneTraceManage();
             List<RecruitPhoneTraceView> rptviewlist = new List<RecruitPhoneTraceView>();
-            EmployeesInfoManage empmanagee = new EmployeesInfoManage();
+          
             var rdslist = rptmanage.GetList().Where(s=>s.IsDel==false).ToList();         
             foreach (var item in rdslist)
             {
-                RecruitPhoneTraceView rptview = new RecruitPhoneTraceView();
-                rptview.Id = item.Id;
-                rptview.Name = item.Name;
-                rptview.PhoneNumber = item.PhoneNumber;
-                rptview.TraceTime = item.TraceTime;
-                rptview.Channel = item.Channel;
-                rptview.ResumeType = item.ResumeType;
-                rptview.PhoneCommunicateResult = item.PhoneCommunicateResult;
-                rptview.IsEntry = item.IsEntry;
-                rptview.Remark = item.Remark;
-                rptview.IsDel = item.IsDel;
-                rptview.Pid = item.Pid;
-                rptview.Pname = empmanagee.GetPobjById((int)item.Pid).PositionName;
-                rptview.Dname = empmanagee.GetDeptByPid((int)item.Pid).DeptName;
+                RecruitPhoneTraceView rptview = rptmanage.GetRptView(item.Id);
                 rptviewlist.Add(rptview);
             }
             var myrdslist = rptviewlist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
@@ -188,25 +175,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var empid = emanage.GetList().Where(e => e.EmpName == name).FirstOrDefault().EmployeeId;
             return empid;
         }
-
-
-        //添加招聘电话追踪信息
+        /// <summary>
+        /// 通过编号获取某条招聘记录数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult GetRPTById(int id) {
+            RecruitPhoneTraceManage rptmanage = new RecruitPhoneTraceManage();
+            var rptview = rptmanage.GetRptView(id);
+            return Json(rptview,JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 添加招聘电话追踪基本信息
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Addrpt() {
             return View();
-        }
-        //添加招聘电话追踪记录页面绑定岗位属性下拉框
-        public ActionResult BindPidSelect()
-        {
-            PositionManage pmanage = new PositionManage();
-            var emp = pmanage.GetList();
-            var newobj = new
-            {
-                code = 0,
-                msg = "",
-                count = emp.Count(),
-                data = emp
-            };
-            return Json(newobj, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public ActionResult Addrpt(RecruitPhoneTrace rpt) {
@@ -214,18 +198,87 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-                
+                rpt.IsEntry = false;
                 rpt.IsDel = false;
                 rmanage.Insert(rpt);
                 AjaxResultxx = rmanage.Success();
-
+                if (AjaxResultxx.Success) {
+                    rpt.SonId = rpt.Id;
+                    rmanage.Update(rpt);
+                    AjaxResultxx = rmanage.Success();
+                }
             }
             catch (Exception ex)
+
             {
                 AjaxResultxx = rmanage.Error(ex.Message);
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 添加招聘的面试记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult AddTrack(int id) {
+            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
+            ViewBag.Id = id;
+            var rds = rmanage.GetEntity(id);
+            var rdslist = rmanage.GetList().Where(r => r.SonId == rds.SonId && r.IsDel==true).ToList();
+            ViewBag.Number = rdslist.Count();
+           // ViewBag.rdslist = rdslist;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AddTrack(RecruitPhoneTrace rpt) {
+            RecruitPhoneTraceManage rptmanage = new RecruitPhoneTraceManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var beforerpt = rptmanage.GetList().Where(r => r.SonId == rpt.SonId && r.IsDel == false).FirstOrDefault();
+                rpt.Pid = beforerpt.Pid;
+                rpt.PhoneNumber = beforerpt.PhoneNumber;
+                rpt.PhoneCommunicateResult = beforerpt.PhoneCommunicateResult;
+                rpt.Channel = beforerpt.Channel;
+                rpt.ResumeType = beforerpt.ResumeType;
+                rpt.IsEntry = beforerpt.IsEntry;
+                rpt.IsDel = true;
+               rptmanage.Insert(rpt);
+                AjaxResultxx = rptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = rptmanage.Error(ex.Message);
+            }
+           
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 编辑某条招聘追踪数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult EditTrack(int id) {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult EditTrack(RecruitPhoneTrace rpt) {
+            var AjaxResultxx = new AjaxResult();
+            RecruitPhoneTraceManage rptmanage = new RecruitPhoneTraceManage();
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = rptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+
         //招聘电话追踪记录的是否入职属性修改
         public ActionResult EditRptIsentry(int id, bool isdel) {
             RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
@@ -276,40 +329,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return date.Year.ToString();
         }
 
-        /// <summary>
-        /// 招聘电话追踪编辑
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult Editrpt(int id) {
-            RecruitPhoneTraceManage rpt = new RecruitPhoneTraceManage();
-             var r= rpt.GetEntity(id);
-            PositionManage pmanage = new PositionManage();
-            ViewBag.pname = new SelectList(pmanage.GetList(),"Pid","PositionName");
-            ViewBag.id = id;
-            return View(r);
-        }
-        public ActionResult GetrptById(int Id) {
-            RecruitPhoneTraceManage rpt = new RecruitPhoneTraceManage();
-            var r = rpt.GetEntity(Id);
-            return Json(r,JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
-        public ActionResult Editrpt(RecruitPhoneTrace rpt) {
-            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
-            var AjaxResultxx = new AjaxResult();
-            try
-            {
-                rmanage.Update(rpt);
-                AjaxResultxx= rmanage.Success();
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = rmanage.Error(ex.Message);
-            }
-            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
-        }
-
+   
         //月度招聘数据汇总添加
         public AjaxResult AddRecruitData()   {
             var AjaxResultxx = new AjaxResult();
