@@ -19,6 +19,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string Remark { get; set; }//备注
         public Nullable<bool> IsDel { get; set; }
         public Nullable<int> Pid { get; set; }//岗位
+        public Nullable<int> Deptid { get; set; }//部门
         public string Pname { get; set; }//应聘岗位
         public string Dname { get; set; }//应聘部门
     }
