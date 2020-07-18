@@ -1899,5 +1899,71 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         }
         #endregion
+
+        #region  修改账号密码
+        public ActionResult updatePassword()
+        {
+            //获取咨询部的所有员工
+             //.Select(s=>new SelectListItem() { Text=s.EmpName,Value=s_Entity.B_USER.GetUserByEmpid(s.EmployeeId).Id}).ToList();
+            List<SelectListItem> empslect = new List<SelectListItem>();
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+            if (s_Entity.GetPostion(UserName.EmpNumber)==0)//加载咨询部
+            {
+                List<EmployeesInfo> emp_list = s_Entity.Enplo_Entity.GetEmpsByDeptid(1);
+                foreach (EmployeesInfo emp in emp_list)
+                {
+                    Base_User find = s_Entity.B_USER.GetUserByEmpid(emp.EmployeeId);
+                    if (find != null)
+                    {
+                        SelectListItem s = new SelectListItem();
+                        s.Value = find.UserId;
+                        s.Text = emp.EmpName;
+                        empslect.Add(s);
+                    }
+                }
+            }
+            else 
+            {
+                //加载网络部
+                List<EmployeesInfo> emp_list = s_Entity.Enplo_Entity.GetEmpsByDeptid(2);
+                foreach (EmployeesInfo emp in emp_list)
+                {
+                    Base_User find = s_Entity.B_USER.GetUserByEmpid(emp.EmployeeId);
+                    if (find != null)
+                    {
+                        SelectListItem s = new SelectListItem();
+                        s.Value = find.UserId;
+                        s.Text = emp.EmpName;
+                        empslect.Add(s);
+                    }
+                }
+            }
+             
+            ViewBag.emp_list = empslect;
+
+            return View();
+        }
+       
+        public ActionResult updatepasswordFunction(string userid,string passwd)
+        {
+            Base_UserBusiness db_user = new Base_UserBusiness();
+            AjaxResult result = new AjaxResult();
+            try
+            {
+                db_user.UpdatePassword(userid, passwd);
+                result.ErrorCode = 200;
+                result.Msg = "系统错误，请重试！！";
+            }
+            catch (Exception )
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "系统错误，请重试！！";
+            }
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
     }
 }

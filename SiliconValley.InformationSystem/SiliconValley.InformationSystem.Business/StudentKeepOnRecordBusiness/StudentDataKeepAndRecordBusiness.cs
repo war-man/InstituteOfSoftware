@@ -21,6 +21,7 @@ using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data;
 using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -80,6 +81,11 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// 文件操作业务类
         /// </summary>
         public CloudstorageBusiness MyFiles = new CloudstorageBusiness();
+
+        /// <summary>
+        /// 获取账号业务
+        /// </summary>
+        public Base_UserBusiness B_USER = new Base_UserBusiness();
         #endregion
 
 

@@ -163,7 +163,7 @@
                 </div>
             </div>
             
-            <div id="NoMainDiv" class="layui-form-item CssHide">
+            @*<div id="NoMainDiv" class="layui-form-item CssHide">
                 <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                     <label class="LableCss1">语文老师:</label>
                     <div id="yuwenDiv" class="layui-input-block">
@@ -182,7 +182,7 @@
                          
                     </div>
                 </div>
-            </div>
+            </div>*@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <div style="width:54%;text-align:right;margin-top:20px;">
@@ -212,43 +212,43 @@
                 //获取班级/语文、数学、英语老师
             form.on('select(grandselect)', function (data) {
                 var grand = $(":checked")[0].innerText;//获取选中的阶段
-                if (grand == "Y1" || grand == "y1") {
-                    $("#NoMainDiv").removeClass("CssHide");
-                    //加载语数英老师
-                    $.ajax({
-                        url: 'GetOrtherTeacher',
-                        type:'POST',
-                        success: function (suc) {
-                            console.log(suc);
-                            if (suc.length>0) {
-                                for (var i = 0; i < suc.length; i++) {
-                                    if (suc[i].Grand_Name == "语文老师") {
-                                        var select1 = $('<select class="layui-select" id="yuwen" name="yuwen"><select/>');
-                                        for (var j = 0; j < suc[i].Class_list.length; j++) {
-                                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
-                                        }
-                                        select1.appendTo("#yuwenDiv");
-                                    } else if (suc[i].Grand_Name == "数学老师") {
-                                        var select1 = $('<select class="layui-select" id="shuxue" name="shuxue"><select/>');
-                                        for (var j = 0; j < suc[i].Class_list.length; j++) {
-                                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
-                                        }
-                                        select1.appendTo("#shuxuenDiv");
-                                    } else if (suc[i].Grand_Name == "英语老师") {
-                                        var select1 = $('<select class="layui-select" id="yingyu" name="yingyu" ><select/>');
-                                        for (var j = 0; j < suc[i].Class_list.length; j++) {
-                                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
-                                        }
-                                        select1.appendTo("#yingyuDiv");
-                                    }
-                                }
-                                form.render();
-                            }
-                        }
-                    });
-                } else {
-                    $("#NoMainDiv").addClass("CssHide");
-                }
+                //if (grand == "Y1" || grand == "y1") {
+                //    $("#NoMainDiv").removeClass("CssHide");
+                //    //加载语数英老师
+                //    $.ajax({
+                //        url: 'GetOrtherTeacher',
+                //        type:'POST',
+                //        success: function (suc) {
+                //            console.log(suc);
+                //            if (suc.length>0) {
+                //                for (var i = 0; i < suc.length; i++) {
+                //                    if (suc[i].Grand_Name == "语文老师") {
+                //                        var select1 = $('<select class="layui-select" id="yuwen" name="yuwen"><select/>');
+                //                        for (var j = 0; j < suc[i].Class_list.length; j++) {
+                //                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
+                //                        }
+                //                        select1.appendTo("#yuwenDiv");
+                //                    } else if (suc[i].Grand_Name == "数学老师") {
+                //                        var select1 = $('<select class="layui-select" id="shuxue" name="shuxue"><select/>');
+                //                        for (var j = 0; j < suc[i].Class_list.length; j++) {
+                //                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
+                //                        }
+                //                        select1.appendTo("#shuxuenDiv");
+                //                    } else if (suc[i].Grand_Name == "英语老师") {
+                //                        var select1 = $('<select class="layui-select" id="yingyu" name="yingyu" ><select/>');
+                //                        for (var j = 0; j < suc[i].Class_list.length; j++) {
+                //                            $('<option  value =' + suc[i].Class_list[j].PID + '> ' + suc[i].Class_list[j].name + ' </option>').appendTo(select1);
+                //                        }
+                //                        select1.appendTo("#yingyuDiv");
+                //                    }
+                //                }
+                //                form.render();
+                //            }
+                //        }
+                //    });
+                //} else {
+                //    $("#NoMainDiv").addClass("CssHide");
+                //}
                     
                     $("#myclass")[0].innerHTML = "";//清空班级DIV
                     

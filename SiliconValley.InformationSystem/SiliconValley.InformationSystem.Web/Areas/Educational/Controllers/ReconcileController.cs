@@ -146,19 +146,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
                     List<Reconcile> new_list = new List<Reconcile>();
 
-                    if (y1_id.ToString() == grand_Id) //判断是否是Y1的班级
-                    {
+                    //if (y1_id.ToString() == grand_Id) //判断是否是Y1的班级
+                    //{
 
-                        #region 初中生
-                        string yuwen = Request.Form["yuwen"]; //获取语文老师
-                        string shuxue = Request.Form["shuxue"]; //获取数学老师
-                        string yingyu = Request.Form["yingyu"]; //获取英语老师
-                        List<Reconcile> get_new_data = Reconcile_Entity.MiddleStudentReconcileFunction(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, y1_id, yuwen, shuxue, yingyu);
-                        a = Reconcile_Entity.Inser_list(get_new_data);
-                        #endregion
-                    }
-                    else
-                    {
+                    //    #region 初中生
+                    //    string yuwen = Request.Form["yuwen"]; //获取语文老师
+                    //    string shuxue = Request.Form["shuxue"]; //获取数学老师
+                    //    string yingyu = Request.Form["yingyu"]; //获取英语老师
+                    //    List<Reconcile> get_new_data = Reconcile_Entity.MiddleStudentReconcileFunction(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, y1_id, yuwen, shuxue, yingyu);
+                    //    a = Reconcile_Entity.Inser_list(get_new_data);
+                    //    #endregion
+                    //}
+                    //else
+                    //{
 
                         #region 高中生
                         ClassSchedule find_class = Reconcile_Com.ClassSchedule_Entity.GetEntity(class_Id);
@@ -167,7 +167,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                         List<Reconcile> get_new_data = Reconcile_Entity.HeghtStudentReconcileFunction(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, grand, marjoin);
                         a = Reconcile_Entity.Inser_list(get_new_data);
                         #endregion
-                    }
+                    //}
 
                 }
             }
@@ -402,28 +402,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
                     List<Reconcile> new_list = new List<Reconcile>();
 
-                    if (y1_id.ToString() == grand_Id) //判断是否是Y1的班级
-                    {
+                    //if (y1_id.ToString() == grand_Id) //判断是否是Y1的班级
+                    //{
 
-                        #region 初中生
-                        string yuwen = Request.Form["yuwen"]; //获取语文老师
-                        string shuxue = Request.Form["shuxue"]; //获取数学老师
-                        string yingyu = Request.Form["yingyu"]; //获取英语老师
-                        List<Reconcile> get_new_data = Reconcile_Entity.MiddleStudent_SingCurs(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, y1_id, yuwen, shuxue, yingyu);
-                        a = Reconcile_Entity.Inser_list(get_new_data);
-                        #endregion
-                    }
-                    else
-                    {
+                    //    #region 初中生
+                    //    string yuwen = Request.Form["yuwen"]; //获取语文老师
+                    //    string shuxue = Request.Form["shuxue"]; //获取数学老师
+                    //    string yingyu = Request.Form["yingyu"]; //获取英语老师
+                    //    List<Reconcile> get_new_data = Reconcile_Entity.MiddleStudent_SingCurs(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, y1_id, yuwen, shuxue, yingyu);
+                    //    a = Reconcile_Entity.Inser_list(get_new_data);
+                    //    #endregion
+                    //}
+                    //else
+                    //{
 
-                        #region 高中生
+                        //#region 高中生
                         ClassSchedule find_class = Reconcile_Com.ClassSchedule_Entity.GetEntity(class_Id);
                         int marjoin = Convert.ToInt32(find_class.Major_Id);
                         int grand = find_class.grade_Id;
                         List<Reconcile> get_new_data = Reconcile_Entity.HeghtStudent_SingCurs(find_g, kengcheng, startTime, time, classroom_Id, techar, class_Id, grand, marjoin);
                         a = Reconcile_Entity.Inser_list(get_new_data);
-                        #endregion
-                    }
+                        //#endregion
+                    //}
 
                 }
             }
