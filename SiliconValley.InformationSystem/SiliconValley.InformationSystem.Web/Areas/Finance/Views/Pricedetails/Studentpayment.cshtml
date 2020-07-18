@@ -206,7 +206,7 @@
                                         var da = checkStatus.data;
                                         $.post("/Finance/Pricedetails/BoolEnroll/" + da[0].StudentNumber + "?Typeid=" + obj.data.id, function (da) {
                                             if (da > 0) {
-                                                Cost(600, 430, "/Finance/Pricedetails/Undergraduatefee/", "自考本科费用", obj.data.id);
+                                                Cost(600, 500, "/Finance/Pricedetails/Undergraduatefee/", "自考本科费用", obj.data.id);
                                             } else {
                                                 layer.alert('费用已交齐!', { icon: 0 });
                                             }
