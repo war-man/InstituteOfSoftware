@@ -1,9 +1,11 @@
 ﻿using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Business.StudentportfolioBusiness;
+using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System;
@@ -152,5 +154,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
             ViewBag.Tuitionrefund = studentFeeStandardBusinsess.FienTuitionrefund(studentFeeStandardBusinsess.FienPrice(id));
             return View();
         }
+        /// <summary>
+        /// 居住信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Dormitoryinformation(string id)
+        {
+            object tempdata = new object();
+            BaseBusiness<Tung> dbtung = new BaseBusiness<Tung>();
+            BaseBusiness<Dormitoryfloor> dbfloor = new BaseBusiness<Dormitoryfloor>();
+            BaseBusiness<TungFloor> dbtungfloor = new BaseBusiness<TungFloor>();
+            BaseBusiness<BenNumber> dbbed = new BaseBusiness<BenNumber>();
+           
+            AccdationinformationBusiness accdationinformationBusiness = new AccdationinformationBusiness();
+            var TungFloor = accdationinformationBusiness.GetDormBystudentno(id);
+            var roomNumber = TungFloor.DormInfoName;//房间号码
+            var Tungfloorobj = dbtungfloor.GetList().Where(d => d.Id == TungFloor.TungFloorId).FirstOrDefault();
+            var tungobj = dbtung.GetList().Where(d => d.Id == Tungfloorobj.TungId).FirstOrDefault(); //栋对象
+            var floorobj = dbfloor.GetList().Where(d => d.ID == Tungfloorobj.FloorId).FirstOrDefault();//楼层对象
+            var accdation = accdationinformationBusiness.GetAccdationByStudentNumber(id);
+            var bedName = dbbed.GetList().Where(d => d.Id == accdation.BedId).FirstOrDefault().BenNo;//床位号
+            if (TungFloor == null)
+            {
+                 tempdata = new
+                {
+                    TungInfo = "无",
+                    FloorInfo = "无",
+                    RoomInfo = "无",
+                    BedInfo = "无",
+
+                };
+            }
+            else
+            {
+                tempdata = new
+                {
+                    TungInfo = tungobj.TungName,
+                    FloorInfo = floorobj.FloorName,
+                    RoomInfo = roomNumber,
+                    BedInfo = bedName
+
+                };
+            }
+
+            ViewBag.tempdata = tempdata;
+            return View();
+        }
+      
     }
 }
