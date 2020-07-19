@@ -1000,7 +1000,58 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
          
             return Json(x,JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 合班
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Combinedclasses()
+        {
+            //班级id
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
 
+            string studentID = Request.QueryString["StudentID"];
+            string[] studentIDs = studentID.Split(',');
+            var Dismantl = Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
+            //获取当前班级数据对象
+            var x = dbtext.FintClassSchedule(Stuclass.SutdentCLassName(studentIDs[0]).ID_ClassName);
+          
+            var List = dbtext.ListGradeidenticals(x.grade_Id);
+            foreach (var item in Dismantl)
+            {
+                List = List.Where(a => a.id != item.FormerClass).ToList();
+            }
+            ViewBag.List = List.Where(a => a.id != ClassID).Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.ClassNumber }).ToList();
+            studentID = studentID.Substring(0, studentID.Length - 1);
+            string[] stu = studentID.Split(',');
+            List<StudentInformation> list = new List<StudentInformation>();
+            foreach (var item in stu)
+            {
+                list.Add(student.GetEntity(item));
+            }
+
+            ViewBag.StudentID = studentID;
+            ViewBag.ClassName = dbtext.FintClassSchedule(ClassID).ClassNumber;
+            ViewBag.ClassID = ClassID;
+            ViewBag.Mylist = list;
+            return View();
+        }
+        /// <summary>
+        /// 合班业务
+        /// </summary>
+        /// <param name="Addtime"></param>
+        /// <param name="FormerClass"></param>
+        /// <param name="List"></param>
+        /// <param name="Reasong"></param>
+        /// <param name="Remarks"></param>
+        /// <param name="StudentID"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Combinedclasses(string Addtime, int FormerClass, int List, string Reasong, string Remarks, string StudentID)
+        {
+            return Json(dbtext.Combinedclasses(Addtime, FormerClass, List, Reasong, Remarks, StudentID), JsonRequestBehavior.AllowGet);
+
+        }
         //public ActionResult xxx()
         //{
         //    EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
