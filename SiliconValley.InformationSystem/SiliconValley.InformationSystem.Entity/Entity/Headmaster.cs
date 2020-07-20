@@ -15,6 +15,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.SqlClient;
 
+    /// <summary>
+    /// 班主任表
+    /// </summary>
     [Table(name: "Headmaster")]
     public partial class Headmaster
     {

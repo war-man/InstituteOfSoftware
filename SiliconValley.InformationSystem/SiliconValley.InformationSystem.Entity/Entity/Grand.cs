@@ -27,8 +27,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 阶段名称
         /// </summary>
         public string GrandName { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Reaks { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> AddDate { get; set; }
 
 

@@ -2370,7 +2370,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             var Position = employeesInfoManage.GetPositionByEmpid(EmpNumber);
             //部门
             var Dept = employeesInfoManage.GetDeptByEmpid(EmpNumber);
-            if (Base_UserBusiness.GetCurrentUser().UserId=="Admin")
+            if (Hadmst.GetList().Where(a => a.informatiees_Id == EmpNumber).FirstOrDefault() == null)
             {
                 studentInformation= studentInformationBusiness.GetList().Where(a => a.IsDelete != true).ToList();
             }

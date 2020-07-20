@@ -15,6 +15,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         [Key]
       public int id { get; set; }
        public string Professionalcode { get; set; }
+        /// <summary>
+        /// 专业名称
+        /// </summary>
       public string ProfessionalName { get; set; }
         public bool IsDelete { get; set; }
     }

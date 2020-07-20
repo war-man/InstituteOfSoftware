@@ -13,16 +13,30 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 学生会部门
+    /// </summary>
     [Table(name: "StudentUnionDepartment")]
     public partial class StudentUnionDepartment
     {
         
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> Dateofregistration { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 部门名称
+        /// </summary>
         public string Departmentname { get; set; }
     
       

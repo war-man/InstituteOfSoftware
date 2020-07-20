@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business;
+﻿using Newtonsoft.Json;
+using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
@@ -14,9 +15,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportfolio
 {
-   
+    //学员信息模块
+    [CheckLogin]
+    [CheckUrlPermission]
     public class StuportfolioController : Controller
     {
         public static string StudentID = null;
@@ -197,7 +201,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Studentportf
                 };
             }
 
-            ViewBag.tempdata = tempdata;
+
+            ViewBag.tempdata = JsonConvert.SerializeObject(tempdata);
             return View();
         }
       
