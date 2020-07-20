@@ -272,7 +272,7 @@
 </script>
 
 <script type="text/template" id="stulistmoban">
-    <button stuNumber="{{=stuNumber}}" class="layui-btn stuBtn">{{=stuName}}<span class="{{=classStyle}}">{{=markState}}</span></button>
+    <button stuNumber="{{=stuNumber}}"  class="layui-btn stuBtn">{{=stuName}}<span class="{{=classStyle}}">{{=markState}}</span></button>
 </script>
 
 @section script{
@@ -282,6 +282,7 @@
     <script>
         var Sheetindex = 0;
         var StuExamNumber; //学员考号
+        var TopstudentNumber;
         var Examid; //考试ID
         var ExamRoom; // 考是（教室ID）StuExamNumberStuExamNumber
         var IsEndSheet = false; //是否为最后一个答卷
@@ -299,6 +300,23 @@
                 div.appendChild(HTMLDOM);
                 return div.innerHTML;
             }
+        }
+
+        function flushStuStatu(stuNumber) {
+            $("#Stulist .stuBtn").each(function (index, elem) {
+
+                var cstunumber = $(this).attr("stuNumber");
+                console.log(cstunumber); //学号
+                console.log(TopstudentNumber);// 编号
+                if (cstunumber == TopstudentNumber) {
+
+                    $(elem).find("span").text("已阅");
+                    $(elem).find("span").attr("class", "layui-badge layui-bg-gray");
+
+                    return;
+                }
+
+            });
         }
 
         layui.use(['layer'], function () {
@@ -380,9 +398,7 @@
                 $("#Stulist").html("");
                 $.post('/ExaminationSystem/ExamScores/MakeStuData', { examid: examid, examroom: examroom }, function (data) {
 
-                    console.log("......");
-                    console.log(data);
-
+                 
                     if (data.ErrorCode == 200) {
 
                         for (var i = 0; i < data.Data.length; i++) {
@@ -516,7 +532,7 @@
 
                         
                         StuExamNumber = result.Data[0].candidinfo.CandidateNumber;
-
+                        TopstudentNumber = result.Data[0].candidinfo.StudentID;
                         if (result.Data[0].isEnd == true) {
 
                             IsEndSheet = true;
@@ -714,15 +730,12 @@
 
 
             $(".commitScores").click(function () {
-
-
-               
-
                 //获取分数
                 var answerScores = $("#answerScores").val();
                 var computerScores = $("#computerScores").val();
                 var remark = $("#scoreRemark").val();
 
+                console.log(StuExamNumber);
                 $.post("/ExaminationSystem/ExamScores/CommitScores", { examid: Examid, StuExamNumber: StuExamNumber, answerScores: answerScores, computerScores: computerScores, remark: remark }, function (result) {
 
                     if (result.ErrorCode == 200) {
@@ -731,12 +744,16 @@
                         layer.msg('记录成功', { icon: 1 }, function () {
                             layer.close(index);
                         });
+
+                        console.log(StuExamNumber);
+                        flushStuStatu(StuExamNumber);
+
                         //下一个
                         $("#nextBtn").click();
 
                         //刷新考生
-                        $("#Stulist button").remove();
-                        loadStuData(Examid, ExamRoom);
+                        //$("#Stulist button").remove();
+                        //loadStuData(Examid, ExamRoom);
 
                         //刷新信息
                         loadMarkInfo(Examid, ExamRoom);

@@ -1,6 +1,7 @@
 ﻿using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
@@ -682,9 +683,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
            // var list = db_examination.GetMyStudentData();
 
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
-
+            ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
             //获取班级学员
-            var list = dbteacherclass.GetStudentByClass(classid);
+            var list = dbclass.ClassListStudent(classid);
             
 
             var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
