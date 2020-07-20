@@ -594,6 +594,77 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             return retus;
         }
         /// <summary>
+        /// 合班业务
+        /// </summary>
+        /// <param name="Addtime"></param>
+        /// <param name="FormerClass"></param>
+        /// <param name="List"></param>
+        /// <param name="Reasong"></param>
+        /// <param name="Remarks"></param>
+        /// <param name="StudentID"></param>
+        /// <returns></returns>
+        public AjaxResult Combinedclasses(string Addtime, int FormerClass, int List, string Reasong, string Remarks, string StudentID)
+        {
+            var x = Dismantle.GetList().Where(a => a.IsDelete == false && a.FormerClass == FormerClass).Count();
+            AjaxResult retus = null;
+            try
+            {
+                retus = new SuccessResult();
+                retus.Success = true;
+                if (x < 1)
+                {
+
+                    Hadmst.EndDai(FormerClass);
+                    var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
+                    var fint = this.FintClassSchedule(FormerClass);
+                    fint.ClassstatusID = staid;
+                    this.Update(fint);
+                  
+                }
+
+                string[] Student = StudentID.Split(',');
+                //     List<ClassDynamics> MyDynamise = new List<ClassDynamics>();
+
+                List<ScheduleForTrainees> UpdateScheduleFor = new List<ScheduleForTrainees>();
+
+                List<ScheduleForTrainees> AddScheduleFor = new List<ScheduleForTrainees>();
+                foreach (var item in Student)
+                {
+                 
+                    var UpdateSche = ss.GetList().Where(a => a.StudentID == item && a.ID_ClassName == FormerClass).FirstOrDefault();
+                    if (UpdateSche != null)
+                    {
+                        UpdateSche.CurrentClass = false;
+                        UpdateScheduleFor.Add(UpdateSche);
+                    }
+                    ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
+                    scheduleForTrainees.ID_ClassName = List;
+                    scheduleForTrainees.StudentID = item;
+                    scheduleForTrainees.CurrentClass = true;
+                    scheduleForTrainees.AddDate = Convert.ToDateTime(Addtime);
+                    scheduleForTrainees.ClassID = this.GetEntity(List).ClassNumber;
+                    AddScheduleFor.Add(scheduleForTrainees);
+                }
+                ss.Update(UpdateScheduleFor);
+                ss = new ScheduleForTraineesBusiness();
+                ss.Insert(AddScheduleFor);
+                //   CLassdynamic.Insert(MyDynamise);
+
+                BusHelper.WriteSysLog("合班数据添加", EnumType.LogType.添加数据);
+                retus.Msg = "合班成功";
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
+        }
+        /// <summary>
         /// 根据班级名称获取阶段跟专业
         /// </summary>
         /// <param name="ClassNumber">班级名称</param>
@@ -2299,7 +2370,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             var Position = employeesInfoManage.GetPositionByEmpid(EmpNumber);
             //部门
             var Dept = employeesInfoManage.GetDeptByEmpid(EmpNumber);
-            if (Base_UserBusiness.GetCurrentUser().UserId=="Admin")
+            if (Hadmst.GetList().Where(a => a.informatiees_Id == EmpNumber).FirstOrDefault() == null)
             {
                 studentInformation= studentInformationBusiness.GetList().Where(a => a.IsDelete != true).ToList();
             }

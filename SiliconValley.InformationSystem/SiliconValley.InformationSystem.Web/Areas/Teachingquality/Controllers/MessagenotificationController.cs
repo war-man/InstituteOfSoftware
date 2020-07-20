@@ -40,7 +40,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
         public ActionResult DateList(string Xi)
         {
-            return Json(dbtext.DateList(Xi), JsonRequestBehavior.AllowGet);
+            try
+            {
+                return Json(dbtext.DateList(Xi), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+
+                return Redirect("/Login/LoginIndex");
+            }
+          
         }
         /// <summary>
         /// 修改读取状态

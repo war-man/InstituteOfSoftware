@@ -1,0 +1,34 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dormitoryinformation</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div style="margin:20px 200px;">
+        <h4><label style="font-size:16px; color:black;">宿舍：</label><span id="Tung" style="font-size:14px; color:gray;">----</span></h4>
+        <h4><label style="font-size:16px; color:black;">楼层：</label><span id="floor" style="font-size:14px; color:gray;">----</span></h4>
+        <h4><label style="font-size:16px; color:black;">房间：</label><span id="room" style="font-size:14px; color:gray;">----</span></h4>
+        <h4><label style="font-size:16px; color:black;">床号：</label><span id="bed" style="font-size:14px; color:gray;">----</span></h4>
+    </div>
+   
+</body>
+</html>
+<script>
+    var tempdata = JSON.parse( '@Html.Raw(ViewBag.tempdata)');
+  
+
+    $("#Tung").text(tempdata.TungInfo);
+    $("#floor").text(tempdata.FloorInfo);
+    $("#room").text(tempdata.RoomInfo);
+    $("#bed").text(tempdata.BedInfo);
+</script>

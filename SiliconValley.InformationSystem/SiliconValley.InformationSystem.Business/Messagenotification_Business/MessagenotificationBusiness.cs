@@ -31,6 +31,7 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
         /// <returns></returns>
         public List<MessagenotificationView> DateList(string Xi)
         {
+
             List<MessagenotificationView> messagenotificationViews = new List<MessagenotificationView>();
             var x = MessagenotificationViewBusiness.GetList().Where(a => a.NotifierEmployeeId == user.EmpNumber).ToList();
             if (!string.IsNullOrEmpty(Xi))
@@ -57,6 +58,7 @@ namespace SiliconValley.InformationSystem.Business.Messagenotification_Business
                     }
                 }
             }
+            
 
 
             return messagenotificationViews;

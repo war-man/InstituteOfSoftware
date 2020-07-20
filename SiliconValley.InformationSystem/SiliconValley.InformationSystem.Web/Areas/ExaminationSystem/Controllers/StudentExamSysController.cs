@@ -630,16 +630,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             examination.ID = 0;
             examination.PaperLevel = int.Parse(level);
 
-           
-                var questiondata = db_stuExam.productComputerQuestion(examination, int.Parse(kecheng));
+            CloudstorageBusiness Bos = new CloudstorageBusiness();
+
+            var client = Bos.BosClient();
+
+            var questiondata = db_stuExam.productComputerQuestion(examination, int.Parse(kecheng));
 
                 var filename = Path.GetFileName(questiondata.SaveURL);
 
-                var path = Server.MapPath("/uploadXLSXfile/ComputerTestQuestionsWord/" + filename);
+                // var filename = Path.GetFileName(com.SaveURL);
 
-                FileStream fileStream = new FileStream(path, FileMode.Open);
+            var fileData = client.GetObject("xinxihua", $"/ExaminationSystem/ComputerTestQuestionsWord/{filename}");
 
-                return File(fileStream, "application/octet-stream", Server.UrlEncode(filename));
+            //FileStream fileStream = new FileStream(path, FileMode.Open);
+
+
+            return File(fileData.ObjectContent, "application/octet-stream", Server.UrlEncode(filename));
 
         }
 

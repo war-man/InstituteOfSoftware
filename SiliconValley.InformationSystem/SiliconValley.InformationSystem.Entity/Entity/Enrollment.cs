@@ -13,7 +13,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 自考本科表
+    /// </summary>
     [Table(name: "Enrollment")]
     public partial class Enrollment
     {

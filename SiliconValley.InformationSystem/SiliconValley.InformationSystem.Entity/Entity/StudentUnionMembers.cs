@@ -13,18 +13,41 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 学生会成员
+    /// </summary>
     [Table(name: "StudentUnionMembers")]
     public partial class StudentUnionMembers
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 学员学号
+        /// </summary>
         public string Studentnumber { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> Dateofregistration { get; set; }
+        /// <summary>
+        /// 入账日期
+        /// </summary>
         public Nullable<System.DateTime> Inrtiationtime { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 职位
+        /// </summary>
         public Nullable<int> position { get; set; }
+        /// <summary>
+        /// 岗位
+        /// </summary>
         public Nullable<int> department { get; set; }
+        /// <summary>
+        /// 离职日期
+        /// </summary>
         public Nullable<System.DateTime> Departuretime { get; set; }
     
        

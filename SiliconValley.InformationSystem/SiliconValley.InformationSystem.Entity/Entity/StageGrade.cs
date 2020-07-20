@@ -13,16 +13,30 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 专业阶段表
+    /// </summary>
     [Table(name: "StageGrade")]
     public partial class StageGrade
     {
        
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> AddTime { get; set; }
+        /// <summary>
+        /// 专业
+        /// </summary>
         public Nullable<int> Major_Id { get; set; }
+        /// <summary>
+        /// 阶段
+        /// </summary>
         public Nullable<int> Grand_Id { get; set; }
     
      
