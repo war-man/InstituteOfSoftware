@@ -301,7 +301,7 @@
                                 }
                             }
 
-                            console.log(RESULT);
+                            console.log(".....");
                             var html = _.template($("#answerquestionmoban").html());
                             var htmldate = html({ questionid: RESULT.Data.data[i].ID, index: i + 1, question: RESULT.Data.data[i].Title, score: itemscores });
 
@@ -454,7 +454,9 @@
                 layer.confirm("确认?", function (index) {
                     //需要先清空AnswerCommit 表单数据
                     //clearformData(formData, ["AnswerCommit"]);
-
+                    var loadindex = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
                     var trueQuestionscores = 0; //获得选择题分数
                     var ids = "";
                     //提交前计算选择题分数
@@ -527,8 +529,6 @@
                         getAnswerCommit();
                         console.log(formData.get("AnswerCommit"));
 
-
-
                         //提交
                         $.ajax({
                             url: '/ExaminationSystem/StudentExamSys/AnswerSheetCommit',
@@ -538,6 +538,8 @@
                             dataType: "json",//返回的数据格式
                             data: formData,
                             success: function (result) {
+
+                                layer.close(loadindex);
 
                                 if (result.ErrorCode == 200) {
 
@@ -550,7 +552,7 @@
                                 }
 
                                 else {
-                                    layer.msg('服务器错误。。', { icon: 2 });
+                                    layer.msg('请下载机试题目', { icon: 2 });
                                 }
                             },
                             error: function () {

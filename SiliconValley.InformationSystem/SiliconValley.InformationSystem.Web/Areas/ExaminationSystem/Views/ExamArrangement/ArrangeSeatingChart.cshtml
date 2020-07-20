@@ -94,6 +94,7 @@
 
                 <tr class="row">
                     <th class="col-lg-2">序号</th>
+                    <th class="col-lg-2">学号</th>
                     <th class="col-lg-2">姓名</th>
                     <th class="col-lg-2">性别</th>
                     <th class="col-lg-2">班级</th>
@@ -115,6 +116,7 @@
 <script type="text/template" id="seatmoban">
     <tr class="row">
         <th class="col-lg-2">{{=index}}</th>
+        <th class="col-lg-2">{{=studentNumber}}</th>
         <th class="col-lg-2">{{=name}}</th>
         <th class="col-lg-2">{{=sex}}</th>
         <th class="col-lg-2">{{=classname}}</th>
@@ -164,7 +166,7 @@
             
 
             $("#createSeat").click(function () {
-
+                var loadindex = layer.load(2, { time: 10 * 1000 }); 
                 var examid = document.getElementsByName("exam")[0].value;
 
 
@@ -173,6 +175,8 @@
                     $.post('/ExaminationSystem/ExamArrangement/ArrangeSeatingChartData', { examid: examid }, function (result) {
 
                         console.log(result);
+
+                        layer.close(loadindex)
 
                         if (result.ErrorCode == 200) {
 
@@ -184,6 +188,8 @@
 
                                 var li = $("<li class='layui-this'></li>");
                                 li.text(result.Data[i].classroom.ClassroomName);
+
+                                
 
                                 var div = $('<div class="layui-tab-item layui-show"></div>');
 
@@ -197,9 +203,9 @@
                                 for (var j = 0; j < seatlist.length; j++) {
 
                                     var layerthtml1 = _.template($("#seatmoban").html());
-                                    console.log(layerthtml1);
-
-                                    var layerdata = layerthtml1({ index: j, sex: seatlist[j].student.Sex, classname: seatlist[j].student.ClassName, name: seatlist[j].student.Name, idcard: seatlist[j].student.IdCard });
+                                    
+                                    
+                                    var layerdata = layerthtml1({ index: j, sex: seatlist[j].student.Sex, studentNumber: seatlist[j].student.StudentNumber, classname: seatlist[j].student.ClassName, name: seatlist[j].student.Name, idcard: seatlist[j].student.IdCard });
 
                                     div.find("tbody").append(layerdata);
 

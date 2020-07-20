@@ -560,7 +560,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 {
                     var tempstu = db_student.GetList().Where(d => d.StudentNumber == item.StudentID).FirstOrDefault();
 
-
                     //查看这个学员的成绩是否已经被录入
 
                     var stuscore = db_examScores.StuExamScores(examid, tempstu.StudentNumber);
