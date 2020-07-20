@@ -130,7 +130,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             {
                 detailView.Avatar = avatarUrl + student.Picture;
             }
-
             detailView.qq = student.qq;
             detailView.Sex = (bool)student.Sex ? "男" : "女";
             detailView.State = student.State;
@@ -152,9 +151,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 detailView.PositionName = posti.Nameofmembers;
 
             }
-
-
-
             detailView.ClassName = myclass.ClassNumber;
             var grand = db_grand.GetGrandByID((int)myclass.grade_Id);
 
@@ -181,9 +177,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     detailView.MajorName = "";
                 }
             }
-
-
-
 
             return detailView;
         }
