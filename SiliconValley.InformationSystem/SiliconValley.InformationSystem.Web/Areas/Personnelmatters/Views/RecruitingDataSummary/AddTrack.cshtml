@@ -2,7 +2,8 @@
 @{
     Layout = null;
 }
-
+@model SiliconValley.InformationSystem.Entity.ViewEntity.RecruitPhoneTraceView
+@using SiliconValley.InformationSystem.Entity.ViewEntity;
 <!DOCTYPE html>
 
 <html>
@@ -13,6 +14,31 @@
 
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height: 120px;
+        }
+    </style>
+
 </head>
 <body>
     <div>
@@ -58,14 +84,15 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">面试时间:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="TraceTime" id="TraceTime" class="layui-input" style="border:0px" readonly="readonly">
+                            @*@Html.TextBoxFor(a => a.TraceTime, new Dictionary<string, object>() { { "class", "layui-input" } })*@
+                            <input type="text" name="TraceTime" id="TraceTime" class="layui-input">
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">面试结果:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="PhoneCommunicateResult" id="PhoneCommunicateResult" class="layui-input" style="border:0px" readonly="readonly">
+                            @Html.TextBoxFor(a => a.PhoneCommunicateResult, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
                 </div>
@@ -74,7 +101,7 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="Remark" id="Remark" class="layui-input" style="border:0px" readonly="readonly">
+                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
                 </div>
@@ -82,7 +109,7 @@
 
             <div class="layui-form-item" style="margin-top:50px;">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1" style="margin-left:300px;">立即提交</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1" style="margin-left:120px;">立即提交</button>
                     <button class="layui-btn " id="btnclose1">关闭</button>
                 </div>
             </div>
@@ -112,6 +139,12 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
 
+            //日期验证
+            laydate.render({
+                elem: '#TraceTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
             //添加提交
             form.on('submit(demo1)', function (data) {
                 $.post("/Personnelmatters/RecruitingDataSummary/AddTrack", data.field, function (data) {
@@ -120,7 +153,7 @@
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layui.table.reload('myrptData');
                             parent.layer.close(index);
-                           
+
                         });
                     } else {
                         layer.alert("添加失败!");
