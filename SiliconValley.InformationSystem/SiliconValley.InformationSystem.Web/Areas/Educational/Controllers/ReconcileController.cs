@@ -31,7 +31,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// 系统安排专业排课页面
         /// </summary>
         /// <returns></returns>
-        public ActionResult HightStudentAnpaiView()
+        public ActionResult HightStudentAnpaiView() 
         {
             //加载阶段
             List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
