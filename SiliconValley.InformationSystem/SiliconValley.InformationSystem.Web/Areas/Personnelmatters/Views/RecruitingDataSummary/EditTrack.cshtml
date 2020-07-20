@@ -32,7 +32,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">应聘部门:</label>
                         <div class="layui-input-block">
-                            <select name="deptid" id="deptid" lay-filter="deptidfilter" lay-verify="required">
+                            <select name="deptid" id="deptid" lay-filter="deptidfilter" lay-verify="required" class="layui-input">
                                 <option value="-1">请选择所属部门</option>
                             </select>
                         </div>
@@ -41,7 +41,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">应聘岗位:</label>
                         <div class="layui-input-block">
-                            <select name="Pid" id="Pid" lay-verify="required" lay-filter="pidfilter">
+                            <select name="Pid" id="Pid" lay-verify="required" lay-filter="pidfilter" class="layui-input">
                                 <option value="-1">请先选择部门</option>
                             </select>
                         </div>
@@ -216,6 +216,13 @@
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
+
+            //日期验证
+            laydate.render({
+                elem: '#TraceTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
 
             //添加提交
             form.on('submit(demo1)', function (data) {

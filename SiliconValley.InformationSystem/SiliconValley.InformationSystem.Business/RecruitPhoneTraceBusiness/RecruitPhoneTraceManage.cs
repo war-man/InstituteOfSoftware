@@ -31,5 +31,22 @@ namespace SiliconValley.InformationSystem.Business.RecruitPhoneTraceBusiness
             rptview.Dname = dept.DeptName;
             return rptview;
         }
+
+        /// <summary>
+        /// 获取某条追踪数据的面试记录数据集合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<RecruitPhoneTraceView> GetRptViewList(int id) {
+            List<RecruitPhoneTraceView> rptviewlist = new List<RecruitPhoneTraceView>();
+            var rpt = this.GetEntity(id);
+            var rptdata = this.GetList().Where(r => r.SonId == rpt.SonId && r.IsDel == true).ToList();
+            foreach (var item in rptdata)
+            {
+                var rptlist = GetRptView(item.Id);
+                rptviewlist.Add(rptlist);
+            }
+            return rptviewlist;
+        }
     }
 }

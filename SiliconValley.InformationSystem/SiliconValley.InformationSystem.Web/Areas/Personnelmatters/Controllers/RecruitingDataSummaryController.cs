@@ -202,16 +202,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 rpt.IsDel = false;
                 rmanage.Insert(rpt);
                 AjaxResultxx = rmanage.Success();
-                if (AjaxResultxx.Success) {
-                    rpt.SonId = rpt.Id;
-                    rmanage.Update(rpt);
-                    AjaxResultxx = rmanage.Success();
-                }
+              
             }
             catch (Exception ex)
 
             {
                 AjaxResultxx = rmanage.Error(ex.Message);
+            }
+            if (AjaxResultxx.Success)
+            {
+                rpt.SonId = rpt.Id;
+                rmanage.Update(rpt);
+                AjaxResultxx = rmanage.Success();
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
@@ -225,8 +227,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
             ViewBag.Id = id;
             var rds = rmanage.GetEntity(id);
-            var rdslist = rmanage.GetList().Where(r => r.SonId == rds.SonId && r.IsDel==true).ToList();
-            ViewBag.Number = rdslist.Count();
+            var rdslist = rmanage.GetList().Where(r => r.SonId == rds.SonId).ToList();
+            ViewBag.Number = rdslist.Count()-1;
            // ViewBag.rdslist = rdslist;
             return View();
         }
@@ -261,7 +263,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         public ActionResult EditTrack(int id) {
-            return View();
+            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            List<RecruitPhoneTraceView> rptviewlist = new List<RecruitPhoneTraceView>();
+
+            ViewBag.Id = id;
+            rptviewlist = rmanage.GetRptViewList(id);//获取回访记录集合
+            ViewBag.rptviewlist = rptviewlist;
+            ViewBag.Number = rptviewlist.Count();
+            var rpt = rmanage.GetRptView(id);
+            return View(rpt);
         }
         [HttpPost]
         public ActionResult EditTrack(RecruitPhoneTrace rpt) {
