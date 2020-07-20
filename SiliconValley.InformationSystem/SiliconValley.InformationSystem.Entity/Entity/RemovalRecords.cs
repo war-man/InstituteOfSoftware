@@ -21,10 +21,25 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
+        /// <summary>
+        /// 班级
+        /// </summary>
         public int FormerClass { get; set; }
+        /// <summary>
+        /// 原因
+        /// </summary>
         public string Reasong { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
     
        

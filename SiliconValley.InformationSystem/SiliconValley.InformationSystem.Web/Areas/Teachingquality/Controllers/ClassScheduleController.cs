@@ -107,7 +107,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 List<ClassSchedule> list = new List<ClassSchedule>();
                 List<ClassSchedule> list1 = new List<ClassSchedule>();
                var dbclass= dbtext.GetListBySql<ClassSchedule>("select *from ClassSchedule").ToList();
-                if (user.UserName == "Admin" || positon.PositionName.Contains("咨询主任"))
+                if (Hadmst.GetList().Where(a => a.informatiees_Id == user.EmpNumber).FirstOrDefault() == null)
                 {
                     list = dbclass.Where(a => a.ClassStatus == false && a.IsDelete == false).ToList();
                 }

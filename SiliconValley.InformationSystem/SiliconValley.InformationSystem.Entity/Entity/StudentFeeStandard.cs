@@ -13,17 +13,37 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 学员收费标准
+    /// </summary>
     [Table(name: "StudentFeeStandard")]
     public partial class StudentFeeStandard
     {
-    [Key]
+        [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 学费
+        /// </summary>
         public Nullable<decimal> Tuition { get; set; }
+        /// <summary>
+        /// 食宿费
+        /// </summary>
         public Nullable<decimal> Foodandlodging { get; set; }
+        /// <summary>
+        /// 阶段
+        /// </summary>
         public Nullable<int> Stage { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
 
 
