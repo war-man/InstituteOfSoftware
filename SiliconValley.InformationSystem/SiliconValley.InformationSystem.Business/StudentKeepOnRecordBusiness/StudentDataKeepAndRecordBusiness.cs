@@ -192,6 +192,17 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         }
 
         /// <summary>
+        /// 获取XX条后面的数据
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> GetAllTopNumber(int number)
+        {
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where Id>=74000 order by BeanDate desc ");
+            return listall;
+        }
+
+        /// <summary>
         /// 获取某一年的已报名备案数据
         /// </summary>
         /// <param name="year">年份</param>
@@ -330,6 +341,25 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             return listall;
         }
 
+        /// <summary>
+        /// 通过sql语句返回对应的视图数据（true--返回2020年之后的，false--返回2017~2019的备案视图集合）
+        /// </summary>
+        /// <param name="str1"></param>
+        /// <param name="isStudent"></param>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> Serch(string str1,bool isStudent)
+        {
+            if (isStudent)
+            {
+                return this.GetListBySql<ExportStudentBeanData>(str1);
+            }
+            else
+            {
+                List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>(str1);
+                return this.LongrageDataToViewmodel(old);
+            }
+           
+        }
         /// <summary>
         /// 根据Id获取备案视图数据
         /// </summary>

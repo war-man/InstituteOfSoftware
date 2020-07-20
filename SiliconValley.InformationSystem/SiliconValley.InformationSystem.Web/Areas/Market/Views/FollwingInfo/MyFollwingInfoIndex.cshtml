@@ -224,7 +224,7 @@
                     , { field: 'MarketType', title: '市场类型', width: 60 }
                     , { field: 'StuEntering', title: '录入人员', width: 100 }
                     , {
-                        field: 'Iszhuce', title: '是否注册学号', width: 30, templet: function (res) {
+                        field: 'Iszhuce', title: '是否注册学号', width: 120, templet: function (res) {
                             
                             if (res.Iszhuce==true) {
                                 return '已注册';
@@ -234,7 +234,7 @@
                         }
                     }
                     , { field: 'BeanDate', title: '备案日期', width: 120, templet: function (res) { return TimeChange(res.BeanDate); } }
-                    , { field: 'CountBeanDate', title: '分量日期', templet: function (res) { return TimeChange(res.BeanDate); }, width: 120 }
+                    //, { field: 'CountBeanDate', title: '分量日期', templet: function (res) { return TimeChange(res.BeanDate); }, width: 120 }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
                 ]]
                 , page: true

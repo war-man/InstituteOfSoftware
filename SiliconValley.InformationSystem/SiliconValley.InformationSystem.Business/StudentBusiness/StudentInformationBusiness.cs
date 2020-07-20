@@ -351,8 +351,8 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         /// <returns></returns>
         public bool IsRegister(int id)
         {
-           var x= this.GetList().Where(a => a.StudentPutOnRecord_Id == id).FirstOrDefault();
-            if (x==null)
+           int count = this.GetListBySql<StudentInformation>("select * from StudentInformation where StudentPutOnRecord_Id="+id).Count;
+            if (count<=0)
             {
                 return false;
             }

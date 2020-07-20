@@ -117,7 +117,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult TableData(int limit, int page)
         {
-            List<ExportStudentBeanData> list = s_Entity.GetSudentDataAll().OrderByDescending(s => s.StuDateTime).ToList();
+           
+            List<ExportStudentBeanData> list = s_Entity.GetAllTopNumber(74000).OrderByDescending(s => s.StuDateTime).ToList();
 
             var data = list.Skip((page - 1) * limit).Take(limit).ToList();
 
