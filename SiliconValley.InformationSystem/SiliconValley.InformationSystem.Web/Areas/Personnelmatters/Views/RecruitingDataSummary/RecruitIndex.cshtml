@@ -115,7 +115,7 @@
                     , { field: 'Dname', title: '应聘部门', sort: true, width: 120 }
                     , { field: 'Pname', title: '应聘岗位', sort: true, width: 120 }
                     , { field: 'PhoneNumber', title: '手机号', width: 125, sort: true }
-                    , { field: 'TraceTime', title: '联系时间', width: 120, sort: true, templet: function (d) { return changeDateTimeFormat(d.TraceTime); } }
+                    , { field: 'TraceTime', title: '联系时间', width: 160, sort: true, templet: function (d) { return changeDateTimeFormat(d.TraceTime); } }
                     , { field: 'Channel', title: '渠道', width: 95, sort: true }
                     , { field: 'ResumeType', title: '简历类型', sort: true, width: 110 }
                     , { field: 'PhoneCommunicateResult', title: '联系结果', width: 160 }
@@ -355,7 +355,7 @@
                 var layer = layui.layer;      //layui对象
                 layer.open({
                     type: 2
-                    , area: ["1000px", "700px"]
+                    , area: ["1100px", "700px"]
                     , title: "编辑招聘电话追踪数据"
                     , content: '/Personnelmatters/RecruitingDataSummary/EditTrack?id=' + id
                     , anim: 2
