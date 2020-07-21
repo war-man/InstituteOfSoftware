@@ -116,7 +116,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
         //手机短信实例
         public ActionResult PhoneSMS()
         {
-            string number = "13204961361";
+            string number = "13723860463";
             string smsText = "达磊，下雨了！！！";
             string t = PhoneMsgHelper.SendMsg(number, smsText);
             return View();
