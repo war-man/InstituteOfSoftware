@@ -1886,6 +1886,10 @@
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\Combinedclasses.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Stuportfolio\Dormitoryinformation.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\SetUp.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\SingeAnpaiView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\GrandChangDataView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\GrandUpdatDataView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\SysView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
