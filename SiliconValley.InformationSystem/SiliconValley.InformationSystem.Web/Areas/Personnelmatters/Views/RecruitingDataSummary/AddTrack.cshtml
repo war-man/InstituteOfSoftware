@@ -67,6 +67,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">应聘岗位:</label>
                         <div class="layui-input-block">
+                            <input type="hidden" name="Pid" id="Pid" />
                             <input type="text" name="Pname" id="Pname" class="layui-input" style="border:0px" readonly="readonly">
                         </div>
                     </div>
@@ -85,14 +86,14 @@
                         <label class="layui-form-label">面试时间:</label>
                         <div class="layui-input-block">
                             @*@Html.TextBoxFor(a => a.TraceTime, new Dictionary<string, object>() { { "class", "layui-input" } })*@
-                            <input type="text" name="TraceTime" id="TraceTime" class="layui-input">
+                            <input type="text" name="TraceTime1" id="TraceTime1" class="layui-input">
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">面试结果:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.PhoneCommunicateResult, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            <input type="text" name="PhoneCommunicateResult1" id="PhoneCommunicateResult1" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -101,7 +102,7 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            <input type="text" name="Remark1" id="Remark1" class="layui-input linu">
                         </div>
                     </div>
                 </div>
@@ -141,12 +142,16 @@
 
             //日期验证
             laydate.render({
-                elem: '#TraceTime',
+                elem: '#TraceTime1',
                 type: 'datetime',
                 format: 'yyyy-MM-dd HH:mm:ss'
             });
             //添加提交
             form.on('submit(demo1)', function (data) {
+                console.log(data.field.TraceTime1);
+                data.field.TraceTime = $("#TraceTime1").val();
+                data.field.PhoneCommunicateResult = $("#PhoneCommunicateResult1").val();
+                data.field.Remark = $("#Remark1").val();
                 $.post("/Personnelmatters/RecruitingDataSummary/AddTrack", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function () {
