@@ -446,16 +446,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 Candidateinfo.Paper = $"{direName}{answerfilename}";
 
                 //获取需要替换的字符串路径
-                var old = Candidateinfo.ComputerPaper.Substring(Candidateinfo.ComputerPaper.IndexOf(',') + 1);
-                if (old.Length == 0)
-                {
-                    Candidateinfo.ComputerPaper = Candidateinfo.ComputerPaper + computerUrl;
-                }
-                else
 
+                if (Candidateinfo.ComputerPaper != null)
                 {
-                    Candidateinfo.ComputerPaper = Candidateinfo.ComputerPaper.Replace(old, computerUrl);    
+                    var old = Candidateinfo.ComputerPaper.Substring(Candidateinfo.ComputerPaper.IndexOf(',') + 1);
+
+                    if (old.Length == 0)
+                    {
+                        Candidateinfo.ComputerPaper = Candidateinfo.ComputerPaper + computerUrl;
+                    }
+                    else
+
+                    {
+                        Candidateinfo.ComputerPaper = Candidateinfo.ComputerPaper.Replace(old, computerUrl);
+                    }
                 }
+               
                 db_exam.UpdateCandidateInfo(Candidateinfo);
 
                 //4.记录选择题分数
@@ -649,6 +655,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
         }
 
+        public ActionResult GetExamEndDate(string examid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var exam = db_exam.GetEntity(int.Parse(examid));
+
+                result.Data = exam.BeginDate.AddHours(exam.TimeLimit);
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

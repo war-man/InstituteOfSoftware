@@ -9,6 +9,7 @@ using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -431,8 +432,9 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         public void ArrangeTheInvigilator(int examid, int examroomid, List<string> proctorList)
         {
             var exammroom = this.ExaminationRoomByExamID(examid).Where(d => d.Classroom_Id == examroomid).FirstOrDefault();
+            var exam = this.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
             BaseBusiness<Headmaster> dbheadmaster = new BaseBusiness<Headmaster>();
-
+            BaseBusiness<Classroom> dbclassroom = new BaseBusiness<Classroom>();
             //首先先删除
             exammroom.Invigilator1 = null;
             exammroom.Invigilator2 = null;
@@ -448,6 +450,12 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 var headmaster = db_emp.GetAll().Where(d => d.EmployeeId == proctorList[0]).FirstOrDefault();
 
                 exammroom.Invigilator1 = headmaster.EmployeeId;
+
+                //发送短信
+                var classroom = dbclassroom.GetEntity(exammroom.Classroom_Id);
+                string smgText = "监考通知: "+ exam.Title +" -- 教室："+classroom.ClassroomName + "时间："+ exam.BeginDate;
+
+                PhoneMsgHelper.SendMsg(headmaster.Phone, smgText);
             }
 
             if (proctorList.Count > 1)
@@ -457,11 +465,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                     var headmaster1 = db_emp.GetAll().Where(d => d.EmployeeId == proctorList[1]).FirstOrDefault();
                     exammroom.Invigilator2 = headmaster1.EmployeeId;
 
+                    //发送短信
+                    var classroom = dbclassroom.GetEntity(exammroom.Classroom_Id);
+                    string smgText = "监考通知: " + exam.Title + " -- 教室：" + classroom.ClassroomName + "时间：" + exam.BeginDate;
+
+                    PhoneMsgHelper.SendMsg(headmaster1.Phone, smgText);
+
 
                 }
             }
 
-           
             db_examroom.Update(exammroom);
 
         }

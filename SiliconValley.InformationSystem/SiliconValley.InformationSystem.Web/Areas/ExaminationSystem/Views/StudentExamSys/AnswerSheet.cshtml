@@ -77,8 +77,11 @@
 <body>
     <div id="mypaper">
         <input type="hidden" id="examid" value="@ViewBag.EXAMVIEW.ID" />
+        <input type="hidden" id="BeginDate" value="@ViewBag.EXAMVIEW.BeginDate" />
+        <input type="hidden" id="limit" value="@ViewBag.EXAMVIEW.TimeLimit" />
         <div id="examinfo">
             <h2 style="text-align:center;">@ViewBag.EXAMVIEW.Title</h2>
+
             <hr />
             <div class="detail">
                 <ul>
@@ -93,11 +96,11 @@
                 <br />
 
             </div>
-           
+
         </div>
 
         <div id="choicequestion">
-            <h3 style="text-align:center; font-size:18px;" >选择题</h3>
+            <h3 style="text-align:center; font-size:18px;">选择题</h3>
 
 
         </div>
@@ -180,6 +183,27 @@
             }
         }
 
+
+        var ExamEndDateUTC;
+
+        ///获取考试的结束时间
+        function getEndTime() {
+            var examid = $("#examid").val();
+            $.post("/ExaminationSystem/StudentExamSys/GetExamEndDate", { examid: examid }, function (data) {
+
+
+                if (data.ErrorCode == 200) {
+
+                    var utc = data.Data.substr(data.Data.indexOf('(') +1, 13);
+
+                    ExamEndDateUTC = utc;
+
+                    console.log(ExamEndDateUTC);
+                }
+
+            });
+        }
+        getEndTime();
         function escapeHTMLString(str) {
             str = str.replace(/</g, '&lt;');
             str = str.replace(/>/g, '&gt;');
@@ -596,6 +620,29 @@
 
                 $(this).find("input").click();
             });
+
+            //创建一个定时器 检查是否已经到了考试结束时间
+            setInterval(function () {
+
+                if (ExamEndDateUTC == undefined) {
+                    getEndTime();
+                }
+
+                var currentDate = new Date();
+               
+                var EndDate = new Date(parseInt(ExamEndDateUTC));
+
+             
+                if (currentDate > EndDate) {
+
+                    //自动点击提交
+                    $("#COMMIT").click();
+                }
+                else {
+                    console.log("考试中......");
+                }
+
+            },60000);
 
         });
 
