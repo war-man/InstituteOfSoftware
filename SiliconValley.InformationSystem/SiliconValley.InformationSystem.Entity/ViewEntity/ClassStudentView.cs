@@ -36,5 +36,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 当前班级id
         /// </summary>
         public int ClassID { get; set; }
+        /// <summary>
+        /// 身份证号码
+        /// </summary>
+        public string identitydocument { get; set; }
     }
 }

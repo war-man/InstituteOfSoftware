@@ -207,6 +207,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 classStudentView.Name = stu.Name;
                 classStudentView.StuNameID = stu.StudentNumber;
                 classStudentView.Sex = stu.Sex;
+                classStudentView.identitydocument = stu.identitydocument;
                 if (item.CurrentClass == false)
                 {
                     var z = scheduleForTraineesBusiness.Where(a => a.StudentID == item.StudentID&&a.CurrentClass==true).FirstOrDefault();

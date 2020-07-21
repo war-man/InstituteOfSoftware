@@ -1417,9 +1417,13 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.ttf" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
+    <Content Include="Scripts\excel.js" />
+    <Content Include="Scripts\excel.min.js" />
     <Content Include="Scripts\js\index.js" />
     <Content Include="Scripts\js\Index2.js" />
     <Content Include="Scripts\js\jquery-1.7.2-min.js" />
+    <Content Include="Scripts\layui\excel.js" />
+    <Content Include="Scripts\layui\excel.min.js" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\live2d\assets\autoload.js" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.svg" />

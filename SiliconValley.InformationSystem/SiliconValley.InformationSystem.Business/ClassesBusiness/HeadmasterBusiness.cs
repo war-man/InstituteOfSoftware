@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.Cloudstorage_Business;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
@@ -360,7 +361,8 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             //班级业务
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
 
-          var ClassZ=  classScheduleBusiness.ClassList();
+            CloudstorageBusiness db_Bos = new CloudstorageBusiness();
+            var ClassZ=  classScheduleBusiness.ClassList();
            
             return ClassZ.Select(a => new TeamleaderdistributionView
             {
@@ -370,7 +372,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
                 ClassID=(int)a.id,
                  Stage= classScheduleBusiness.GetClassGrand((int)a.id, 222),
                  Major= classScheduleBusiness.GetClassGrand((int)a.id, 1),
-                 HeadmasterImages= classScheduleBusiness.HeadSraffFine(a.id).EmployeeId == null?"": classScheduleBusiness.HeadSraffFine(a.id).Image
+                 HeadmasterImages= classScheduleBusiness.HeadSraffFine(a.id).EmployeeId == null?"": db_Bos.ImagesFine("xinxihua", "EmpImage", classScheduleBusiness.HeadSraffFine(a.id).Image, 10) 
 
             }).ToList();
         }
