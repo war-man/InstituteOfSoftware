@@ -473,9 +473,15 @@
 
             }
             //点击提交
-            $("#COMMIT").click(function () {
+            $("#COMMIT").click(function () { 
 
-                layer.confirm("确认?", function (index) {
+                var msg = "确认 答卷提交后将无法再次作答?";
+
+                if (formData.get("rarfile") == undefined) {
+                    msg = "机试题未上传， 是否继续提交答卷";
+                }
+
+                layer.confirm(msg, function (index) {
                     //需要先清空AnswerCommit 表单数据
                     //clearformData(formData, ["AnswerCommit"]);
                     var loadindex = layer.load(1, {
@@ -608,10 +614,12 @@
                 var index = file.name.lastIndexOf(".");
                 var suffix = file.name.substr(index + 1); //文件拓展名
 
-                if (suffix != "rar") {
-                    layer.msg("请将文件压缩后再上产 (rar)");
-                } else {
+                if (suffix == "rar" || suffix == "zip") {
+                   
                     formData.append("rarfile", file);
+                } else {
+
+                    layer.msg("请将文件压缩后再上产 (rar,zip)");
                 }
 
             });
