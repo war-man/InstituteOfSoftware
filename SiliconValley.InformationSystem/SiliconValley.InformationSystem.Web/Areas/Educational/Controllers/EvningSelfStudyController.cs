@@ -428,5 +428,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             AjaxResult a = EvningSelefstudy_Entity.Delete_Data(evn_list);
             return Json(a, JsonRequestBehavior.AllowGet);
         }
+       
     }
 }

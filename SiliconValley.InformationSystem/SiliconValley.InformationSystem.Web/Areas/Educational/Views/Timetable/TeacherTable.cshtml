@@ -1,49 +1,31 @@
 ﻿
 @{
-    ViewBag.Title = "TimeTableIndex";
+    ViewBag.Title = "TeacherTable";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 @using SiliconValley.InformationSystem.Entity.ViewEntity
 @using SiliconValley.InformationSystem.Entity.MyEntity
-@section style{
-    <style>
-        th
-        {
-            width: 195px;
-            text-align: center;
-            border: 1px solid black;
-            height: 40px;
-        }
 
-        #mytable
-        {
-            z-index: 3;
-        }
-        .item{
-        cursor:pointer;
-        }
-        .item2
-        {
-            cursor: pointer;
-        }
-        body .demo-class .layui-layer-title
-        {
-            background: #009688;
-            color: #fff;
-            border: none;
-        }
-        .iCss
-        {
-            cursor: pointer;
-        }
+<style>
+    th
+    {
+        width: 195px;
+        text-align: center;
+        border: 1px solid black;
+        height: 40px;
+    }
 
-        .iCss2
-        {
-            cursor: pointer;
-        }
-    </style>
-}
+    body .demo-class .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+    .nigth{
+    cursor:pointer;
+    }
+</style>
+
 <div id="time_div" style="margin-bottom:20px;">
     <form id="reconcile_form" lay-filter="reconcile_form" class="layui-form">
         <div class="layui-row">
@@ -58,7 +40,7 @@
                     {
                         if (index == 0)
                         {
-                            <input name="campus" id="campus" type="radio" value="@i.Id" title="@i.Name" checked/>
+                            <input name="campus" id="campus" type="radio" value="@i.Id" title="@i.Name" checked />
                         }
                         else
                         {
@@ -71,9 +53,6 @@
             </div>
             <div class="layui-col-sm4" style="margin-left:20px">
                 <button type="button" class="layui-btn" onclick="GetKebiao()">获取课表</button>
-                <button type="button" class="layui-btn" onclick="SysStudy()">安排自习课</button>
-                <button type="button" class="layui-btn" onclick="AnpaiStuyEvning()">阶段安排晚自习</button>
-                <button type="button" class="layui-btn" onclick="DeleteStuyEvning()">阶段删除晚自习</button>
             </div>
         </div>
     </form>
@@ -86,7 +65,7 @@
     <script>
         var new_laydate;
         var dayname;
-         
+
         function TableFulsh() {
             GetKebiao();
         }
@@ -174,11 +153,11 @@
         //获取课表
         function GetKebiao() {
             var layer = layui.layer;
-            var formdata = { "SelectTime": $("#SelectTime").val(), "campus": $(":checked").val() };       
+            var formdata = { "SelectTime": $("#SelectTime").val(), "campus": $(":checked").val() };
             if (formdata.SelectTime.length <= 0) {
                 layer.msg('请选择日期!!', { icon: 2, shade: 0.8 });
             } else {
-                var index= layer.load(1);
+                var index = layer.load(1);
                 $.ajax({
                     url: '/Educational/Timetable/GetReconcileData',
                     type: 'POST',
@@ -199,7 +178,7 @@
                             if (sucdata.MymongingOne[i].ClassName != null) {
                                 $('<th class="item" data-rid= ' + sucdata.MymongingOne[i].R_Id + ' >' + sucdata.MymongingOne[i].ClassName + '</th>').appendTo(tr2);
                             } else {
-                                $('<th><i class="layui-icon iCss">&#xe624;</i></th>').appendTo(tr2);
+                                $('<th><i class="layui-icon">&#xe624;</i></th>').appendTo(tr2);
                             }
 
                         }
@@ -207,12 +186,12 @@
                         var tr3 = $('<tr></tr>');
                         for (var i = 0; i < sucdata.MymongingOne.length; i++) {
                             if (sucdata.MymongingOne[i].NeiRong != null) {
-                                if (sucdata.MymongingOne[i].Teacher == "无" || sucdata.MymongingOne[i].Teacher == null) {
+                                if (sucdata.MymongingOne[i].Teacher=="无" || sucdata.MymongingOne[i].Teacher == null) {
                                     $('<th><span>' + sucdata.MymongingOne[i].NeiRong + '</span><span>').appendTo(tr3);
                                 } else {
                                     $('<th><span>' + sucdata.MymongingOne[i].NeiRong + '</span><span>/</span><span>' + sucdata.MymongingOne[i].Teacher + '</span></th>').appendTo(tr3);
                                 }
-                                
+
                             } else {
                                 $('<th></th>').appendTo(tr3);
                             }
@@ -224,7 +203,7 @@
                             if (sucdata.MymongingTwo[i].ClassName != null) {
                                 $('<th class="item" data-rid= ' + sucdata.MymongingTwo[i].R_Id + ' >' + sucdata.MymongingTwo[i].ClassName + '</th>').appendTo(tr4);
                             } else {
-                                $('<th><i class="layui-icon iCss">&#xe624;</i></th>').appendTo(tr4);
+                                $('<th><i class="layui-icon">&#xe624;</i></th>').appendTo(tr4);
                             }
 
                         }
@@ -233,12 +212,12 @@
                         var tr5 = $('<tr></tr>');
                         for (var i = 0; i < sucdata.MymongingTwo.length; i++) {
                             if (sucdata.MymongingTwo[i].NeiRong != null) {
-                                if (sucdata.MymongingTwo[i].Teacher == null || sucdata.MymongingTwo[i].Teacher == "无") {
+                                if (sucdata.MymongingTwo[i].Teacher=="无" || sucdata.MymongingTwo[i].Teacher == "无") {
                                     $('<th><span>' + sucdata.MymongingTwo[i].NeiRong + '</span><span>').appendTo(tr5);
                                 } else {
                                     $('<th><span>' + sucdata.MymongingTwo[i].NeiRong + '</span><span>/</span><span>' + sucdata.MymongingTwo[i].Teacher + '</span></th>').appendTo(tr5);
                                 }
-                                 
+
                             } else {
                                 $('<th></th>').appendTo(tr5);
                             }
@@ -251,7 +230,7 @@
                             if (sucdata.MyafternoonOne[i].ClassName != null) {
                                 $('<th class="item" data-rid= ' + sucdata.MyafternoonOne[i].R_Id + ' >' + sucdata.MyafternoonOne[i].ClassName + '</th>').appendTo(tr6);
                             } else {
-                                $('<th><i class="layui-icon iCss">&#xe624;</i></th>').appendTo(tr6);
+                                $('<th><i class="layui-icon">&#xe624;</i></th>').appendTo(tr6);
                             }
 
                         }
@@ -260,12 +239,12 @@
                         var tr7 = $('<tr></tr>');
                         for (var i = 0; i < sucdata.MyafternoonOne.length; i++) {
                             if (sucdata.MyafternoonOne[i].NeiRong != null) {
-                                if (sucdata.MyafternoonOne[i].Teacher == null || sucdata.MyafternoonOne[i].Teacher == "无") {
+                                if (sucdata.MyafternoonOne[i].Teacher=="无" || sucdata.MyafternoonOne[i].Teacher == "无") {
                                     $('<th><span>' + sucdata.MyafternoonOne[i].NeiRong + '</span></th>').appendTo(tr7);
                                 } else {
                                     $('<th><span>' + sucdata.MyafternoonOne[i].NeiRong + '</span><span>/</span><span>' + sucdata.MyafternoonOne[i].Teacher + '</span></th>').appendTo(tr7);
                                 }
-                                 
+
                             } else {
                                 $('<th></th>').appendTo(tr7);
                             }
@@ -279,7 +258,7 @@
                             if (sucdata.MyafternoonTwo[i].ClassName != null) {
                                 $('<th class="item" data-rid= ' + sucdata.MyafternoonTwo[i].R_Id + '  >' + sucdata.MyafternoonTwo[i].ClassName + '</th>').appendTo(tr8);
                             } else {
-                                $('<th><i class="layui-icon iCss">&#xe624;</i></th>').appendTo(tr8);
+                                $('<th><i class="layui-icon">&#xe624;</i></th>').appendTo(tr8);
                             }
 
                         }
@@ -288,12 +267,12 @@
                         var tr9 = $('<tr></tr>');
                         for (var i = 0; i < sucdata.MyafternoonTwo.length; i++) {
                             if (sucdata.MyafternoonTwo[i].NeiRong != null) {
-                                if (sucdata.MyafternoonTwo[i].Teacher == null || sucdata.MyafternoonTwo[i].Teacher == "无") {
+                                if (sucdata.MyafternoonTwo[i].Teacher=="无"|| sucdata.MyafternoonTwo[i].Teacher == "无") {
                                     $('<th><span>' + sucdata.MyafternoonTwo[i].NeiRong + '</span></th>').appendTo(tr9);
                                 } else {
                                     $('<th><span>' + sucdata.MyafternoonTwo[i].NeiRong + '</span><span>/</span><span>' + sucdata.MyafternoonTwo[i].Teacher + '</span></th>').appendTo(tr9);
                                 }
-                                
+
                             } else {
                                 $('<th></th>').appendTo(tr9);
                             }
@@ -306,15 +285,15 @@
 
                         for (var i = 0; i < sucdata.MyngintOne.length; i++) {
                             if (sucdata.MyngintOne[i].ClassName != null) {
-                                if (sucdata.MyngintOne[i].Teacher == "无" || sucdata.MyngintOne[i].Teacher == null) {
-                                    $('<th class="item2" data-rid= ' + sucdata.MyngintOne[i].R_Id + ' > <span>' + sucdata.MyngintOne[i].ClassName + '</span></th>').appendTo(tr10);
-                                   
+                                if (sucdata.MyngintOne[i].Teacher=="无" || sucdata.MyngintOne[i].Teacher == null) {
+                                    $('<th class="item2 nigth" data-rid= ' + sucdata.MyngintOne[i].R_Id + ' > <span>' + sucdata.MyngintOne[i].ClassName + '</span></th>').appendTo(tr10);
+
                                 } else {
-                                    $('<th class="item2" data-rid= ' + sucdata.MyngintOne[i].R_Id + ' > <span>' + sucdata.MyngintOne[i].ClassName + '</span><span>/' + sucdata.MyngintOne[i].Teacher + '</span></th>').appendTo(tr10);
+                                    $('<th class="item2 nigth" data-rid= ' + sucdata.MyngintOne[i].R_Id + ' > <span>' + sucdata.MyngintOne[i].ClassName + '</span><span>/' + sucdata.MyngintOne[i].Teacher + '</span></th>').appendTo(tr10);
                                 }
-                                
+
                             } else {
-                                $('<th><i class="layui-icon iCss2">&#xe624;</i></th>').appendTo(tr10);
+                                $('<th><i class="layui-icon">&#xe624;</i></th>').appendTo(tr10);
                             }
 
                         }
@@ -326,14 +305,14 @@
 
                         for (var i = 0; i < sucdata.MyngintTwo.length; i++) {
                             if (sucdata.MyngintTwo[i].ClassName != null) {
-                                if (sucdata.MyngintTwo[i].Teacher == "无" || sucdata.MyngintTwo[i].Teacher == null) {
-                                    $('<th class="item2" data-rid= ' + sucdata.MyngintTwo[i].R_Id + '  ><span>' + sucdata.MyngintTwo[i].ClassName + '</span></th>').appendTo(tr11);
+                                if (sucdata.MyngintTwo[i].Teacher=="无" || sucdata.MyngintTwo[i].Teacher == null) {
+                                    $('<th class="item2 nigth" data-rid= ' + sucdata.MyngintTwo[i].R_Id + '  ><span>' + sucdata.MyngintTwo[i].ClassName + '</span></th>').appendTo(tr11);
                                 } else {
-                                    $('<th class="item2" data-rid= ' + sucdata.MyngintTwo[i].R_Id + '  ><span>' + sucdata.MyngintTwo[i].ClassName + '</span><span>/' + sucdata.MyngintTwo[i].Teacher + '</span></th>').appendTo(tr11);
+                                    $('<th class="item2 nigth" data-rid= ' + sucdata.MyngintTwo[i].R_Id + '  ><span>' + sucdata.MyngintTwo[i].ClassName + '</span><span>/' + sucdata.MyngintTwo[i].Teacher + '</span></th>').appendTo(tr11);
                                 }
-                                 
+
                             } else {
-                                $('<th><i class="layui-icon iCss2">&#xe624;</i></th>').appendTo(tr11);
+                                $('<th><i class="layui-icon">&#xe624;</i></th>').appendTo(tr11);
                             }
 
                         }
@@ -343,100 +322,29 @@
                         recon_table.appendTo($('#table_div'));
 
                         layer.close(index);
-                        //编辑排课数据
-                        $(".item").each(function (index, value) {
-                            $(value).click(function () {
-                                var rid = $(value).attr("data-rid");
-                                //询问是否要编辑排课数据
-                                layer.confirm('系统温馨提示！', {
-                                    btn: ['编辑数据', '删除数据']  
-                                    , btn2: function (index, layero) {
-                                        //删除
-                                       var delconfi=  layer.confirm('真的要删除吗？', function (mixdel) {
-                                            var moreindex = layer.load(1);
-                                            $.ajax({
-                                                url: '/Educational/Reconcile/DeleteMore',
-                                                type: 'POST',
-                                                data: { "str": rid },
-                                                success: function (suc) {
-                                                    layer.msg(suc.Msg, function () {
-                                                        GetKebiao();
-                                                        layer.close(delconfi);
-                                                        layer.close(moreindex);
-                                                    });
-                                                }
-                                            });
-
-                                        })
-                                        
-                                    }
-                                }, function (index, layero) {
-                                    //编辑
-                                    var ifsingle = rid.indexOf(',');
-                                    if (ifsingle == -1) {
-                                        //alert('只是单个班级');
-                                        SetmyidValue(rid);
-                                    } else {
-                                        layer.open({
-                                            type: 2
-                                            , title: '多个班级排课数据提示'
-                                            , shade: 0.8
-                                            , anim: 4
-                                            , skin: 'demo-class'
-                                            , content: '/Educational/Timetable/TiShiView/' + rid,
-                                        });
-                                    }
-                                    layer.close(index);
-                                });
-                                 
-                            });
-                        });
                         //编辑晚自习数据
                         $(".item2").each(function (index, val) {
                             $(val).click(function () {
                                 var rid = $(val).attr("data-rid");
-                                var leng = rid.indexOf(',');
-                                layer.confirm('系统温馨提示！', {
-                                    btn: ['编辑数据', '删除数据']  
-                                    , btn2: function (index, layero) {
-                                       var delindex= layer.confirm('真的要删除吗？', function (mixdel) {
-                                            var moreindex = layer.load(1);
-
-                                            $.ajax({
-                                                url: '/Educational/EvningSelfStudy/DeleteFunction',
-                                                type: 'POST',
-                                                data: { "str": rid },
-                                                success: function (suc) {
-                                                    layer.msg(suc.Msg, function () {
-                                                        GetKebiao();
-                                                        layer.close(delindex);
-                                                        layer.close(moreindex);
-                                                    });
-                                                }
-                                            })
-                                        });
-                                         
-                                    }
-                                }, function (index, layero) {
-                                    //编辑数据
-                                    if (leng == -1) {
-                                        //单条数据
-                                        SetEvningValue(rid);
-                                    } else {
-                                        //多条数据
-                                        layer.open({
-                                            type: 2
-                                            , title: '多个班级晚自习数据提示'
-                                            , shade: 0.8
-                                            , anim: 4
-                                            , skin: 'demo-class'
-                                            , content: '/Educational/Timetable/TishEvningView/' + rid,
-                                        });
-                                    }
-                                    layer.close(index);
-
-                                });
-                                //layer.confirm('需要编辑晚自习数据吗?', { icon: 3 }, function (index) {
+                                //var leng = rid.indexOf(',');
+                                //layer.confirm('系统温馨提示！', {
+                                //    btn: ['值班']
+                                //    , btn2: function (index, layero) {
+                                //        var moreindex = layer.load(1)
+                                //        $.ajax({
+                                //            url: '/Educational/EvningSelfStudy/DeleteFunction',
+                                //            type: 'POST',
+                                //            data: { "str": rid },
+                                //            success: function (suc) {
+                                //                layer.msg(suc.Msg, function () {
+                                //                    GetKebiao();
+                                //                    layer.close(moreindex);
+                                //                });
+                                //            }
+                                //        })
+                                //    }
+                                //}, function (index, layero) {
+                                //    //编辑数据
                                 //    if (leng == -1) {
                                 //        //单条数据
                                 //        SetEvningValue(rid);
@@ -452,107 +360,30 @@
                                 //        });
                                 //    }
                                 //    layer.close(index);
-                                //});
 
-                            });
-                        });
-                        //添加排课数据
-                        $(".iCss").each(function (index, val) {
-                            $(val).click(function () {
-                                layer.open({
-                                    type: 2,
-                                    content: '/Educational/Reconcile/ManualReconcileView'
-                                    , area: ['1000px', '500px'],
-                                    title: '添加排课数据页面'
-                                    , shade: 0.8
-                                    , anim: 4
-                                    , skin: 'demo-class'
+                                //});
+                                layer.confirm('确定值班吗?', { icon: 3, title: '提示' }, function (index) {
+                                    console.log(rid);
+                                    var moreindex = layer.load(1);
+                                    $.ajax({
+                                        url: '/Educational/Timetable/TeacherFunction',
+                                        type: 'POST',
+                                        data: {"id":rid},
+                                        success: function (suc) {
+                                            layer.msg(suc.Msg,function () {
+                                                GetKebiao();
+                                                layer.close(moreindex);
+                                            });
+                                        }
+                                    });
+                                    layer.close(index);
                                 });
                             });
-                        });
-                        //添加晚自习排课数据
-                        $(".iCss2").each(function (index, val) {
-                            $(val).click(function () {
-                                layer.open({
-                                    type: 2,
-                                    content: '/Educational/EvningSelfStudy/AnPaiEvningSelfStudyView',
-                                    area: ['680px', '550px'],
-                                    title: '晚自习安排页面'
-                                    , shade: 0.8
-                                    , anim: 4
-                                    , skin: 'demo-class'
-                                });
-                            });
-                        });
+                        });                        
                     }
                 });
             }
-           
-
-        }
-
-        function SysStudy() {
-            layui.use('layer', function () {
-                var layer = layui.layer;
-                layer.open({
-                    type: 2,
-                    content: '/Educational/Reconcile/SysView'
-                    , area: ['800px', '450px'],
-                    title: '系统安排自习课'
-                    , shade: 0.8
-                    , anim: 4
-                    , skin: 'demo-class'
-                });
-            });
-        }
-
-        function AnpaiStuyEvning() {
-            layui.use('layer', function () {
-                layer.open({
-                    type: 2,
-                    content: '/Educational/EvningSelfStudy/GoodEvningSelfStudyView',
-                    area: ['600px', '450px'],
-                    title: '阶段安排晚自习页面'
-                    , shade: 0.8
-                    , anim: 4
-                    , skin: 'demo-class'
-                });
-            });
-             
-        }
-
-        function Myopen(str) {
-            var layer = layui.layer;
-            //示范一个公告层
-            layer.open({
-                type: 1
-                , title: false //不显示标题栏
-                , closeBtn: false
-                , area: ['600px', '650px']
-                , skin: 'layui-layer-demo'
-                , shade: 0.8
-                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                , btn: ['知道了']
-                , moveType: 1 //拖拽模式，0或者1
-                , content: str
-            });
-        }
-
-        function DeleteStuyEvning() {
-            layui.use('layer', function () {
-                layer.open({
-                    type: 2,
-                    content: '/Educational/EvningSelfStudy/DeleteDateView',
-                    area: ['600px', '450px'],
-                    title: '阶段删除晚自习页面'
-                    , shade: 0.8
-                    , anim: 4
-                    , skin: 'demo-class'
-                });  
-            });
         }
     </script>
 }
-
-
 

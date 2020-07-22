@@ -14,8 +14,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
     /// </summary>
    public class TimeTableManeger 
     {
-        ReconcileManeger Reconcile_Entity;
-        EvningSelfStudyManeger EvningSelfStudy_Entity;
+        public ReconcileManeger Reconcile_Entity;
+        public EvningSelfStudyManeger EvningSelfStudy_Entity;
+        public TeacherNightManeger Teacher_Entity = new TeacherNightManeger();
+        
         /// <summary>
         /// 获取排课数据(显示课表形式)
         /// </summary>

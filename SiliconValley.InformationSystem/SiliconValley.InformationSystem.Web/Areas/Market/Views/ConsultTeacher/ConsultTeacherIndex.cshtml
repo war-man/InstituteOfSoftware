@@ -132,11 +132,8 @@
                     <div class="item" myid="@item.Id">
                         @{
                             string imge = item.BrainImage;
-                            if (string.IsNullOrEmpty(imge))
-                            {
-                                imge = "1.jpg";
-                            }
-                            <img src="~/uploadXLSXfile/EmpImage/@imge" style="height:80%;width:100%" />
+                             
+                            <img src="@imge" style="height:80%;width:100%" />
                         }
 
                         <div style="text-align:center"><span> @item.EmpName</span></div>

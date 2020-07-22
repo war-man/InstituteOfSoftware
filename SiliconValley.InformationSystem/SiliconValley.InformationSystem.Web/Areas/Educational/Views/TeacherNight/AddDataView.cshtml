@@ -40,11 +40,11 @@
             line-height: 20px;
             text-align: right
         }
-        .layui-unselect
+        /*.layui-unselect
         {
             width: 100%;
             border-radius: 5px;
-        }
+        }*/
         .lin{
         width:100%;
         }
@@ -59,13 +59,13 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
                         <div class="layui-input-block">
-                            <input type="radio" name="type" title="手动安排" value="2" lay-filter="types" />
+                            <input type="radio" name="type" title="晚自习加课" value="1006" lay-filter="types" />
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
                         <div id="ClssTime" class="layui-input-block">
-                            <input type="radio" name="type" title="系统安排" value="1" lay-filter="types" checked="checked" />
+                            <input type="radio" name="type" title="晚自习值班" value="1" lay-filter="types" checked="checked" />
                         </div>
                     </div>
 
@@ -74,22 +74,41 @@
         </fieldset>
         <fieldset style="height:98%;">
             <legend style="border:0px;">操作区</legend>
-            <div id="system_Div">
+            @*<div id="system_Div">
                 <form id="system_form" class="layui-form" lay-filter="system_form">
                     <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                             <label class="LableCss1">日 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  期:</label>
                             <div class="layui-input-block">
-                                <input type="text" id="times" name="times" class="layui-input" style="width:200px;" />
+                                <input type="text" id="times" name="times" class="layui-input" />
                             </div>
                         </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <label class="LableCss1">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  段:</label>
+                            <div class="layui-input-block">
+                                @{
+                                    List<SelectListItem> list = ViewBag.grlist as List<SelectListItem>;
+                                    foreach (var item in list)
+                                    {
+                                        <input name="glist" type="checkbox" value="@item.Value" title="@item.Text" />
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center">
                             <button type="submit" class="layui-btn" lay-submit="" lay-filter="sysBtn">点击安排</button>
                         </div>
                     </div>
+                    
                 </form>
-            </div>
-            <div id="hand_Div" class="hideCss">
+            </div>*@
+            <div id="hand_Div">
                 <form id="system_form" class="layui-form" lay-filter="hand_addview">
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -154,14 +173,14 @@
             var laydate = layui.laydate;
             var tree = layui.tree;
             var layer = layui.layer;
-            laydate.render({
-                elem: '#times'
-                , type: 'date'
-                , range: '到'
-                , format: 'yyyy-MM-dd'
-                , theme: 'grid'
-                , trigger: 'click'               
-            });
+            //laydate.render({
+            //    elem: '#times'
+            //    , type: 'date'
+            //    , range: '到'
+            //    , format: 'yyyy-MM-dd'
+            //    , theme: 'grid'
+            //    , trigger: 'click'               
+            //});
             laydate.render({
                 elem: '#mytime'
                 , trigger: 'click'
@@ -176,41 +195,46 @@
                     form.render();
                 }
             });
-            form.on('radio(types)', function (data) {
-                if (data.value == "1") {
-                    $("#system_Div").removeClass("hideCss");
-                    $("#hand_Div").addClass("hideCss");
-                } else if (data.value == "2") {
-                    $("#hand_Div").removeClass("hideCss");
-                    $("#system_Div").addClass("hideCss");
-                }
-            });
+            //form.on('radio(types)', function (data) {
+            //    if (data.value == "1") {
+            //        $("#system_Div").removeClass("hideCss");
+            //        $("#hand_Div").addClass("hideCss");
+            //    } else if (data.value == "2") {
+            //        $("#hand_Div").removeClass("hideCss");
+            //        $("#system_Div").addClass("hideCss");
+            //    }
+            //});
 
             form.render();
 
-            //监听(系统安排)提交
-            form.on('submit(sysBtn)', function (data) {
-                var index = layer.load(1);
-                $.ajax({
-                    url: '/Educational/TeacherNight/SystemAnpaiFunction',
-                    type: 'POST'
-                    , data: data.field
-                    , success: function (suda) {
-                        if (suda.Success == false) {
-                            layer.close(index);
-                            layer.msg('系统错误！！！', { icon: 2 });
+            ////监听(系统安排)提交
+            //form.on('submit(sysBtn)', function (data) {
+            //    var index = layer.load(1);
+            //    var str = "";
+            //    $('input[name="glist"]:checked').each(function (num,ele) {
+            //        str += $(ele).val() + ",";
+            //    });
+            //    data.field.str = str;
+            //    $.ajax({
+            //        url: '/Educational/TeacherNight/SystemAnpaiFunction',
+            //        type: 'POST'
+            //        , data: data.field
+            //        , success: function (suda) {
+            //            if (suda.Success == false) {
+            //                layer.close(index);
+            //                layer.msg('系统错误！！！', { icon: 2 });
 
-                        } else {
-                            layer.close(index);
-                            layer.msg(suda.Msg, { icon: 1, shade: 0.8 }, function () {
-                                window.parent.TableFulsh();
-                                Myclose();
-                            });
-                        }
-                    }
-                });
-                return false;
-            });
+            //            } else {
+            //                layer.close(index);
+            //                layer.msg(suda.Msg, { icon: 1, shade: 0.8 }, function () {
+            //                    window.parent.TableFulsh();
+            //                    Myclose();
+            //                });
+            //            }
+            //        }
+            //    });
+            //    return false;
+            //});
             //监听（手动安排)提交
             form.on('submit(handBtn)', function (data) {
                 
@@ -224,7 +248,8 @@
                     layer.msg('请选择班级', { icon: 2 });
                 } else {   
                     var index = layer.load(1);
-                   
+                    data.field.type = $("input[name='type']:checked")[0].value;
+                    
                     $.ajax({
                         url: '/Educational/TeacherNight/HandAnpaiFunction',
                         data: data.field,

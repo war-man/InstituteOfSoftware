@@ -114,8 +114,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public static AjaxResult SetEvningStudentData(DateTime date,int classid,string teacherid)
         {
             AjaxResult a = new AjaxResult();
-            EvningSelfStudyView findata1= evningSelfStudy_Entity.GetAllView().Where(e => e.Anpaidate == date && e.ClassSchedule_id == classid).FirstOrDefault();
-            EvningSelfStudy findata = findata1.ToModel(findata1);
+ 
+            EvningSelfStudy findata = evningSelfStudy_Entity.GetNving(date, classid);
             if (findata!=null)
             {
                 if (teacherid==null)
@@ -133,7 +133,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     a.Success = true;
                     a.Msg = "编辑成功";
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     a.Success = false;
                     a.Msg = "编辑异常，请刷新重试！！";

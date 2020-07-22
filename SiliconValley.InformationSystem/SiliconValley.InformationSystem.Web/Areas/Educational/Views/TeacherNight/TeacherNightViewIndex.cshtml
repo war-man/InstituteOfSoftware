@@ -88,13 +88,13 @@
 <script type="text/html" id="toolbarDemo_Night">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData_addNight"><i class="layui-icon">&#xe624;</i>添加值班数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_timeChange"> <i class="layui-icon">&#xe642;</i>日期更改</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_time"> <i class="layui-icon">&#xe642;</i>上课延迟或提前</button>
+        @*<button class="layui-btn layui-btn-sm" lay-event="getCheckData_timeChange"> <i class="layui-icon">&#xe642;</i>日期更改</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_time"> <i class="layui-icon">&#xe642;</i>上课延迟或提前</button>*@
     </div>
 </script>
 
 <script type="text/html" id="barDemo_Night">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    @*<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>*@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
@@ -171,28 +171,28 @@
                         , skin: 'demo-class'
                     });
                     break;
-                case 'getCheckData_timeChange':
-                    layer.open({
-                        type: 2,
-                        content: '/Educational/TeacherNight/ClassadjustmentView/false'
-                        , area: ['600px', '400px'],
-                        title: '修改日期页面'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                    break;
-                case 'getCheckData_time':
-                    layer.open({
-                        type: 2,
-                        content: '/Educational/TeacherNight/ClassadjustmentView/true'
-                        , area: ['600px', '400px'],
-                        title: '日期修改页面'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                    break;
+                //case 'getCheckData_timeChange':
+                //    layer.open({
+                //        type: 2,
+                //        content: '/Educational/TeacherNight/ClassadjustmentView/false'
+                //        , area: ['600px', '400px'],
+                //        title: '修改日期页面'
+                //        , shade: 0.8
+                //        , anim: 4
+                //        , skin: 'demo-class'
+                //    });
+                //    break;
+                //case 'getCheckData_time':
+                //    layer.open({
+                //        type: 2,
+                //        content: '/Educational/TeacherNight/ClassadjustmentView/true'
+                //        , area: ['600px', '400px'],
+                //        title: '日期修改页面'
+                //        , shade: 0.8
+                //        , anim: 4
+                //        , skin: 'demo-class'
+                //    });
+                //    break;
 
             };
         });
