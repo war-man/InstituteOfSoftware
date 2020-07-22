@@ -58,7 +58,7 @@
     </Reference>
     <Reference Include="BceSdkDotNet, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SiliconValley.InformationSystem.Business\bin\Debug\bce-dotnet-sdk-1.0.4\BceSdkDotNet.dll</HintPath>
+      <HintPath>..\SiliconValley.InformationSystem.Business\bin\Debug\BceSdkDotNet.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -1029,7 +1029,6 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptUpdate.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmp.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
@@ -1894,6 +1893,8 @@
     <Content Include="Areas\Educational\Views\Reconcile\GrandChangDataView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\GrandUpdatDataView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\SysView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\AddTrack.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\EditTrack.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

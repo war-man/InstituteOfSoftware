@@ -278,6 +278,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ViewBag.rptviewlist = rptviewlist;
             ViewBag.Number = rptviewlist.Count();
             var rpt = rmanage.GetRptView(id);
+            ViewBag.pid = rpt.Pid;
+            ViewBag.pname = rpt.Pname;
             return View(rpt);
         }
         [HttpPost]
