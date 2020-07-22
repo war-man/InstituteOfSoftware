@@ -17,9 +17,12 @@
 </head>
 <body>
     <div>
+        <form class="layui-form" action="" lay-filter="formtest">
             <div class="layui-container">
-                <input type="hidden" id="Id" name="Id" />
+                <input type="hidden" id="Id" name="Id" value="@ViewBag.Id" />
                 <input type="hidden" id="SonId" name="SonId" />
+                <input type="hidden" id="Pname" name="Pname" value="@ViewBag.pname" />
+                <input type="hidden" id="mypid" name="mypid" value="@ViewBag.pid" />
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -32,7 +35,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">应聘部门:</label>
                         <div class="layui-input-block">
-                            <select name="deptid" id="deptid" lay-filter="deptidfilter" lay-verify="required" class="layui-input">
+                            <select name="Deptid" id="Deptid" lay-filter="deptidfilter" class="layui-input">
                                 <option value="-1">请选择所属部门</option>
                             </select>
                         </div>
@@ -41,7 +44,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">应聘岗位:</label>
                         <div class="layui-input-block">
-                            <select name="Pid" id="Pid" lay-verify="required" lay-filter="pidfilter" class="layui-input">
+                            <select name="Pid" id="Pid" lay-filter="pidfilter" class="layui-input">
                                 <option value="-1">请先选择部门</option>
                             </select>
                         </div>
@@ -50,21 +53,21 @@
                 </div>
 
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">联系时间:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.TraceTime, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input " } })
+                            <input type="text" name="TraceTime1" id="TraceTime1" class="layui-input">
                         </div>
                     </div>
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">手机号:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.PhoneNumber, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.PhoneNumber, new Dictionary<string, object>() { { "lay-verify", "phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input " } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">渠道:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.Channel, new Dictionary<string, object>() { { "class", "layui-input " } })
@@ -75,25 +78,27 @@
 
 
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">面试次数:</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" readonly="readonly" style="border:0px" value="@ViewBag.Number" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">简历类型:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.ResumeType, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label" style="margin-left:-40px;width:120px;">电话沟通结果:</label>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="margin-left:-40px;width:120px;">联系结果:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.PhoneCommunicateResult, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            <input type="text" name="PhoneCommunicateResult1" id="PhoneCommunicateResult1" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">面试次数:</label>
-                        <div class="layui-input-block">
-                            <input type="text" class="layui-input" readonly="readonly" style="border:0px" value="@ViewBag.Number" />
-                        </div>
-                    </div>
+
                 </div>
 
                 <div class="layui-row layui-form-item">
@@ -101,97 +106,97 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            <input type="text" name="Remark1" id="Remark1" class="layui-input">
                         </div>
                     </div>
                 </div>
 
             </div>
-
-            <div class="layui-tab" lay-filter="test">
-                <ul class="layui-tab-title">
-                    @{
-                        List<RecruitPhoneTraceView> list = (ViewBag.rptviewlist) as List<RecruitPhoneTraceView>;
-                        int i = 1;
-                        if (list.Count > 0)
+        </form>
+        <div class="layui-tab" lay-filter="test">
+            <ul class="layui-tab-title">
+                @{
+                    List<RecruitPhoneTraceView> list = (ViewBag.rptviewlist) as List<RecruitPhoneTraceView>;
+                    int i = 1;
+                    if (list.Count > 0)
+                    {
+                        foreach (var item in list)
                         {
-                            foreach (var item in list)
-                            {
 
-                                <li id=@item.Id name="@item.Id" class="layui-this">第<span>@i</span>次面试</li>
+                            <li id=@item.Id name="@item.Id" class="layui-this">第<span>@i</span>次面试</li>
 
-                                i++;
-                            }
-                        }
-                        else
-                        {
-                            <li class="layui-this">温馨提示</li>
+                            i++;
                         }
                     }
-                </ul>
-                <div class="layui-tab-content">
-                    @{
-                        if (list.Count > 0)
-                        {
-                            <form class="layui-form" id="myform" lay-filter="myform">
-                                <div class="layui-tab-item layui-show">
-                                    <input type="hidden" id="F_Id" name="F_Id" value="@list[0].Id" />
-                                  
-                                    <div class="layui-row layui-form-item">
-                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                            <label class="layui-form-label">面试时间:</label>
-                                            <div class="layui-input-block">
-                                                <input class="layui-input" id="TraceTime" name="TraceTime" value="@list[0].TraceTime" />
-                                            </div>
+                    else
+                    {
+                        <li class="layui-this">温馨提示</li>
+                    }
+                }
+            </ul>
+            <div class="layui-tab-content">
+                @{
+                    if (list.Count > 0)
+                    {
+                        <form class="layui-form" id="myform" lay-filter="myform">
+                            <div class="layui-tab-item layui-show">
+                                <input type="hidden" id="F_Id" name="F_Id" value="@list[0].Id" />
+
+                                <div class="layui-row layui-form-item">
+                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                        <label class="layui-form-label">面试时间:</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" id="TraceTime" name="TraceTime" value="@list[0].TraceTime" />
                                         </div>
                                     </div>
-                                    <div class="layui-row layui-form-item">
-                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                            <label class="LableCss1">面试结果:</label>
-                                            <div class="layui-input-block">
-                                                <input class="layui-input" id="PhoneCommunicateResult" name="PhoneCommunicateResult" value="@list[0].PhoneCommunicateResult" />
-                                            </div>
+                                </div>
+                                <div class="layui-row layui-form-item">
+                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                        <label class="layui-form-label">面试结果:</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" id="PhoneCommunicateResult" name="PhoneCommunicateResult" value="@list[0].PhoneCommunicateResult" />
                                         </div>
                                     </div>
-                                    <div class="layui-row layui-form-item">
-                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                            <label class="layui-form-label">备注:</label>
-                                            <div class="layui-input-block">
-                                                <textarea class="layui-input linu" id="Remark" name="Remark">
+                                </div>
+                                <div class="layui-row layui-form-item">
+                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                        <label class="layui-form-label">备注:</label>
+                                        <div class="layui-input-block">
+                                            <textarea class="layui-input linu" id="Remark" name="Remark">
                                                          @list[0].Remark 
                                                     </textarea>
-                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="layui-form-item">
-                                        <div class="layui-input-block">
-                                            <button class="layui-btn " lay-submit="" lay-filter="demo" style="margin-left:300px;">立即提交</button>
-                                            <button class="layui-btn btnclose">关闭</button>
-                                        </div>
-                                    </div>
-
                                 </div>
 
-                            </form>
-                        }
-                        else
-                        {
-                            <div class="layui-tab-item layui-show">
-                                <h3>
-                                    还没有面试记录哟!!!
-                                </h3>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn " lay-submit="" lay-filter="demo" style="margin-left:300px;">立即提交</button>
+                                        <button class="layui-btn btnclose">关闭</button>
+                                    </div>
+                                </div>
+
                             </div>
-                        }
+
+                        </form>
                     }
-                </div>
+                    else
+                    {
+                        <div class="layui-tab-item layui-show">
+                            <h3>
+                                还没有面试记录哟!!!
+                            </h3>
+                        </div>
+                    }
+                }
             </div>
-            <div class="layui-form-item" style="margin-top:50px;">
-                <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1" style="margin-left:300px;">立即提交</button>
-                    <button class="layui-btn " id="btnclose1">关闭</button>
-                </div>
+        </div>
+        <div class="layui-form-item" style="margin-top:50px;display:none;" id="formbtn1">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" id="subbtn"  style="margin-left:300px;">立即提交</button>
+                <button class="layui-btn btnclose">关闭</button>
             </div>
+        </div>
     </div>
 
 
@@ -200,16 +205,54 @@
             loadnetinfo();// 初始化编辑数据加载
         });
         function loadnetinfo() {
+            $("#TraceTime").val(changeDateTimeFormat($("#TraceTime").val()));
             var id = $("#Id").val();
+             var count =@ViewBag.Number;
             $.get("/Personnelmatters/RecruitingDataSummary/GetRPTById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
-
+                    data.TraceTime1 = changeDateTimeFormat(data.TraceTime);
+                   // data.deptid = data.Deptid;
+                    data.PhoneCommunicateResult1 = data.PhoneCommunicateResult;
+                    data.Remark1 = data.Remark;
                     form.val("formtest", data);
-
+                    if (count <= 0) {
+                        $("#formbtn1").attr("style", "block");
+                    }
                 });
             })
         }
+
+        //给ul中的li注册点击事件
+        $(".layui-tab-title li").click(function () {
+            var fid = $(this).attr("id");
+            $("#F_Id").val(fid);
+            console.log("跟踪id:" + fid);
+            $.ajax({
+                url: '/Personnelmatters/RecruitingDataSummary/GetRPTById/' + fid,
+                type: "GET",
+                success: function (SucData) {
+                    console.log(SucData.PhoneCommunicateResult);
+                    //if (SucData.Success) {
+                        layui.use('form', function () {
+                            var form = layui.form;
+
+                            $("#TraceTime").val(changeDateTimeFormat(SucData.TraceTime));
+                            $("#PhoneCommunicateResult").val(SucData.PhoneCommunicateResult);
+                            $("#Remark").val(SucData.Remark);
+                            form.render();
+                        })
+
+                    //} else {
+                    //    layui.use('layer', function () {
+                    //        var layer = layui.layer;
+                    //        layer.msg('系统操作有误，请重试！！！', { icon: 2 });
+                    //    });
+                    //}
+                }
+            });
+        });
+
 
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
@@ -222,6 +265,43 @@
                 elem: '#TraceTime',
                 type: 'datetime',
                 format: 'yyyy-MM-dd HH:mm:ss'
+            });
+
+            //添加提交
+            form.on('submit(demo)', function (data) {
+                data.field.Id = $("#F_Id").val();
+                //data.field.MarketTeaId = $("#MarketTeaId").val();
+                $.post("/Personnelmatters/RecruitingDataSummary/GetRPTById", data.field, function (data) {
+                    if (data.Success) {
+                        layer.alert("编辑成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layui.table.reload('mynetinfo');
+                            parent.layer.close(index);
+
+                        });
+                    } else {
+                        layer.alert("编辑失败!");
+                    }
+                });
+                return false;
+            });
+
+            $("#subbtn").click(function () {
+                var id = $("#Id").val();
+                var markettea = $("#MarketTeaId").val();
+                console.log("市场变：" + markettea);
+                $.post("/Market/NetClientRecord/EditCallbackInfos", { id: id, markettea: markettea }, function (data) {
+                    if (data.Success) {
+                        layer.alert("编辑成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layui.table.reload('mynetinfo');
+                            parent.layer.close(index);
+
+                        });
+                    } else {
+                        layer.alert("编辑失败!");
+                    }
+                });
             });
 
             //添加提交
@@ -243,10 +323,90 @@
 
 
             //关闭添加页面
-            $("#btnclose1").click(function () {
+            $(".btnclose").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
             });
+
+        });
+
+
+        //时间格式转换
+        function changeDateTimeFormat(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+    @* 部门与岗位的下拉框动态赋值及下拉框二级联动 *@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+            console.log("岗位米高处：" + $("#Pname").val());
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#Deptid").empty();
+                    if (resultData.code == 0) {
+
+                        $("#Pid").append(new Option($("#Pname").val(), $("#mypid").val()));
+                        $.each(resultData.data, function (index, item) {
+                            $('#Deptid').append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#Deptid").append(new Option("暂无数据", ""));
+                    }
+
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#Pid").empty();
+                            console.log(resultData.data);
+                            $("#Pid").append(new Option("请选择岗位", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#Pid').append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#Pid").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
 
         });
     </script>

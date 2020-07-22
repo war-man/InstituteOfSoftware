@@ -9,6 +9,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+    using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -267,6 +268,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// </summary>
         public void SetMarkingTeacher(int examid, int examroomid, string empid)
         {
+            var emp = db_emp.GetInfoByEmpID(empid);
             var temp = this.AllMarkingArrange().Where(d => d.ExamID == examid && d.ExamRoom == examroomid &&d.MarkingTeacher == empid).FirstOrDefault();
 
             if (temp == null)
@@ -285,6 +287,10 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             temp.MarkingTeacher = empid;
 
             db_markingArrange.Update(temp);
+
+            var smgText = "硅谷高科阅卷通知 ：收到一份阅卷通知  请及时查看";
+
+            PhoneMsgHelper.SendMsg(emp.Phone, smgText);
         }
 
 

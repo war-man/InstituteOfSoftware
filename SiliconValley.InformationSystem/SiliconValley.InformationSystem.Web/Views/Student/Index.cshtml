@@ -1,40 +1,50 @@
 ﻿
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
 }
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="mywarp" style="text-align:center; margin-top:100px;">
 
-<div id="mywarp" style="text-align:center; margin-top:100px;">
+        <button style="width:150px; height:150px;" id="survey" class="layui-btn layui-btn-primary" type="button">满意度填写</button>
+        <button style="width:150px; height:150px;" id="exam" class="layui-btn layui-btn-primary" type="button">考试</button>
 
-    <button style="width:150px; height:150px;" id="survey" class="layui-btn layui-btn-primary" type="button">满意度填写</button>
-    <button style="width:150px; height:150px;" id="exam" class="layui-btn layui-btn-primary" type="button">考试</button>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 
-</div>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
 
-@section script{
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+            $("#survey").click(function () {
+
+                window.location.href = '/Teaching/SatisfactionSurvey/StudentSurveyIndex'
+
+            });
+
+            $("#exam").click(function () {
+
+                window.location.href = '/ExaminationSystem/StudentExamSys/StuExamIndex'
+
+            });
+
+        });
+
+
+    </script>
+</body>
+</html>
+
+
+
     
- <script>
 
-
-     layui.use(['layer'], function(){
-     
-     var layer = layui.layer;
-
-         $("#survey").click(function () {
-
-             window.location.href = '/Teaching/SatisfactionSurvey/StudentSurveyIndex'
-
-         });
-
-         $("#exam").click(function () {
-
-             window.location.href = '/ExaminationSystem/StudentExamSys/StuExamIndex'
-
-         });
-
-     });
-
-
-    </script>   
-    
- }

@@ -238,15 +238,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-                var beforerpt = rptmanage.GetList().Where(r => r.SonId == rpt.SonId && r.IsDel == false).FirstOrDefault();
-                rpt.Pid = beforerpt.Pid;
-                rpt.PhoneNumber = beforerpt.PhoneNumber;
-                rpt.PhoneCommunicateResult = beforerpt.PhoneCommunicateResult;
-                rpt.Channel = beforerpt.Channel;
-                rpt.ResumeType = beforerpt.ResumeType;
-                rpt.IsEntry = beforerpt.IsEntry;
-                rpt.IsDel = true;
-               rptmanage.Insert(rpt);
+                var beforerpt = rptmanage.GetList().Where(r => r.Id==rpt.Id && r.IsDel == false).FirstOrDefault();
+                RecruitPhoneTrace rptnew = new RecruitPhoneTrace();
+                rptnew.SonId = beforerpt.SonId;
+                rptnew.Name = beforerpt.Name;
+                rptnew.PhoneNumber = beforerpt.PhoneNumber;
+                rptnew.TraceTime = rpt.TraceTime;
+                rptnew.PhoneCommunicateResult = rpt.PhoneCommunicateResult;
+                rptnew.Channel = beforerpt.Channel;
+                rptnew.ResumeType = beforerpt.ResumeType;
+                rptnew.IsEntry = beforerpt.IsEntry;
+                rptnew.Remark = rpt.Remark;
+                rptnew.IsDel = true;
+                rptnew.Pid = rpt.Pid;
+             
+               rptmanage.Insert(rptnew);
                 AjaxResultxx = rptmanage.Success();
             }
             catch (Exception ex)
@@ -272,6 +278,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ViewBag.rptviewlist = rptviewlist;
             ViewBag.Number = rptviewlist.Count();
             var rpt = rmanage.GetRptView(id);
+            ViewBag.pid = rpt.Pid;
+            ViewBag.pname = rpt.Pname;
             return View(rpt);
         }
         [HttpPost]

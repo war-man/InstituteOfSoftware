@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
-    public class StudentController : Controller
+    public class StudentController : BaseController
     {
         // GET: Student
         public ActionResult Index()
