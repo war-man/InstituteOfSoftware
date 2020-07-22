@@ -13,6 +13,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 学员异动表
+    /// </summary>
     [Table("ClassDynamics")]
     public partial class ClassDynamics
     {

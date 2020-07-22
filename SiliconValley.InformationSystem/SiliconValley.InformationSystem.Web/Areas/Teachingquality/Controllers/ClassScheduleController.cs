@@ -305,7 +305,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             var x = dbtext.ClassStudentneViewList(ClassID);
             return Json(x, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 获取班级正常学员
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ISClassStuDate(int page, int limit)
+        {
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+            var x = dbtext.ClassStudentneViewList(ClassID).Where(a=>a.Statusname==null).ToList();
+           var mystudent = x.OrderBy(a => a.StuNameID).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = x.Count,
+                data = mystudent
+            }; return Json(data, JsonRequestBehavior.AllowGet);
 
+           
+        }
+        public ActionResult ListStudent()
+        {
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+            var x = dbtext.ClassStudentneViewList(ClassID).Where(a => a.Statusname == null).Select(a=>new { a.StuNameID,a.Name,a.identitydocument,Sex=a.Sex==true?"男":"女"}).ToList();
+            return Json(x, JsonRequestBehavior.AllowGet);
+        }
         //群号操作页面
         public ActionResult Groupnumber()
         {
