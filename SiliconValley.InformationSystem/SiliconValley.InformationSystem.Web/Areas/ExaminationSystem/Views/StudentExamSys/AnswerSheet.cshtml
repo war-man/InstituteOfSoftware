@@ -475,130 +475,149 @@
             //点击提交
             $("#COMMIT").click(function () { 
 
-                var msg = "确认 答卷提交后将无法再次作答?";
+                Commit(false);
+            });
 
-                if (formData.get("rarfile") == undefined) {
-                    msg = "机试题未上传， 是否继续提交答卷";
-                }
+            function CommitAnswerSheet() {
+                //需要先清空AnswerCommit 表单数据
+                //clearformData(formData, ["AnswerCommit"]);
+                var loadindex = layer.load(1, {
+                    shade: [0.1, '#fff'] //0.1透明度的白色背景
+                });
+                var trueQuestionscores = 0; //获得选择题分数
+                var ids = "";
+                //提交前计算选择题分数
+                $("#choicequestion .questionItem").each(function (index, elem) {
 
-                layer.confirm(msg, function (index) {
-                    //需要先清空AnswerCommit 表单数据
-                    //clearformData(formData, ["AnswerCommit"]);
-                    var loadindex = layer.load(1, {
-                        shade: [0.1, '#fff'] //0.1透明度的白色背景
-                    });
-                    var trueQuestionscores = 0; //获得选择题分数
-                    var ids = "";
-                    //提交前计算选择题分数
-                    $("#choicequestion .questionItem").each(function (index, elem) {
+                    ids += $(elem).attr("questionid") + ',';
 
-                        ids += $(elem).attr("questionid") + ',';
+                });
+                $.post('/ExaminationSystem/StudentExamSys/ChoiceQuestionAnswer', { questions: ids }, function (result) {
 
-                    });
-                    $.post('/ExaminationSystem/StudentExamSys/ChoiceQuestionAnswer', { questions: ids }, function (result) {
+                    for (var i = 0; i < result.Data.length; i++) {
 
-                        for (var i = 0; i < result.Data.length; i++) {
+                        $("#choicequestion .questionItem").each(function (index, elem) {
+                            var questionitem = $(elem);
 
-                            $("#choicequestion .questionItem").each(function (index, elem) {
-                                var questionitem = $(elem);
+                            var questionid = $(this).attr("questionid");
 
-                                var questionid = $(this).attr("questionid");
+                            if (questionid == result.Data[i].questionid) {
 
-                                if (questionid == result.Data[i].questionid) {
+                                //比较答案是否正确
+                                //首先截取出答案
+                                var arry_answer = result.Data[i].answer.split(',');
 
-                                    //比较答案是否正确
-                                    //首先截取出答案
-                                    var arry_answer = result.Data[i].answer.split(',');
+                                // arry_answer.pop();
+                                //获取学员选择的答案
+                                var arry_stuanswer = new Array();
+                                $(this).find("input").each(function (index, elem) {
 
-                                   // arry_answer.pop();
-                                    //获取学员选择的答案
-                                    var arry_stuanswer = new Array();
-                                    $(this).find("input").each(function (index, elem) {
-
-                                        if (elem.checked == true) {
-                                            arry_stuanswer.push($(elem).val());
-
-                                        }
-                                       
-
-                                    });
-
-                                    console.log(arry_stuanswer);
-
-                                    ///判断答案是否一致
-                                    var isTrue = arry_answer.toString() == arry_stuanswer.toString();
-                                    questionitem.find(".title").find(".panduan").remove();
-
-                                    if (isTrue) {
-
-                                        //如果一致
-                                        var score = $(questionitem).find(".hidescore").val();
-
-                                        trueQuestionscores += parseFloat(score);
-                                        var span = $('<span class="panduan"><i style="font-size:25px; color:green;" class="layui-icon layui-icon-ok"></i></span>');
-                                        questionitem.find(".title").append(span);
+                                    if (elem.checked == true) {
+                                        arry_stuanswer.push($(elem).val());
 
                                     }
-                                    else {
-                                        var span = $('<span class="panduan"><i style="font-size:25px; color:red;" class="layui-icon layui-icon-close"></i></span>');
-                                        questionitem.find(".title").append(span);
-                                    }
+
+
+                                });
+
+                                console.log(arry_stuanswer);
+
+                                ///判断答案是否一致
+                                var isTrue = arry_answer.toString() == arry_stuanswer.toString();
+                                questionitem.find(".title").find(".panduan").remove();
+
+                                if (isTrue) {
+
+                                    //如果一致
+                                    var score = $(questionitem).find(".hidescore").val();
+
+                                    trueQuestionscores += parseFloat(score);
+                                    var span = $('<span class="panduan"><i style="font-size:25px; color:green;" class="layui-icon layui-icon-ok"></i></span>');
+                                    questionitem.find(".title").append(span);
 
                                 }
-                            });
+                                else {
+                                    var span = $('<span class="panduan"><i style="font-size:25px; color:red;" class="layui-icon layui-icon-close"></i></span>');
+                                    questionitem.find(".title").append(span);
+                                }
+
+                            }
+                        });
+
+                    }
+
+                    //渲染选择题获得分数:
+                    $(".choiceQuestionScoreshuode").text(trueQuestionscores);
+
+                    //更新表单数据 选择题分数
+                    formData.append("ChoiceScores", trueQuestionscores);
+
+                    //更新表单数据
+                    getAnswerCommit();
+                    console.log(formData.get("AnswerCommit"));
+
+                    //提交
+                    $.ajax({
+                        url: '/ExaminationSystem/StudentExamSys/AnswerSheetCommit',
+                        type: "post",
+                        contentType: false,
+                        processData: false,
+                        dataType: "json",//返回的数据格式
+                        data: formData,
+                        success: function (result) {
+
+                            layer.close(loadindex);
+
+                            if (result.ErrorCode == 200) {
+
+                                layer.msg('成功。。', { icon: 1 }, function () {
+
+                                    window.location.href = '/ExaminationSystem/StudentExamSys/StuExamIndex';
+                                });
+
+                                layui.form.render();
+                            }
+
+                            else {
+                                layer.msg('请下载机试题目', { icon: 2 });
+                            }
+                        },
+                        error: function () {
+                            layer.msg('异常。。', { icon: 2 });
 
                         }
 
-                        //渲染选择题获得分数:
-                        $(".choiceQuestionScoreshuode").text(trueQuestionscores);
-
-                        //更新表单数据 选择题分数
-                        formData.append("ChoiceScores", trueQuestionscores);
-
-                        //更新表单数据
-                        getAnswerCommit();
-                        console.log(formData.get("AnswerCommit"));
-
-                        //提交
-                        $.ajax({
-                            url: '/ExaminationSystem/StudentExamSys/AnswerSheetCommit',
-                            type: "post",
-                            contentType: false,
-                            processData: false,
-                            dataType: "json",//返回的数据格式
-                            data: formData,
-                            success: function (result) {
-
-                                layer.close(loadindex);
-
-                                if (result.ErrorCode == 200) {
-
-                                    layer.msg('成功。。', { icon: 1 }, function () {
-
-                                        window.location.href = '/ExaminationSystem/StudentExamSys/StuExamIndex';
-                                    });
-
-                                    layui.form.render();
-                                }
-
-                                else {
-                                    layer.msg('请下载机试题目', { icon: 2 });
-                                }
-                            },
-                            error: function () {
-                                layer.msg('异常。。', { icon: 2 });
-
-                            }
-
-
-                        });
-
-                        layer.close(index);
 
                     });
 
+                    layer.close(index);
+
                 });
-            });
+
+            }
+
+            function Commit(IsAutoCommit) {
+
+                if (IsAutoCommit == true) {
+
+                    layer.msg("考试时间已到，正在自动提交！");
+
+                    CommitAnswerSheet();
+
+                }
+                else {
+                    var msg = "确认 答卷提交后将无法再次作答?";
+
+                    if (formData.get("rarfile") == undefined) {
+                        msg = "机试题未上传， 是否继续提交答卷";
+                    }
+
+                    layer.confirm(msg, function (index) {
+                        CommitAnswerSheet();
+                    });
+                }
+
+            }
 
             //监听选择文件  表单数据
             $("#Upload").change(function () {
@@ -644,7 +663,7 @@
                 if (currentDate > EndDate) {
 
                     //自动点击提交
-                    $("#COMMIT").click();
+                    Commit(true);
                 }
                 else {
                     console.log("考试中......");
