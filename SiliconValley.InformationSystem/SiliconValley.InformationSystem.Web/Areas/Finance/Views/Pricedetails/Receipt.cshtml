@@ -79,9 +79,9 @@
                 <td></td>
             </tr>
             @*<tr>
-                    <td colspan="7" style="width:530px;"></td>
-                    <td colspan="1" style="text-align:inherit;">2020-06-23</td>
-                </tr>*@
+                <td colspan="7" style="width:530px;"></td>
+                <td colspan="1" style="text-align:inherit;">2020-06-23</td>
+            </tr>*@
 
             <tr>
                 <td style="width:80px;"></td>
@@ -101,19 +101,20 @@
 
             <tbody id="xuezai" style="height:70px;">  </tbody>
             @*<tr>
-                    <td colspan="7" style="text-align:center;" id="DaXie">合计金额（大写）：</td>
-                    <td colspan="1" style="text-align:inherit;width:230px;" id="pricent">2000</td>
-                </tr>*@
+                <td colspan="7" style="text-align:center;" id="DaXie">合计金额（大写）：</td>
+                <td colspan="1" style="text-align:inherit;width:230px;" id="pricent">2000</td>
+            </tr>*@
 
         </table>
-        <div id="" style="width:80px;position:absolute;top:280px;left:284px;"> <input type="text" style="border:0px;height:12px;margin-top:12px;" lay-verify="required" class="layui-input" /></div>
+        <div style="position:absolute;top:289px;left:294px;">
+            <textarea id="Remarks"  style="height:82px;width:130px;"></textarea>
 
+        </div>
         <div id="DaXie" style="position:absolute;left:188px;"></div>
         <div id="pricent" style="position:absolute;left:524px;"></div>
-        <div style="position:absolute;left:100px;top:249px;">
-            <textarea id="Remarks" style="height:42px;width:190px;"></textarea>
-         
-        </div>
+
+        <div id="Remark" style="width:280px;position:absolute;top:250px;left:102px;"> <input type="text" style="border:0px;height:12px;margin-top:12px;" lay-verify="required" class="layui-input" /></div>
+
     </div>
 
 
@@ -141,7 +142,7 @@
     $("#classa").text(studen.classa);
     $("#identitydocument").text(studen.identitydocument);
     var Receiptdata = JSON.parse('@Html.Raw(ViewBag.Receiptdata)');
-    $("#Remarks").text(Receiptdata[0].Remarks);
+    $("#Remark").val(Receiptdata[0].Remarks);
     var count = 0;
     var ostitemsName = "";
     var Amountofmoneys = 0;
@@ -153,7 +154,7 @@
 
         if (i == 0) {
             //AddDate
-            $("#Remarks").text(Receiptdata[i].Remarks);
+            $("#Remark").text(Receiptdata[i].Remarks);
             var date = new Date(Receiptdata[i].AddDate);
             $("#AddDate").text(getNowFormatDate(date));
         }

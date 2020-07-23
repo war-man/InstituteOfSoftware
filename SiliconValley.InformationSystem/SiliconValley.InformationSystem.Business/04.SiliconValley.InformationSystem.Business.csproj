@@ -292,10 +292,7 @@
     <None Include="obj\Release\04.SiliconValley.InformationSystem.Business.csproj.CoreCompileInputs.cache" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Debug\zh-Hans\" />
-    <Folder Include="bin\Release\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Depository\02.SiliconValley.InformationSystem.Depository.csproj">
       <Project>{8a91cd26-c6bb-4f0e-819c-8ef3be0a0d6e}</Project>
