@@ -536,11 +536,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult PreentryfeeDates(int page, int limit)
+        public ActionResult PreentryfeeDates(int page, int limit,string StuName,string identitydocument,string qBeginTime,string qEndTime)
         {
-            return Json(dbtext.PreentryfeeDates(page, limit), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.PreentryfeeDates(page, limit,StuName,identitydocument,qBeginTime,qEndTime), JsonRequestBehavior.AllowGet);
         }
-        
+        /// <summary>
+        /// 预入费统计
+        /// </summary>
+        /// <param name="StuName"></param>
+        /// <param name="identitydocument"></param>
+        /// <param name="qBeginTime"></param>
+        /// <param name="qEndTime"></param>
+        /// <returns></returns>
+        public ActionResult PreentryStatistics(string StuName, string identitydocument, string qBeginTime, string qEndTime)
+        {
+            return null;
+        }
         /// <summary>
         /// 退预入费页面
         /// </summary>
@@ -554,7 +565,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             var x = Preentryfeebusenn.GetEntity(id);
             ViewBag.ExportStudentBeanData = stuDataKeepAndRecordBusiness.GetSudentDataAll().Where(a => a.Id == x.keeponrecordid).FirstOrDefault();
             ViewBag.obj = x;
-            ViewBag.ClassNumber = classScheduleBusiness.GetEntity(x.ClassID).ClassNumber;
+            ViewBag.ClassNumber = x.ClassID;
             return View();
         }
         /// <summary>
