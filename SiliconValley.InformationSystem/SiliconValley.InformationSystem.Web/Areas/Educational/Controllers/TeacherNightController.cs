@@ -103,24 +103,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             List<SelectListItem> schooladdress = baseDataEnum_Entity.GetsameFartherData("校区地址").Select(s => new SelectListItem() { Text = s.Name, Value = s.Id.ToString() }).ToList();
             schooladdress.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
             ViewBag.Schooladdress = schooladdress.OrderBy(s => s.Value).ToList();
+            //获取阶段
+            List<SelectListItem> g_list = Reconcile_Com.GetGrand_Id().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            ViewBag.grlist = g_list;
             return View();
         }
+
+        #region 系统安排晚自习
 
         /// <summary>
         /// 系统自动安排晚自习方法
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        public ActionResult SystemAnpaiFunction()
-        {
-            TeacherNight_Entity = new TeacherNightManeger();
-            string[] times = Request.Form["times"].Split('到');
-            DateTime start = Convert.ToDateTime(times[0]);
-            DateTime end = Convert.ToDateTime(times[1]);
-            AjaxResult a = TeacherNight_Entity.AnpaiNight(start, end);
-            return Json(a, JsonRequestBehavior.AllowGet);
-        }
+        //[HttpPost]
+        //public ActionResult SystemAnpaiFunction()
+        //{
+        //    TeacherNight_Entity = new TeacherNightManeger();
+        //    string[] times = Request.Form["times"].Split('到');
+        //    DateTime start = Convert.ToDateTime(times[0]);
+        //    DateTime end = Convert.ToDateTime(times[1]);
+        //    string[] grand_id = Request.Form["str"].Split(',');
+        //    //获取这个阶段的班级
+        //    List<ClassSchedule> grand_class_list = new List<ClassSchedule>();
+        //    foreach (string item in grand_id)
+        //    {
+        //        if (!string.IsNullOrEmpty(item))
+        //        {
+        //            int gid = Convert.ToInt32(item);
+        //            grand_class_list.AddRange( Reconcile_Com.GetClass().Where(c=>c.grade_Id==gid));
+        //        }
+        //    }
 
+        //    AjaxResult a = TeacherNight_Entity.AnpaiNight(start, end,grand_class_list);
+        //    return Json(a, JsonRequestBehavior.AllowGet);
+        //}
+        #endregion
+       
         /// <summary>
         /// 手动安排晚自习方法
         /// </summary>
@@ -140,7 +158,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             new_t.timename = Request.Form["timename"];
             new_t.AttendDate = DateTime.Now;
           
-            new_t.BeOnDuty_Id = beOnDuty_Entity.GetSingleBeOnButy("教员晚自习", false).Id;
+            new_t.BeOnDuty_Id =Convert.ToInt32( Request.Form["type"]);
             bool istrue= TeacherNightandEvningStudet.IsUpdateTeacherNightData(new_t.OrwatchDate,Convert.ToInt32(new_t.ClassSchedule_Id));//判断是否可以安排老师值班
             if (istrue==true)
             {
@@ -193,11 +211,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 if (!string.IsNullOrEmpty(item))
                 {
                     int tid = Convert.ToInt32(item);
-                    DELE.Add( TeacherNight_Entity.GetEntity(tid));
+                    DELE.Add(TeacherNight_Entity.GetEntity(tid));
                 }
             }
              
             a = TeacherNight_Entity.My_Delete(DELE);
+            if (a.Success)
+            {
+                //修改晚自习数据
+                List<EvningSelfStudy> updateTeacher = new List<EvningSelfStudy>();
+                foreach (TeacherNight item in DELE)
+                {
+                   List<EvningSelfStudy> findlist = TeacherNight_Entity.EvningSelfStudent_Entity.GetSQLDat("select * from EvningSelfStudy where ClassSchedule_id=" + item.ClassSchedule_Id + " and Anpaidate='" + item.OrwatchDate + "'");
+
+                    findlist[0].emp_id = null;
+                    updateTeacher.Add(findlist[0]);
+                }
+              a=  TeacherNight_Entity.EvningSelfStudent_Entity.Update_Data(updateTeacher);
+            }
             return Json(a, JsonRequestBehavior.AllowGet);
         }
 
@@ -317,7 +348,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         }
         #endregion
 
-
+         
         #endregion
 
         #region 班主任晚自习值班

@@ -351,19 +351,24 @@
                                 layer.confirm('系统温馨提示！', {
                                     btn: ['编辑数据', '删除数据']  
                                     , btn2: function (index, layero) {
-                                      //删除
-                                       var moreindex= layer.load(1)
-                                        $.ajax({
-                                            url: '/Educational/Reconcile/DeleteMore',
-                                            type:'POST',
-                                            data: {"str": rid },
-                                            success: function (suc) {                                                 
+                                        //删除
+                                       var delconfi=  layer.confirm('真的要删除吗？', function (mixdel) {
+                                            var moreindex = layer.load(1);
+                                            $.ajax({
+                                                url: '/Educational/Reconcile/DeleteMore',
+                                                type: 'POST',
+                                                data: { "str": rid },
+                                                success: function (suc) {
                                                     layer.msg(suc.Msg, function () {
                                                         GetKebiao();
+                                                        layer.close(delconfi);
                                                         layer.close(moreindex);
-                                                    });                                                
-                                            }
+                                                    });
+                                                }
+                                            });
+
                                         })
+                                        
                                     }
                                 }, function (index, layero) {
                                     //编辑
@@ -394,18 +399,23 @@
                                 layer.confirm('系统温馨提示！', {
                                     btn: ['编辑数据', '删除数据']  
                                     , btn2: function (index, layero) {
-                                        var moreindex = layer.load(1)
-                                        $.ajax({
-                                            url: '/Educational/EvningSelfStudy/DeleteFunction',
-                                            type: 'POST',
-                                            data: { "str": rid },
-                                            success: function (suc) {
-                                                layer.msg(suc.Msg, function () {
-                                                    GetKebiao();
-                                                    layer.close(moreindex);
-                                                });
-                                            }
-                                        })
+                                       var delindex= layer.confirm('真的要删除吗？', function (mixdel) {
+                                            var moreindex = layer.load(1);
+
+                                            $.ajax({
+                                                url: '/Educational/EvningSelfStudy/DeleteFunction',
+                                                type: 'POST',
+                                                data: { "str": rid },
+                                                success: function (suc) {
+                                                    layer.msg(suc.Msg, function () {
+                                                        GetKebiao();
+                                                        layer.close(delindex);
+                                                        layer.close(moreindex);
+                                                    });
+                                                }
+                                            })
+                                        });
+                                         
                                     }
                                 }, function (index, layero) {
                                     //编辑数据

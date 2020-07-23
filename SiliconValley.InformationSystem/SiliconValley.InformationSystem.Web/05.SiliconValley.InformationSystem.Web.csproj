@@ -56,7 +56,7 @@
     <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.1.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="BceSdkDotNet, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BceSdkDotNet, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SiliconValley.InformationSystem.Business\bin\Debug\bce-dotnet-sdk-1.0.4\BceSdkDotNet.dll</HintPath>
     </Reference>
@@ -247,24 +247,13 @@
     <Compile Include="Areas\Educational\Controllers\BeOnDutyController.cs" />
     <Compile Include="Areas\Educational\Controllers\BreakController.cs" />
     <Compile Include="Areas\Educational\Controllers\CheckController.cs" />
-    <Compile Include="Areas\Educational\Controllers\CheckGoodsController.cs" />
     <Compile Include="Areas\Educational\Controllers\ClassroomController.cs" />
     <Compile Include="Areas\Educational\Controllers\ClassTeacherKeepController.cs" />
-    <Compile Include="Areas\Educational\Controllers\ConvertCourseController.cs" />
     <Compile Include="Areas\Educational\Controllers\EvningSelfStudyController.cs" />
-    <Compile Include="Areas\Educational\Controllers\GoodsController.cs" />
-    <Compile Include="Areas\Educational\Controllers\GoodsProvideController.cs" />
-    <Compile Include="Areas\Educational\Controllers\GoodsTypeController.cs" />
-    <Compile Include="Areas\Educational\Controllers\InStockController.cs" />
-    <Compile Include="Areas\Educational\Controllers\InStockGoodsController.cs" />
-    <Compile Include="Areas\Educational\Controllers\IsGoodOrBadController.cs" />
     <Compile Include="Areas\Educational\Controllers\LaterecordController.cs" />
     <Compile Include="Areas\Educational\Controllers\LeaderAddCourseToExamineController.cs" />
-    <Compile Include="Areas\Educational\Controllers\PurchaseApplyController.cs" />
     <Compile Include="Areas\Educational\Controllers\ReconcileController.cs" />
-    <Compile Include="Areas\Educational\Controllers\ShppingDetailController.cs" />
     <Compile Include="Areas\Educational\Controllers\Staff_Cost_StatisticsController.cs" />
-    <Compile Include="Areas\Educational\Controllers\StockInfoController.cs" />
     <Compile Include="Areas\Educational\Controllers\SubstituteTeachCourseController.cs" />
     <Compile Include="Areas\Educational\Controllers\TeacherNightController.cs" />
     <Compile Include="Areas\Educational\Controllers\TimetableController.cs" />
@@ -1417,13 +1406,9 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.ttf" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
-    <Content Include="Scripts\excel.js" />
-    <Content Include="Scripts\excel.min.js" />
     <Content Include="Scripts\js\index.js" />
     <Content Include="Scripts\js\Index2.js" />
     <Content Include="Scripts\js\jquery-1.7.2-min.js" />
-    <Content Include="Scripts\layui\excel.js" />
-    <Content Include="Scripts\layui\excel.min.js" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\live2d\assets\autoload.js" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.svg" />
@@ -1569,16 +1554,8 @@
     <Content Include="Areas\Educational\Views\Break\BreakIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Classroom\AddorEditView.cshtml" />
     <Content Include="Areas\Educational\Views\Classroom\ClassroomIndexView.cshtml" />
-    <Content Include="Areas\Educational\Views\Goods\GoodsAddorEditView.cshtml" />
-    <Content Include="Areas\Educational\Views\Goods\GoodsIndexView.cshtml" />
-    <Content Include="Areas\Educational\Views\GoodsProvide\AddorEditView.cshtml" />
-    <Content Include="Areas\Educational\Views\GoodsProvide\GoodsProvideIndexView.cshtml" />
-    <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
-    <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
-    <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ReconcileIndexViews.cshtml" />
-    <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\AddView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\WarehouseIndexView.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomDisabled\RoomDisabledIndex.cshtml" />
@@ -1890,10 +1867,7 @@
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\Combinedclasses.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Stuportfolio\Dormitoryinformation.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\SetUp.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\SingeAnpaiView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\GrandChangDataView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\GrandUpdatDataView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\SysView.cshtml" />
+    <Content Include="Areas\Educational\Views\Timetable\TeacherTable.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3611,10 +3585,6 @@
     <Folder Include="Areas\Educational\Models\" />
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
     <Folder Include="Areas\Educational\Views\Check\" />
-    <Folder Include="Areas\Educational\Views\GoodsType\" />
-    <Folder Include="Areas\Educational\Views\InStockGoods\" />
-    <Folder Include="Areas\Educational\Views\InStock\" />
-    <Folder Include="Areas\Educational\Views\IsGoodOrBad\" />
     <Folder Include="Areas\Educational\Views\PurchaseType\" />
     <Folder Include="Areas\Educational\Views\Shared\" />
     <Folder Include="Areas\Educational\Views\ShppingDetail\" />

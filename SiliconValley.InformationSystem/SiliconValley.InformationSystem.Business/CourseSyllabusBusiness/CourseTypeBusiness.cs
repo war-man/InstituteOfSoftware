@@ -38,7 +38,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             else
             {
                 //不是主键
-                new_c = this.GetList().Where(c => c.TypeName == Id).FirstOrDefault();
+                new_c = this.GetListBySql<CourseType>("select * from CourseType where TypeName='"+Id+"'").FirstOrDefault();
             }
 
             return new_c;

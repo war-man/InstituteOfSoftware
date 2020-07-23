@@ -1030,8 +1030,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 s = true;
             }
             return s;
-        }
-        
+        }        
       
         /// <summary>
         ///  判断XX班级在这期间是否上过XX课程(false--没有，ture--有)
@@ -1238,7 +1237,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public bool AidClassData(DateTime date, int days, int class_id,GetYear YearMon)
         {
             bool s = false;
-            days = days - 1;
+            //days = days - 1;
             try
             {
                 List<Reconcile> recon = new List<Reconcile>();
@@ -1252,11 +1251,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             //单休
                             if (this.IsSaturday(re.AnPaiDate) == 1)
                             {
-                                re.AnPaiDate = re.AnPaiDate.AddDays((days + 1));
+                                re.AnPaiDate = re.AnPaiDate.AddDays(2);
                             }
                             else
                             {
-                                re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                                re.AnPaiDate = re.AnPaiDate.AddDays(1);
                             }
                         }
                         else
@@ -1265,11 +1264,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             DayOfWeek week = re.AnPaiDate.DayOfWeek;
                             if (week == DayOfWeek.Friday)
                             {
-                                re.AnPaiDate = re.AnPaiDate.AddDays((days + 2));
+                                re.AnPaiDate = re.AnPaiDate.AddDays((3));
                             }
                             else
                             {
-                                re.AnPaiDate = re.AnPaiDate.AddDays(days);
+                                re.AnPaiDate = re.AnPaiDate.AddDays(1);
                             }
                         }
 
@@ -2537,8 +2536,46 @@ Curriculum_Id like '职素' or Curriculum_Id like '班会' or Curriculum_Id like
         }
         #endregion
 
+        #region 给教员值班提供的数据查询
+        /// <summary>
+        /// 获取这天上专业课的数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="clasid"></param>
+        /// <returns></returns>
+        public Reconcile Teacher_Reconfile(DateTime date,int clasid)
+        {
+           List<Reconcile> list= this.GetListBySql<Reconcile>("select * from Reconcile where ClassSchedule_Id=" + clasid + " and AnPaiDate='" + date + "'");
+            Reconcile reconcile = null;
+            foreach (Reconcile item in list)
+            {
+                Curriculum findata= Reconcile_Com.GetNameGetCur(item.Curriculum_Id);
+                
+                if (findata != null && findata.CourseType_Id==1)
+                {
+                    
+                        
+                       return  item;                   
+                }
+            }
 
+            return reconcile;
+        }
+        
+        /// <summary>
+        /// 如果有考试就返回true
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="clasid"></param>
+        /// <returns></returns>
+        public bool FindCouse(DateTime date, int clasid)
+        {
+            List<Reconcile> list= this.GetListBySql<Reconcile>("select * from Reconcile where ClassSchedule_Id=" + clasid + " and AnPaiDate='" + date + "' and Curriculum_Id is not null");
+            int cout= list.Where(l => l.Curriculum_Id.Contains("考试") || l.Curriculum_Id.Contains("语文") || l.Curriculum_Id.Contains("数学")).Count();
 
+            return cout > 0 ? true : false;
+        }
+        #endregion
     }
 }
 

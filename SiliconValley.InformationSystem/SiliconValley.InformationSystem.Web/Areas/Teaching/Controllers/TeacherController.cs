@@ -22,7 +22,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     [CheckLogin]
     public class TeacherController : Controller
     {
-        // GET: /Teaching/Teacher/GetTimeName
+        // GET: /Teaching/Teacher/AddCourse
         Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
         #region
 
