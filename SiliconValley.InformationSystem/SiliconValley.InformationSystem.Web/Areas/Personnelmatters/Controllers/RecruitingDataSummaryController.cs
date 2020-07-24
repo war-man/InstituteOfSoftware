@@ -175,6 +175,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var empid = emanage.GetList().Where(e => e.EmpName == name).FirstOrDefault().EmployeeId;
             return empid;
         }
+
+
         /// <summary>
         /// 通过编号获取某条招聘记录数据
         /// </summary>
@@ -185,6 +187,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var rptview = rptmanage.GetRptView(id);
             return Json(rptview,JsonRequestBehavior.AllowGet);
         }
+
         /// <summary>
         /// 添加招聘电话追踪基本信息
         /// </summary>
@@ -270,7 +273,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>
         public ActionResult EditTrack(int id) {
             RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
-            EmployeesInfoManage empinfo = new EmployeesInfoManage();
             List<RecruitPhoneTraceView> rptviewlist = new List<RecruitPhoneTraceView>();
 
             ViewBag.Id = id;
@@ -282,18 +284,135 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ViewBag.pname = rpt.Pname;
             return View(rpt);
         }
+        /// <summary>
+        /// 没有面试记录的追踪编辑提交
+        /// </summary>
+        /// <param name="Tracklist"></param>
+        /// <returns></returns>
         [HttpPost]
-        public ActionResult EditTrack(RecruitPhoneTrace rpt) {
+        public ActionResult EditTracks(string Tracklist) {
             var AjaxResultxx = new AjaxResult();
             RecruitPhoneTraceManage rptmanage = new RecruitPhoneTraceManage();
             try
             {
+                string[] str = Tracklist.Split(',');
+                    string id = str[0];
+                    string pid = str[1];
+                    string time = str[2];
+                    string PhoneNumber = str[3];
+                    string Channel = str[4];
+                    string ResumeType = str[5];
+                    string result = str[6];
+                    string remark = str[7];
+                var rpt = rptmanage.GetEntity(int.Parse(id));
+                rpt.Pid =int.Parse(pid);
+                rpt.TraceTime =Convert.ToDateTime(time);
+                rpt.PhoneNumber = PhoneNumber;
+                rpt.Channel = Channel;
+                rpt.ResumeType = ResumeType;
+                rpt.PhoneCommunicateResult = result;
+                rpt.Remark = remark;
+                rptmanage.Update(rpt);
+                AjaxResultxx = rptmanage.Success();
 
             }
             catch (Exception ex)
             {
                 AjaxResultxx = rptmanage.Error(ex.Message);
             }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 有面试记录的追踪编辑提交
+        /// </summary>
+        /// <param name="mydata"></param>
+        /// <param name="Tracklist"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult EditTrack(RecruitPhoneTrace mydata, string Tracklist) {
+            var AjaxResultxx = new AjaxResult();
+            RecruitPhoneTraceManage rptmanage = new RecruitPhoneTraceManage();
+            try
+            {     
+                var rpt1 = rptmanage.GetEntity(mydata.Id);
+                rpt1.TraceTime = mydata.TraceTime;
+                rpt1.PhoneCommunicateResult = mydata.PhoneCommunicateResult;
+                rpt1.Remark = mydata.Remark;
+                rptmanage.Update(rpt1);
+                AjaxResultxx = rptmanage.Success();
+                if (AjaxResultxx.Success) {
+                    string[] str = Tracklist.Split(',');
+                    string id = str[0];
+                    string pid = str[1];
+                    string time = str[2];
+                    string PhoneNumber = str[3];
+                    string Channel = str[4];
+                    string ResumeType = str[5];
+                    string result = str[6];
+                    string remark = str[7];
+                    var rpt2 = rptmanage.GetEntity(int.Parse(id));
+                    rpt2.Pid = int.Parse(pid);
+                    rpt2.TraceTime = Convert.ToDateTime(time);
+                    rpt2.PhoneNumber = PhoneNumber;
+                    rpt2.Channel = Channel;
+                    rpt2.ResumeType = ResumeType;
+                    rpt2.PhoneCommunicateResult = result;
+                    rpt2.Remark = remark;
+                    rptmanage.Update(rpt2);
+                    AjaxResultxx = rptmanage.Success();
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = rptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 追踪记录详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult TrackDetailInfo(int id) {
+            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
+            List<RecruitPhoneTraceView> rptviewlist = new List<RecruitPhoneTraceView>();
+            ViewBag.Id = id;
+            rptviewlist = rmanage.GetRptViewList(id);//获取回访记录集合
+            ViewBag.rptviewlist = rptviewlist;
+            ViewBag.Number = rptviewlist.Count();
+            return View();
+        }
+
+
+        public ActionResult IsEntry(int id) {
+            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
+            var rpt = rmanage.GetRptView(id);
+            ViewBag.Id = id;
+            ViewBag.pid = rpt.Pid;
+            ViewBag.pname = rpt.Pname;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult IsEntry(string id) {
+            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var rpt = rmanage.GetEntity(int.Parse(id));
+                var rptlist = rmanage.GetList().Where(s => s.SonId == rpt.SonId).ToList();
+                foreach (var item in rptlist)
+                {
+                    item.IsEntry = true;
+                    rmanage.Update(item);
+                }
+               AjaxResultxx= rmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = rmanage.Error(ex.Message);
+            }
+           
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
@@ -334,6 +453,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+
 
         public  string Condition(DateTime date, string type)
         {
