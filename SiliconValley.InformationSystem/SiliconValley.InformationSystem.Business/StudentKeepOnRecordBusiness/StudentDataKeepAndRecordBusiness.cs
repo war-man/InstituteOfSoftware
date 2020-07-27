@@ -86,6 +86,11 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// 获取账号业务
         /// </summary>
         public Base_UserBusiness B_USER = new Base_UserBusiness();
+
+        /// <summary>
+        /// 获取备案日志业务类
+        /// </summary>
+        public StudentbeanLogManeger log_s = new StudentbeanLogManeger();
         #endregion
 
 
@@ -879,13 +884,12 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             #region
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where  StudentName ='郭吉鹏' and SalePerson='陈亚红'";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Education,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark,MarketState,MarketType,Info from Sch_Market  where  CreateDate>='2019-01-01' and CreateDate<='2019-12-30' and Source='网络'";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
 
             foreach (ADDdataview item in all)
             {
-
                 StudentPutOnRecord one = new StudentPutOnRecord();
                 one.Reak = item.Remark;
                 one.StuName = item.StudentName;
@@ -948,6 +952,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                     string str1 = ex.Message;
                 }
             }
+            
+            
             #endregion
         }
          

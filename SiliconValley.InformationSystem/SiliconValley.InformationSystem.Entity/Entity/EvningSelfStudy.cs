@@ -37,10 +37,6 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
         public DateTime Newdate { get; set; }
         /// <summary>
-        /// 值班老师
-        /// </summary>
-        public string emp_id { get; set; }
-        /// <summary>
         /// 备注
         /// </summary>
         public string Rmark { get; set; }
@@ -49,6 +45,10 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
         public bool IsDelete { get; set; }
 
+        /// <summary>
+        /// 教员编号
+        /// </summary>
+        public string emp_id { get; set; }
 
         public EvningSelfStudy ()
         {
@@ -62,7 +62,6 @@ namespace SiliconValley.InformationSystem.Entity.Entity
             this.curd_name = curd_name;
             this.Anpaidate = Anpaidate;
             this.Newdate = Newdate;
-            this.emp_id = emp_id;
             this.IsDelete = IsDelete;
         }
     }

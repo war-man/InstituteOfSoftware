@@ -24,7 +24,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
        public DateTime Newdate { get; set; }
        public string Rmark { get; set; }
        public bool IsDelete { get; set; }
-       public string emp_id { get; set; }
        public string ClassNumber { get; set; }
        public string ClassroomName { get; set; }
        public string EmpName { get; set; }
@@ -45,7 +44,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data.MyViewEntity
             e.Newdate = t.Newdate;
             e.Rmark = t.Rmark;
             e.IsDelete = t.IsDelete;
-            e.emp_id = t.emp_id;
             return e;
         }
     }

@@ -130,8 +130,8 @@ namespace SiliconValley.InformationSystem.Business
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="entity">实体</param>
         public void Insert(T entity)
-        {
-            Service.Insert<T>(entity);
+        {            
+                Service.Insert<T>(entity);             
           //  RedisRemove();
         }
         /// <summary>

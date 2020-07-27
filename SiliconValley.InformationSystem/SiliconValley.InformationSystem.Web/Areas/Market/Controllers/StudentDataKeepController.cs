@@ -39,6 +39,7 @@ using BaiduBce.Auth;
 using BaiduBce.Services.Bos;
 using System.Configuration;
 using SiliconValley.InformationSystem.Business.BaiduAPI_Business;
+using SiliconValley.InformationSystem.Entity.ViewEntity.TM_Data;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -326,6 +327,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     a = s_Entity.Add_data(news);
                     if (a.Success == true)
                     {
+                        StudentbeanLog log = new StudentbeanLog() { insertDate = DateTime.Now, userId = UserName.EmpNumber, operationType = Entity.Base_SysManage.EnumType.LogType.添加数据 + ":" + news.StuName + "备案成功！" };
+                        s_Entity.log_s.Add_data(log);
+
                         //判断是否是网咨，如果是网咨则不需要发短信
                         StuInfomationType find_type = s_Entity.StuInfomationType_Entity.SerchSingleData("网络", false);
                         if (news.StuInfomationType_Id != find_type.Id)
@@ -376,13 +380,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     a = new AjaxResult();
                     a.Success = false;
                     a.Msg = "该学生已备案";
+                    StudentbeanLog log = new StudentbeanLog() { insertDate = DateTime.Now , userId = UserName.EmpNumber , operationType = Entity.Base_SysManage.EnumType.LogType.添加数据error + ":"+ news.StuName+ "备案数据重复！" };
+                    s_Entity.log_s.Add_data(log);
                 }
                 return Json(a);
             }
             catch (Exception ex)
             {
                 //将错误填写到日志中     
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                //BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                StudentbeanLog log = new StudentbeanLog() { insertDate = DateTime.Now , userId = UserName.EmpNumber , operationType = Entity.Base_SysManage.EnumType.LogType.添加数据error + ex.Message };
+                s_Entity.log_s.Add_data(log);
                 return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
             }
         }
@@ -535,7 +543,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         }                                                                                 
                 }
             }
-            a = s_Entity.Update_data(olds);    
+            a = s_Entity.Update_data(olds);
+
+            if (a.Success==true)
+            {
+                StudentbeanLog log = new StudentbeanLog() { insertDate = DateTime.Now, userId = UserName.EmpNumber, operationType = Entity.Base_SysManage.EnumType.LogType.编辑数据 + ":" + olds.StuName + "备案数据编辑成功！" };
+                s_Entity.log_s.Add_data(log);
+            }
             string marketvalue= Request.Form["market"];
 
             string phoen = Request.Form["ShorPhone"];
@@ -963,8 +977,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //将文件中的内容写入到数据库中
         public ActionResult IntoServer()
         {
-           string result = "no";
-           string msg = "系统错误,请重试！！！";
+            Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+
+            string result = "no";
+            string msg = "系统错误,请重试！！！";
 
             Excel_Entity = new ExcelHelper();
 
@@ -989,6 +1005,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         string number = s_Entity.Enplo_Entity.FindEmpData(equally_list2[0].EmployeesInfo_Id, false).Phone;
                         string smsText = "备案提示:Excel文件备案成功,但是有重复数据，请去系统查看！！！";
                         string t = PhoneMsgHelper.SendMsg(number, smsText);
+
+                        StudentbeanLog log = new StudentbeanLog() { insertDate = DateTime.Now, userId = UserName.EmpNumber, operationType = Entity.Base_SysManage.EnumType.LogType.添加数据 + ":Excel备案成功,但是有重复数据！" };
+                        s_Entity.log_s.Add_data(log);
                     }
 
                     //有重复的值                                
@@ -1044,13 +1063,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         string number = s_Entity.Enplo_Entity.FindEmpData(nochongfu_list[0].EmployeesInfo_Id,false).Phone;
                         string smsText = "备案提示:Excel文件备案成功，无重复数据";
                         string t = PhoneMsgHelper.SendMsg(number, smsText);
+
+                        StudentbeanLog log = new StudentbeanLog() { insertDate = DateTime.Now, userId = UserName.EmpNumber, operationType = Entity.Base_SysManage.EnumType.LogType.添加数据 + ":Excel备案成功,没有重复数据！" };
+                        s_Entity.log_s.Add_data(log);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                // BusHelper.WriteSysLog(s_Entity.Enplo_Entity.GetEntity(UserName).EmpName +"Excel大批量导入数据时出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+
+                StudentbeanLog log = new StudentbeanLog() { insertDate = DateTime.Now, userId = UserName.EmpNumber, operationType = Entity.Base_SysManage.EnumType.LogType.添加数据error +ex.Message };
+                s_Entity.log_s.Add_data(log);
                 result = "no";
                 msg = "系统异常，请刷新重试！！！";
             }

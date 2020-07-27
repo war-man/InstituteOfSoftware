@@ -72,7 +72,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             TeacherBusiness Teacher_Entity = new TeacherBusiness();
             BaseDataEnumManeger dataEnum_Entity = new BaseDataEnumManeger();
-            ViewBag.myclass = Reconcile_Com.GetClass().Select(c => new SelectListItem() { Text = c.ClassNumber, Value = c.id.ToString() }).ToList(); //获取所有有效的班级
+            //获取阶段
+            List<SelectListItem> g_list =Reconcile_Com.GetGrand_Id().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.grandlist = g_list;
+
             List<SelectListItem> teachers = Teacher_Entity.GetTeachers().Select(t => new SelectListItem() { Value = t.EmployeeId, Text = Reconcile_Com.GetEmpName(t.EmployeeId) }).ToList(); //获取所有未辞职的教员
             teachers.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
             ViewBag.teacher = teachers.OrderBy(t => t.Value).ToList();
@@ -213,10 +217,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             timename_list.Add(new SelectListItem() { Text = "晚一", Value = "晚一" });
             timename_list.Add(new SelectListItem() { Text = "晚二", Value = "晚二" });
             ViewBag.timename = timename_list;
-            EvningSelfStudy find_e = EvningSelefstudy_Entity.GetEntity(id);
+            EvningSelfStudyView find_e = EvningSelefstudy_Entity.FindIdView(id);
             TeacherBusiness Teacher_Entity = new TeacherBusiness();
-            List<SelectListItem> teachers = Teacher_Entity.GetTeachers().Select(t => new SelectListItem() { Value = t.EmployeeId, Text = Reconcile_Com.GetEmpName(t.EmployeeId) }).ToList(); //获取所有未辞职的教员
-            teachers.Add(new SelectListItem() { Text = "--请选择--", Selected = true, Value = "0" });
+            List<SelectListItem> teachers = Teacher_Entity.GetTeachers().Select(t => new SelectListItem() { Value = t.EmployeeId, Text = Reconcile_Com.GetEmpName(t.EmployeeId),Selected= Reconcile_Com.GetEmpName(t.EmployeeId)== find_e.EmpName?true:false }).ToList(); //获取所有未辞职的教员
+            if (find_e.EmpName==null)
+            {
+                teachers.Add(new SelectListItem() { Text = "--无--", Value = "0" ,Selected=true});
+            }
+            else
+            {
+                teachers.Add(new SelectListItem() { Text = "--无--", Value = "0", Selected = false });
+            }
+             
             ViewBag.tt = teachers;
             //获取排课日期
             ViewBag.date = find_e.Anpaidate.Year + "-" + find_e.Anpaidate.Month + "-" + find_e.Anpaidate.Day;
@@ -229,9 +241,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// <param name="e"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult UpdateFunction(EvningSelfStudy e)
+        public ActionResult UpdateFunction(EvningSelfStudyView e)
         {
-            AjaxResult a = EvningSelefstudy_Entity.Update_DataTwo(e);
+            EvningSelfStudy evning= EvningSelefstudy_Entity.FindId(e.id);
+            evning.ClassSchedule_id = e.ClassSchedule_id;
+            evning.Classroom_id = e.Classroom_id;
+            evning.curd_name = e.curd_name;
+            evning.Anpaidate = e.Anpaidate;
+            evning.Rmark = e.Rmark;
+            AjaxResult a = EvningSelefstudy_Entity.Update_Data(evning);
+
+            if (e.EmpName != "0")
+            {
+                //判断是否修改了老师
+                EvningSelefstudy_Entity.FindIdView(e.id);
+            }
+             
             return Json(a, JsonRequestBehavior.AllowGet);
         }
 

@@ -120,11 +120,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 if (teacherid==null)
                 {
-                    findata.emp_id = null;
+                    //findata.emp_id = null;
                 }
                 else
                 {
-                    findata.emp_id = teacherid;
+                   // findata.emp_id = teacherid;
                 }
                 try
                 {
@@ -174,13 +174,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="date"></param>
         /// <param name="classid"></param>
         /// <returns></returns>
-        public static EvningSelfStudy GetEvningData(DateTime date,int classid)
+        public static List<EvningSelfStudy> GetEvningData(DateTime date,int classid)
         {
             string sql = "select * from EvningSelfStudy where AnpaiDate='"+ date + "' and ClassSchedule_id="+classid+"";
             List<EvningSelfStudy> list = evningSelfStudy_Entity.GetListBySql<EvningSelfStudy>(sql);
             // return  evningSelfStudy_Entity.GetAllView().Where(e => e.Anpaidate == date && e.ClassSchedule_id == classid).FirstOrDefault();
 
-            return list.Count>0?list[0]:null;
+            return list;
         }
 
         /// <summary>

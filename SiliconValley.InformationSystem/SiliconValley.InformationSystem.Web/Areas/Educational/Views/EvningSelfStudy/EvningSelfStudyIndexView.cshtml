@@ -151,6 +151,8 @@
                     , { fixed: 'right', title: '操作', toolbar: '#Ev_barDemo', width: 150 }
                 ]]
                 , page: true
+                , limits: [20, 30, 40, 50, 60, 70, 80, 90]
+                ,limit:20
             });
 
             //头工具栏事件
@@ -161,7 +163,7 @@
                         layer.open({
                             type: 2,
                             content: '/Educational/EvningSelfStudy/AnPaiEvningSelfStudyView',
-                            area: ['680px', '550px'],
+                            area: ['750px', '600px'],
                             title: '晚自习安排'
                             , shade: 0.8
                             , anim: 4
@@ -261,9 +263,7 @@
                             });
                         } else {
                             layer.msg("至少选择一条数据！！！", { icon: 2, shade: 0.8 })
-                        }
-                        
-                         
+                        }                                                 
                         break;     
                     
                 };

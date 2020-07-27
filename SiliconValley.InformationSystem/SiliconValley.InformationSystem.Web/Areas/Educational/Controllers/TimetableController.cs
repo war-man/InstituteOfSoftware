@@ -141,8 +141,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational
                 List<EvningSelfStudy> evnings = new List<EvningSelfStudy>();
                 foreach (EvningSelfStudyView c in list1)
                 {
-                    if (c.emp_id==null)
-                    {
+                    //if (c.emp_id==null)
+                    //{
                         EvningSelfStudy study = new EvningSelfStudy();
                         study.id = c.id;
                         study.ClassSchedule_id = c.ClassSchedule_id;
@@ -150,10 +150,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational
                         study.curd_name = c.curd_name;
                         study.Anpaidate = c.Anpaidate;
                         study.Newdate = c.Newdate;
-                        study.emp_id = UserName.EmpNumber;
+                        //study.emp_id = UserName.EmpNumber;
                         study.IsDelete = c.IsDelete;
                         evnings.Add(study);
-                    }
+                    //}
                     
                 }
                 if (evnings.Count>0)

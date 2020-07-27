@@ -1,0 +1,85 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TeacherEACHView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div style="width:95%;margin-top:40px;margin-left:auto;margin-right:auto">
+        <form id="serch_Teacher" class="layui-form" lay-filter="hand_addview">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="LableCss1">模糊查找:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="Tea_Ser" name="Tea_Ser" class="layui-input" /><icon id="icon_Teacher" class="layui-icon iconCss">&#xe615;</icon>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="LableCss1">值班老师:</label>
+                    <div class="layui-input-block" id="teachDiv">
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        $(function () {
+            var form;
+            var tree;
+            var layer;
+            layui.use(['form'], function () {
+                form = layui.form;
+ 
+                layer = layui.layer;
+
+
+                form.on('radio(select_Teacher)', function (data) {
+                    console.log(data.elem); //得到radio原始DOM对象
+                    console.log(data.value); //被点击的radio的value值
+                      //var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                      //parent.layer.close(index); //再执行关闭
+                });  
+               
+            })
+             
+            //获取教员
+            $("#iconMy").click(function () {
+                var Teache_Ser = $("#Teache_Ser").val();
+                if (Teache_Ser.length <= 0) {
+                    layer.msg('请输入教员姓名！');
+                } else {
+                    var ddinde = layer.load(1);
+                    $.ajax({
+                        url: '/Educational/TeacherNight/TeacherSerch',
+                        data: { "teachername": Teache_Ser },
+                        type: 'POST',
+                        success: function (sucdata) {
+                            $("#teachDiv")[0].innerHTML = "";
+                            for (var i = 0; i < sucdata.Data.length; i++) {
+                                $('<input type="radio" name="select_Teacher" lay-filter="select_Teacher" value="' + sucdata.Data[i].Value + '" title="' + sucdata.Data[i].Text + '">').appendTo($("#teachDiv"));
+                            }
+                            layer.close(ddinde);
+                            form.render();
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+    </script>
+</body>
+</html>

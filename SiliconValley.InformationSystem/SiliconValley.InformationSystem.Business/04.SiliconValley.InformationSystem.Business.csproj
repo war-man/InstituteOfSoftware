@@ -167,12 +167,8 @@
     <Compile Include="EducationalBusiness\BreakManeger.cs" />
     <Compile Include="EducationalBusiness\ClassroomManeger.cs" />
     <Compile Include="EducationalBusiness\ClassTeacherKeepManeger.cs" />
-    <Compile Include="EducationalBusiness\CourseTimeManeger.cs" />
     <Compile Include="EducationalBusiness\DutyCostBusiness.cs" />
     <Compile Include="EducationalBusiness\EvningSelfStudyManeger.cs" />
-    <Compile Include="EducationalBusiness\GoodsManeger.cs" />
-    <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
-    <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
     <Compile Include="EducationalBusiness\InternalTrainingCostBusiness.cs" />
     <Compile Include="EducationalBusiness\LaterecordManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
@@ -182,8 +178,8 @@
     <Compile Include="EducationalBusiness\SatisfactionBusiness.cs" />
     <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
     <Compile Include="EducationalBusiness\Staff_Cost_StatisticssBusiness.cs" />
-    <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\SubstituteTeachCourseManeger.cs" />
+    <Compile Include="EducationalBusiness\TeacherAddorBeonDutyManager.cs" />
     <Compile Include="EducationalBusiness\TeacherNightandEvningStudet.cs" />
     <Compile Include="EducationalBusiness\TeacherNightManeger.cs" />
     <Compile Include="EducationalBusiness\TimeTableManeger.cs" />
@@ -260,6 +256,7 @@
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\HeiHuManeger.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\Sch_MarketManeger.cs" />
+    <Compile Include="StudentKeepOnRecordBusiness\StudentbeanLogManeger.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
     <Compile Include="StudentmanagementBusinsess\InterviewStudentsBusiness.cs" />
     <Compile Include="StudentmanagementBusinsess\StudentAttendanceBusiness.cs" />

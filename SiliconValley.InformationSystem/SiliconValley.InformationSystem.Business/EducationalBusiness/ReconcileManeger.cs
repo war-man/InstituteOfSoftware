@@ -1406,7 +1406,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         new_eone.Classroom_id = find_emptyone.ClassRoomId;
                         new_eone.ClassSchedule_id = class_id;
                         new_eone.curd_name = "晚一";
-                        new_eone.emp_id = emp_id;
+                        //new_eone.emp_id = emp_id;
                         new_eone.IsDelete = false;
                         new_eone.Newdate = DateTime.Now;
                         bool e1 = EvningSelfStudy_Entity.Add_Data(new_eone).Success;
@@ -1415,7 +1415,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         new_eTwo.Classroom_id = find_emptyone.ClassRoomId;
                         new_eTwo.ClassSchedule_id = class_id;
                         new_eTwo.curd_name = "晚二";
-                        new_eTwo.emp_id = emp_id;
+                        //new_eTwo.emp_id = emp_id;
                         new_eTwo.IsDelete = false;
                         new_eTwo.Newdate = DateTime.Now;
                         bool e2 = EvningSelfStudy_Entity.Add_Data(new_eTwo).Success;
@@ -1434,8 +1434,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     else
                     {
                         //修改晚自习排课信息
-                        find_eving.emp_id = emp_id;
-                        bool s1 = EvningSelfStudy_Entity.Update_DataTwo(find_eving).Success;
+                        //find_eving.emp_id = emp_id;
+                        //bool s1 = EvningSelfStudy_Entity.Update_DataTwo(find_eving).Success;
                         //获取这个教室的另外一个班级
                         EvningSelfStudy find_eving2 = EvningSelfStudy_Entity.GetOnCurrClass(dateTime, find_eving.Classroom_id).Where(e => e.ClassSchedule_id != class_id).FirstOrDefault();
 
@@ -1444,22 +1444,22 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         find_eving2.Classroom_id = find_empty.ClassRoomId;
                         find_eving2.curd_name = find_empty.TimeName;
                         //修改另外一个表
-                        bool s2 = EvningSelfStudy_Entity.Update_DataTwo(find_eving2).Success;
+                        //bool s2 = EvningSelfStudy_Entity.Update_DataTwo(find_eving2).Success;
                         //添加一条数据
                         EvningSelfStudy new_e = new EvningSelfStudy();
                         new_e.Anpaidate = dateTime;
                         new_e.Classroom_id = find_eving.Classroom_id;
                         new_e.ClassSchedule_id = find_eving.ClassSchedule_id;
                         new_e.curd_name = find_eving.curd_name == "晚一" ? "晚二" : "晚一";
-                        new_e.emp_id = emp_id;
+                        //new_e.emp_id = emp_id;
                         new_e.IsDelete = false;
                         new_e.Newdate = DateTime.Now;
                         bool s3 = EvningSelfStudy_Entity.Add_Data(new_e).Success;
 
-                        if (s1 == true && s2 == true && s3 == true)
-                        {
-                            COU++;
-                        }
+                        //if (s1 == true && s2 == true && s3 == true)
+                        //{
+                        //    COU++;
+                        //}
 
                     }
 
@@ -1530,9 +1530,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public List<Reconcile> GetReconciles(DateTime time)
+        public List<ReconcileView> GetReconciles(DateTime time)
         {
-            return GetReconcileDate(time,false).Where(a => a.AnPaiDate == time).ToList();
+           return this.GetListBySql<ReconcileView>("select * from ReconcileView where AnPaiDate='" + time + "'");             
         }
          
         /// <summary>

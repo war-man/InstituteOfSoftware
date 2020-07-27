@@ -108,13 +108,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         }
 
         /// <summary>
-        /// 获取这个时间的晚自习安排数据
+        /// 获取这个时间的晚自习安排视图数据
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public List<EvningSelfStudy> GetTimeData(DateTime time)
+        public List<EvningSelfStudyView> GetTimeData(DateTime time)
         {
-            return this.GetListBySql<EvningSelfStudy>("select * from EvningSelfStudy where AnpaiDate='" + time + "'");
+            return this.GetListBySql<EvningSelfStudyView>("select * from EvningSelfStudyView where AnpaiDate='" + time + "'");
         }
 
         /// <summary>
@@ -163,20 +163,20 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     this.Insert(e);
                     //EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
                     a.Success = true;
-                    if (e.emp_id != null)//如果安排的老师上课，则要去值班表添加值班信息
-                    {
-                        TeacherNight newteachernightdata = new TeacherNight();
-                        newteachernightdata.OrwatchDate = e.Anpaidate;
-                        newteachernightdata.IsDelete = false;
-                        newteachernightdata.AttendDate = DateTime.Now;
-                        BeOnDutyManeger bb = new BeOnDutyManeger();
-                        newteachernightdata.BeOnDuty_Id = bb.GetSingleBeOnButy("教员晚自习", false).Id;
-                        newteachernightdata.Tearcher_Id = e.emp_id;
-                        newteachernightdata.timename = e.curd_name;
-                        newteachernightdata.ClassSchedule_Id = e.ClassSchedule_id;
-                        newteachernightdata.ClassRoom_id = e.Classroom_id;
-                        a = TeacherNightandEvningStudet.AddTeacherNighData(newteachernightdata);
-                    }
+                    //if (e.emp_id != null)//如果安排的老师上课，则要去值班表添加值班信息
+                    //{
+                    //    TeacherNight newteachernightdata = new TeacherNight();
+                    //    newteachernightdata.OrwatchDate = e.Anpaidate;
+                    //    newteachernightdata.IsDelete = false;
+                    //    newteachernightdata.AttendDate = DateTime.Now;
+                    //    BeOnDutyManeger bb = new BeOnDutyManeger();
+                    //    newteachernightdata.BeOnDuty_Id = bb.GetSingleBeOnButy("教员晚自习", false).Id;
+                       
+                    //    newteachernightdata.timename = e.curd_name;
+                    //    newteachernightdata.ClassSchedule_Id = e.ClassSchedule_id;
+                    //    newteachernightdata.ClassRoom_id = e.Classroom_id;
+                    //    a = TeacherNightandEvningStudet.AddTeacherNighData(newteachernightdata);
+                    //}
 
                 }
             }
@@ -260,13 +260,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 if (find_e != null)
                 {
-                    this.Delete(find_e);
-                    //判断是否有老师值班，如果值班就将值班数据删除
-                    if (find_e.emp_id != null)
-                    {
-                        TeacherNightandEvningStudet.SetTeacherNightData(find_e.Anpaidate, null, find_e.ClassSchedule_id, find_e.Classroom_id, find_e.Anpaidate, find_e.curd_name, find_e.ClassSchedule_id);
-                    }
-                    //EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
+                    this.Delete(find_e);                    
                     a.Success = true;
                 }
             }
@@ -322,31 +316,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return a;
         }
-        public AjaxResult Update_DataTwo(EvningSelfStudy new_e)
-        {
-            EvningSelfStudy find = this.GetEntity(new_e.id);//原来的数据
-            AjaxResult a = new AjaxResult();
-            try
-            {
-                if (new_e.emp_id == "0")
-                {
-                    new_e.emp_id = null;
-                }
-                this.Update(new_e);
-                //改变值班数据
-                TeacherNightandEvningStudet.SetTeacherNightData(find.Anpaidate, new_e.emp_id, find.ClassSchedule_id, new_e.Classroom_id, new_e.Anpaidate, new_e.curd_name, new_e.ClassSchedule_id);
-                //redisCache.RemoveCache("EvningSelfStudyList");
-                a.Success = true;
-            }
-            catch (Exception ex)
-            {
-
-                a.Msg = ex.Message;
-                a.Success = false;
-            }
-            return a;
-        }
-
+      
         public AjaxResult Update_Data(List<EvningSelfStudy> new_e)
         {
             AjaxResult a = new AjaxResult();
@@ -437,7 +407,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                                 new_ev.Classroom_id = Convert.ToInt32(find_r.ClassRoom_Id);
                                 new_ev.ClassSchedule_id = classSchedule_all[i].id;
                                 new_ev.curd_name = timename[timenameindex];
-                                new_ev.emp_id = null;
+                               
                                 new_ev.IsDelete = false;
                                 new_ev.Newdate = DateTime.Now;
                                 ev_list.Add(new_ev);
@@ -452,7 +422,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                                         new_ev2.Classroom_id = Convert.ToInt32(find_r2.ClassRoom_Id);
                                         new_ev2.ClassSchedule_id = find_r2.ClassSchedule_Id;
                                         new_ev2.curd_name = new_ev.curd_name == "晚一" ? "晚二" : "晚一";
-                                        new_ev2.emp_id = null;
+                                     
                                         new_ev2.IsDelete = false;
                                         new_ev2.Newdate = DateTime.Now;
                                         ev_list.Add(new_ev2);
