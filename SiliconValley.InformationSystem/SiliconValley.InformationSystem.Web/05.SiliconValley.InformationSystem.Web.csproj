@@ -1018,7 +1018,6 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptUpdate.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmp.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
@@ -1406,9 +1405,13 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.ttf" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
+    <Content Include="Scripts\excel.js" />
+    <Content Include="Scripts\excel.min.js" />
     <Content Include="Scripts\js\index.js" />
     <Content Include="Scripts\js\Index2.js" />
     <Content Include="Scripts\js\jquery-1.7.2-min.js" />
+    <Content Include="Scripts\layui\excel.js" />
+    <Content Include="Scripts\layui\excel.min.js" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\live2d\assets\autoload.js" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.svg" />
@@ -1868,6 +1871,9 @@
     <Content Include="Areas\Teachingquality\Views\Stuportfolio\Dormitoryinformation.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\SetUp.cshtml" />
     <Content Include="Areas\Educational\Views\Timetable\TeacherTable.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\AddTrack.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\EditTrack.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Shift.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

@@ -616,10 +616,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 {
 
                     Hadmst.EndDai(FormerClass);
-                    var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
-                    var fint = this.FintClassSchedule(FormerClass);
-                    fint.ClassstatusID = staid;
-                    this.Update(fint);
+                    //var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
+                    //var fint = this.FintClassSchedule(FormerClass);
+                    //fint.ClassstatusID = staid;
+                    //this.Update(fint);
                   
                 }
 
@@ -656,6 +656,56 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             catch (Exception ex)
             {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
+        }
+        /// <summary>
+        /// 转班业务
+        /// </summary>
+        /// <param name="FormerClass">原班</param>
+        /// <param name="List">分配的班级</param>
+        /// <param name="StudentID">学号</param>
+        /// <returns></returns>
+        public AjaxResult Shift(int FormerClass, int List, string StudentID) {
+
+            AjaxResult retus = null;
+            try
+            {
+                retus = new SuccessResult();
+                retus.Success = true;
+                string[] Student = StudentID.Split(',');
+                List<ScheduleForTrainees> UpdateScheduleFor = new List<ScheduleForTrainees>();
+                List<ScheduleForTrainees> AddScheduleFor = new List<ScheduleForTrainees>();
+                foreach (var item in Student)
+                {
+                    var UpdateSche = ss.GetList().Where(a => a.StudentID == item && a.ID_ClassName == FormerClass).FirstOrDefault();
+                    if (UpdateSche != null)
+                    {
+                        UpdateSche.CurrentClass = false;
+                        UpdateScheduleFor.Add(UpdateSche);
+                    }
+                    ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
+                    scheduleForTrainees.ID_ClassName = List;
+                    scheduleForTrainees.StudentID = item;
+                    scheduleForTrainees.CurrentClass = true;
+                    scheduleForTrainees.AddDate = DateTime.Now;
+                    scheduleForTrainees.ClassID = this.GetEntity(List).ClassNumber;
+                    AddScheduleFor.Add(scheduleForTrainees);
+                }
+                ss.Update(UpdateScheduleFor);
+                ss = new ScheduleForTraineesBusiness();
+                ss.Insert(AddScheduleFor);
+                retus.Msg = "转班成功";
+            }
+            catch (Exception ex)
+            {
+
                 retus = new ErrorResult();
                 retus.Msg = "服务器错误";
 

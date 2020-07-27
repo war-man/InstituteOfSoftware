@@ -402,6 +402,7 @@
                         if (ViewBag.Stage == "S3" || ViewBag.Stage == "S4")
                         {
                             <div>
+                                <button type="button" id="Shift" class="layui-btn layui-btn-fluid mybut">多人转班</button>
                                 <button type="button" id="Combinedclasses" class="layui-btn layui-btn-fluid mybut">合班分配班级</button>
                             </div>
                         }
@@ -1129,23 +1130,18 @@
         });
         //异动数据处理
         $("#transactionprocessing").click(function () {
-
             var url = "/Teachingquality/StudentTransaction/transactionprocessing?ClassID=" + $("#ClassName").text();
           //  Popup(url, "学员异动处理", 1000, 800);
-
             layer.open({
                 type: 2,
                 content: url
                 , area: ['1000px', '800px']
                 , title: ""
-
                 , shade: 0.3
                 , cancel: function () {
                     StudentDate();
                 }
                 , anim: 1
-
-
             });
 
         });
@@ -1185,6 +1181,28 @@
                     type: 2,
                     area: ['700px', '700px']
                     , content: "/Teachingquality/ClassSchedule/Combinedclasses?StudentID=" + x + "&ClassID=" + $("#ClassName").text()
+                    , end: function () { StudentDate(); }
+                    , anim: 1,
+                    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                });
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+        });
+        //转班业务
+        $("#Shift").click(function () {
+            if ($(".color").length > 0) {
+                var x = "";
+                var list = $(".color");
+                for (var i = 0; i < list.length; i++) {
+                    x += $($(list[i]).children()[0]).text() + ",";
+                }
+
+                layer.open({
+                    title: "拆班",
+                    type: 2,
+                    area: ['700px', '500px']
+                    , content: "/Teachingquality/ClassSchedule/Shift?StudentID=" + x + "&ClassID=" + $("#ClassName").text()
                     , end: function () { StudentDate(); }
                     , anim: 1,
                     //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响

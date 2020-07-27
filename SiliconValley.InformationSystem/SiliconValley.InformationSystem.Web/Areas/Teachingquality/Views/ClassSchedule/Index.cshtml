@@ -158,15 +158,12 @@
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
               
                 if (layEvent === 'select') { //查看
-                    $.post("", function (dt) {
-                        if (dt == true) {
+                  
                             window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + data.id;
-                        } else {
-                            layer.msg("别以为你长得好看,就可以进去看！");
-                        }
-                    });
+                        
+                
                    
-                    console.log(data);
+                 
                 }
 
             });
