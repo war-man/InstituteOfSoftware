@@ -73,33 +73,40 @@
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">预面试时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ForwardDate" id="ForwardDate" class="layui-input" style="border:0px" readonly="readonly">
+                        </div>
+                    </div>
+                  
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">面试次数:</label>
                         <div class="layui-input-block">
                             <input type="text" class="layui-input" readonly="readonly" style="border:0px" value="@ViewBag.Number" />
                         </div>
                     </div>
-                </div>
-
-                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">面试时间:</label>
                         <div class="layui-input-block">
-                            @*@Html.TextBoxFor(a => a.TraceTime, new Dictionary<string, object>() { { "class", "layui-input" } })*@
                             <input type="text" name="TraceTime1" id="TraceTime1" class="layui-input">
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">面试结果:</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="PhoneCommunicateResult1" id="PhoneCommunicateResult1" class="layui-input">
                         </div>
                     </div>
                 </div>
 
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">面试结果:</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="PhoneCommunicateResult1" value="False" title="未通过" checked>
+                            <input type="radio" name="PhoneCommunicateResult1" value="True" title="通过">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
                             <input type="text" name="Remark1" id="Remark1" class="layui-input linu">
@@ -128,6 +135,7 @@
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
                     data.TraceTime = changeDateTimeFormat(data.TraceTime);
+                    data.ForwardDate = changeDateTimeFormat(data.ForwardDate);
                     form.val("formtest", data);
 
                 });
@@ -148,9 +156,9 @@
             });
             //添加提交
             form.on('submit(demo1)', function (data) {
-                console.log(data.field.TraceTime1);
                 data.field.TraceTime = $("#TraceTime1").val();
-                data.field.PhoneCommunicateResult = $("#PhoneCommunicateResult1").val();
+                console.log(data.field.PhoneCommunicateResult1 );
+                data.field.PhoneCommunicateResult = data.field.PhoneCommunicateResult1 ;
                 data.field.Remark = $("#Remark1").val();
                 $.post("/Personnelmatters/RecruitingDataSummary/AddTrack", data.field, function (data) {
                     if (data.Success) {

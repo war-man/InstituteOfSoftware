@@ -203,6 +203,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 rpt.IsEntry = false;
                 rpt.IsDel = false;
+                rpt.PhoneCommunicateResult = false;
                 rmanage.Insert(rpt);
                 AjaxResultxx = rmanage.Success();
               
@@ -247,7 +248,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 rptnew.Name = beforerpt.Name;
                 rptnew.PhoneNumber = beforerpt.PhoneNumber;
                 rptnew.TraceTime = rpt.TraceTime;
-                rptnew.PhoneCommunicateResult = rpt.PhoneCommunicateResult;
+                rptnew.ForwardDate = rpt.ForwardDate;
+                rptnew.PhoneCommunicateResult =rpt.PhoneCommunicateResult;
                 rptnew.Channel = beforerpt.Channel;
                 rptnew.ResumeType = beforerpt.ResumeType;
                 rptnew.IsEntry = beforerpt.IsEntry;
@@ -257,6 +259,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
              
                rptmanage.Insert(rptnew);
                 AjaxResultxx = rptmanage.Success();
+                if (AjaxResultxx.Success) {
+                    beforerpt.PhoneCommunicateResult = rptnew.PhoneCommunicateResult;
+                    rptmanage.Update(beforerpt);
+                    AjaxResultxx = rptmanage.Success();
+                }
             }
             catch (Exception ex)
             {
@@ -302,15 +309,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     string PhoneNumber = str[3];
                     string Channel = str[4];
                     string ResumeType = str[5];
-                    string result = str[6];
-                    string remark = str[7];
+                    string remark = str[6];
                 var rpt = rptmanage.GetEntity(int.Parse(id));
                 rpt.Pid =int.Parse(pid);
                 rpt.TraceTime =Convert.ToDateTime(time);
                 rpt.PhoneNumber = PhoneNumber;
                 rpt.Channel = Channel;
                 rpt.ResumeType = ResumeType;
-                rpt.PhoneCommunicateResult = result;
                 rpt.Remark = remark;
                 rptmanage.Update(rpt);
                 AjaxResultxx = rptmanage.Success();
@@ -348,18 +353,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     string PhoneNumber = str[3];
                     string Channel = str[4];
                     string ResumeType = str[5];
-                    string result = str[6];
-                    string remark = str[7];
+                   // string result = str[6];
+                    string remark = str[6];
                     var rpt2 = rptmanage.GetEntity(int.Parse(id));
                     rpt2.Pid = int.Parse(pid);
                     rpt2.TraceTime = Convert.ToDateTime(time);
                     rpt2.PhoneNumber = PhoneNumber;
                     rpt2.Channel = Channel;
                     rpt2.ResumeType = ResumeType;
-                    rpt2.PhoneCommunicateResult = result;
+                  //  rpt2.PhoneCommunicateResult =Convert.ToBoolean(result);
                     rpt2.Remark = remark;
+                    rpt2.PhoneCommunicateResult = rpt1.PhoneCommunicateResult;
                     rptmanage.Update(rpt2);
                     AjaxResultxx = rptmanage.Success();
+                 
                 }
             }
             catch (Exception ex)
@@ -484,8 +491,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                month = g.Key.month,//月份
                                position = g.Key.Pid,//岗位
                                resumenum = g.Count(),//简历总数
-                               PhoneCommunicatenum= g.Count(t=>t.PhoneCommunicateResult != null),//电话呼出总数
-                               //invitednum=g.Count(t=>t.FirstInterviewDate!=null),//邀约总数
+                               PhoneCommunicatenum= g.Count(t=>t.PhoneCommunicateResult != null),//联系的总数
+                               invitednum=g.Count(t=>t.ForwardDate != null),//邀约总数
                                //Facednum=g.Count(t=>t.IsInterview==true),//当月到面总数
                                //Refacednum=g.Count(t=>t.RetestResult!="-1"),//当月复试总数
                                //Refacepassednum=g.Count(t=>t.RetestResult=="通过"),//当月复试通过总数

@@ -115,5 +115,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             }
             return result;
         }
+
+        //public MeritsCheck GetBaseEmp(string empid) {
+        //    MeritsCheck mc = new MeritsCheck();
+        //    return mc;
+        //}
     }
 }

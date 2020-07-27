@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public Nullable<System.DateTime> TraceTime { get; set; }//追踪时间
         public string Channel { get; set; }//渠道
         public string ResumeType { get; set; }//简历类型
-        public string PhoneCommunicateResult { get; set; }//联系结果
+        public Nullable<bool> PhoneCommunicateResult { get; set; }//联系结果
         public Nullable<bool> IsEntry { get; set; }//是否入职
         public string Remark { get; set; }//备注
         public Nullable<bool> IsDel { get; set; }
@@ -22,5 +22,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public Nullable<int> Deptid { get; set; }//部门
         public string Pname { get; set; }//应聘岗位
         public string Dname { get; set; }//应聘部门
+        public Nullable<System.DateTime> ForwardDate { get; set; }//预面试时间
     }
 }

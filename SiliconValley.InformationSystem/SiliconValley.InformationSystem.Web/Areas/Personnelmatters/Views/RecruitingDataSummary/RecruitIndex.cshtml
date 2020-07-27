@@ -34,8 +34,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label" style="width:100px;margin-left:-20px;">部门:</label>
                         <div class="layui-input-inline">
-                            <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
-                            </select>
+                            <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search=""></select>
 
                         </div>
                     </div>
@@ -76,14 +75,15 @@
     </div>
 </div>
 
+@*招聘电话追踪记录的联系结果属性*@
+<script type="text/html" id="switchTp1">
+    <input type="checkbox" name="PhoneCommunicateResult" value="{{d.Id}}" lay-skin="switch" lay-text="通过|未通过" lay-filter="IsInterviewDemo" {{ d.PhoneCommunicateResult == true ? 'checked' : '' }}>
+</script>
 @*招聘电话追踪记录的是否入职属性*@
 <script type="text/html" id="switchTp2">
     <input type="checkbox" name="IsEntry" value="{{d.Id}}" lay-skin="switch" lay-text="是|否" lay-filter="entryDemo" {{ d.IsEntry == true ? 'checked' : '' }}>
 </script>
-@*招聘电话追踪记录的是否面试属性*@
-<script type="text/html" id="switchTp3">
-    <input type="checkbox" name="IsInterview" value="{{d.Id}}" lay-skin="switch" lay-text="是|否" lay-filter="IsInterviewDemo" {{ d.IsInterview == true ? 'checked' : '' }}>
-</script>
+
 
 @*复试结果*@
 <script type="text/html" id="result">
@@ -119,7 +119,7 @@
                     , { field: 'TraceTime', title: '联系时间', width: 160, sort: true, templet: function (d) { return changeDateTimeFormat(d.TraceTime); } }
                     , { field: 'Channel', title: '渠道', width: 95, sort: true }
                     , { field: 'ResumeType', title: '简历类型', sort: true, width: 110 }
-                    , { field: 'PhoneCommunicateResult', title: '联系结果', width: 160 }
+                    , { field: 'PhoneCommunicateResult', title: '联系结果', width: 160, templet: '#switchTp1', unresize: true }
                     //, { field: 'FirstInterviewDate', title: '初试日期', width: 100, templet: function (d) { return GetYMD(d.FirstInterviewDate); } }
                     //, { field: 'IsInterview', title: '是否面试', width: 100, templet: '#switchTp3', unresize: true }
                     //, { field: 'FirstInterviewResult', title: '初试结果', width: 100 }
@@ -405,7 +405,7 @@
                     }
                 }
             });
-          
+
         }
 
         //格式化时间
