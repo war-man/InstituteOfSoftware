@@ -377,11 +377,11 @@
             var id = $("#Id").val();
             $.get("/Personnelmatters/RecruitingDataSummary/GetRPTById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
-                    var form = layui.form;
+                    var form = layui.form;                                                                     
                     $("#EmpName").val(data.Name);
                     $("#PositionId").val(data.Pid);
                     $("#Phone").val(data.PhoneNumber);
-
+                    $("#InvitedSource").val(data.Channel);
                     form.val("formtest", data);
 
                 });
