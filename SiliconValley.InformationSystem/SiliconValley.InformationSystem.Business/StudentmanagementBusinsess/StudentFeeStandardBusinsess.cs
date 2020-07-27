@@ -378,10 +378,16 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                    // }
                 }
             }
-            if (studentfee.GetListBySql<StudentFeeRecord>("select * from StudentFeeRecord where IsDelete='false' and StudenID='" + studentid + "' and Costitemsid='" + costitemsBusiness.GetList().Where(a => a.Name == "宿舍押金" && a.IsDelete == false&&a.Grand_id==Grand_id).FirstOrDefault().id+"'").FirstOrDefault()!=null)                
+
+           var cost= costitemsBusiness.GetList().Where(a => a.Name == "宿舍押金" && a.IsDelete == false && a.Grand_id == Grand_id).FirstOrDefault();
+            if (cost!=null)
             {
-                countfee1=5;
+                if (studentfee.GetListBySql<StudentFeeRecord>("select * from StudentFeeRecord where IsDelete='false' and StudenID='" + studentid + "' and Costitemsid='" +cost.id +"'").FirstOrDefault() != null)
+                {
+                    countfee1 = 5;
+                }
             }
+           
 
            var z= costitemsBusiness.GetList().Where(a => a.Grand_id == Grand_id&&a.IsDelete==false).Select(a => new { a.id, a.Name, a.Amountofmoney, Rategory = costitemssX.GetEntity(a.Rategory).Name, countfee, countfee1 }).ToList();
             return z;

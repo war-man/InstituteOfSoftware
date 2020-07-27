@@ -193,9 +193,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         }
         RedisCache redis = new RedisCache();
         //获取所有数据
-        public ActionResult GetDate(int page, int limit, string Name, string Sex, string StudentNumber, string identitydocument)
+        public ActionResult GetDate(int page, int limit, string Name, string Sex, string StudentNumber, string identitydocument,string Stu)
         {
-            //  List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
+            List<StudentInformation> listx = new List<StudentInformation>();
             //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
             List<StudentInformation> list = classschedu.HeadteStudent();
             foreach (var item in list)
@@ -233,7 +233,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 {
                     list = list.Where(a => a.identitydocument.Contains(identitydocument)).ToList();
                 }
+                if (!string.IsNullOrEmpty(Stu))
+                {
+                    //Trim
+                    string[] st = Stu.Split('-');
+                    string kai = st[0] + st[1];
+                    string jie = st[2] + st[3];
 
+                    if (kai.Trim()==jie.Trim())
+                    {
+                        foreach (var item in list)
+                        {
+                            if (item.StudentNumber.Substring(0, 4) == kai.Substring(2).Trim())
+                            {
+                                listx.Add(item);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in list)
+                        {
+                            if (item.StudentNumber.Substring(0, 4) == kai.Substring(2).Trim())
+                            {
+                                listx.Add(item);
+                            }
+
+                            if (item.StudentNumber.Substring(0, 4) == jie.Substring(2).Trim())
+                            {
+                                listx.Add(item);
+                            }
+                        }
+                    }
+                    list = listx;
+                }
 
             }
             catch (Exception ex)
@@ -664,7 +697,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //班级学员业务类
             BaseBusiness<ScheduleForTraineesview> ScheduleForTraineesviewBusiness = new BaseBusiness<ScheduleForTraineesview>();
 
-            var MyClass = classschedu.GetListBySql<ClassSchedule>("select *from ClassSchedule").ToList();
+            var MyClass = classschedu.GetListBySql<ClassSchedule>("select *from ClassSchedule").Where(a => a.ClassstatusID == null).ToList();
 
 
             if (!string.IsNullOrEmpty(Stage_id))
