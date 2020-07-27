@@ -47,7 +47,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             //  int DepaID = Depa.GetList().Where(a => a.DeptName.Contains("教质部") && a.IsDel == false).FirstOrDefault().DeptId;
             var list = dbtext.GetList().ToList();
-            if (user.UserName != "Admin")
+            if (dbtext.GetList().Where(a => a.informatiees_Id == user.EmpNumber).FirstOrDefault() != null)
             {
                 //employeesInfoManage.GetDeptByEmpid(user.EmpNumber).DeptId;//部门
                 list= dbtext.GetList().Where(a =>  employeesInfoManage.GetDeptByEmpid(a.informatiees_Id).DeptId == employeesInfoManage.GetDeptByEmpid(user.EmpNumber).DeptId).ToList();

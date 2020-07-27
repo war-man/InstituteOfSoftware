@@ -362,6 +362,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         public object Studentfeepayment(int Grand_id, string studentid)
         {
             int countfee = 0;
+            int countfee1 = 0;
             var idcost = costitemssX.GetList().Where(a => a.IsDelete == false && a.Name == "学杂费").FirstOrDefault().id;
             var costitemslist = costitemsBusiness.costitemslist().Where(a => a.Rategory == idcost&&a.IsDelete==false).ToList();
             foreach (var item in costitemslist)
@@ -376,10 +377,20 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                         countfee++;
                    // }
                 }
-
             }
 
-            return costitemsBusiness.GetList().Where(a => a.Grand_id == Grand_id&&a.IsDelete==false).Select(a => new { a.id, a.Name, a.Amountofmoney, Rategory = costitemssX.GetEntity(a.Rategory).Name, countfee }).ToList();
+           var cost= costitemsBusiness.GetList().Where(a => a.Name == "宿舍押金" && a.IsDelete == false && a.Grand_id == Grand_id).FirstOrDefault();
+            if (cost!=null)
+            {
+                if (studentfee.GetListBySql<StudentFeeRecord>("select * from StudentFeeRecord where IsDelete='false' and StudenID='" + studentid + "' and Costitemsid='" +cost.id +"'").FirstOrDefault() != null)
+                {
+                    countfee1 = 5;
+                }
+            }
+           
+
+           var z= costitemsBusiness.GetList().Where(a => a.Grand_id == Grand_id&&a.IsDelete==false).Select(a => new { a.id, a.Name, a.Amountofmoney, Rategory = costitemssX.GetEntity(a.Rategory).Name, countfee, countfee1 }).ToList();
+            return z;
         }
         /// <summary>
         /// 根据学号获取姓名，性别，班级，身份证，学号
@@ -465,9 +476,13 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                         payviewPaymentverslist.Add(payviewPaymentver);
                     }
                     PayviewPaymentverBusiness.Insert(payviewPaymentverslist);
+                 
+                   
                     retus = new SuccessResult();
                     retus.Success = true;
                     retus.Msg = "录入费用成功";
+                  
+                   
                     BusHelper.WriteSysLog("录入费用模拟数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 }
                 catch (Exception ex)
@@ -1177,6 +1192,16 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                         studentFeeRecord.StudenID = view.StudenID;
                         studentFeeRecordslist.Add(studentFeeRecord);
                     }
+                    var x2 = Preentryfeebusenn.GetList().Where(a=>a.keeponrecordid==studentInformationBusiness.GetEntity(PayviewBusiness.GetEntity(pay[1].Payviewid).StudenID).StudentPutOnRecord_Id&&a.Refundornot==null).ToList();
+                    if (x2.Count>0)
+                    {
+                        foreach (var item in x2)
+                        {
+                            item.Refundornot = true;
+                           
+                        }
+                        Preentryfeebusenn.Update(x2);
+                    }
                     studentfee.Insert(studentFeeRecordslist);
                     if (studentFeeRecordslist.Count<2)
                     {
@@ -1275,10 +1300,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 studentFee.StudenID = preentryfee.keeponrecordid.ToString() + "," + preentryfee.ClassID;
                 preentryfee.ClassID = classid[0];
                 Preentryfeebusenn.Insert(preentryfee);
-
-             
-               
-
+                StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
+                studentDataKeepAndRecordBusiness.ChangeStudentState(preentryfee.keeponrecordid);
                   List<Payview> liststudents = new List<Payview>();
             
                 studentFee.Amountofmoney = preentryfee.Amountofmoney;
@@ -1319,6 +1342,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             public string identitydocument { get; set; }
             public string ClassNumber { get; set; }
             public string OddNumbers { get; set; }
+            public DateTime AddDate { get; set; }
         }
         /// <summary>
         /// 获取已缴预入费数据
@@ -1326,7 +1350,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public object PreentryfeeDates(int page, int limit)
+        public object PreentryfeeDates(int page, int limit, string StuName, string identitydocument, string qBeginTime, string qEndTime)
         {
             var preenlist = Preentryfeebusenn.GetList().Where(A=>A.IsDit==false).ToList();
             List<Preeviews> list = new List<Preeviews>();
@@ -1345,11 +1369,31 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                     Amountofmoney= item.Amountofmoney,
                     identitydocument= item.identitydocument,
                     ClassNumber= item.ClassID,
-                    OddNumbers=item.OddNumbers==null?"请补录": item.OddNumbers
+                    OddNumbers=item.OddNumbers==null?"请补录": item.OddNumbers,
+                    AddDate=item.AddDate
 
                 };
                 list.Add(x);
             }
+            if (!string.IsNullOrEmpty(StuName))
+            {
+                list=list.Where(a => a.StuName == StuName).ToList();
+            }
+            if (!string.IsNullOrEmpty(identitydocument))
+            {
+                list = list.Where(a => a.identitydocument == identitydocument).ToList();
+            }
+            if (!string.IsNullOrEmpty(qBeginTime))
+            {
+                DateTime time = Convert.ToDateTime(qBeginTime);
+                list = list.Where(a => Convert.ToDateTime(a.AddDate).ToShortDateString().ToDateTime() >= time).ToList();
+            }
+            if (!string.IsNullOrEmpty(qEndTime))
+            {
+                DateTime time = Convert.ToDateTime(qEndTime);
+                list = list.Where(a => Convert.ToDateTime(a.AddDate).ToShortDateString().ToDateTime() <= time).ToList();
+            }
+
             var dataList = list.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new
@@ -1372,9 +1416,12 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             try
             {
                 retus = new SuccessResult();
-                if (Preentryfeebusenn.GetEntity(refund.Preentid).Refundornot==null)
+                var x = Preentryfeebusenn.GetEntity(refund.Preentid);
+                if (x.Refundornot==null)
                 {
+                    x.Refundornot = false;
                     refund.AddDate = DateTime.Now;
+                    Preentryfeebusenn.Update(x);
                     RefundBusiness.Insert(refund);
                     retus.Msg = "退费成功";
                 }

@@ -24,6 +24,7 @@
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="addTrack">添加追踪</a>
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-xs" lay-event="Entry">入职</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">查看详情</a>
             </script>
         </div>
@@ -155,6 +156,9 @@
                         break;
                     case 'detail':
                         DetailTrace(data.Id);
+                        break;
+                    case 'Entry':
+                        ConfirmEntry(data.Id);
                 };
             });
 
@@ -355,13 +359,53 @@
                 var layer = layui.layer;      //layui对象
                 layer.open({
                     type: 2
-                    , area: ["1100px", "700px"]
+                    , area: ["1060px", "620px"]
                     , title: "编辑招聘电话追踪数据"
                     , content: '/Personnelmatters/RecruitingDataSummary/EditTrack?id=' + id
                     , anim: 2
                 });
 
             })
+        }
+
+        //招聘电话追踪详情
+        function DetailTrace(id) {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["1060px", "620px"]
+                    , title: "编辑招聘电话追踪数据"
+                    , content: '/Personnelmatters/RecruitingDataSummary/TrackDetailInfo?id=' + id
+                    , anim: 2
+                });
+
+            })
+        }
+
+        //确认入职
+        function ConfirmEntry(id) {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: '/Personnelmatters/RecruitingDataSummary/GetRPTById/?id=' + id,
+                // data: data.EmployeeId,
+                success: function (data) {
+                    if (data.IsEntry) {
+                        layer.msg("该应聘者已入职！");
+                        //layui.table.reload('myEmpInfo');
+                    } else {
+                        layer.open({
+                            type: 2
+                            , area: ["1300px", "720px"]
+                            , title: "填写应聘者入职信息"
+                            , content: '/Personnelmatters/RecruitingDataSummary/IsEntry?id=' + id
+                            , anim: 2
+                        });
+                    }
+                }
+            });
+          
         }
 
         //格式化时间

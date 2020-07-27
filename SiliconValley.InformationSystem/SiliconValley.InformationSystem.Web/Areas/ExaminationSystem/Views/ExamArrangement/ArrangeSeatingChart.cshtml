@@ -18,78 +18,84 @@
             margin: 0 auto;
             border-bottom: 1px solid gray;
         }
+
         thead tr th {
-            font-size:25px;
+            font-size: 25px;
         }
+
         table {
-            border :1px solid gray;
-        }
-        table th  {
             border: 1px solid gray;
         }
-      
+
+            table th {
+                border: 1px solid gray;
+            }
     </style>
 
 
 }
-    <div id="currentWarp">
-        <div id="toordiv">
+<div id="currentWarp">
+    <div id="toordiv">
 
-            <form class="layui-form">
+        <form class="layui-form">
 
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">考试</label>
-                        <div class="layui-input-inline">
-                            <select name="exam">
-                                @{ 
-                                    foreach (var item in ViewBag.Exams as List<Examination>)
-                                    {
-                                        <option value="@item.ID"> @item.Title </option>
-                                    }
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">考试</label>
+                    <div class="layui-input-inline">
+                        <select name="exam">
+                            @{
+                                foreach (var item in ViewBag.Exams as List<Examination>)
+                                {
+                                    <option value="@item.ID"> @item.Title </option>
                                 }
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-
-                        <button type="button" id="createSeat" class="layui-btn layui-btn-danger"><i class="layui-icon layui-icon-list"></i>生成座位表</button>
+                            }
+                        </select>
                     </div>
                 </div>
 
-            </form>
-        </div>
-        <div id="seat">
+                <div class="layui-inline">
 
 
-            <div class="layui-tab">
-                <ul class="layui-tab-title"></ul>
-
-                <div class="layui-tab-content">
-
+                    <button type="button" id="createSeat" class="layui-btn layui-btn-danger"><i class="layui-icon layui-icon-list"></i>生成座位表</button>
                 </div>
+            </div>
 
+        </form>
+    </div>
+    <div id="seat">
+
+
+        <div class="layui-tab">
+            <ul class="layui-tab-title"></ul>
+
+            <div class="layui-tab-content">
 
             </div>
 
 
-
-
-
-
         </div>
 
-        <div>
-            <button id="print" class="layui-btn layui-btn-primary"> 打印</button>
-        </div>
+
+
+
 
 
     </div>
 
+
+   
+   
+    <div>
+        <button id="print" class="layui-btn layui-btn-primary"> 打印</button>
+    </div>
+
+
+</div>
+
 <script type="text/template" id="seattable">
-    <div class="container">
-        <table  style="width:800px;" border="1" cellspacing="0"  class="table table-striped">
+    <div class="container" id="printAreazhong">
+        <table style="width:800px;" border="1"  cellspacing="0" class="table table-striped">
             <thead>
 
                 <tr class="row">
@@ -101,9 +107,7 @@
                     <th class="col-lg-3">身份证</th>
                 </tr>
             </thead>
-            <tbody>
-               
-            </tbody>
+            <tbody></tbody>
         </table>
 
     </div>
@@ -127,46 +131,28 @@
 @section script{
 
     <script src="~/Scripts/underscore.js"></script>
-    <script src="~/Scripts/LodopFuncs.js"></script>
+    @*<script src="~/Scripts/LodopFuncs.js"></script>*@
+    <script src="~/Areas/Teachingquality/js/Print.js"></script>
     <script>
+        function doPrint() {
+            bdhtml = document.getElementById("printAreazhong").innerHTML;
+           
+
+            window.document.body.innerHTML = bdhtml;
+            window.print();
+        }
 
 
-        var LODOP; //声明为全局变量
 
-        function prn1_preview() {
-            CreateOneFormPage();
-            LODOP.PREVIEW();
-        };
-        function prn1_print() {
-            CreateOneFormPage();
-            LODOP.PRINT();
-        };
-        function prn1_printA() {
-            CreateOneFormPage();
-            LODOP.PRINTA();
-        };
-
-        function CreateOneFormPage() {
-            LODOP = getLodop();
-            LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
-            LODOP.SET_PRINT_PAGESIZE(3, 0, 0, 'A4');
-            LODOP.SET_PRINT_STYLE("FontSize", 18);
-            LODOP.SET_PRINT_STYLE("Bold", 0);
-            
-            LODOP.ADD_PRINT_HTM(10, 50, 350, 1000, document.getElementById("seat").innerHTML);
-        };
-
-        
-
-        layui.use(['form', 'table', 'element','layer'], function () {
+        layui.use(['form', 'table', 'element', 'layer'], function () {
             var form = layui.form;
             var layer = layui.layer;
             var table = layui.table;
             var element = layui.element;
-            
+
 
             $("#createSeat").click(function () {
-                var loadindex = layer.load(2, { time: 10 * 1000 }); 
+                var loadindex = layer.load(2, { time: 10 * 1000 });
                 var examid = document.getElementsByName("exam")[0].value;
 
 
@@ -189,7 +175,7 @@
                                 var li = $("<li class='layui-this'></li>");
                                 li.text(result.Data[i].classroom.ClassroomName);
 
-                                
+
 
                                 var div = $('<div class="layui-tab-item layui-show"></div>');
 
@@ -203,9 +189,9 @@
                                 for (var j = 0; j < seatlist.length; j++) {
 
                                     var layerthtml1 = _.template($("#seatmoban").html());
-                                    
-                                    
-                                    var layerdata = layerthtml1({ index: j, sex: seatlist[j].student.Sex, studentNumber: seatlist[j].student.StudentNumber, classname: seatlist[j].student.ClassName, name: seatlist[j].student.Name, idcard: seatlist[j].student.IdCard });
+
+
+                                    var layerdata = layerthtml1({ index: j+1, sex: seatlist[j].student.Sex, studentNumber: seatlist[j].student.StudentNumber, classname: seatlist[j].student.ClassName, name: seatlist[j].student.Name, idcard: seatlist[j].student.IdCard });
 
                                     div.find("tbody").append(layerdata);
 
@@ -235,15 +221,9 @@
             //打印按钮
             $("#print").click(function () {
 
-                //首先检查是否安装打印控件
-                if (LODOP == undefined) {
-
-                    layer.msg("您没有安装控件");
-                }
-                else {
-
-                    prn1_preview();
-                }
+                
+                doPrint();
+               
 
 
             });

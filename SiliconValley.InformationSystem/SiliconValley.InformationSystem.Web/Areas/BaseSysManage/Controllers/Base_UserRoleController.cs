@@ -59,7 +59,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         {
 
             List<Base_User> userlist = db_user.GetList();
-
+            List<Base_User> searchlist = new List<Base_User>();
             EmployeesInfoManage dbemp = new EmployeesInfoManage();
 
 
@@ -73,10 +73,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                     if (empobj != null)
                     {
 
-                        if (!empobj.EmpName.Contains(empname))
+                        if (empobj.EmpName.Contains(empname))
                         {
                             //从集合中删除
-                            userlist.RemoveAt(userlist.IndexOf(u));
+                            searchlist.Add(u);
                         }
                     }
 
@@ -84,13 +84,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                
             }
 
-            var skiplist = userlist.Skip((page - 1) * limit).Take(limit).ToList();
+            if (string.IsNullOrEmpty(empname) && string.IsNullOrEmpty(empnumber))
+            {
+                searchlist.AddRange(userlist);
+            }
+
+            var skiplist = searchlist.Skip((page - 1) * limit).Take(limit).ToList();
 
             ///转为模型视图
 
             List<AccountView> accountlist = new List<AccountView>();
 
-            foreach (var item in userlist)
+            foreach (var item in skiplist)
             {
                 var tempobj = db_user.ConvetToView(item);
 
@@ -106,7 +111,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
                 code = 0,
                 msg = "",
-                count = userlist.Count,
+                count = searchlist.Count,
                 data = accountlist
 
             };

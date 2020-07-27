@@ -14,53 +14,65 @@
 <form class="layui-form" action="">
     <div class="layui-carousel-left" style="width:80%">
         <div class="layui-row ">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs3">
 
-         
-                <div class="layui-row layui-form-item">
-
-
-                    <div class="layui-col-xs3">
-                        <label class="layui-form-label">姓名</label>
-                        <div class="layui-input-inline">
-                            <input type="tel"  name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
-                        </div>
+                    <label class="layui-form-label" style="width:110px;">注册范围</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input linu" name="Dateofregistration" id="Dateofregistration" placeholder=" ~ ">
                     </div>
-                    <div class="layui-col-xs3">
-                        <label class="layui-form-label">性别</label>
-                        <div class="layui-input-block">
-                            <input type="radio" name="Sex" value="false" title="女">
-                            <input type="radio" name="Sex" value="true" title="男">
-                            <input type="radio" name="Sex" value="" title="全部" checked="checked">
-                        </div>
-                    </div>
-                    <div class="layui-col-xs3">
-                        <label class="layui-form-label">学号</label>
-                        <div class="layui-input-inline" >
-                            <input type="text" lay-verify="number" name="StudentNumber" class="layui-input"  />
-
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs3">
-
-                        <label class="layui-form-label">身份证</label>
-                        <div class="layui-input-block">
-                            <input type="text" lay-verify="identityi" name="identitydocument" class="layui-input linu"  />
-
-                        </div>
-
-                    </div>
-                    <div style="position:absolute;left:85%;">
-                        <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i>查询</button>
-                    </div>
-
 
                 </div>
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label" style="width:110px;">学号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="number" name="StudentNumber" class="layui-input" />
 
-           
-           
+                    </div>
+                </div>
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label" style="width:110px;">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div style="position:absolute;left:69%;">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i>查询</button>
+                </div>
+
+            </div>
+
+            <div class="layui-row layui-form-item">
+
+
+
+                <div class="layui-col-xs3">
+
+                    <label class="layui-form-label"  style="width:110px;">身份证</label>
+                    <div class="layui-input-block">
+                        <input type="text" lay-verify="identityi" name="identitydocument" class="layui-input linu" />
+
+                    </div>
+
+                </div>
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label"  style="width:110px;">性别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="Sex" value="false" title="女">
+                        <input type="radio" name="Sex" value="true" title="男">
+                        <input type="radio" name="Sex" value="" title="全部" checked="checked">
+                    </div>
+                </div>
+
+
+             
+
+            </div>
+
+
+
+            </div>
         </div>
-    </div>
 </form>
 
 <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -138,11 +150,11 @@
             }
             return returnAge //返回周岁年龄
         }
-        layui.use(['table', 'layer', 'tree', 'form'], function () {
+        layui.use(['table', 'layer', 'tree', 'form','laydate'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
-         
+            var laydate = layui.laydate;
             //正则表达式
             form.verify({
                 Name: function (value, item) { //value：表单的值、item：表单的DOM对象
@@ -410,12 +422,21 @@
                         Name: x.Name,
                         Sex: x.Sex,
                         StudentNumber: x.StudentNumber,
-                        identitydocument: x.identitydocument
+                        identitydocument: x.identitydocument,
+                        Stu: x.Dateofregistration
                     }, page: {
                         curr: 1
                     }
                 });
                 return false;
+            });
+
+            //日期时间范围
+            laydate.render({
+                elem: '#Dateofregistration'
+               
+                , type: 'month'
+                , range: true
             });
         });
     </script>

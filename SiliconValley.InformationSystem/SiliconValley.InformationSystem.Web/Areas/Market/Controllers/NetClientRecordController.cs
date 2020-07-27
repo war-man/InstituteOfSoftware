@@ -133,7 +133,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                 nmanage.Insert(ncrnew);
                 AjaxResultxx = nmanage.Success();
-                //    BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加了一条回访学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加了一条回访学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 if (AjaxResultxx.Success) {
                     AjaxResultxx.Success= nmanage.UpdateNetClientDate(ncrnew.SPRId,ncrnew.NetClientDate);
                 }
@@ -141,7 +141,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             catch (Exception ex)
             {
                 AjaxResultxx = nmanage.Error(ex.Message);
-              //  BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加回访数据出错:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+               BusHelper.WriteSysLog(empmanage.GetInfoByEmpID(eid).EmpName + "添加回访数据出错:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
 
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
@@ -157,7 +157,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             NetClientRecordManage ncr = new NetClientRecordManage();
             List<NetClientRecordView> ncrviewlist = new List<NetClientRecordView>();
              ncrviewlist = ncr.GetNcrviewlist(Id);//获取回访记录集合
-            var n = ncr.GetNcrviewById(Id);
+            //var n = ncr.GetNcrviewById(Id);
             ViewBag.ncrlist = ncrviewlist;
             ViewBag.Number = ncrviewlist.Count();
             ViewBag.Id = Id;
@@ -171,6 +171,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(ncrview, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 查询选择渠道员工（市场员工）
+        /// </summary>
+        /// <returns></returns>
         public ActionResult SelectChannelemp()
         {
             return View();

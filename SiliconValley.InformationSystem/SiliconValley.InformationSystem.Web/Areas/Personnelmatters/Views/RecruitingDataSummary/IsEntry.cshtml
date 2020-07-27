@@ -1,15 +1,14 @@
-﻿@{
+﻿
+@{
     Layout = null;
 }
-@model SiliconValley.InformationSystem.Entity.MyEntity.EmployeesInfo
-@using SiliconValley.InformationSystem.Entity.MyEntity;
 
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>AddEmp</title>
+    <title>IsEntry</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/layui/layui.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -36,22 +35,25 @@
         .linu {
             height: 120px;
         }
+
         .needTextColor {
             color: red
         }
     </style>
 </head>
 <body>
-
     <div>
-        <form class="layui-form" action="">
+        <form class="layui-form" action="" lay-filter="formtest">
+            <input type="hidden" id="Id" name="Id" value="@ViewBag.Id" />
+            <input type="hidden" id="Pname" name="Pname" value="@ViewBag.pname" />
+            <input type="hidden" id="mypid" name="mypid" value="@ViewBag.pid" />
             <div class="layui-container">
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label needTextColor">姓名:</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.EmpName, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
+                            <input type="text" id="EmpName" name="EmpName" lay-verify="required" class="layui-input" placeholder="请输入员工姓名">
                         </div>
                     </div>
 
@@ -66,7 +68,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label needTextColor">钉钉工号:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.DDAppId, new Dictionary<string, object>() { { "lay-verify", "required|number|CheckDDNum" }, { "placeholder", "请输入员工钉钉号" }, { "class", "layui-input" } })
+                            <input type="text" id="DDAppId" name="EmpName" lay-verify="required|number|CheckDDNum" class="layui-input" placeholder="请输入员工钉钉号">
                         </div>
                     </div>
                 </div>
@@ -76,7 +78,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label needTextColor">所属部门:</label>
                         <div class="layui-input-block">
-                            <select name="deptid" id="deptid" lay-filter="deptidfilter" lay-verify="required">
+                            <select name="Deptid" id="Deptid" lay-filter="deptidfilter" lay-verify="required">
                                 <option value="-1">请选择所属部门</option>
                             </select>
 
@@ -95,7 +97,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">民族:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Nation, new Dictionary<string, object>() { { "placeholder", "请输入民族" }, { "class", "layui-input" } })
+                            <input type="text" id="Nation" name="Nation" class="layui-input" placeholder="请输入民族">
                         </div>
                     </div>
                 </div>
@@ -105,21 +107,21 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label needTextColor">手机号码:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Phone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入电话号码" }, { "class", "layui-input" } })
+                            <input type="text" id="Phone" name="Phone" lay-verify="required|phone" class="layui-input" placeholder="请输入电话号码">
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label needTextColor">身份证号:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.IdCardNum, new Dictionary<string, object>() { { "lay-verify", "required|myIdCardNum" }, { "placeholder", "请输入身份证号" }, { "class", "layui-input " } })
+                            <input type="text" id="IdCardNum" name="IdCardNum" lay-verify="myIdCardNum|required" class="layui-input" placeholder="请输入身份证号">
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label needTextColor">入职时间:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.EntryTime, new Dictionary<string, object>() { { "lay-verify", "required|EntryTime" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
+                            <input type="text" id="EntryTime" name="EntryTime" lay-verify="required|EntryTime" class="layui-input" placeholder="yyyy-MM-dd">
                         </div>
                     </div>
                 </div>
@@ -129,14 +131,14 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" style="width:120px;margin-left:-40px;">合同起始时间:</label>
                         <div class="layui-input-block" style="width:320px;">
-                            @Html.TextBoxFor(a => a.ContractStartTime, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
+                            <input type="text" id="ContractStartTime" name="ContractStartTime" class="layui-input" placeholder="yyyy-MM-dd">
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" style="width:120px;margin-left:-60px;">合同终止时间:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ContractEndTime, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
+                            <input type="text" id="ContractEndTime" name="ContractEndTime" class="layui-input" placeholder="yyyy-MM-dd">
                         </div>
                     </div>
 
@@ -165,7 +167,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" style="width:120px;margin-left:-60px;">身份证有效期:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.IdCardIndate, new Dictionary<string, object>() { { "lay-verify", "IdCardIndate" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
+                            <input type="text" id="IdCardIndate" name="IdCardIndate" lay-verify="IdCardIndate" class="layui-input" placeholder="yyyy-MM-dd">
                         </div>
                     </div>
 
@@ -176,21 +178,21 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">招聘来源:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.InvitedSource, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            <input type="text" id="InvitedSource" name="InvitedSource" class="layui-input">
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">户籍地址:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.DomicileAddress, new Dictionary<string, object>() { { "placeholder", "请输入户籍地址" }, { "class", "layui-input" } })
+                            <input type="text" id="DomicileAddress" name="DomicileAddress" placeholder="请输入户籍地址" class="layui-input">
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">现居地址:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Address, new Dictionary<string, object>() { { "placeholder", "请输入现居地址" }, { "class", "layui-input " } })
+                            <input type="text" id="Address" name="Address" placeholder="请输入现居地址" class="layui-input">
                         </div>
                     </div>
 
@@ -201,7 +203,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label" style="margin-left:-40px;width:120px;">紧急联系电话:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.UrgentPhone, new Dictionary<string, object>() { { "lay-verify", "myUrgentPhone" }, { "placeholder", "请输入紧急联系电话" }, { "class", "layui-input" } })
+                            <input type="text" id="UrgentPhone" name="UrgentPhone" lay-verify="myUrgentPhone" placeholder="请输入紧急联系电话" class="layui-input">
                         </div>
                     </div>
 
@@ -248,14 +250,14 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">试用期工资:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "placeholder", "请输入试用期工资" }, { "class", "layui-input salary" } })
+                            <input type="text" id="ProbationSalary" name="ProbationSalary" placeholder="请输入试用期工资" class="layui-input salary">
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label needTextColor">转正后工资:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Salary, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入转正工资" }, { "class", "layui-input salary" } })
+                            <input type="text" id="Salary" name="Salary" lay-verify="required" placeholder="请输入转正工资" class="layui-input salary">
                         </div>
                     </div>
 
@@ -266,14 +268,14 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">银行卡号:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.BCNum, new Dictionary<string, object>() { { "lay-verify", "myBCNum" }, { "placeholder", "请输入银行卡号" }, { "class", "layui-input" } })
+                            <input type="text" id="BCNum" name="BCNum" lay-verify="myBCNum" placeholder="请输入银行卡号" class="layui-input">
                         </div>
                     </div>
 
                     <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
                         <label class="layui-form-label">材料:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            <input type="text" id="Material" name="Material" class="layui-input linu">
                         </div>
                     </div>
 
@@ -284,7 +286,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            <input type="text" id="Remark" name="Remark" class="layui-input linu">
                         </div>
                     </div>
 
@@ -311,25 +313,23 @@
         </form>
     </div>
 
-    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    @* 部门与岗位的下拉框动态赋值及下拉框二级联动 *@
     <script>
         layui.use(['form', 'upload', 'layer'], function () {
-
             var form = layui.form;
             $.ajax({
                 url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
                 data: {},
                 dataType: "json",
                 success: function (resultData) {
-                    $("#deptid").empty();
+                    $("#Deptid").empty();
                     if (resultData.code == 0) {
-
-                        $("#deptid").append(new Option("请选择部门", ""));
+                        $("#PositionId").append(new Option($("#Pname").val(), $("#mypid").val()));
                         $.each(resultData.data, function (index, item) {
-                            $('#deptid').append(new Option(item.DeptName, item.DeptId));
+                            $('#Deptid').append(new Option(item.DeptName, item.DeptId));
                         });
                     } else {
-                        $("#deptid").append(new Option("暂无数据", ""));
+                        $("#Deptid").append(new Option("暂无数据", ""));
                     }
 
                     layui.form.render("select");
@@ -369,6 +369,26 @@
 
 
     <script>
+
+        $(function () {
+            loadnetinfo();// 初始化编辑数据加载
+        });
+        function loadnetinfo() {
+            var id = $("#Id").val();
+            $.get("/Personnelmatters/RecruitingDataSummary/GetRPTById/" + id, function (data) {
+                layui.use(['layer', 'form', 'table'], function () {
+                    var form = layui.form;
+                    $("#EmpName").val(data.Name);
+                    $("#PositionId").val(data.Pid);
+                    $("#Phone").val(data.PhoneNumber);
+
+                    form.val("formtest", data);
+
+                });
+            })
+        }
+
+
         //异步读取图片并显示
         document.querySelector("#Image").onchange = function () {
             //1.0获取选择的文件
@@ -386,7 +406,7 @@
                 console.log(e.target.result);
                 document.querySelector("#showimg").src = e.target.result;
             };
-           
+
             //最后通过file.result属性返回读取文件的内容
             //document.querySelector("#showimg").src = file.result;
         }
@@ -416,7 +436,8 @@
                             date: date.date,
                             hours: date.hours,
                             minutes: date.minutes,
-                            seconds: date.seconds}
+                            seconds: date.seconds
+                        }
                 }
             }); //入职时间
             var startTime = laydate.render({
@@ -431,14 +452,14 @@
                         minutes: date.minutes,
                         seconds: date.seconds
                     },
-                    entryTime.config.max = {
-                        year: date.year,
-                        month: date.month - 1,//关键
-                        date: date.date,
-                        hours: date.hours,
-                        minutes: date.minutes,
-                        seconds: date.seconds
-                    }
+                        entryTime.config.max = {
+                            year: date.year,
+                            month: date.month - 1,//关键
+                            date: date.date,
+                            hours: date.hours,
+                            minutes: date.minutes,
+                            seconds: date.seconds
+                        }
                 }
             });//合同起始时间
             var endTime = laydate.render({
@@ -452,7 +473,7 @@
                         minutes: date.minutes,
                         seconds: date.seconds
                     },
-                    entryTime.config.max = {
+                        entryTime.config.max = {
                             year: date.year,
                             month: date.month - 1,//关键
                             date: date.date,
@@ -478,16 +499,6 @@
                         }
                     }
                 },//身份证号
-                myUrgentPhone: function (value, item) {
-                    if (value == '') {
-                        return '';
-                    } else {
-                        var v = /^1[3456789]\d{9}$/;
-                        if (!v.test(value)) {
-                            return '号码格式输入错误';
-                        }
-                    }
-                },//紧急联系电话
                 mymonth: function (value, item) {
                     if (value == '') {
                         return '';
@@ -508,6 +519,16 @@
                         }
                     }
                 },//验证哪天
+                myUrgentPhone: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^1[3456789]\d{9}$/;
+                        if (!v.test(value)) {
+                            return '号码格式输入错误';
+                        }
+                    }
+                },//紧急联系电话
                 myBCNum: function (value, item) {
                     if (value == '') {
                         return '';
@@ -525,17 +546,17 @@
                         var resultdata = check(value);
                         console.log(resultdata);
                         return resultdata;
-                    } 
+                    }
                 }//验证钉钉号是否重复
             });
 
-            function check(value) {  
+            function check(value) {
                 var str;
                 $.ajax({
                     url: '/Personnelmatters/EmployeesInfo/CheckDDNum',
                     type: 'get',
                     async: false,
-                    data: { ddnum: value},
+                    data: { ddnum: value },
                     success: function (successdata) {
                         if (successdata.Success) {
                             str = '已经存在该钉钉号，请重新输入！';
@@ -547,7 +568,7 @@
                         str = '网络不佳！';
                     }
                 });
-                return str;             
+                return str;
             }
             //工资输入判断
             $(".salary").keyup(function () {
@@ -569,20 +590,17 @@
             //添加提交
             form.on('submit(demo1)', function (data) {
                 var loadindex = layer.load(1);
-                if (data.field.month!= "" && data.field.day != "") {
+                if (data.field.month != "" && data.field.day != "") {
                     data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
                 }
-               
+
                 var fd = new FormData();
                 var myimg = document.querySelector("#Image").files[0];
                 fd.append('Image', myimg);
                 for (var item in data.field) {
                     fd.append(item, data.field[item]);
                 }
-                console.log(fd);
 
-              
-                console.log($("#Image").val());
                 $.ajax({
                     type: "post",
                     url: "/Personnelmatters/EmployeesInfo/AddEmpInfo",
@@ -596,18 +614,32 @@
                     success: function (data) {
                         layer.close(loadindex);
                         if (data.Success) {
-                            layer.alert("添加成功!", { icon: 1 }, function () {
-                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                                parent.layui.table.reload('myEmpInfo');
-                                parent.layer.close(index);
+                            var id = $("#Id").val();
+                            console.log("应聘员工入职后获取的招聘编号：" + id);
+                            $.post("/Personnelmatters/RecruitingDataSummary/EdiIsEntrytTrack", { id: id }, function (data) {
+                                if (data.Success) {
+                                    layer.alert("编辑成功!", { icon: 1 }, function () {
+                                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                        parent.layui.table.reload('myrptData');
+                                        parent.layer.close(index);
 
+                                    });
+                                } else {
+                                    layer.alert("编辑失败!");
+                                }
                             });
+                            //layer.alert("添加成功!", { icon: 1 }, function () {
+                            //    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            //    parent.layui.table.reload('myEmpInfo');
+                            //    parent.layer.close(index);
+
+                            //});
                         } else {
                             layer.alert("添加失败!");
                         }
                     }
                 });
-                
+
             });
 
             //关闭添加页面
@@ -624,5 +656,4 @@
 
 
 </body>
-
 </html>

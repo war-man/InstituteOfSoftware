@@ -43,6 +43,7 @@
             width: 100px;
             height: 100px;
         }
+
         #Remarks {
             overflow: auto;
             background-attachment: fixed;
@@ -51,6 +52,7 @@
             border-color: #FFFFFF;
             resize: none;
         }
+
         table {
             font-size: 10pt;
         }
@@ -65,7 +67,7 @@
 <body>
 
     <div id="shouju" style="position:absolute;">
-        <img src="~/Areas/Finance/images/shouju.jpg" style="width:672px;z-index:0;margin-top:-22px;margin-left:41px;" />
+        <img src="~/Areas/Finance/images/shouju.jpg" style="width:672px;z-index:0;margin-top:-22px;margin-left:29px;" />
     </div>
     <div style="z-index:999;position:absolute;top:73px;left:10px;height:200px;" id="text">
 
@@ -74,46 +76,46 @@
         <div id="classa" style="position:absolute;left:218px;top:42px;"></div>
         <div id="GrandName" style="position:absolute;left:340px;top:42px;"></div>
         <div id="identitydocument" style="position:absolute;left:500px;top:42px;"></div>
-        <table cellpadding="1" style="width:790px;">
-            <tr>
-                <td></td>
-            </tr>
-            @*<tr>
-                    <td colspan="7" style="width:530px;"></td>
-                    <td colspan="1" style="text-align:inherit;">2020-06-23</td>
-                </tr>*@
+        <div style="height:214px">
+            <table cellpadding="1" style="width:790px;">
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="width:80px;"></td>
+                    <th style="width:113px;"></th>
+                    <td style="width:35px;"></td>
+                    <th style="text-align:inherit;width:90px;"></th>
+                    <td style="width:50px;"></td>
+                    <th style="text-align:inherit;width:145px;"></th>
 
-            <tr>
-                <td style="width:80px;"></td>
-                <th style="width:113px;"></th>
-                <td style="width:35px;"></td>
-                <th style="text-align:inherit;width:90px;"></th>
-                <td style="width:50px;"></td>
-                <th style="text-align:inherit;width:145px;"></th>
+                    <th colspan="2" style="text-align:inherit;width:220px;"></th>
+                </tr>
+                <tr>
+                    <td colspan="7"></td>
+                    <td colspan="1" style="text-align:inherit;"></td>
+                </tr>
+                <tbody id="xiangmu">
+                 
+                </tbody>
 
-                <th colspan="2" style="text-align:inherit;width:220px;"></th>
-            </tr>
-            <tr>
-                <td colspan="7" style="width:530px;"></td>
-                <td colspan="1" style="text-align:inherit;"></td>
-            </tr>
-            <tbody id="xiangmu" style="height:70px;"></tbody>
+                <tbody id="xuezai" >  </tbody>
+                @*<tr>
+                <td colspan="7" style="text-align:center;" id="DaXie">合计金额（大写）：</td>
+                <td colspan="1" style="text-align:inherit;width:230px;" id="pricent">2000</td>
+            </tr>*@
 
-            <tbody id="xuezai" style="height:70px;">  </tbody>
-            @*<tr>
-                    <td colspan="7" style="text-align:center;" id="DaXie">合计金额（大写）：</td>
-                    <td colspan="1" style="text-align:inherit;width:230px;" id="pricent">2000</td>
-                </tr>*@
+            </table>
+        </div>
+        <div style="position:absolute;top:289px;left:294px;">
+            <textarea id="Remarks" style="height:82px;width:130px;"></textarea>
 
-        </table>
-        <div id="" style="width:80px;position:absolute;top:280px;left:284px;"> <input type="text" style="border:0px;height:12px;margin-top:12px;" lay-verify="required" class="layui-input" /></div>
-
+        </div>
         <div id="DaXie" style="position:absolute;left:188px;"></div>
         <div id="pricent" style="position:absolute;left:524px;"></div>
-        <div style="position:absolute;left:100px;top:249px;">
-            <textarea id="Remarks" style="height:42px;width:190px;"></textarea>
-         
-        </div>
+
+        <div style="width:390px;position:absolute;top:241px;left:102px;"> <input type="text" style="border:0px;height:12px;margin-top:12px;" id="Remark" class="layui-input" /></div>
+
     </div>
 
 
@@ -141,11 +143,13 @@
     $("#classa").text(studen.classa);
     $("#identitydocument").text(studen.identitydocument);
     var Receiptdata = JSON.parse('@Html.Raw(ViewBag.Receiptdata)');
-    $("#Remarks").text(Receiptdata[0].Remarks);
+    $("#Remark").val(Receiptdata[0].Remarks);
     var count = 0;
     var ostitemsName = "";
     var Amountofmoneys = 0;
     var pricent = 0;
+    
+   
     console.log(Receiptdata);
     for (var i = 0; i < Receiptdata.length; i++) {
 
@@ -153,20 +157,24 @@
 
         if (i == 0) {
             //AddDate
-            $("#Remarks").text(Receiptdata[i].Remarks);
+            $("#Remark").text(Receiptdata[i].Remarks);
             var date = new Date(Receiptdata[i].AddDate);
             $("#AddDate").text(getNowFormatDate(date));
         }
         if (Receiptdata[i].Rategory == "阶段费用缴纳" || Receiptdata[i].Rategory == "学费" || Receiptdata[i].Rategory == "食宿费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
+        
+            
             $("#xiangmu").append($('<tr> <td colspan="4" style="text-align:center;">' + Receiptdata[i].GrandName+"阶段" + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
+
+
             // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         } else if ( Receiptdata[i].Rategory == "其它" || Receiptdata[i].Rategory == "驾校费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
             $("#xiangmu").append($('<tr style="height:55px;"> <td colspan="4" style="text-align:center;">' + Receiptdata[i].Rategory + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
             // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         } else if (Receiptdata[i].Rategory == "预入费") {
-           
+          
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
             $("#xiangmu").append($('<tr style="height:55px;"> <td colspan="4" style="text-align:center;">' + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
             // $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
@@ -175,6 +183,7 @@
             $("#xiangmu").append($('<tr style=""> <td colspan="4" style="text-align:center;">' + Receiptdata[i].ostitemsName + '</td> <td colspan="4" style="text-align:inherit;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoney + '</td></tr>'));
         }
         if (Receiptdata[i].Rategory == "学杂费") {
+
             count++;
             ostitemsName += Receiptdata[i].ostitemsName + ",";
             Amountofmoneys = Amountofmoneys + parseInt(Receiptdata[i].Amountofmoney);
@@ -195,14 +204,18 @@
     $("#DaXie").text(convertCurrency(pricent));
 
     if (count < 3 && count != 0) {
+     
         $("#xuezai").append($('<tr> <td colspan="4" style="text-align:center;"><div>' + ostitemsName.substring(0, ostitemsName.length - 1) + '</div></td> <td colspan="4" style="text-align:inherit;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + Amountofmoneys + '.00</td></tr>'));
 
     //    $("#text tbody").before($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
     }
-    if (count==0) {
+    if (count == 0) {
+       
         $("#xuezai").append($('<tr  style="height:60px;"> <td colspan="4" style="text-align:center;"></td> <td colspan="4" style="text-align:inherit;"></td></tr>'));
 
     }
+ 
+  
     //if (Receiptdata.length > 1 && Receiptdata.length<4) {
     //    $("#text tbody").before($('<tr style="text-align:center;height: 30px;"></tr>'));
     //    $("#text tbody").before($('<tr style="text-align:center;height: 30px;"></tr>'));
@@ -222,21 +235,18 @@
 <script src="~/Areas/Teachingquality/js/Print.js"></script>
 <script>
     document.getElementById('btn').onclick = function () {
-
         Print('#text', {
             //onStart: function () {
-            //    var RegWsh = new ActiveXObject("WScript.Shell")
-            //    hkey_key = "header"
-            //    RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "")
-            //    hkey_key = "footer"
-            //    RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "")
+            //    console.log("a");
             //},
             //onEnd: function () {
-            //    console.log('onEnd', new Date())
+
             //}
         })
-
     }
+     
+
+    
 
 
 </script>
