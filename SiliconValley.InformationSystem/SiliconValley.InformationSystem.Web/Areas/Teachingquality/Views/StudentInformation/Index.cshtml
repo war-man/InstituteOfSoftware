@@ -48,7 +48,7 @@
 
                 <div class="layui-col-xs3">
 
-                    <label class="layui-form-label"  style="width:110px;">身份证</label>
+                    <label class="layui-form-label" style="width:110px;">身份证</label>
                     <div class="layui-input-block">
                         <input type="text" lay-verify="identityi" name="identitydocument" class="layui-input linu" />
 
@@ -56,7 +56,7 @@
 
                 </div>
                 <div class="layui-col-xs3">
-                    <label class="layui-form-label"  style="width:110px;">性别</label>
+                    <label class="layui-form-label" style="width:110px;">性别</label>
                     <div class="layui-input-block">
                         <input type="radio" name="Sex" value="false" title="女">
                         <input type="radio" name="Sex" value="true" title="男">
@@ -64,8 +64,13 @@
                     </div>
                 </div>
 
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label" style="width:110px;">班级</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="ClassName" lay-verify="ClassName" id="ClassName" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
 
-             
 
             </div>
 
@@ -423,7 +428,8 @@
                         Sex: x.Sex,
                         StudentNumber: x.StudentNumber,
                         identitydocument: x.identitydocument,
-                        Stu: x.Dateofregistration
+                        Stu: x.Dateofregistration,
+                        ClassName: x.ClassName
                     }, page: {
                         curr: 1
                     }
