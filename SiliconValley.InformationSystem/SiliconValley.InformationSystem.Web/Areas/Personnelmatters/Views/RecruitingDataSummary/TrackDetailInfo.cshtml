@@ -47,13 +47,7 @@
                 </div>
 
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">联系时间:</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="TraceTime1" id="TraceTime1"  readonly class="layui-input">
-                        </div>
-                    </div>
-
+                  
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">手机号:</label>
                         <div class="layui-input-block">
@@ -68,16 +62,6 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">面试次数:</label>
-                        <div class="layui-input-block">
-                            <input type="text" class="layui-input" readonly="readonly" value="@ViewBag.Number" />
-                        </div>
-                    </div>
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">简历类型:</label>
                         <div class="layui-input-block">
@@ -85,10 +69,27 @@
                         </div>
                     </div>
 
+                </div>
+
+                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label" style="margin-left:-40px;width:120px;">联系结果:</label>
+                        <label class="layui-form-label">联系时间:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="PhoneCommunicateResult1" id="PhoneCommunicateResult1" readonly class="layui-input">
+                            <input type="text" name="TraceTime1" id="TraceTime1" readonly class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="margin-left:-40px;width:120px;">预面试时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ForwardDate" id="ForwardDate" readonly class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">面试次数:</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" readonly="readonly" value="@ViewBag.Number" />
                         </div>
                     </div>
 
@@ -153,7 +154,8 @@
                                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                                         <label class="layui-form-label">面试结果:</label>
                                         <div class="layui-input-block">
-                                            <input class="layui-input" id="PhoneCommunicateResult" name="PhoneCommunicateResult" value="@list[0].PhoneCommunicateResult"  readonly />
+                                            <input type="radio" name="PhoneCommunicateResult" title="未通过" value="false" readonly>
+                                            <input type="radio" name="PhoneCommunicateResult" title="通过" value="true" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -193,11 +195,18 @@
         function loadnetinfo() {
             $("#TraceTime").val(changeDateTimeFormat($("#TraceTime").val()));
             var id = $("#Id").val();
+            var result = $("#F_Id").val();
             $.get("/Personnelmatters/RecruitingDataSummary/GetRPTById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
                     data.TraceTime1 = changeDateTimeFormat(data.TraceTime);
-                    data.PhoneCommunicateResult1 = data.PhoneCommunicateResult;
+                    data.ForwardDate = changeDateTimeFormat(data.ForwardDate);
+                    if (data.IsEntry == false) {
+                        data.IsEntry="未入职";
+                    } else {
+                        data.IsEntry = "已入职";
+                    }
+                    //data.PhoneCommunicateResult1 = data.PhoneCommunicateResult;
                     data.Remark1 = data.Remark;
                     if (data.IsEntry == true) {
                         $("#IsEntry").val("已入职");
@@ -208,6 +217,19 @@
                    
                 });
             })
+
+            $.get("/Personnelmatters/RecruitingDataSummary/GetRPTById/" + result, function (data) {
+                layui.use(['layer', 'form', 'table'], function () {
+                    var form = layui.form;
+                    data.TraceTime = changeDateTimeFormat(data.TraceTime);
+                    var ss = data.PhoneCommunicateResult;
+
+                    $("input[name=PhoneCommunicateResult][value=" + ss + "]").attr("checked", true);
+
+                    form.val("myform", data);
+                });
+            })
+
         }
 
         //给ul中的li注册点击事件
