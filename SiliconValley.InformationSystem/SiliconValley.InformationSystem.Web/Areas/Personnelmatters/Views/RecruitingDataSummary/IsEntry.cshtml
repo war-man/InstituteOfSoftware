@@ -68,7 +68,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label needTextColor">钉钉工号:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="DDAppId" name="EmpName" lay-verify="required|number|CheckDDNum" class="layui-input" placeholder="请输入员工钉钉号">
+                            <input type="text" id="DDAppId" name="DDAppId" lay-verify="required|number|CheckDDNum" class="layui-input" placeholder="请输入员工钉钉号">
                         </div>
                     </div>
                 </div>
@@ -377,7 +377,7 @@
             var id = $("#Id").val();
             $.get("/Personnelmatters/RecruitingDataSummary/GetRPTById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
-                    var form = layui.form;                                                                     
+                    var form = layui.form;
                     $("#EmpName").val(data.Name);
                     $("#PositionId").val(data.Pid);
                     $("#Phone").val(data.PhoneNumber);
@@ -600,7 +600,7 @@
                 for (var item in data.field) {
                     fd.append(item, data.field[item]);
                 }
-
+                console.log("云哥1：" + data.field.EmpName);
                 $.ajax({
                     type: "post",
                     url: "/Personnelmatters/EmployeesInfo/AddEmpInfo",
@@ -621,6 +621,7 @@
                                     layer.alert("编辑成功!", { icon: 1 }, function () {
                                         var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                                         parent.layui.table.reload('myrptData');
+                                        parent.layui.table.reload('myRecruitData');
                                         parent.layer.close(index);
 
                                     });
@@ -628,12 +629,7 @@
                                     layer.alert("编辑失败!");
                                 }
                             });
-                            //layer.alert("添加成功!", { icon: 1 }, function () {
-                            //    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            //    parent.layui.table.reload('myEmpInfo');
-                            //    parent.layer.close(index);
-
-                            //});
+                           
                         } else {
                             layer.alert("添加失败!");
                         }
@@ -648,9 +644,6 @@
                 parent.layer.close(index);
             });
         });
-
-
-
 
     </script>
 

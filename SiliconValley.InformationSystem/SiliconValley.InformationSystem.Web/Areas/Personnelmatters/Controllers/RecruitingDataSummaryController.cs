@@ -53,72 +53,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
-        //获取月度招聘数据汇总
-        public ActionResult GetRecruitData(int page, int limit,string AppCondition) {
-             AddRecruitData();
-            RecruitingDataSummaryManage rdsmanage = new RecruitingDataSummaryManage();
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var rdslist = rdsmanage.GetList();
-            var myrdslist = rdslist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
-            if (!string.IsNullOrEmpty(AppCondition))
-            {
-                string[] str = AppCondition.Split(',');
-                string deptid = str[0];
-                string pname = str[1];
-                string start_time = str[2];
-                string end_time = str[3];
-                if (!string.IsNullOrEmpty(deptid))
-                {
-                    myrdslist = myrdslist.Where(e => empmanage.GetDeptByPid((int)e.Pid).DeptId==int.Parse(deptid)).ToList();
-                }
-                if (!string.IsNullOrEmpty(pname) )
-                {
-                    myrdslist = myrdslist.Where(e => e.Pid == int.Parse(pname)).ToList();
-                }
-                if (!string.IsNullOrEmpty(start_time))
-                {
-                    DateTime stime = Convert.ToDateTime(start_time);
-                    myrdslist = myrdslist.Where(a => a.YearAndMonth >= stime).ToList();
-                }
-                if (!string.IsNullOrEmpty(end_time))
-                {
-                    DateTime etime = Convert.ToDateTime(end_time );
-                    myrdslist = myrdslist.Where(a => a.YearAndMonth <= etime).ToList();
-                }
-            }
-            var newlist = from rds in myrdslist
-                          select new
-                          {
-                              #region 赋值
-                              rds.Id,
-                              rds.YearAndMonth,
-                              pname = GetPosition((int)rds.Pid).PositionName,
-                              rds.PlanRecruitNum,
-                              rds.ResumeSum,
-                              rds.OutboundCallSum,
-                              rds.InstantInviteSum,
-                              rds.InstantToFacesSum,
-                              rds.InstantRetestSum,
-                              rds.InstantRetestPassSum,
-                              rds.InstantEntryNum,
-                              rds.InstantToFacesRate,
-                              rds.InstantInviteRate,
-                              rds.InstantRetestPassrate,
-                              rds.EntryRate,
-                              rds.RecruitPercentage,
-                              rds.Remark
-                              #endregion
-                          };
-            var newobj = new
-            {
-                code = 0,
-                msg = "",
-                count = rdslist.Count(),
-                data = newlist
-            };
-            return Json(newobj, JsonRequestBehavior.AllowGet);
-        }
-
+      
         #region 获取某个部门或岗位
        
         /// <summary>
@@ -165,16 +100,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return pid;
         }
         #endregion
-        /// <summary>
-        /// 根据员名称获取员工编号
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public string GetEmpidByName(string name) {
-            EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var empid = emanage.GetList().Where(e => e.EmpName == name).FirstOrDefault().EmployeeId;
-            return empid;
-        }
 
 
         /// <summary>
@@ -391,7 +316,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
 
-
         public ActionResult IsEntry(int id) {
             RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
             var rpt = rmanage.GetRptView(id);
@@ -424,45 +348,75 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
-        //招聘电话追踪记录的是否入职属性修改
-        public ActionResult EditRptIsentry(int id, bool isdel) {
-            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
-            var AjaxResultxx = new AjaxResult();
-            try
+        //获取月度招聘数据汇总
+        public ActionResult GetRecruitData(int page, int limit, string AppCondition)
+        {
+            AddRecruitData();
+            RecruitingDataSummaryManage rdsmanage = new RecruitingDataSummaryManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var rdslist = rdsmanage.GetList();
+            var myrdslist = rdslist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            if (!string.IsNullOrEmpty(AppCondition))
             {
-                var rpt = rmanage.GetEntity(id);
-                rpt.IsEntry = isdel;
-                rmanage.Update(rpt);
-                AjaxResultxx = rmanage.Success();
-
+                string[] str = AppCondition.Split(',');
+                string deptid = str[0];
+                string pname = str[1];
+                string start_time = str[2];
+                string end_time = str[3];
+                if (!string.IsNullOrEmpty(deptid))
+                {
+                    myrdslist = myrdslist.Where(e => empmanage.GetDeptByPid((int)e.Pid).DeptId == int.Parse(deptid)).ToList();
+                }
+                if (!string.IsNullOrEmpty(pname))
+                {
+                    myrdslist = myrdslist.Where(e => e.Pid == int.Parse(pname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(start_time))
+                {
+                    DateTime stime = Convert.ToDateTime(start_time);
+                    myrdslist = myrdslist.Where(a => a.YearAndMonth >= stime).ToList();
+                }
+                if (!string.IsNullOrEmpty(end_time))
+                {
+                    DateTime etime = Convert.ToDateTime(end_time);
+                    myrdslist = myrdslist.Where(a => a.YearAndMonth <= etime).ToList();
+                }
             }
-            catch (Exception ex)
+            var newlist = from rds in myrdslist
+                          select new
+                          {
+                              #region 赋值
+                              rds.Id,
+                              rds.YearAndMonth,
+                              pname = GetPosition((int)rds.Pid).PositionName,
+                              rds.PlanRecruitNum,
+                              rds.ResumeSum,
+                              rds.OutboundCallSum,
+                              rds.InstantInviteSum,
+                              rds.InstantToFacesSum,
+                              rds.InstantRetestSum,
+                              rds.InstantRetestPassSum,
+                              rds.InstantEntryNum,
+                              rds.InstantToFacesRate,
+                              rds.InstantInviteRate,
+                              rds.InstantRetestPassrate,
+                              rds.EntryRate,
+                              rds.RecruitPercentage,
+                              rds.Remark
+                              #endregion
+                          };
+            var newobj = new
             {
-                AjaxResultxx = rmanage.Error(ex.Message);
-            }
-            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+                code = 0,
+                msg = "",
+                count = rdslist.Count(),
+                data = newlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
         }
-        //招聘电话追踪记录的是否面试属性修改
-        public ActionResult EditRptIsInterview(int id, bool isdel) {
-            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
-            var AjaxResultxx = new AjaxResult();
-            try
-            {
-                var rpt = rmanage.GetEntity(id);
-                //rpt.IsInterview = isdel;
-                rmanage.Update(rpt);
-                AjaxResultxx = rmanage.Success();
-
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = rmanage.Error(ex.Message);
-            }
-            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
-        }
 
 
-        public  string Condition(DateTime date, string type)
+        public string Condition(DateTime date, string type)
         {
             if (type == "day")
             {
@@ -475,7 +429,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return date.Year.ToString();
         }
 
-   
+        /// <summary>
+        ///为计算某月某岗位的复试总数
+        /// </summary>
+        /// <param name="rptlist"></param>
+        /// <returns></returns>
+        public int GetRefacednum(List<RecruitPhoneTrace> rptlist) {
+            int result=0;
+            var conditionrpt = rptlist.GroupBy(s=>s.SonId);
+
+            conditionrpt.ForEach(d=>
+            {
+                if (d.Count() > 1)
+                {
+                    result+=d.Count()-1;
+                }
+                
+            });
+
+           // result = conditionrpt.Count();
+            return result;
+        }
         //月度招聘数据汇总添加
         public AjaxResult AddRecruitData()   {
             var AjaxResultxx = new AjaxResult();
@@ -490,13 +464,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                            {
                                month = g.Key.month,//月份
                                position = g.Key.Pid,//岗位
-                               resumenum = g.Count(),//简历总数
-                               PhoneCommunicatenum= g.Count(t=>t.PhoneCommunicateResult != null),//联系的总数
-                               invitednum=g.Count(t=>t.ForwardDate != null),//邀约总数
-                               //Facednum=g.Count(t=>t.IsInterview==true),//当月到面总数
-                               //Refacednum=g.Count(t=>t.RetestResult!="-1"),//当月复试总数
-                               //Refacepassednum=g.Count(t=>t.RetestResult=="通过"),//当月复试通过总数
-                               Entrynum=g.Count(t=>t.IsEntry==true)//当月入职人数
+                               resumenum = g.Count(s => s.IsDel == false),//简历总数(排除这些应聘者的面试记录)
+                               PhoneCommunicatenum=g.Count(s => s.IsDel == false && !string.IsNullOrEmpty(Convert.ToString(s.TraceTime))),//联系的总数(有联系时间的才算联系过)
+                               invitednum=g.Count(t=>t.IsDel==false && t.ForwardDate != null),//当月邀约总数
+                               Facednum=g.Count(t=>t.IsDel==true),//当月到面总数
+                               Refacednum = GetRefacednum(g.Where(s=>s.IsDel==true).ToList()),//当月复试总数
+                               Refacepassednum= GetRefacednum(g.Where(s => s.IsDel == true && s.PhoneCommunicateResult == true).ToList()),//当月复试通过总数
+                               Entrynum=g.Count(t=>t.IsDel==false && t.IsEntry==true)//当月入职人数
                            };
                 List<RecruitingDataSummary> rlist = new List<RecruitingDataSummary>();
                 foreach (var s in list)
@@ -507,27 +481,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     item.Pid = s.position;
                     item.ResumeSum = s.resumenum;
                     item.OutboundCallSum = s.PhoneCommunicatenum;
-                    //item.InstantInviteSum = s.invitednum;
-                    //item.InstantToFacesSum = s.Facednum;
-                    //item.InstantRetestSum = s.Refacednum;
-                    //item.InstantRetestPassSum = s.Refacepassednum;
+                    item.InstantInviteSum = s.invitednum;
+                    item.InstantToFacesSum = s.Facednum;
+                    item.InstantRetestSum = s.Refacednum;
+                    item.InstantRetestPassSum = s.Refacepassednum;
                     item.InstantEntryNum = s.Entrynum;
-                    //if (s.invitednum != 0)
-                    //{
-                    //    item.InstantToFacesRate =Convert.ToDecimal(s.Facednum) / Convert.ToDecimal(s.invitednum);
-                    //}
-                    //if (s.PhoneCommunicatenum != 0)
-                    //{
-                    //    item.InstantInviteRate = Convert.ToDecimal(s.invitednum) / Convert.ToDecimal(s.PhoneCommunicatenum);
-                    //}
-                    //if (s.Refacednum != 0)
-                    //{
-                    //    item.InstantRetestPassrate = Convert.ToDecimal(s.Refacepassednum) / Convert.ToDecimal(s.Refacednum);
-                    //}
-                    //if (s.Refacepassednum != 0)
-                    //{
-                    //    item.EntryRate = Convert.ToDecimal(s.Entrynum) / Convert.ToDecimal(s.Refacepassednum);
-                    //}
+                    if (s.invitednum != 0)
+                    {
+                        item.InstantToFacesRate = Convert.ToDecimal(s.Facednum) / Convert.ToDecimal(s.invitednum);
+                    }
+                    if (s.PhoneCommunicatenum != 0)
+                    {
+                        item.InstantInviteRate = Convert.ToDecimal(s.invitednum) / Convert.ToDecimal(s.PhoneCommunicatenum);
+                    }
+                    if (s.Refacednum != 0)
+                    {
+                        item.InstantRetestPassrate = Convert.ToDecimal(s.Refacepassednum) / Convert.ToDecimal(s.Refacednum);
+                    }
+                    if (s.Refacepassednum != 0)
+                    {
+                        item.EntryRate = Convert.ToDecimal(s.Entrynum) / Convert.ToDecimal(s.Refacepassednum);
+                    }
                     var rds = rdsmanage.GetList().Where(a => a.Pid == item.Pid && Condition((DateTime)a.YearAndMonth, "month") == Condition((DateTime)item.YearAndMonth, "month")).FirstOrDefault();
                     if (rds != null)
                     {
