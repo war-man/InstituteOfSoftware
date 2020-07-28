@@ -193,7 +193,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         }
         RedisCache redis = new RedisCache();
         //获取所有数据
-        public ActionResult GetDate(int page, int limit, string Name, string Sex, string StudentNumber, string identitydocument,string Stu)
+        public ActionResult GetDate(int page, int limit, string Name, string Sex, string StudentNumber, string identitydocument,string Stu,string ClassName)
         {
             List<StudentInformation> listx = new List<StudentInformation>();
             //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
@@ -215,7 +215,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             try
             {
-
+                if (!string.IsNullOrEmpty(ClassName))
+                {
+                    listx = new List<StudentInformation>();
+                  var classid=  classschedu.GetList().Where(a => a.ClassNumber == ClassName.ToUpper()&&a.ClassstatusID==null).FirstOrDefault();
+                    if (classid!=null)
+                    {
+                      var student=  Stuclass.GetList().Where(a => a.CurrentClass == true && a.ID_ClassName == classid.id).ToList();
+                        foreach (var item in student)
+                        {
+                            var x = list.Where(a => a.StudentNumber == item.StudentID).FirstOrDefault();
+                            if (x!=null)
+                            {
+                                listx.Add(x);
+                            }
+                         
+                        }
+                        list = listx;
+                    }
+                    
+                }
                 if (!string.IsNullOrEmpty(Name))
                 {
                     list = list.Where(a => a.Name.Contains(Name)).ToList();
@@ -235,6 +254,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 }
                 if (!string.IsNullOrEmpty(Stu))
                 {
+                    listx = new List<StudentInformation>();
                     //Trim
                     string[] st = Stu.Split('-');
                     string kai = st[0] + st[1];
@@ -254,15 +274,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     {
                         foreach (var item in list)
                         {
-                            if (item.StudentNumber.Substring(0, 4) == kai.Substring(2).Trim())
+                            if (int.Parse(item.StudentNumber.Substring(0, 4))>=int.Parse(kai.Substring(2).Trim())&& int.Parse(item.StudentNumber.Substring(0, 4))<= int.Parse(jie.Substring(2).Trim()))
                             {
                                 listx.Add(item);
                             }
 
-                            if (item.StudentNumber.Substring(0, 4) == jie.Substring(2).Trim())
-                            {
-                                listx.Add(item);
-                            }
+                            
                         }
                     }
                     list = listx;
