@@ -152,10 +152,8 @@
                                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                                         <label class="layui-form-label">面试结果:</label>
                                         <div class="layui-input-block">
-                                            @*@Html.RadioButtonFor(a => a.PhoneCommunicateResult, list[0].PhoneCommunicateResult, new Dictionary<string, object>() { { "class", "layui-input " } })*@
                                             <input type="radio" name="PhoneCommunicateResult" title="未通过" value="false"  >
                                             <input type="radio" name="PhoneCommunicateResult" title="通过" value="true">
-                                            @*<input class="layui-input" id="PhoneCommunicateResult" name="PhoneCommunicateResult" />*@
                                         </div>
                                     </div>
                                 </div>
@@ -235,18 +233,10 @@
                     var form = layui.form;
                     data.TraceTime = changeDateTimeFormat(data.TraceTime);
                     var ss = data.PhoneCommunicateResult;
-                    //if (ss) {
-                    //    $("[name='PhoneCommunicateResult'][value='true']").prop('checked', true);
-                    //} else {
-                    //    $("[name='PhoneCommunicateResult'][value=" + result + "]").prop('checked', true);
-                    //}
-                    console.log("面试结果：" + ss);
+
                     $("input[name=PhoneCommunicateResult][value=" + ss + "]").attr("checked", true);
-                   
-                    console.log("哪呢：" + $("[name='PhoneCommunicateResult'][value=" + ss + "]").attr('checked'));
                   
                     form.val("myform", data);
-                   
                 });
             })
         }
@@ -330,6 +320,7 @@
                         layer.alert("编辑成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layui.table.reload('myrptData');
+                            parent.layui.table.reload('myRecruitData');
                             parent.layer.close(index);
 
                         });
@@ -347,6 +338,7 @@
                         layer.alert("编辑成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layui.table.reload('myrptData');
+                            parent.layui.table.reload('myRecruitData');
                             parent.layer.close(index);
 
                         });
