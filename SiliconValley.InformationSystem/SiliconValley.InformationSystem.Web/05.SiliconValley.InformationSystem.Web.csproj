@@ -1874,6 +1874,7 @@
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\AddTrack.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\EditTrack.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\Shift.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\Translate.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
