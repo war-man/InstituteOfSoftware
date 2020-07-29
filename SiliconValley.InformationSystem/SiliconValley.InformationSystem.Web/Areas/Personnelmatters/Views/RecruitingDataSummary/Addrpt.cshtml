@@ -109,9 +109,9 @@
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label" style="margin-left:-40px;width:120px;">电话沟通结果:</label>
+                        <label class="layui-form-label">预面试时间:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.PhoneCommunicateResult, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(a => a.ForwardDate, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
 
@@ -151,6 +151,11 @@
                 type:'datetime',
                 format:'yyyy-MM-dd HH:mm:ss'
             });
+            laydate.render({
+                elem: '#ForwardDate',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
           
             //添加提交
             form.on('submit(demo1)', function (data) {
@@ -160,7 +165,7 @@
                         layer.alert("添加成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layui.table.reload('myrptData');
-                            //parent.layui.table.reload('myRecruitData');
+                            parent.layui.table.reload('myRecruitData');
                             parent.layer.close(index);
 
                         });

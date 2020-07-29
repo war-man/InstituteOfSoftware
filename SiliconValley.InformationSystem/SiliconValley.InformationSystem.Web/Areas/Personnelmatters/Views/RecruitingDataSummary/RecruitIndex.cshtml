@@ -34,8 +34,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label" style="width:100px;margin-left:-20px;">部门:</label>
                         <div class="layui-input-inline">
-                            <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
-                            </select>
+                            <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search=""></select>
 
                         </div>
                     </div>
@@ -76,14 +75,15 @@
     </div>
 </div>
 
+@*招聘电话追踪记录的联系结果属性*@
+@*<script type="text/html" id="switchTp1">
+    <input type="checkbox" name="PhoneCommunicateResult" value="{{d.Id}}" lay-skin="switch" lay-text="通过|未通过" lay-filter="IsInterviewDemo" {{ d.PhoneCommunicateResult == true ? 'checked' : '' }}>
+</script>*@
 @*招聘电话追踪记录的是否入职属性*@
 <script type="text/html" id="switchTp2">
     <input type="checkbox" name="IsEntry" value="{{d.Id}}" lay-skin="switch" lay-text="是|否" lay-filter="entryDemo" {{ d.IsEntry == true ? 'checked' : '' }}>
 </script>
-@*招聘电话追踪记录的是否面试属性*@
-<script type="text/html" id="switchTp3">
-    <input type="checkbox" name="IsInterview" value="{{d.Id}}" lay-skin="switch" lay-text="是|否" lay-filter="IsInterviewDemo" {{ d.IsInterview == true ? 'checked' : '' }}>
-</script>
+
 
 @*复试结果*@
 <script type="text/html" id="result">
@@ -113,20 +113,13 @@
                 , limit: 6
                 , cols: [[
                     { field: 'Name', title: '姓名', sort: true, width: 90 }
-                    , { field: 'Dname', title: '应聘部门', sort: true, width: 120 }
-                    , { field: 'Pname', title: '应聘岗位', sort: true, width: 120 }
+                    , { field: 'Dname', title: '应聘部门', sort: true, width: 130 }
+                    , { field: 'Pname', title: '应聘岗位', sort: true, width: 130 }
                     , { field: 'PhoneNumber', title: '手机号', width: 125, sort: true }
-                    , { field: 'TraceTime', title: '联系时间', width: 160, sort: true, templet: function (d) { return changeDateTimeFormat(d.TraceTime); } }
+                    , { field: 'TraceTime', title: '联系时间', width: 170, sort: true, templet: function (d) { return changeDateTimeFormat(d.TraceTime); } }
                     , { field: 'Channel', title: '渠道', width: 95, sort: true }
                     , { field: 'ResumeType', title: '简历类型', sort: true, width: 110 }
-                    , { field: 'PhoneCommunicateResult', title: '联系结果', width: 160 }
-                    //, { field: 'FirstInterviewDate', title: '初试日期', width: 100, templet: function (d) { return GetYMD(d.FirstInterviewDate); } }
-                    //, { field: 'IsInterview', title: '是否面试', width: 100, templet: '#switchTp3', unresize: true }
-                    //, { field: 'FirstInterviewResult', title: '初试结果', width: 100 }
-                    //, { field: 'RetestDate', title: '复试日期', width: 100, templet: function (d) { return GetYMD(d.RetestDate); } }
-                    //, { field: 'RetestResult', title: '复试结果', width: 100, templet: '#result' }
-                    //, { field: 'OfferGiveTime', title: 'offer时间', width: 100, templet: function (d) { return changeDateTimeFormat(d.OfferGiveTime); } }
-                    //, { field: 'PlanEntryTime', title: '预计入职时间', width: 120, templet: function (d) { return GetYMD(d.PlanEntryTime); } }
+                    , { field: 'ForwardDate', title: '预面试时间', width: 170, sort: true, templet: function (d) { return changeDateTimeFormat(d.ForwardDate); } }
                     , { field: 'IsEntry', title: '是否入职', width: 100, templet: '#switchTp2', unresize: true }
                     , { field: 'Remark', title: '备注', sort: true, width: 90 }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
@@ -375,7 +368,7 @@
                 layer.open({
                     type: 2
                     , area: ["1060px", "620px"]
-                    , title: "编辑招聘电话追踪数据"
+                    , title: "招聘电话追踪数据详情"
                     , content: '/Personnelmatters/RecruitingDataSummary/TrackDetailInfo?id=' + id
                     , anim: 2
                 });
@@ -405,7 +398,7 @@
                     }
                 }
             });
-          
+
         }
 
         //格式化时间

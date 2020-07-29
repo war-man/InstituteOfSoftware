@@ -29,6 +29,7 @@ namespace SiliconValley.InformationSystem.Business.RecruitPhoneTraceBusiness
             rptview.Deptid = dept.DeptId;
             rptview.Pname = empmanage.GetPobjById((int)item.Pid).PositionName;
             rptview.Dname = dept.DeptName;
+            rptview.ForwardDate = item.ForwardDate;
             return rptview;
         }
 

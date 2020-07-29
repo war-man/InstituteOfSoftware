@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
@@ -49,8 +50,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>
         public ActionResult PerformanceAssessShow(int page, int limit, string AppCondition, string time)
         {
+            //var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
+            //string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
+             
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var mclist = mcmanage.GetEmpMCData().Where(s => s.IsDel == false).ToList();
+            //var userdept = emanage.GetDeptByEmpid(eid);
+            //var userposition = emanage.GetPositionByEmpid(eid);
+            //if (userdept.DeptName!="校办" && (userposition.PositionName.Contains("主任")|| userposition.PositionName.Contains("主任"))) {
+            //    mclist = mclist.Where(s=>emanage.GetDeptByEmpid(s.EmployeeId).DeptName==userdept.DeptName).ToList();
+            //}
             if (!string.IsNullOrEmpty(time))
             {
                 var stime = DateTime.Parse(time);

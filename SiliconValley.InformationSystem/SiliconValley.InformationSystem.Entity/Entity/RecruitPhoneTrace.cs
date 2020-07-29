@@ -14,27 +14,31 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     [Table(name: "RecruitPhoneTrace")]
-    public partial class RecruitPhoneTrace
+    public partial class RecruitPhoneTrace 
     {
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }//姓名
-        public string PhoneNumber { get; set; } //电话号码
+        public string PhoneNumber { get; set; } //电话号码 
         public Nullable<System.DateTime> TraceTime { get; set; }//追踪时间
         public string Channel { get; set; }//渠道
         public string ResumeType { get; set; }//简历类型
-        public string PhoneCommunicateResult { get; set; }//联系结果
-        //public Nullable<System.DateTime> FirstInterviewDate { get; set; }
+        public Nullable<bool> PhoneCommunicateResult { get; set; }//面试结果
+        public Nullable<bool> IsEntry { get; set; }//是否入职
+        public string Remark { get; set; }//备注
+        public Nullable<bool> IsDel { get; set; }
+        public Nullable<int> Pid { get; set; }//岗位
+        public Nullable<int> SonId { get; set; }//自编号
+       
+
+        public Nullable<System.DateTime> ForwardDate { get; set; }//预面试时间（为计算邀约总数）
+
         //public Nullable<bool> IsInterview { get; set; }
         //public string FirstInterviewResult { get; set; }
         //public Nullable<System.DateTime> RetestDate { get; set; }
         //public string RetestResult { get; set; }
         //public Nullable<System.DateTime> OfferGiveTime { get; set; }
         //public Nullable<System.DateTime> PlanEntryTime { get; set; }
-        public Nullable<bool> IsEntry { get; set; }//是否入职
-        public string Remark { get; set; }//备注
-        public Nullable<bool> IsDel { get; set; }
-        public Nullable<int> Pid { get; set; }//岗位
-        public Nullable<int> SonId { get; set; }//自编号
+
     }
 }

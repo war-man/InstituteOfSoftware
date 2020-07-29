@@ -710,7 +710,8 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                                                         emp.Material = item.paperyMaterial;
                                                         emp.Remark = item.Remark;
                                                         emp.RecruitSource = item.original;
-                                                        emp.IsDel = false;
+                                                        emp.IsDel = false;                                                       
+                                                        emp.Image = "guigu.jpg";
                                                         this.Insert(emp);
                                                         rc.RemoveCache("InRedisEmpInfoData");
                                                         AddEmpToCorrespondingDept(emp);
